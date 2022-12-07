@@ -1,0 +1,15 @@
+C:\mono\csharpacademy\CodeTrack\CodeTrack\ReportBuilder\obj\Debug\net7.0\ReportBuilder.csproj.AssemblyReference.cache
+C:\mono\csharpacademy\CodeTrack\CodeTrack\ReportBuilder\obj\Debug\net7.0\ReportBuilder.GeneratedMSBuildEditorConfig.editorconfig
+C:\mono\csharpacademy\CodeTrack\CodeTrack\ReportBuilder\obj\Debug\net7.0\ReportBuilder.AssemblyInfoInputs.cache
+C:\mono\csharpacademy\CodeTrack\CodeTrack\ReportBuilder\obj\Debug\net7.0\ReportBuilder.AssemblyInfo.cs
+C:\mono\csharpacademy\CodeTrack\CodeTrack\ReportBuilder\obj\Debug\net7.0\ReportBuilder.csproj.CoreCompileInputs.cache
+C:\mono\csharpacademy\CodeTrack\CodeTrack\ReportBuilder\bin\Debug\net7.0\ReportBuilder.deps.json
+C:\mono\csharpacademy\CodeTrack\CodeTrack\ReportBuilder\bin\Debug\net7.0\ReportBuilder.dll
+C:\mono\csharpacademy\CodeTrack\CodeTrack\ReportBuilder\bin\Debug\net7.0\ReportBuilder.pdb
+C:\mono\csharpacademy\CodeTrack\CodeTrack\ReportBuilder\bin\Debug\net7.0\TrackDB.dll
+C:\mono\csharpacademy\CodeTrack\CodeTrack\ReportBuilder\bin\Debug\net7.0\TrackDB.pdb
+C:\mono\csharpacademy\CodeTrack\CodeTrack\ReportBuilder\obj\Debug\net7.0\ReportBuilder.csproj.CopyComplete
+C:\mono\csharpacademy\CodeTrack\CodeTrack\ReportBuilder\obj\Debug\net7.0\ReportBuilder.dll
+C:\mono\csharpacademy\CodeTrack\CodeTrack\ReportBuilder\obj\Debug\net7.0\refint\ReportBuilder.dll
+C:\mono\csharpacademy\CodeTrack\CodeTrack\ReportBuilder\obj\Debug\net7.0\ReportBuilder.pdb
+C:\mono\csharpacademy\CodeTrack\CodeTrack\ReportBuilder\obj\Debug\net7.0\ref\ReportBuilder.dll

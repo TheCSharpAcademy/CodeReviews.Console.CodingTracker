@@ -4,8 +4,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeTrack", "CodeTrack\CodeTrack.csproj", "{72CB00BC-5E4D-4EA0-B09C-EC289F6360A5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3E2D6604-4755-48C0-B090-701D021506AB} = {3E2D6604-4755-48C0-B090-701D021506AB}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackDB", "TrackDB\TrackDB.csproj", "{158DA992-382F-47EB-9FA7-ABF3D881601B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportBuilder", "ReportBuilder\ReportBuilder.csproj", "{3E2D6604-4755-48C0-B090-701D021506AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +26,10 @@ Global
 		{158DA992-382F-47EB-9FA7-ABF3D881601B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{158DA992-382F-47EB-9FA7-ABF3D881601B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{158DA992-382F-47EB-9FA7-ABF3D881601B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E2D6604-4755-48C0-B090-701D021506AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E2D6604-4755-48C0-B090-701D021506AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E2D6604-4755-48C0-B090-701D021506AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E2D6604-4755-48C0-B090-701D021506AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
