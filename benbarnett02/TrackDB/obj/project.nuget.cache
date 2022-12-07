@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "kqwC1x0k2BFscTKRZ7LH/6JbNmuhw+4ZEpfB8VRS2aPOww65DyULVL02nnDIfrytfJDX4h9F+oto+azb9Fn3lA==",
+  "dgSpecHash": "rKTYLSdoHTy5N0AZqzKbLpNzAKaF81GZbThIYeznyunSvNJMmQYtx5uBB7Qz7qWhT26DdYIsk0rr9804mzh+VA==",
   "success": true,
-  "projectFilePath": "C:\\mono\\csharpacademy\\CodeTrack\\CodeTrack\\TrackDB\\TrackDB.csproj",
+  "projectFilePath": "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\TrackDB\\TrackDB.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\benja\\.nuget\\packages\\microsoft.data.sqlite\\7.0.0\\microsoft.data.sqlite.7.0.0.nupkg.sha512",
     "C:\\Users\\benja\\.nuget\\packages\\microsoft.data.sqlite.core\\7.0.0\\microsoft.data.sqlite.core.7.0.0.nupkg.sha512",

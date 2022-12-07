@@ -22,3 +22,15 @@ C:\Users\BenBarnett\Documents\Code\mono\csharpacademy\CodeTrack\CodeTrack\TrackD
 C:\Users\BenBarnett\Documents\Code\mono\csharpacademy\CodeTrack\CodeTrack\TrackDB\obj\Debug\net7.0\refint\TrackDB.dll
 C:\Users\BenBarnett\Documents\Code\mono\csharpacademy\CodeTrack\CodeTrack\TrackDB\obj\Debug\net7.0\TrackDB.pdb
 C:\Users\BenBarnett\Documents\Code\mono\csharpacademy\CodeTrack\CodeTrack\TrackDB\obj\Debug\net7.0\ref\TrackDB.dll
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\TrackDB\bin\Debug\net7.0\TrackDB.deps.json
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\TrackDB\bin\Debug\net7.0\TrackDB.dll
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\TrackDB\bin\Debug\net7.0\TrackDB.pdb
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\TrackDB\obj\Debug\net7.0\TrackDB.csproj.AssemblyReference.cache
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\TrackDB\obj\Debug\net7.0\TrackDB.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\TrackDB\obj\Debug\net7.0\TrackDB.AssemblyInfoInputs.cache
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\TrackDB\obj\Debug\net7.0\TrackDB.AssemblyInfo.cs
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\TrackDB\obj\Debug\net7.0\TrackDB.csproj.CoreCompileInputs.cache
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\TrackDB\obj\Debug\net7.0\TrackDB.dll
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\TrackDB\obj\Debug\net7.0\refint\TrackDB.dll
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\TrackDB\obj\Debug\net7.0\TrackDB.pdb
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\TrackDB\obj\Debug\net7.0\ref\TrackDB.dll

@@ -781,11 +781,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\mono\\csharpacademy\\CodeTrack\\CodeTrack\\CodeTrack\\CodeTrack.csproj",
+      "projectUniqueName": "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\CodeTrack\\CodeTrack.csproj",
       "projectName": "CodeTrack",
-      "projectPath": "C:\\mono\\csharpacademy\\CodeTrack\\CodeTrack\\CodeTrack\\CodeTrack.csproj",
+      "projectPath": "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\CodeTrack\\CodeTrack.csproj",
       "packagesPath": "C:\\Users\\benja\\.nuget\\packages\\",
-      "outputPath": "C:\\mono\\csharpacademy\\CodeTrack\\CodeTrack\\CodeTrack\\obj\\",
+      "outputPath": "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\CodeTrack\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\benja\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -802,11 +802,11 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "C:\\mono\\csharpacademy\\CodeTrack\\CodeTrack\\ReportBuilder\\ReportBuilder.csproj": {
-              "projectPath": "C:\\mono\\csharpacademy\\CodeTrack\\CodeTrack\\ReportBuilder\\ReportBuilder.csproj"
+            "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\ReportBuilder\\ReportBuilder.csproj": {
+              "projectPath": "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\ReportBuilder\\ReportBuilder.csproj"
             },
-            "C:\\mono\\csharpacademy\\CodeTrack\\CodeTrack\\TrackDB\\TrackDB.csproj": {
-              "projectPath": "C:\\mono\\csharpacademy\\CodeTrack\\CodeTrack\\TrackDB\\TrackDB.csproj"
+            "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\TrackDB\\TrackDB.csproj": {
+              "projectPath": "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\TrackDB\\TrackDB.csproj"
             }
           }
         }

@@ -706,11 +706,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\mono\\csharpacademy\\CodeTrack\\CodeTrack\\TrackDB\\TrackDB.csproj",
+      "projectUniqueName": "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\TrackDB\\TrackDB.csproj",
       "projectName": "TrackDB",
-      "projectPath": "C:\\mono\\csharpacademy\\CodeTrack\\CodeTrack\\TrackDB\\TrackDB.csproj",
+      "projectPath": "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\TrackDB\\TrackDB.csproj",
       "packagesPath": "C:\\Users\\benja\\.nuget\\packages\\",
-      "outputPath": "C:\\mono\\csharpacademy\\CodeTrack\\CodeTrack\\TrackDB\\obj\\",
+      "outputPath": "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\TrackDB\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\benja\\AppData\\Roaming\\NuGet\\NuGet.Config",

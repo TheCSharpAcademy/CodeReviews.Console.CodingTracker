@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\mono\\csharpacademy\\CodeTrack\\CodeTrack\\CodeTrack\\CodeTrack.csproj": {}
+    "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\CodeTrack\\CodeTrack.csproj": {}
   },
   "projects": {
-    "C:\\mono\\csharpacademy\\CodeTrack\\CodeTrack\\CodeTrack\\CodeTrack.csproj": {
+    "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\CodeTrack\\CodeTrack.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\mono\\csharpacademy\\CodeTrack\\CodeTrack\\CodeTrack\\CodeTrack.csproj",
+        "projectUniqueName": "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\CodeTrack\\CodeTrack.csproj",
         "projectName": "CodeTrack",
-        "projectPath": "C:\\mono\\csharpacademy\\CodeTrack\\CodeTrack\\CodeTrack\\CodeTrack.csproj",
+        "projectPath": "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\CodeTrack\\CodeTrack.csproj",
         "packagesPath": "C:\\Users\\benja\\.nuget\\packages\\",
-        "outputPath": "C:\\mono\\csharpacademy\\CodeTrack\\CodeTrack\\CodeTrack\\obj\\",
+        "outputPath": "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\CodeTrack\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\benja\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -28,11 +28,11 @@
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "C:\\mono\\csharpacademy\\CodeTrack\\CodeTrack\\ReportBuilder\\ReportBuilder.csproj": {
-                "projectPath": "C:\\mono\\csharpacademy\\CodeTrack\\CodeTrack\\ReportBuilder\\ReportBuilder.csproj"
+              "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\ReportBuilder\\ReportBuilder.csproj": {
+                "projectPath": "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\ReportBuilder\\ReportBuilder.csproj"
               },
-              "C:\\mono\\csharpacademy\\CodeTrack\\CodeTrack\\TrackDB\\TrackDB.csproj": {
-                "projectPath": "C:\\mono\\csharpacademy\\CodeTrack\\CodeTrack\\TrackDB\\TrackDB.csproj"
+              "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\TrackDB\\TrackDB.csproj": {
+                "projectPath": "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\TrackDB\\TrackDB.csproj"
               }
             }
           }
@@ -80,14 +80,14 @@
         }
       }
     },
-    "C:\\mono\\csharpacademy\\CodeTrack\\CodeTrack\\ReportBuilder\\ReportBuilder.csproj": {
+    "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\ReportBuilder\\ReportBuilder.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\mono\\csharpacademy\\CodeTrack\\CodeTrack\\ReportBuilder\\ReportBuilder.csproj",
+        "projectUniqueName": "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\ReportBuilder\\ReportBuilder.csproj",
         "projectName": "ReportBuilder",
-        "projectPath": "C:\\mono\\csharpacademy\\CodeTrack\\CodeTrack\\ReportBuilder\\ReportBuilder.csproj",
+        "projectPath": "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\ReportBuilder\\ReportBuilder.csproj",
         "packagesPath": "C:\\Users\\benja\\.nuget\\packages\\",
-        "outputPath": "C:\\mono\\csharpacademy\\CodeTrack\\CodeTrack\\ReportBuilder\\obj\\",
+        "outputPath": "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\ReportBuilder\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\benja\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -104,8 +104,8 @@
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "C:\\mono\\csharpacademy\\CodeTrack\\CodeTrack\\TrackDB\\TrackDB.csproj": {
-                "projectPath": "C:\\mono\\csharpacademy\\CodeTrack\\CodeTrack\\TrackDB\\TrackDB.csproj"
+              "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\TrackDB\\TrackDB.csproj": {
+                "projectPath": "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\TrackDB\\TrackDB.csproj"
               }
             }
           }
@@ -145,14 +145,14 @@
         }
       }
     },
-    "C:\\mono\\csharpacademy\\CodeTrack\\CodeTrack\\TrackDB\\TrackDB.csproj": {
+    "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\TrackDB\\TrackDB.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\mono\\csharpacademy\\CodeTrack\\CodeTrack\\TrackDB\\TrackDB.csproj",
+        "projectUniqueName": "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\TrackDB\\TrackDB.csproj",
         "projectName": "TrackDB",
-        "projectPath": "C:\\mono\\csharpacademy\\CodeTrack\\CodeTrack\\TrackDB\\TrackDB.csproj",
+        "projectPath": "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\TrackDB\\TrackDB.csproj",
         "packagesPath": "C:\\Users\\benja\\.nuget\\packages\\",
-        "outputPath": "C:\\mono\\csharpacademy\\CodeTrack\\CodeTrack\\TrackDB\\obj\\",
+        "outputPath": "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\TrackDB\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\benja\\AppData\\Roaming\\NuGet\\NuGet.Config",
