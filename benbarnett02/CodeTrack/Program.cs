@@ -243,10 +243,11 @@ class Program
         {
             TrackingData.DeleteCodeEntry(id);
             Console.WriteLine("Record Deleted\n-----------------------------------------\n\n\n\n");
-        } else { }
+        }
+        else { }
 
     }
-    
+
     static void ReportMenu()
     {
         Console.WriteLine("\nWhat report do you want to see?");
