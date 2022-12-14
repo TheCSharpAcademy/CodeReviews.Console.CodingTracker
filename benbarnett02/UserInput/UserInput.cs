@@ -1,4 +1,4 @@
-﻿namespace CodeTrack
+﻿namespace TrackingProgram
 {
     public class UserInput
     {
