@@ -2,19 +2,15 @@
 using System.Globalization;
 namespace TrackingProgram;
 
-// This class handles all user interface elements and input validation.
 class Program
 {
-    // Configuration manager, as required. Just for connection string at the moment.
     static void Main(string[] args)
     {
         TrackingData.StartupDatabase();
-        // Pretend like it takes a long time to connect to a local database, lol.
         Console.WriteLine("-------------------------------\n");
         Console.WriteLine("Connecting to " + TrackingData.connectionString);
         Console.WriteLine("\n-----------------------------\n");
         Console.WriteLine("Welcome to Code Tracker! \n");
-
         MainMenu();
     }
 
@@ -29,9 +25,7 @@ class Program
             Console.WriteLine("\t3. View/Edit past time entries");
             Console.WriteLine("(type the number you want to select, then press enter)");
 
-
             string mainMenuSelection = Console.ReadLine();
-
             switch (mainMenuSelection)
             {
                 case ("0"):
@@ -58,24 +52,19 @@ class Program
 
     static void ManualEntry()
     {
-        // Initialisation stuff for datetime parsing.
         string format = "dd/MM/yyyy HH:mm tt";
         CultureInfo culture = CultureInfo.CreateSpecificCulture("en-AU");
 
-        // Initialise these variables to have them in the scope of the method, not the loops below... made that mistake.
         DateTime startDateTime;
         DateTime endDateTime;
 
-        // Avoiding nulls, probably pointless but not sure.
-        string enteredStartTime = DateTime.Now.ToString(format);
-        string enteredEndTime = DateTime.Now.ToString(format);
-        string entryLabel = "Default Label";
+        string enteredStartTime;
+        string enteredEndTime;
+        string entryLabel;
 
-        // Get time entry label from user.
         Console.WriteLine("Label for the entry:");
         entryLabel = Console.ReadLine();
 
-        // Get and parse start time.
         Console.WriteLine($"\nWhat time did the coding start? {format}");
         enteredStartTime = Console.ReadLine();
         while (!DateTime.TryParse(enteredStartTime, culture, DateTimeStyles.None, out startDateTime))
@@ -85,8 +74,6 @@ class Program
         }
         Console.WriteLine($"Start time confirmed: {startDateTime.ToString(format)}.");
 
-
-        // Get and parse end time.
         Console.WriteLine($"What time did this end? {format}");
         enteredEndTime = Console.ReadLine();
         while (!DateTime.TryParse(enteredEndTime, culture, DateTimeStyles.None, out endDateTime))
@@ -98,7 +85,7 @@ class Program
 
         TrackingData.CodeEntry manualEntry = new TrackingData.CodeEntry
         {
-            Id = 0, // I think this could be null or undefined but not sure how to make it accept that. It's not used.
+            Id = 0,
             Label = entryLabel,
             StartDate = startDateTime,
             EndDate = endDateTime,
@@ -109,17 +96,14 @@ class Program
 
     static void Stopwatch()
     {
-        // Initialisation stuff for datetime parsing.
         string format = "dd/MM/yyyy HH:mm tt";
-        string entryLabel = "Default Label";
+        string entryLabel;
         CultureInfo culture = CultureInfo.CreateSpecificCulture("en-AU");
 
-        // Get the label.
         Console.WriteLine("Label for the entry:");
         entryLabel = Console.ReadLine();
         Console.WriteLine();
 
-        // Initialise these variables to have them in the scope of the method, not the loops below.
         DateTime startDateTime = DateTime.Now;
         DateTime endDateTime;
 
@@ -133,7 +117,6 @@ class Program
         Console.WriteLine("-----------------------------");
         Console.WriteLine("Recording time...");
 
-        // Make a CodeEntry object.
         TrackingData.CodeEntry stopwatchEntry = new TrackingData.CodeEntry
         {
             Id = 0,
@@ -141,18 +124,13 @@ class Program
             StartDate = startDateTime,
             EndDate = endDateTime,
         };
-
         TrackingData.InsertCodeEntry(stopwatchEntry);
-
         Console.WriteLine($"Time recorded. You coded for {TrackingData.getDurationOfCodeEntry(stopwatchEntry).ToString("hh\\:mm\\:ss")}");
         Console.WriteLine("-------------------------------------------------------------------\n\n\n");
     }
 
-
-
     static void PastEntries()
     {
-        // Past Entries Presentation
         Table table = ReportBuilder.AllEntryTable();
         AnsiConsole.Write(table);
         PastEntriesMenu();
@@ -182,11 +160,9 @@ class Program
             default:
                 Console.WriteLine("Invalid Input. Try again.");
                 PastEntriesMenu();
-
                 break;
         }
     }
-
 
     static void UpdateMenu()
     {
@@ -203,24 +179,19 @@ class Program
         Console.Clear();
         AnsiConsole.Write(table);
 
-        // Initialisation stuff for datetime parsing.
         string format = "dd/MM/yyyy HH:mm tt";
         CultureInfo culture = CultureInfo.CreateSpecificCulture("en-AU");
 
-        // Initialise these variables to have them in the scope of the method, not the loops below... made that mistake.
         DateTime startDateTime;
         DateTime endDateTime;
 
-        // Avoiding nulls, probably pointless but not sure.
-        string enteredStartTime = DateTime.Now.ToString(format);
-        string enteredEndTime = DateTime.Now.ToString(format);
-        string entryLabel = "Default Label";
+        string enteredStartTime;
+        string enteredEndTime;
+        string entryLabel;
 
-        // Get time entry label from user.
         Console.WriteLine("New Label:");
         entryLabel = Console.ReadLine();
 
-        // Get and parse start time.
         Console.WriteLine($"\nNew Start Time ({format}):");
         enteredStartTime = Console.ReadLine();
         while (!DateTime.TryParse(enteredStartTime, culture, DateTimeStyles.None, out startDateTime))
@@ -230,8 +201,6 @@ class Program
         }
         Console.WriteLine($"Start time confirmed: {startDateTime.ToString(format)}.");
 
-
-        // Get and parse end time.
         Console.WriteLine($"New End Time ({format}):");
         enteredEndTime = Console.ReadLine();
         while (!DateTime.TryParse(enteredEndTime, culture, DateTimeStyles.None, out endDateTime))
@@ -243,18 +212,16 @@ class Program
 
         TrackingData.CodeEntry updatedEntry = new TrackingData.CodeEntry
         {
-            Id = int.Parse(id), // I think this is okay
+            Id = int.Parse(id),
             Label = entryLabel,
             StartDate = startDateTime,
             EndDate = endDateTime,
         };
-
         TrackingData.UpdateCodeEntry(updatedEntry);
 
         table = ReportBuilder.SingleEntryTable(id);
         AnsiConsole.Write(table);
     }
-
 
     static void DeleteMenu()
     {
@@ -286,7 +253,6 @@ class Program
         Console.WriteLine("\t0. Back to Main Menu");
         Console.WriteLine("\t1. Fun Statistics");
         Console.WriteLine("\t2. This week's stats\n");
-
 
         string pastEntriesMenuSelection = Console.ReadLine();
         switch (pastEntriesMenuSelection)

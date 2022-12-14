@@ -1,12 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
-using System.Globalization;
 using System.Configuration;
-using System.Collections.Generic;
-using static TrackingProgram.TrackingData;
-
-
-
-// This class handles all database operations. 
+using System.Globalization;
 namespace TrackingProgram;
 
 public class TrackingData
@@ -97,19 +91,17 @@ EndDate TEXT
             myDatabase.Close();
         }
     }
-    
 
-    // Lol, don't laugh at these next 3 methods I know it's weird and wrong but I had fun.
     public static void DeleteCodeEntry(CodeEntry codeEntry)
     {
-        DeleteCodeEntry(codeEntry.Id); // Trigger the Int overload
+        DeleteCodeEntry(codeEntry.Id);
     }
     public static void DeleteCodeEntry(int id)
     {
-        DeleteCodeEntry(id.ToString()); // Trigger the String overload
+        DeleteCodeEntry(id.ToString());
     }
-    
-    public static void DeleteCodeEntry(string id) // This one does the work
+
+    public static void DeleteCodeEntry(string id)
     {
         using (var myDatabase = new SqliteConnection(connectionString))
         {
@@ -121,7 +113,6 @@ EndDate TEXT
             myDatabase.Close();
         }
     }
-
 
     public static bool TryGetCodeEntry(string id)
     {
@@ -150,7 +141,6 @@ EndDate TEXT
         return exists;
     }
 
-    // I wanted this to be able to handle ints, as well. And learn about overloading methods.
     public static bool TryGetCodeEntry(int id)
     {
         bool exists = TryGetCodeEntry(id.ToString());
@@ -163,10 +153,8 @@ EndDate TEXT
         {
             myDatabase.Open();
             var tableCmd = myDatabase.CreateCommand();
-
             tableCmd.CommandText =
-                $"SELECT * FROM coding_entries WHERE Id = '{id}'"; ;
-
+                $"SELECT * FROM coding_entries WHERE Id = '{id}'";
             SqliteDataReader reader = tableCmd.ExecuteReader();
 
             if (reader.HasRows)
@@ -187,9 +175,7 @@ EndDate TEXT
                 myDatabase.Close();
                 return null;
             }
-
         }
-
     }
 
     public static TimeSpan getDurationOfCodeEntry(CodeEntry codeEntry)
@@ -197,9 +183,6 @@ EndDate TEXT
         TimeSpan duration = codeEntry.EndDate.Subtract(codeEntry.StartDate);
         return duration;
     }
-
-
-
 
     public class CodeEntry
     {

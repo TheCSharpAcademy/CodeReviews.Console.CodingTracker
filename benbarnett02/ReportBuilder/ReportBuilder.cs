@@ -1,5 +1,4 @@
 ﻿using Spectre.Console;
-
 namespace TrackingProgram;
 public class ReportBuilder
 {
@@ -11,8 +10,7 @@ public class ReportBuilder
         table.AddColumn("Label");
         table.AddColumn("Statistic");
 
-        // Total in past 7 days.
-        DateTime sevenDaysAgo = DateTime.Now.AddDays(-7); // I think I'm doing this right?
+        DateTime sevenDaysAgo = DateTime.Now.AddDays(-7);
         sevenDaysAgo = new DateTime(sevenDaysAgo.Year, sevenDaysAgo.Month, sevenDaysAgo.Day, 0, 0, 0);
         List<TrackingData.CodeEntry> entriesInPast7 = new List<TrackingData.CodeEntry>();
         List<double> durationsInPast7 = new List<double>();
@@ -24,11 +22,10 @@ public class ReportBuilder
                 durationsInPast7.Add(TrackingData.getDurationOfCodeEntry(entry).TotalSeconds);
             }
         }
-        table.AddRow("Total time coding past 7 days", TimeSpan.FromSeconds(durationsInPast7.Sum()).ToString()); // I like this line
-        // Over the course of the above line, data goes from a list of doubles, to a double, to a timespan, then becomes a string and finally gets added to a table.
+        table.AddRow("Total time coding past 7 days", TimeSpan.FromSeconds(durationsInPast7.Sum()).ToString());
         table.AddRow("Number of code entries", entriesInPast7.Count().ToString());
         table.AddRow("Average time spent coding", TimeSpan.FromSeconds(durationsInPast7.Average()).ToString());
-        table.AddRow("Amount of time spent not coding :(", TimeSpan.FromSeconds(604800.0-durationsInPast7.Sum()).ToString());
+        table.AddRow("Amount of time spent not coding :(", TimeSpan.FromSeconds(604800.0 - durationsInPast7.Sum()).ToString());
 
 
         return table;
@@ -48,12 +45,8 @@ public class ReportBuilder
         table.Border(TableBorder.DoubleEdge);
         if (codeEntries != null)
         {
-            // Table styling.
-
-
             foreach (TrackingData.CodeEntry entry in codeEntries)
             {
-                // I'm not sure this is the best way to do this, but I don't really see a need for an intermediate variable and not sure how else to do it.
                 table.AddRow(entry.Id.ToString(), entry.Label, entry.StartDate.ToString(), entry.EndDate.ToString(), TrackingData.getDurationOfCodeEntry(entry).ToString("hh\\:mm\\:ss"));
             }
             return table;
@@ -87,7 +80,6 @@ public class ReportBuilder
     {
         Console.Clear();
         Console.WriteLine("\n\n Welcome to advanced reporting. Please select from the list below what you would like to view.");
-
     }
 
     public static Table FunStats()
@@ -97,7 +89,6 @@ public class ReportBuilder
         table.AddColumn("Statistic");
 
         List<TrackingData.CodeEntry> allEntries = TrackingData.GetAllCodeRecords();
-        // Getting the average duration across all entries.
         List<double> allDurations = new List<double>();
         foreach (TrackingData.CodeEntry entry in allEntries)
         {
@@ -106,25 +97,20 @@ public class ReportBuilder
         TimeSpan averageDuration = TimeSpan.FromSeconds(allDurations.Average());
         table.AddRow("Average Duration of all Coding Entries", averageDuration.ToString());
 
-
-        // Total in past 7 days.
-        DateTime sevenDaysAgo = DateTime.Now.AddDays(-7); // I think I'm doing this right?
+        DateTime sevenDaysAgo = DateTime.Now.AddDays(-7);
         sevenDaysAgo = new DateTime(sevenDaysAgo.Year, sevenDaysAgo.Month, sevenDaysAgo.Day, 0, 0, 0);
         List<TrackingData.CodeEntry> entriesInPast7 = new List<TrackingData.CodeEntry>();
         List<double> durationsInPast7 = new List<double>();
-        foreach(TrackingData.CodeEntry entry in allEntries)
+        foreach (TrackingData.CodeEntry entry in allEntries)
         {
-            if(entry.StartDate >= sevenDaysAgo)
+            if (entry.StartDate >= sevenDaysAgo)
             {
                 entriesInPast7.Add(entry);
                 durationsInPast7.Add(TrackingData.getDurationOfCodeEntry(entry).TotalSeconds);
             }
         }
         table.AddRow("Total time coding past 7 days", TimeSpan.FromSeconds(durationsInPast7.Sum()).ToString());
-
-       table.AddRow("Number of records (all time)",allEntries.Count.ToString());
-
+        table.AddRow("Number of records (all time)", allEntries.Count.ToString());
         return table;
     }
 }
-
