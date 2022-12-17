@@ -357,13 +357,24 @@
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
           "Microsoft.Data.Sqlite": "7.0.0",
-          "System.Configuration.ConfigurationManager": "7.0.0"
+          "System.Configuration.ConfigurationManager": "7.0.0",
+          "UserInput": "1.0.0"
         },
         "compile": {
           "bin/placeholder/TrackDB.dll": {}
         },
         "runtime": {
           "bin/placeholder/TrackDB.dll": {}
+        }
+      },
+      "UserInput/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "compile": {
+          "bin/placeholder/UserInput.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/UserInput.dll": {}
         }
       }
     }
@@ -745,6 +756,11 @@
       "type": "project",
       "path": "../TrackDB/TrackDB.csproj",
       "msbuildProject": "../TrackDB/TrackDB.csproj"
+    },
+    "UserInput/1.0.0": {
+      "type": "project",
+      "path": "../UserInput/UserInput.csproj",
+      "msbuildProject": "../UserInput/UserInput.csproj"
     }
   },
   "projectFileDependencyGroups": {

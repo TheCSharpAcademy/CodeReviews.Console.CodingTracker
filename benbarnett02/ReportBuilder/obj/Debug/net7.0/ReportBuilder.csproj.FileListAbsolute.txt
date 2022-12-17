@@ -28,3 +28,5 @@ C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker
 C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\ReportBuilder\obj\Debug\net7.0\refint\ReportBuilder.dll
 C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\ReportBuilder\obj\Debug\net7.0\ReportBuilder.pdb
 C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\ReportBuilder\obj\Debug\net7.0\ref\ReportBuilder.dll
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\ReportBuilder\bin\Debug\net7.0\UserInput.dll
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\ReportBuilder\bin\Debug\net7.0\UserInput.pdb

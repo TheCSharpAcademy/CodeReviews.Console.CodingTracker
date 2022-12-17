@@ -27,7 +27,6 @@ public class ReportBuilder
         table.AddRow("Average time spent coding", TimeSpan.FromSeconds(durationsInPast7.Average()).ToString());
         table.AddRow("Amount of time spent not coding :(", TimeSpan.FromSeconds(604800.0 - durationsInPast7.Sum()).ToString());
 
-
         return table;
     }
 

@@ -311,10 +311,16 @@
       "TrackDB/1.0.0": {
         "dependencies": {
           "Microsoft.Data.Sqlite": "7.0.0",
-          "System.Configuration.ConfigurationManager": "7.0.0"
+          "System.Configuration.ConfigurationManager": "7.0.0",
+          "UserInput": "1.0.0"
         },
         "runtime": {
           "TrackDB.dll": {}
+        }
+      },
+      "UserInput/1.0.0": {
+        "runtime": {
+          "UserInput.dll": {}
         }
       }
     }
@@ -431,6 +437,11 @@
       "hashPath": "system.windows.extensions.7.0.0.nupkg.sha512"
     },
     "TrackDB/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "UserInput/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

@@ -352,6 +352,22 @@
           }
         }
       },
+      "Menus/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "ReportBuilder": "1.0.0",
+          "TrackDB": "1.0.0",
+          "UserInput": "1.0.0",
+          "Validation": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Menus.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Menus.dll": {}
+        }
+      },
       "ReportBuilder/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
@@ -371,13 +387,34 @@
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
           "Microsoft.Data.Sqlite": "7.0.0",
-          "System.Configuration.ConfigurationManager": "7.0.0"
+          "System.Configuration.ConfigurationManager": "7.0.0",
+          "UserInput": "1.0.0"
         },
         "compile": {
           "bin/placeholder/TrackDB.dll": {}
         },
         "runtime": {
           "bin/placeholder/TrackDB.dll": {}
+        }
+      },
+      "UserInput/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "compile": {
+          "bin/placeholder/UserInput.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/UserInput.dll": {}
+        }
+      },
+      "Validation/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "compile": {
+          "bin/placeholder/Validation.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Validation.dll": {}
         }
       }
     }
@@ -755,6 +792,11 @@
         "useSharedDesignerContext.txt"
       ]
     },
+    "Menus/1.0.0": {
+      "type": "project",
+      "path": "../Menus/Menus.csproj",
+      "msbuildProject": "../Menus/Menus.csproj"
+    },
     "ReportBuilder/1.0.0": {
       "type": "project",
       "path": "../ReportBuilder/ReportBuilder.csproj",
@@ -764,15 +806,28 @@
       "type": "project",
       "path": "../TrackDB/TrackDB.csproj",
       "msbuildProject": "../TrackDB/TrackDB.csproj"
+    },
+    "UserInput/1.0.0": {
+      "type": "project",
+      "path": "../UserInput/UserInput.csproj",
+      "msbuildProject": "../UserInput/UserInput.csproj"
+    },
+    "Validation/1.0.0": {
+      "type": "project",
+      "path": "../Validation/Validation.csproj",
+      "msbuildProject": "../Validation/Validation.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net7.0": [
+      "Menus >= 1.0.0",
       "Microsoft.Data.Sqlite >= 7.0.0",
       "ReportBuilder >= 1.0.0",
       "Spectre.Console >= 0.45.0",
       "System.Configuration.ConfigurationManager >= 7.0.0",
-      "TrackDB >= 1.0.0"
+      "TrackDB >= 1.0.0",
+      "UserInput >= 1.0.0",
+      "Validation >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -802,11 +857,20 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
+            "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\Menus\\Menus.csproj": {
+              "projectPath": "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\Menus\\Menus.csproj"
+            },
             "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\ReportBuilder\\ReportBuilder.csproj": {
               "projectPath": "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\ReportBuilder\\ReportBuilder.csproj"
             },
             "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\TrackDB\\TrackDB.csproj": {
               "projectPath": "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\TrackDB\\TrackDB.csproj"
+            },
+            "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\UserInput\\UserInput.csproj": {
+              "projectPath": "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\UserInput\\UserInput.csproj"
+            },
+            "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\Validation\\Validation.csproj": {
+              "projectPath": "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\Validation\\Validation.csproj"
             }
           }
         }

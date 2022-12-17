@@ -1,0 +1,5 @@
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\Menus\obj\Release\net7.0\Menus.csproj.AssemblyReference.cache
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\Menus\obj\Release\net7.0\Menus.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\Menus\obj\Release\net7.0\Menus.AssemblyInfoInputs.cache
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\Menus\obj\Release\net7.0\Menus.AssemblyInfo.cs
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\Menus\obj\Release\net7.0\Menus.csproj.CoreCompileInputs.cache
