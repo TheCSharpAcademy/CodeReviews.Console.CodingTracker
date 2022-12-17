@@ -20,7 +20,6 @@ Label TEXT,
 StartDate TEXT,
 EndDate TEXT
 )";
-
             tableCmd.ExecuteNonQuery();
             trackingDatabase.Close();
 
@@ -33,7 +32,6 @@ EndDate TEXT
         {
             myDatabase.Open();
             var tableCmd = myDatabase.CreateCommand();
-
             tableCmd.CommandText =
                 $"SELECT * FROM coding_entries";
 
@@ -155,25 +153,26 @@ EndDate TEXT
             var tableCmd = myDatabase.CreateCommand();
             tableCmd.CommandText =
                 $"SELECT * FROM coding_entries WHERE Id = '{id}'";
-            SqliteDataReader reader = tableCmd.ExecuteReader();
-
-            if (reader.HasRows)
+            using (SqliteDataReader reader = tableCmd.ExecuteReader())
             {
-                reader.Read();
-                CodeEntry codeEntry = new CodeEntry
+                if (reader.HasRows)
                 {
-                    Id = reader.GetInt32(0),
-                    Label = reader.GetString(1),
-                    StartDate = DateTime.ParseExact(reader.GetString(2), "dd/MM/yyyy HH:mm tt", new CultureInfo("en-US")),
-                    EndDate = DateTime.ParseExact(reader.GetString(3), "dd/MM/yyyy HH:mm tt", new CultureInfo("en-US"))
-                };
-                myDatabase.Close();
-                return codeEntry;
-            }
-            else
-            {
-                myDatabase.Close();
-                return null;
+                    reader.Read();
+                    CodeEntry codeEntry = new CodeEntry
+                    {
+                        Id = reader.GetInt32(0),
+                        Label = reader.GetString(1),
+                        StartDate = DateTime.ParseExact(reader.GetString(2), "dd/MM/yyyy HH:mm tt", new CultureInfo("en-US")),
+                        EndDate = DateTime.ParseExact(reader.GetString(3), "dd/MM/yyyy HH:mm tt", new CultureInfo("en-US"))
+                    };
+                    myDatabase.Close();
+                    return codeEntry;
+                }
+                else
+                {
+                    myDatabase.Close();
+                    return null;
+                }
             }
         }
     }

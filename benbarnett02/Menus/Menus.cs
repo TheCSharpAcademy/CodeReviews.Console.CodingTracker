@@ -59,13 +59,15 @@ public class Menus
 
         Console.WriteLine("Label for the entry:");
         entryLabel = Console.ReadLine();
-
         Console.WriteLine($"\nWhat time did the coding start? {UserInput.format}");
         startDateTime = UserInput.GetDateInput();
         Console.WriteLine($"Start time confirmed: {startDateTime.ToString(UserInput.format)}.");
-
         Console.WriteLine($"What time did this end? {UserInput.format}");
         endDateTime = UserInput.GetDateInput();
+        while (!Validation.DateTimeIsValid(startDateTime, endDateTime))
+        {
+            Console.WriteLine($"End time is not before start time. The end time you entered was: {endDateTime.ToString(UserInput.format)} and the start time you entered was: {startDateTime.ToString(UserInput.format)}.");
+        }
         Console.WriteLine($"End time confirmed: {endDateTime.ToString(UserInput.format)}.");
 
         TrackingData.CodeEntry manualEntry = new TrackingData.CodeEntry
@@ -75,7 +77,6 @@ public class Menus
             StartDate = startDateTime,
             EndDate = endDateTime,
         };
-
         TrackingData.InsertCodeEntry(manualEntry);
     }
 
@@ -83,8 +84,6 @@ public class Menus
     {
         string format = "dd/MM/yyyy HH:mm tt";
         string entryLabel;
-        CultureInfo culture = CultureInfo.CreateSpecificCulture("en-AU");
-
         Console.WriteLine("Label for the entry:");
         entryLabel = Console.ReadLine();
         Console.WriteLine();
@@ -94,9 +93,7 @@ public class Menus
 
         Console.WriteLine($"Stopwatch started at: {startDateTime.ToString(format)}. Type 'stop' to stop.");
         while (Console.ReadLine() != "stop") { }
-
         endDateTime = DateTime.Now;
-
         Console.WriteLine("-----------------------------");
         Console.WriteLine($"Timer stopped at {endDateTime}");
         Console.WriteLine("-----------------------------");
@@ -151,7 +148,6 @@ public class Menus
 
     static void UpdateMenu()
     {
-
         Console.WriteLine("\n\n Please enter the ID of the entry you want to edit.");
         string id = Console.ReadLine();
         Table table = ReportBuilder.SingleEntryTable(id);
@@ -164,11 +160,8 @@ public class Menus
         Console.Clear();
         AnsiConsole.Write(table);
 
-        CultureInfo culture = CultureInfo.CreateSpecificCulture("en-AU");
-
         DateTime startDateTime;
         DateTime endDateTime;
-
         string entryLabel;
 
         Console.WriteLine("New Label:");
@@ -177,7 +170,6 @@ public class Menus
         Console.WriteLine($"\nNew Start Time ({UserInput.format}):");
         startDateTime = UserInput.GetDateInput();
         Console.WriteLine($"Start time confirmed: {startDateTime.ToString(UserInput.format)}.");
-
 
         Console.WriteLine($"New End Time ({UserInput.format}):");
         endDateTime = UserInput.GetDateInput();
@@ -191,7 +183,6 @@ public class Menus
             EndDate = endDateTime,
         };
         TrackingData.UpdateCodeEntry(updatedEntry);
-
         table = ReportBuilder.SingleEntryTable(id);
         AnsiConsole.Write(table);
     }

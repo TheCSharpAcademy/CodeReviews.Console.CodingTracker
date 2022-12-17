@@ -358,7 +358,8 @@
         "dependencies": {
           "ReportBuilder": "1.0.0",
           "TrackDB": "1.0.0",
-          "UserInput": "1.0.0"
+          "UserInput": "1.0.0",
+          "Validation": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Menus.dll": {}
@@ -403,6 +404,16 @@
         },
         "runtime": {
           "bin/placeholder/UserInput.dll": {}
+        }
+      },
+      "Validation/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "compile": {
+          "bin/placeholder/Validation.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Validation.dll": {}
         }
       }
     }
@@ -799,6 +810,11 @@
       "type": "project",
       "path": "../UserInput/UserInput.csproj",
       "msbuildProject": "../UserInput/UserInput.csproj"
+    },
+    "Validation/1.0.0": {
+      "type": "project",
+      "path": "../Validation/Validation.csproj",
+      "msbuildProject": "../Validation/Validation.csproj"
     }
   },
   "projectFileDependencyGroups": {

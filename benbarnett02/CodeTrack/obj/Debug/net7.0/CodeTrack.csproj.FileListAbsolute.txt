@@ -181,3 +181,5 @@ C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker
 C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\CodeTrack\obj\Debug\net7.0\ref\CodeTrack.dll
 C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\CodeTrack\bin\Debug\net7.0\UserInput.dll
 C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\CodeTrack\bin\Debug\net7.0\UserInput.pdb
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\CodeTrack\bin\Debug\net7.0\Menus.dll
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\CodeTrack\bin\Debug\net7.0\Menus.pdb

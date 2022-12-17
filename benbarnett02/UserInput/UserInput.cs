@@ -19,7 +19,4 @@ public class UserInput
         }
         return outDateTime;
     }
-
-
-
 }

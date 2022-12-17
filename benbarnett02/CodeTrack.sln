@@ -12,9 +12,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrackDB", "TrackDB\TrackDB.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReportBuilder", "ReportBuilder\ReportBuilder.csproj", "{3E2D6604-4755-48C0-B090-701D021506AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserInput", "UserInput\UserInput.csproj", "{0B60D676-651A-419A-A824-1E74503AC673}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserInput", "UserInput\UserInput.csproj", "{0B60D676-651A-419A-A824-1E74503AC673}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Menus", "Menus\Menus.csproj", "{4BFF75BD-655B-4DFD-B928-8AC78C93A062}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Menus", "Menus\Menus.csproj", "{4BFF75BD-655B-4DFD-B928-8AC78C93A062}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Validation", "Validation\Validation.csproj", "{6F8AB27C-E413-4D70-9229-6A2EAA14D62D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,6 +44,10 @@ Global
 		{4BFF75BD-655B-4DFD-B928-8AC78C93A062}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4BFF75BD-655B-4DFD-B928-8AC78C93A062}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4BFF75BD-655B-4DFD-B928-8AC78C93A062}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F8AB27C-E413-4D70-9229-6A2EAA14D62D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F8AB27C-E413-4D70-9229-6A2EAA14D62D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F8AB27C-E413-4D70-9229-6A2EAA14D62D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F8AB27C-E413-4D70-9229-6A2EAA14D62D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
