@@ -11,4 +11,8 @@
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\UserInput\UserInput.csproj" />
+  </ItemGroup>
+
 </Project>

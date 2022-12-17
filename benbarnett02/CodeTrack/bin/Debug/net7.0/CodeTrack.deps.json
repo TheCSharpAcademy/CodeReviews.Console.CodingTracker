@@ -8,11 +8,14 @@
     ".NETCoreApp,Version=v7.0": {
       "CodeTrack/1.0.0": {
         "dependencies": {
+          "Menus": "1.0.0",
           "Microsoft.Data.Sqlite": "7.0.0",
           "ReportBuilder": "1.0.0",
           "Spectre.Console": "0.45.0",
           "System.Configuration.ConfigurationManager": "7.0.0",
-          "TrackDB": "1.0.0"
+          "TrackDB": "1.0.0",
+          "UserInput": "1.0.0",
+          "Validation": "1.0.0"
         },
         "runtime": {
           "CodeTrack.dll": {}
@@ -311,6 +314,17 @@
           }
         }
       },
+      "Menus/1.0.0": {
+        "dependencies": {
+          "ReportBuilder": "1.0.0",
+          "TrackDB": "1.0.0",
+          "UserInput": "1.0.0",
+          "Validation": "1.0.0"
+        },
+        "runtime": {
+          "Menus.dll": {}
+        }
+      },
       "ReportBuilder/1.0.0": {
         "dependencies": {
           "Spectre.Console": "0.45.0",
@@ -323,10 +337,21 @@
       "TrackDB/1.0.0": {
         "dependencies": {
           "Microsoft.Data.Sqlite": "7.0.0",
-          "System.Configuration.ConfigurationManager": "7.0.0"
+          "System.Configuration.ConfigurationManager": "7.0.0",
+          "UserInput": "1.0.0"
         },
         "runtime": {
           "TrackDB.dll": {}
+        }
+      },
+      "UserInput/1.0.0": {
+        "runtime": {
+          "UserInput.dll": {}
+        }
+      },
+      "Validation/1.0.0": {
+        "runtime": {
+          "Validation.dll": {}
         }
       }
     }
@@ -442,12 +467,27 @@
       "path": "system.windows.extensions/7.0.0",
       "hashPath": "system.windows.extensions.7.0.0.nupkg.sha512"
     },
+    "Menus/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
     "ReportBuilder/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
     "TrackDB/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "UserInput/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Validation/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

@@ -34,3 +34,6 @@ C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker
 C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\TrackDB\obj\Debug\net7.0\refint\TrackDB.dll
 C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\TrackDB\obj\Debug\net7.0\TrackDB.pdb
 C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\TrackDB\obj\Debug\net7.0\ref\TrackDB.dll
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\TrackDB\bin\Debug\net7.0\UserInput.dll
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\TrackDB\bin\Debug\net7.0\UserInput.pdb
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\TrackDB\obj\Debug\net7.0\TrackDB.csproj.CopyComplete

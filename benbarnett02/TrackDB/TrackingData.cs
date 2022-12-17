@@ -1,12 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
-using System.Globalization;
 using System.Configuration;
-using System.Collections.Generic;
-using static TrackingProgram.TrackingData;
-
-
-
-// This class handles all database operations. 
 namespace TrackingProgram;
 
 public class TrackingData
@@ -26,20 +19,18 @@ Label TEXT,
 StartDate TEXT,
 EndDate TEXT
 )";
-
             tableCmd.ExecuteNonQuery();
             trackingDatabase.Close();
 
         }
     }
-
+    
     public static List<CodeEntry> GetAllCodeRecords()
     {
         using (var myDatabase = new SqliteConnection(connectionString))
         {
             myDatabase.Open();
             var tableCmd = myDatabase.CreateCommand();
-
             tableCmd.CommandText =
                 $"SELECT * FROM coding_entries";
 
@@ -54,8 +45,8 @@ EndDate TEXT
                         {
                             Id = reader.GetInt32(0),
                             Label = reader.GetString(1),
-                            StartDate = DateTime.ParseExact(reader.GetString(2), "dd/MM/yyyy HH:mm tt", new CultureInfo("en-US")),
-                            EndDate = DateTime.ParseExact(reader.GetString(3), "dd/MM/yyyy HH:mm tt", new CultureInfo("en-US")),
+                            StartDate = DateTime.ParseExact(reader.GetString(2), UserInput.format, UserInput.culture),
+                            EndDate = DateTime.ParseExact(reader.GetString(3), UserInput.format, UserInput.culture),
                         }
                         );
                 }
@@ -72,13 +63,12 @@ EndDate TEXT
 
     public static void InsertCodeEntry(CodeEntry codeEntry)
     {
-        string format = "dd/MM/yyyy HH:mm tt";
         using (var myDatabase = new SqliteConnection(connectionString))
         {
             myDatabase.Open();
             var tableCmd = myDatabase.CreateCommand();
             tableCmd.CommandText =
-                $"INSERT INTO coding_entries(Label, StartDate, EndDate) VALUES('{codeEntry.Label}', '{codeEntry.StartDate.ToString(format)}','{codeEntry.EndDate.ToString(format)}')";
+                $"INSERT INTO coding_entries(Label, StartDate, EndDate) VALUES('{codeEntry.Label}', '{codeEntry.StartDate.ToString(UserInput.format)}','{codeEntry.EndDate.ToString(UserInput.format)}')";
             tableCmd.ExecuteNonQuery();
             myDatabase.Close();
         }
@@ -86,30 +76,27 @@ EndDate TEXT
 
     public static void UpdateCodeEntry(CodeEntry codeEntry)
     {
-        string format = "dd/MM/yyyy HH:mm tt";
         using (var myDatabase = new SqliteConnection(connectionString))
         {
             myDatabase.Open();
             var tableCmd = myDatabase.CreateCommand();
             tableCmd.CommandText =
-                $"UPDATE coding_entries SET Label = '{codeEntry.Label}', StartDate = '{codeEntry.StartDate.ToString(format)}', EndDate = '{codeEntry.EndDate.ToString(format)}' WHERE Id = {codeEntry.Id.ToString()}";
+                $"UPDATE coding_entries SET Label = '{codeEntry.Label}', StartDate = '{codeEntry.StartDate.ToString(UserInput.format)}', EndDate = '{codeEntry.EndDate.ToString(UserInput.format)}' WHERE Id = {codeEntry.Id.ToString()}";
             tableCmd.ExecuteNonQuery();
             myDatabase.Close();
         }
     }
-    
 
-    // Lol, don't laugh at these next 3 methods I know it's weird and wrong but I had fun.
     public static void DeleteCodeEntry(CodeEntry codeEntry)
     {
-        DeleteCodeEntry(codeEntry.Id); // Trigger the Int overload
+        DeleteCodeEntry(codeEntry.Id);
     }
     public static void DeleteCodeEntry(int id)
     {
-        DeleteCodeEntry(id.ToString()); // Trigger the String overload
+        DeleteCodeEntry(id.ToString());
     }
-    
-    public static void DeleteCodeEntry(string id) // This one does the work
+
+    public static void DeleteCodeEntry(string id)
     {
         using (var myDatabase = new SqliteConnection(connectionString))
         {
@@ -121,7 +108,6 @@ EndDate TEXT
             myDatabase.Close();
         }
     }
-
 
     public static bool TryGetCodeEntry(string id)
     {
@@ -150,7 +136,6 @@ EndDate TEXT
         return exists;
     }
 
-    // I wanted this to be able to handle ints, as well. And learn about overloading methods.
     public static bool TryGetCodeEntry(int id)
     {
         bool exists = TryGetCodeEntry(id.ToString());
@@ -163,33 +148,30 @@ EndDate TEXT
         {
             myDatabase.Open();
             var tableCmd = myDatabase.CreateCommand();
-
             tableCmd.CommandText =
-                $"SELECT * FROM coding_entries WHERE Id = '{id}'"; ;
-
-            SqliteDataReader reader = tableCmd.ExecuteReader();
-
-            if (reader.HasRows)
+                $"SELECT * FROM coding_entries WHERE Id = '{id}'";
+            using (SqliteDataReader reader = tableCmd.ExecuteReader())
             {
-                reader.Read();
-                CodeEntry codeEntry = new CodeEntry
+                if (reader.HasRows)
                 {
-                    Id = reader.GetInt32(0),
-                    Label = reader.GetString(1),
-                    StartDate = DateTime.ParseExact(reader.GetString(2), "dd/MM/yyyy HH:mm tt", new CultureInfo("en-US")),
-                    EndDate = DateTime.ParseExact(reader.GetString(3), "dd/MM/yyyy HH:mm tt", new CultureInfo("en-US"))
-                };
-                myDatabase.Close();
-                return codeEntry;
+                    reader.Read();
+                    CodeEntry codeEntry = new CodeEntry
+                    {
+                        Id = reader.GetInt32(0),
+                        Label = reader.GetString(1),
+                        StartDate = DateTime.ParseExact(reader.GetString(2), UserInput.format, UserInput.culture),
+                        EndDate = DateTime.ParseExact(reader.GetString(3), UserInput.format, UserInput.culture)
+                    };
+                    myDatabase.Close();
+                    return codeEntry;
+                }
+                else
+                {
+                    myDatabase.Close();
+                    return null;
+                }
             }
-            else
-            {
-                myDatabase.Close();
-                return null;
-            }
-
         }
-
     }
 
     public static TimeSpan getDurationOfCodeEntry(CodeEntry codeEntry)
@@ -197,9 +179,6 @@ EndDate TEXT
         TimeSpan duration = codeEntry.EndDate.Subtract(codeEntry.StartDate);
         return duration;
     }
-
-
-
 
     public class CodeEntry
     {

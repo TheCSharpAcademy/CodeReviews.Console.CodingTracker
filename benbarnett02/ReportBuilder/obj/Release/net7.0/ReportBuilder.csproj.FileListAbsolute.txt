@@ -1,0 +1,15 @@
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\ReportBuilder\bin\Release\net7.0\ReportBuilder.deps.json
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\ReportBuilder\bin\Release\net7.0\ReportBuilder.dll
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\ReportBuilder\bin\Release\net7.0\ReportBuilder.pdb
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\ReportBuilder\bin\Release\net7.0\TrackDB.dll
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\ReportBuilder\bin\Release\net7.0\TrackDB.pdb
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\ReportBuilder\obj\Release\net7.0\ReportBuilder.csproj.AssemblyReference.cache
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\ReportBuilder\obj\Release\net7.0\ReportBuilder.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\ReportBuilder\obj\Release\net7.0\ReportBuilder.AssemblyInfoInputs.cache
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\ReportBuilder\obj\Release\net7.0\ReportBuilder.AssemblyInfo.cs
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\ReportBuilder\obj\Release\net7.0\ReportBuilder.csproj.CoreCompileInputs.cache
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\ReportBuilder\obj\Release\net7.0\ReportBuilder.csproj.CopyComplete
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\ReportBuilder\obj\Release\net7.0\ReportBuilder.dll
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\ReportBuilder\obj\Release\net7.0\refint\ReportBuilder.dll
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\ReportBuilder\obj\Release\net7.0\ReportBuilder.pdb
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\ReportBuilder\obj\Release\net7.0\ref\ReportBuilder.dll

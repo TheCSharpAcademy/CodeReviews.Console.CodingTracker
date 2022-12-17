@@ -118,6 +118,11 @@ C:\Users\BenBarnett\Documents\Code\mono\csharpacademy\CodeTrack\CodeTrack\CodeTr
 C:\Users\BenBarnett\Documents\Code\mono\csharpacademy\CodeTrack\CodeTrack\CodeTrack\obj\Debug\net7.0\ref\CodeTrack.dll
 C:\mono\csharpacademy\CodeTrack\CodeTrack\CodeTrack\bin\Debug\net7.0\ReportBuilder.dll
 C:\mono\csharpacademy\CodeTrack\CodeTrack\CodeTrack\bin\Debug\net7.0\ReportBuilder.pdb
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\CodeTrack\obj\Debug\net7.0\CodeTrack.csproj.AssemblyReference.cache
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\CodeTrack\obj\Debug\net7.0\CodeTrack.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\CodeTrack\obj\Debug\net7.0\CodeTrack.AssemblyInfoInputs.cache
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\CodeTrack\obj\Debug\net7.0\CodeTrack.AssemblyInfo.cs
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\CodeTrack\obj\Debug\net7.0\CodeTrack.csproj.CoreCompileInputs.cache
 C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\CodeTrack\bin\Debug\net7.0\CodeTrack.exe
 C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\CodeTrack\bin\Debug\net7.0\CodeTrack.dll.config
 C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\CodeTrack\bin\Debug\net7.0\CodeTrack.deps.json
@@ -164,15 +169,16 @@ C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker
 C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\CodeTrack\bin\Debug\net7.0\runtimes\win\lib\net7.0\System.Drawing.Common.dll
 C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\CodeTrack\bin\Debug\net7.0\runtimes\win\lib\net7.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\CodeTrack\bin\Debug\net7.0\runtimes\win\lib\net7.0\System.Windows.Extensions.dll
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\CodeTrack\bin\Debug\net7.0\Menus.dll
 C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\CodeTrack\bin\Debug\net7.0\ReportBuilder.dll
 C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\CodeTrack\bin\Debug\net7.0\TrackDB.dll
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\CodeTrack\bin\Debug\net7.0\UserInput.dll
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\CodeTrack\bin\Debug\net7.0\Validation.dll
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\CodeTrack\bin\Debug\net7.0\Menus.pdb
 C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\CodeTrack\bin\Debug\net7.0\ReportBuilder.pdb
 C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\CodeTrack\bin\Debug\net7.0\TrackDB.pdb
-C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\CodeTrack\obj\Debug\net7.0\CodeTrack.csproj.AssemblyReference.cache
-C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\CodeTrack\obj\Debug\net7.0\CodeTrack.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\CodeTrack\obj\Debug\net7.0\CodeTrack.AssemblyInfoInputs.cache
-C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\CodeTrack\obj\Debug\net7.0\CodeTrack.AssemblyInfo.cs
-C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\CodeTrack\obj\Debug\net7.0\CodeTrack.csproj.CoreCompileInputs.cache
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\CodeTrack\bin\Debug\net7.0\UserInput.pdb
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\CodeTrack\bin\Debug\net7.0\Validation.pdb
 C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\CodeTrack\obj\Debug\net7.0\CodeTrack.csproj.CopyComplete
 C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\CodeTrack\obj\Debug\net7.0\CodeTrack.dll
 C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\CodeTrack\obj\Debug\net7.0\refint\CodeTrack.dll
