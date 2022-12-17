@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Menus\Menus.csproj" />
     <ProjectReference Include="..\ReportBuilder\ReportBuilder.csproj" />
     <ProjectReference Include="..\TrackDB\TrackDB.csproj" />
     <ProjectReference Include="..\UserInput\UserInput.csproj" />
