@@ -1,6 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
 using System.Configuration;
-using System.Globalization;
 namespace TrackingProgram;
 
 public class TrackingData
@@ -25,7 +24,7 @@ EndDate TEXT
 
         }
     }
-
+    
     public static List<CodeEntry> GetAllCodeRecords()
     {
         using (var myDatabase = new SqliteConnection(connectionString))
@@ -46,8 +45,8 @@ EndDate TEXT
                         {
                             Id = reader.GetInt32(0),
                             Label = reader.GetString(1),
-                            StartDate = DateTime.ParseExact(reader.GetString(2), "dd/MM/yyyy HH:mm tt", new CultureInfo("en-US")),
-                            EndDate = DateTime.ParseExact(reader.GetString(3), "dd/MM/yyyy HH:mm tt", new CultureInfo("en-US")),
+                            StartDate = DateTime.ParseExact(reader.GetString(2), UserInput.format, UserInput.culture),
+                            EndDate = DateTime.ParseExact(reader.GetString(3), UserInput.format, UserInput.culture),
                         }
                         );
                 }
@@ -64,13 +63,12 @@ EndDate TEXT
 
     public static void InsertCodeEntry(CodeEntry codeEntry)
     {
-        string format = "dd/MM/yyyy HH:mm tt";
         using (var myDatabase = new SqliteConnection(connectionString))
         {
             myDatabase.Open();
             var tableCmd = myDatabase.CreateCommand();
             tableCmd.CommandText =
-                $"INSERT INTO coding_entries(Label, StartDate, EndDate) VALUES('{codeEntry.Label}', '{codeEntry.StartDate.ToString(format)}','{codeEntry.EndDate.ToString(format)}')";
+                $"INSERT INTO coding_entries(Label, StartDate, EndDate) VALUES('{codeEntry.Label}', '{codeEntry.StartDate.ToString(UserInput.format)}','{codeEntry.EndDate.ToString(UserInput.format)}')";
             tableCmd.ExecuteNonQuery();
             myDatabase.Close();
         }
@@ -78,13 +76,12 @@ EndDate TEXT
 
     public static void UpdateCodeEntry(CodeEntry codeEntry)
     {
-        string format = "dd/MM/yyyy HH:mm tt";
         using (var myDatabase = new SqliteConnection(connectionString))
         {
             myDatabase.Open();
             var tableCmd = myDatabase.CreateCommand();
             tableCmd.CommandText =
-                $"UPDATE coding_entries SET Label = '{codeEntry.Label}', StartDate = '{codeEntry.StartDate.ToString(format)}', EndDate = '{codeEntry.EndDate.ToString(format)}' WHERE Id = {codeEntry.Id.ToString()}";
+                $"UPDATE coding_entries SET Label = '{codeEntry.Label}', StartDate = '{codeEntry.StartDate.ToString(UserInput.format)}', EndDate = '{codeEntry.EndDate.ToString(UserInput.format)}' WHERE Id = {codeEntry.Id.ToString()}";
             tableCmd.ExecuteNonQuery();
             myDatabase.Close();
         }
@@ -162,8 +159,8 @@ EndDate TEXT
                     {
                         Id = reader.GetInt32(0),
                         Label = reader.GetString(1),
-                        StartDate = DateTime.ParseExact(reader.GetString(2), "dd/MM/yyyy HH:mm tt", new CultureInfo("en-US")),
-                        EndDate = DateTime.ParseExact(reader.GetString(3), "dd/MM/yyyy HH:mm tt", new CultureInfo("en-US"))
+                        StartDate = DateTime.ParseExact(reader.GetString(2), UserInput.format, UserInput.culture),
+                        EndDate = DateTime.ParseExact(reader.GetString(3), UserInput.format, UserInput.culture)
                     };
                     myDatabase.Close();
                     return codeEntry;

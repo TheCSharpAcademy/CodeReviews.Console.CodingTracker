@@ -10,7 +10,8 @@
         "dependencies": {
           "ReportBuilder": "1.0.0",
           "TrackDB": "1.0.0",
-          "UserInput": "1.0.0"
+          "UserInput": "1.0.0",
+          "Validation": "1.0.0"
         },
         "runtime": {
           "Menus.dll": {}
@@ -331,6 +332,11 @@
         "runtime": {
           "UserInput.dll": {}
         }
+      },
+      "Validation/1.0.0": {
+        "runtime": {
+          "Validation.dll": {}
+        }
       }
     }
   },
@@ -456,6 +462,11 @@
       "sha512": ""
     },
     "UserInput/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Validation/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

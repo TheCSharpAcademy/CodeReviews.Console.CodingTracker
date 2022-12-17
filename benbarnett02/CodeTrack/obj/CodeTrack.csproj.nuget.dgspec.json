@@ -39,6 +39,9 @@
               },
               "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\UserInput\\UserInput.csproj": {
                 "projectPath": "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\UserInput\\UserInput.csproj"
+              },
+              "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\Validation\\Validation.csproj": {
+                "projectPath": "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\Validation\\Validation.csproj"
               }
             }
           }
@@ -242,7 +245,11 @@
         "frameworks": {
           "net7.0": {
             "targetAlias": "net7.0",
-            "projectReferences": {}
+            "projectReferences": {
+              "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\UserInput\\UserInput.csproj": {
+                "projectPath": "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\UserInput\\UserInput.csproj"
+              }
+            }
           }
         },
         "warningProperties": {

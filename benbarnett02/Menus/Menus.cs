@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-using Spectre.Console;
-
+﻿using Spectre.Console;
 namespace TrackingProgram;
 
 public class Menus
@@ -66,7 +64,8 @@ public class Menus
         endDateTime = UserInput.GetDateInput();
         while (!Validation.DateTimeIsValid(startDateTime, endDateTime))
         {
-            Console.WriteLine($"End time is not before start time. The end time you entered was: {endDateTime.ToString(UserInput.format)} and the start time you entered was: {startDateTime.ToString(UserInput.format)}.");
+            Console.WriteLine($"End time is not before start time. The end time you entered was: {endDateTime.ToString(UserInput.format)} and the start time you entered was: {startDateTime.ToString(UserInput.format)}. Please enter a valid end time.");
+            endDateTime = UserInput.GetDateInput();
         }
         Console.WriteLine($"End time confirmed: {endDateTime.ToString(UserInput.format)}.");
 
@@ -163,16 +162,18 @@ public class Menus
         DateTime startDateTime;
         DateTime endDateTime;
         string entryLabel;
-
         Console.WriteLine("New Label:");
         entryLabel = Console.ReadLine();
-
         Console.WriteLine($"\nNew Start Time ({UserInput.format}):");
         startDateTime = UserInput.GetDateInput();
         Console.WriteLine($"Start time confirmed: {startDateTime.ToString(UserInput.format)}.");
-
         Console.WriteLine($"New End Time ({UserInput.format}):");
         endDateTime = UserInput.GetDateInput();
+        while (!Validation.DateTimeIsValid(startDateTime, endDateTime))
+        {
+            Console.WriteLine($"End time is not before start time. The end time you entered was: {endDateTime.ToString(UserInput.format)} and the start time you entered was: {startDateTime.ToString(UserInput.format)}. Please enter a valid end time.");
+            endDateTime = UserInput.GetDateInput();
+        }
         Console.WriteLine($"End time confirmed: {endDateTime.ToString(UserInput.format)}.");
 
         TrackingData.CodeEntry updatedEntry = new TrackingData.CodeEntry

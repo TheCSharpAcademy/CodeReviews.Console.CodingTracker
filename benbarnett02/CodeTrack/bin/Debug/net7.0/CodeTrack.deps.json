@@ -14,7 +14,8 @@
           "Spectre.Console": "0.45.0",
           "System.Configuration.ConfigurationManager": "7.0.0",
           "TrackDB": "1.0.0",
-          "UserInput": "1.0.0"
+          "UserInput": "1.0.0",
+          "Validation": "1.0.0"
         },
         "runtime": {
           "CodeTrack.dll": {}
@@ -317,7 +318,8 @@
         "dependencies": {
           "ReportBuilder": "1.0.0",
           "TrackDB": "1.0.0",
-          "UserInput": "1.0.0"
+          "UserInput": "1.0.0",
+          "Validation": "1.0.0"
         },
         "runtime": {
           "Menus.dll": {}
@@ -344,6 +346,11 @@
       "UserInput/1.0.0": {
         "runtime": {
           "UserInput.dll": {}
+        }
+      },
+      "Validation/1.0.0": {
+        "runtime": {
+          "Validation.dll": {}
         }
       }
     }
@@ -475,6 +482,11 @@
       "sha512": ""
     },
     "UserInput/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Validation/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

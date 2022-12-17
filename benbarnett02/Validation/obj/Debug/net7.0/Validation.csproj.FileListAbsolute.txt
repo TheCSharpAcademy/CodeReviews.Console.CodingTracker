@@ -3,3 +3,10 @@ C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker
 C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\Validation\obj\Debug\net7.0\Validation.AssemblyInfoInputs.cache
 C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\Validation\obj\Debug\net7.0\Validation.AssemblyInfo.cs
 C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\Validation\obj\Debug\net7.0\Validation.csproj.CoreCompileInputs.cache
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\Validation\bin\Debug\net7.0\Validation.deps.json
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\Validation\bin\Debug\net7.0\Validation.dll
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\Validation\bin\Debug\net7.0\Validation.pdb
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\Validation\obj\Debug\net7.0\Validation.dll
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\Validation\obj\Debug\net7.0\refint\Validation.dll
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\Validation\obj\Debug\net7.0\Validation.pdb
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\Validation\obj\Debug\net7.0\ref\Validation.dll

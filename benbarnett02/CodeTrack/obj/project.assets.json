@@ -387,7 +387,8 @@
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
           "Microsoft.Data.Sqlite": "7.0.0",
-          "System.Configuration.ConfigurationManager": "7.0.0"
+          "System.Configuration.ConfigurationManager": "7.0.0",
+          "UserInput": "1.0.0"
         },
         "compile": {
           "bin/placeholder/TrackDB.dll": {}
@@ -825,7 +826,8 @@
       "Spectre.Console >= 0.45.0",
       "System.Configuration.ConfigurationManager >= 7.0.0",
       "TrackDB >= 1.0.0",
-      "UserInput >= 1.0.0"
+      "UserInput >= 1.0.0",
+      "Validation >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -866,6 +868,9 @@
             },
             "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\UserInput\\UserInput.csproj": {
               "projectPath": "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\UserInput\\UserInput.csproj"
+            },
+            "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\Validation\\Validation.csproj": {
+              "projectPath": "C:\\Users\\benja\\OneDrive - BNB Made Easy\\Documents\\Git\\benbarnett02.CodingTracker\\benbarnett02\\Validation\\Validation.csproj"
             }
           }
         }
