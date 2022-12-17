@@ -1,7 +1,6 @@
 ﻿using System.Globalization;
 
 namespace TrackingProgram;
-
 public class UserInput
 {
     public static string format = "dd/MM/yyyy HH:mm tt";

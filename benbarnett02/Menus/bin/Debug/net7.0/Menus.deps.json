@@ -322,7 +322,8 @@
       "TrackDB/1.0.0": {
         "dependencies": {
           "Microsoft.Data.Sqlite": "7.0.0",
-          "System.Configuration.ConfigurationManager": "7.0.0"
+          "System.Configuration.ConfigurationManager": "7.0.0",
+          "UserInput": "1.0.0"
         },
         "runtime": {
           "TrackDB.dll": {}
