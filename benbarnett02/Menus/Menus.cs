@@ -5,7 +5,7 @@ namespace TrackingProgram;
 
 public class Menus
 {
-    public static void Main()
+    public static void Begin()
     {
         TrackingData.StartupDatabase();
         Console.WriteLine("-------------------------------\n");

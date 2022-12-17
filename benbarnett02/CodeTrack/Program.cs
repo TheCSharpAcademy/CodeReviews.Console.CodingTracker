@@ -1,1 +1,1 @@
-﻿TrackingProgram.Menus.Main();
+﻿TrackingProgram.Menus.Begin();
