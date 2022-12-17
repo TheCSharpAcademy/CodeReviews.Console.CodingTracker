@@ -53,36 +53,20 @@ public class Menus
 
     static void ManualEntry()
     {
-        string format = "dd/MM/yyyy HH:mm tt";
-        CultureInfo culture = CultureInfo.CreateSpecificCulture("en-AU");
-
         DateTime startDateTime;
         DateTime endDateTime;
-
-        string enteredStartTime;
-        string enteredEndTime;
         string entryLabel;
 
         Console.WriteLine("Label for the entry:");
         entryLabel = Console.ReadLine();
 
-        Console.WriteLine($"\nWhat time did the coding start? {format}");
-        enteredStartTime = Console.ReadLine();
-        while (!DateTime.TryParse(enteredStartTime, culture, DateTimeStyles.None, out startDateTime))
-        {
-            Console.WriteLine("Invalid date/time format. Please try again.");
-            enteredStartTime = Console.ReadLine();
-        }
-        Console.WriteLine($"Start time confirmed: {startDateTime.ToString(format)}.");
+        Console.WriteLine($"\nWhat time did the coding start? {UserInput.format}");
+        startDateTime = UserInput.GetDateInput();
+        Console.WriteLine($"Start time confirmed: {startDateTime.ToString(UserInput.format)}.");
 
-        Console.WriteLine($"What time did this end? {format}");
-        enteredEndTime = Console.ReadLine();
-        while (!DateTime.TryParse(enteredEndTime, culture, DateTimeStyles.None, out endDateTime))
-        {
-            Console.WriteLine("Invalid date/time format. Please try again.");
-            enteredEndTime = Console.ReadLine();
-        }
-        Console.WriteLine($"End time confirmed: {endDateTime.ToString(format)}.");
+        Console.WriteLine($"What time did this end? {UserInput.format}");
+        endDateTime = UserInput.GetDateInput();
+        Console.WriteLine($"End time confirmed: {endDateTime.ToString(UserInput.format)}.");
 
         TrackingData.CodeEntry manualEntry = new TrackingData.CodeEntry
         {
@@ -180,36 +164,24 @@ public class Menus
         Console.Clear();
         AnsiConsole.Write(table);
 
-        string format = "dd/MM/yyyy HH:mm tt";
         CultureInfo culture = CultureInfo.CreateSpecificCulture("en-AU");
 
         DateTime startDateTime;
         DateTime endDateTime;
 
-        string enteredStartTime;
-        string enteredEndTime;
         string entryLabel;
 
         Console.WriteLine("New Label:");
         entryLabel = Console.ReadLine();
 
-        Console.WriteLine($"\nNew Start Time ({format}):");
-        enteredStartTime = Console.ReadLine();
-        while (!DateTime.TryParse(enteredStartTime, culture, DateTimeStyles.None, out startDateTime))
-        {
-            Console.WriteLine("Invalid date/time format. Please try again.");
-            enteredStartTime = Console.ReadLine();
-        }
-        Console.WriteLine($"Start time confirmed: {startDateTime.ToString(format)}.");
+        Console.WriteLine($"\nNew Start Time ({UserInput.format}):");
+        startDateTime = UserInput.GetDateInput();
+        Console.WriteLine($"Start time confirmed: {startDateTime.ToString(UserInput.format)}.");
 
-        Console.WriteLine($"New End Time ({format}):");
-        enteredEndTime = Console.ReadLine();
-        while (!DateTime.TryParse(enteredEndTime, culture, DateTimeStyles.None, out endDateTime))
-        {
-            Console.WriteLine("Invalid date/time format. Please try again.");
-            enteredEndTime = Console.ReadLine();
-        }
-        Console.WriteLine($"End time confirmed: {endDateTime.ToString(format)}.");
+
+        Console.WriteLine($"New End Time ({UserInput.format}):");
+        endDateTime = UserInput.GetDateInput();
+        Console.WriteLine($"End time confirmed: {endDateTime.ToString(UserInput.format)}.");
 
         TrackingData.CodeEntry updatedEntry = new TrackingData.CodeEntry
         {
