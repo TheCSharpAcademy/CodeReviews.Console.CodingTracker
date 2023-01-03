@@ -7,5 +7,7 @@ internal class Program
     private static void Main(string[] args)
     {
         DatabaseManager.CreateTable(connectionString);
+
+        UserInput.MainMenu();
     }
 }
