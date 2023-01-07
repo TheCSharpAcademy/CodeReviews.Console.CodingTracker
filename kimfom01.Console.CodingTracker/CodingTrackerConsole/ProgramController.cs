@@ -63,10 +63,10 @@ public static class ProgramController
 
         var modelRecord = new CodingTrackerModel
         {
-            Date = Input.GetDate(),
-            StartTime = Input.GetTime(),
-            EndTime = Input.GetTime(),
+            Date = Input.GetDate()
         };
+
+        (modelRecord.StartTime, modelRecord.EndTime) = Input.GetTimes();
         modelRecord.Duration = Input.GetDuration(modelRecord.StartTime, modelRecord.EndTime);
 
         DbManager.InsertRecord(modelRecord);
@@ -143,15 +143,13 @@ public static class ProgramController
                     DbManager.UpdateRecord(oldDate, newRecord);
                     break;
                 case "t":
-                    newRecord.StartTime = Input.GetTime();
-                    newRecord.EndTime = Input.GetTime();
+                    (newRecord.StartTime, newRecord.EndTime) = Input.GetTimes();
                     newRecord.Duration = Input.GetDuration(newRecord.StartTime, newRecord.EndTime);
                     DbManager.UpdateRecord(oldDate, newRecord);
                     break;
                 case "a":
                     newRecord.Date = Input.GetDate();
-                    newRecord.StartTime = Input.GetTime();
-                    newRecord.EndTime = Input.GetTime();
+                    (newRecord.StartTime, newRecord.EndTime) = Input.GetTimes();
                     newRecord.Duration = Input.GetDuration(newRecord.StartTime, newRecord.EndTime);
                     DbManager.UpdateRecord(oldDate, newRecord);
                     break;

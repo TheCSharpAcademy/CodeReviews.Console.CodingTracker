@@ -14,6 +14,12 @@ public class Validation
         return TimeOnly.TryParseExact(time, "HH:mm", null, DateTimeStyles.None, out _);
     }
 
+    public bool IsValidTimeOrder(string startTime, string endTime)
+    {
+        return DateTime.ParseExact(startTime, "HH:mm", null, DateTimeStyles.None) <
+               DateTime.ParseExact(endTime, "HH:mm", null, DateTimeStyles.None);
+    }
+
     public bool IsValidDay(string day)
     {
         int.TryParse(day, out int parsedDay);

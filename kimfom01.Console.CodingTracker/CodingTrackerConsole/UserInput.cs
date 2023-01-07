@@ -20,9 +20,9 @@ public class UserInput
         return date;
     }
 
-    public string GetTime()
+    private string GetTime(string? type)
     {
-        Console.Write("Enter time (hh:mm): ");
+        Console.Write($"Enter {type} time (hh:mm): ");
         var time = Console.ReadLine();
 
         while (!_dateTimeValidation.IsValidTime(time))
@@ -32,6 +32,20 @@ public class UserInput
         }
 
         return time;
+    }
+
+    public (string, string) GetTimes()
+    {
+        var startTime = GetTime("start");
+        var endTime = GetTime("end");
+        while (!_dateTimeValidation.IsValidTimeOrder(startTime, endTime))
+        {
+            Console.WriteLine("Start time cannot be greater than end time!");
+            startTime = GetTime("start");
+            endTime = GetTime("end");
+        }
+
+        return (startTime, endTime);
     }
 
     public string GetDuration(string startTime, string endTime)
