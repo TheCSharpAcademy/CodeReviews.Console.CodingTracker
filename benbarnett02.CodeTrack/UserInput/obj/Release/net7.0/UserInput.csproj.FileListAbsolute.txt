@@ -1,0 +1,12 @@
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\UserInput\bin\Release\net7.0\UserInput.deps.json
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\UserInput\bin\Release\net7.0\UserInput.dll
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\UserInput\bin\Release\net7.0\UserInput.pdb
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\UserInput\obj\Release\net7.0\UserInput.csproj.AssemblyReference.cache
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\UserInput\obj\Release\net7.0\UserInput.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\UserInput\obj\Release\net7.0\UserInput.AssemblyInfoInputs.cache
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\UserInput\obj\Release\net7.0\UserInput.AssemblyInfo.cs
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\UserInput\obj\Release\net7.0\UserInput.csproj.CoreCompileInputs.cache
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\UserInput\obj\Release\net7.0\UserInput.dll
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\UserInput\obj\Release\net7.0\refint\UserInput.dll
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\UserInput\obj\Release\net7.0\UserInput.pdb
+C:\Users\benja\OneDrive - BNB Made Easy\Documents\Git\benbarnett02.CodingTracker\benbarnett02\UserInput\obj\Release\net7.0\ref\UserInput.dll
