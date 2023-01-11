@@ -7,4 +7,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="System.Configuration.ConfigurationManager" />
+    <None Remove="Microsoft.Data.Sqlite" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.1" />
+  </ItemGroup>
 </Project>
