@@ -1,6 +1,4 @@
-﻿using System.Security.Policy;
-
-namespace SinghxRaj.CodingTracker;
+﻿namespace SinghxRaj.CodingTracker;
 
 internal class CodingTrackerController
 {
