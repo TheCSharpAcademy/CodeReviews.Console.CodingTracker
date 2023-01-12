@@ -10,9 +10,11 @@
   <ItemGroup>
     <None Remove="System.Configuration.ConfigurationManager" />
     <None Remove="Microsoft.Data.Sqlite" />
+    <None Remove="ConsoleTableExt" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.1" />
+    <PackageReference Include="ConsoleTableExt" Version="3.2.0" />
   </ItemGroup>
 </Project>

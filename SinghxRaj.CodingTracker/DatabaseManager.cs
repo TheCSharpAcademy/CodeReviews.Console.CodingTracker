@@ -3,7 +3,7 @@ using Microsoft.Data.Sqlite;
 
 namespace SinghxRaj.CodingTracker;
 
-internal class DatebaseManager
+internal class DatabaseManager
 {
     private static string ConnectionString = ConfigurationManager.AppSettings.Get("ConnectionString")!;
     private const int SucessfullyAddedRow = 1;
