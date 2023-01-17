@@ -1,4 +1,6 @@
-﻿namespace CodingTracker
+﻿using Microsoft.Data.Sqlite;
+
+namespace CodingTracker
 {
     public static class SqliteTypeConverter
     {

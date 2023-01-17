@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using ConsoleTableExt;
+using System.Globalization;
 
 namespace CodingTracker
 {
