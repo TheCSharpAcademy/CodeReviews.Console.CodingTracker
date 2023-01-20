@@ -1,4 +1,5 @@
 ﻿using System.Configuration;
+using System.Globalization;
 using Microsoft.Data.Sqlite;
 
 namespace SinghxRaj.CodingTracker;
@@ -6,7 +7,7 @@ namespace SinghxRaj.CodingTracker;
 internal class DatabaseManager
 {
     private static string ConnectionString = ConfigurationManager.AppSettings.Get("ConnectionString")!;
-    private const int SucessfullyAddedRow = 1;
+    private const int SUCCESSFULLY_ADDED_ROW = 1;
 
     public static void CreateTable()
     {
@@ -27,18 +28,18 @@ internal class DatabaseManager
     {
         int rowsAdded;
 
-        string start = session.StartTime.ToString("yyyy-MM-dd HH:mm:ss");
-        string end = session.EndTime.ToString("yyyy-MM-dd HH:mm:ss");
-        int durationInSeconds = (int)session.Duration.TotalSeconds;
+        string start = session.StartTime.ToString(TimeFormat.SessionTimeStampFormat);
+        string end = session.EndTime.ToString(TimeFormat.SessionTimeStampFormat);
+        int durationInMinutes = (int)session.Duration.TotalMinutes;
 
         string newSession = @$"INSERT INTO CODING_TRACKER (Start, End, Duration)
-                                  VALUES ({ start }, { end }, { durationInSeconds }";
+                                  VALUES ({ start }, { end }, { durationInMinutes }";
 
         using var connection = new SqliteConnection(ConnectionString);
         using var command = connection.CreateCommand();
         command.CommandText = newSession;
         rowsAdded = command.ExecuteNonQuery();
-        return rowsAdded == SucessfullyAddedRow;
+        return rowsAdded == SUCCESSFULLY_ADDED_ROW;
 
     }
 
@@ -54,13 +55,23 @@ internal class DatabaseManager
 
         while (reader.Read())
         {
-            var id = reader.GetInt32(0);
-            var start = reader.GetDateTime(1);
-            var end = reader.GetDateTime(2);
-            int durationInSeconds = reader.GetInt32(3);
-            var duration = TimeSpan.FromSeconds(durationInSeconds);
+            int id = reader.GetInt32(0);
+            string startStr = reader.GetString(1);
+            string endStr = reader.GetString(2);
+            int durationInMinutes = reader.GetInt32(3);
+            TimeSpan duration = TimeSpan.FromMinutes(durationInMinutes);
 
-            sessions.Add(new CodingSession(id, start, end, duration));
+            bool parseStart = DateTime.TryParseExact(startStr, TimeFormat.SessionTimeStampFormat,
+            CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime start);
+
+            bool parseEnd =  DateTime.TryParseExact(startStr, TimeFormat.SessionTimeStampFormat,
+            CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime end);
+
+            if (parseStart && parseEnd)
+            {
+                sessions.Add(new CodingSession(id, start, end, duration));
+            }
+            
         }
         return sessions;
     }
