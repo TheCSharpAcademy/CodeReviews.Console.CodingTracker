@@ -1,5 +1,4 @@
 ﻿using ConsoleTableExt;
-using SinghxRaj.CodingTracker;
 
 namespace SinghxRaj.CodingTracker;
 
@@ -44,7 +43,7 @@ internal class CodingTrackerController
 
         var convertedList = sessions.Select(session => new List<object>
         {
-            session.Id,
+            session.Id!,
             session.StartTime.ToString("yyyy-MM-dd HH:mm:ss"),
             session.EndTime.ToString("yyyy-MM-dd HH:mm:ss"),
             session.Duration
