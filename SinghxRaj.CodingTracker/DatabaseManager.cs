@@ -16,15 +16,10 @@ internal class DatabaseManager
                                       End DATETIME,
                                       Duration INTEGER";
 
-        using (var connection = new SqliteConnection(ConnectionString))
-        {
-            using (var command = connection.CreateCommand())
-            {
-                command.CommandText = createTable;
-                command.ExecuteNonQuery();
-            }
-
-        }
+        using var connection = new SqliteConnection(ConnectionString);
+        using var command = connection.CreateCommand();
+        command.CommandText = createTable;
+        command.ExecuteNonQuery();
 
     }
 
@@ -39,14 +34,10 @@ internal class DatabaseManager
         string newSession = @$"INSERT INTO CODING_TRACKER (Start, End, Duration)
                                   VALUES ({ start }, { end }, { durationInSeconds }";
 
-        using (var connection = new SqliteConnection(ConnectionString))
-        {
-            using (var command = connection.CreateCommand())
-            {
-                command.CommandText = newSession;
-                rowsAdded = command.ExecuteNonQuery();
-            }
-        }
+        using var connection = new SqliteConnection(ConnectionString);
+        using var command = connection.CreateCommand();
+        command.CommandText = newSession;
+        rowsAdded = command.ExecuteNonQuery();
         return rowsAdded == SucessfullyAddedRow;
 
     }
@@ -56,25 +47,20 @@ internal class DatabaseManager
         string getSessions = @"SELECT * FROM CODING_TRACKER;";
         var sessions = new List<CodingSession>();
 
-        using (var connection = new SqliteConnection(ConnectionString))
+        using var connection = new SqliteConnection(ConnectionString);
+        using var command = connection.CreateCommand();
+        command.CommandText = getSessions;
+        var reader = command.ExecuteReader();
+
+        while (reader.Read())
         {
-            using (var command = connection.CreateCommand())
-            {
-                command.CommandText = getSessions;
-                var reader = command.ExecuteReader();
+            var id = reader.GetInt32(0);
+            var start = reader.GetDateTime(1);
+            var end = reader.GetDateTime(2);
+            int durationInSeconds = reader.GetInt32(3);
+            var duration = TimeSpan.FromSeconds(durationInSeconds);
 
-                while (reader.Read())
-                {
-                    var id = reader.GetInt32(0);
-                    var start = reader.GetDateTime(1);
-                    var end = reader.GetDateTime(2);
-                    int durationInSeconds = reader.GetInt32(3);
-                    var duration = TimeSpan.FromSeconds(durationInSeconds);
-
-                    sessions.Add(new CodingSession(id, start, end, duration));
-                }
-
-            }
+            sessions.Add(new CodingSession(id, start, end, duration));
         }
         return sessions;
     }
