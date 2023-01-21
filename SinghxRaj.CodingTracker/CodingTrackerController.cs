@@ -44,8 +44,8 @@ internal class CodingTrackerController
         var convertedList = sessions.Select(session => new List<object>
         {
             session.Id!,
-            session.StartTime.ToString("yyyy-MM-dd HH:mm:ss"),
-            session.EndTime.ToString("yyyy-MM-dd HH:mm:ss"),
+            session.StartTime.ToString(TimeFormat.SessionTimeStampFormat),
+            session.EndTime.ToString(TimeFormat.SessionTimeStampFormat),
             session.Duration
         }).ToList();
 
@@ -57,7 +57,7 @@ internal class CodingTrackerController
     {
         CodingSession session = UserInput.GetCodingSessionInfo();
 
-        bool success = DatabaseManager.AddNewCodingSession(session);
+        bool success = DatabaseManager.AddNewCodingSession(session); 
 
         if (success)
         {

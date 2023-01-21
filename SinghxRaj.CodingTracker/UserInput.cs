@@ -23,12 +23,6 @@ internal class UserInput
         DateTime start = GetStartInfo();
         DateTime end = GetEndInfo(start);
 
-        while (!Validator.ValidateEnd(end))
-        {
-            Console.WriteLine("Invalid end time. Try again.");
-            end = GetEndInfo(start);
-        }
-
         TimeSpan duration = CalculateDuration(start, end);
 
         return new CodingSession(start, end, duration);
@@ -37,50 +31,66 @@ internal class UserInput
 
     private static TimeSpan CalculateDuration(DateTime start, DateTime end)
     {
-        throw new NotImplementedException();
+        return end - start;
     }
 
     private static DateTime GetEndInfo(DateTime start)
     {
+        // TODO
         string endDate = GetEndDateInfo();
         string endTime = GetEndTimeInfo();
 
         string endStr = endDate + endTime;
 
-        DateTime.TryParseExact(endStr, "dd-MM-yy hh-mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime end);
+        DateTime.TryParseExact(endStr, TimeFormat.SessionTimeStampFormat,
+            CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime end);
 
         return end;
     }
 
     private static string GetEndTimeInfo()
     {
+        // TODO
         throw new NotImplementedException();
     }
 
     private static string GetEndDateInfo()
     {
+        // TODO
         throw new NotImplementedException();
     }
 
     private static DateTime GetStartInfo()
     {
+        // TODO
         string startDate = GetStartDateInfo();
         string startTime = GetStartTimeInfo();
 
         string startStr = startDate + startTime;
 
-        DateTime.TryParseExact(startStr, "dd-MM-yy hh-mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime start);
+        DateTime.TryParseExact(startStr, TimeFormat.SessionTimeStampFormat,
+            CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime start);
+
 
         return start;
     }
 
     private static string GetStartTimeInfo()
     {
-        throw new NotImplementedException();
+        Console.WriteLine("Type the start time of the session (format hh:mm)");
+        string? dateInput = Console.ReadLine();
+        while (!Validator.ValidateStartTime(dateInput))
+        {
+            Console.WriteLine("Invalidate input for date.");
+            Console.WriteLine("Type date again (format dd-mm-yy):");
+            dateInput = Console.ReadLine();
+        }
+        return dateInput!;
     }
 
     private static string GetStartDateInfo()
     {
+        // TODO
         Console.WriteLine("Type the start date of the session (format dd-mm-yy)");
         string? dateInput = Console.ReadLine();
         while (!Validator.ValidateStartDate(dateInput))
