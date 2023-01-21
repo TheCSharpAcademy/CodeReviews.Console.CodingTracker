@@ -21,7 +21,6 @@ internal class DatabaseManager
         using var command = connection.CreateCommand();
         command.CommandText = createTable;
         command.ExecuteNonQuery();
-
     }
 
     public static bool AddNewCodingSession(CodingSession session)
@@ -40,7 +39,6 @@ internal class DatabaseManager
         command.CommandText = newSession;
         rowsAdded = command.ExecuteNonQuery();
         return rowsAdded == SUCCESSFULLY_ADDED_ROW;
-
     }
 
     public static List<CodingSession> GetCodingSessions()
@@ -71,7 +69,6 @@ internal class DatabaseManager
             {
                 sessions.Add(new CodingSession(id, start, end, duration));
             }
-            
         }
         return sessions;
     }

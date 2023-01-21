@@ -116,5 +116,4 @@ internal class UserInput
         }
         return dateInput!;
     }
-
 }
