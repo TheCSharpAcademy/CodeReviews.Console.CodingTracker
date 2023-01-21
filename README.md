@@ -41,19 +41,19 @@
  ![image](https://user-images.githubusercontent.com/69612398/213860308-ef96fe42-89c5-4ecf-8216-8ada4cb6c305.png)
 
 
- Challenges
+ ## Hurdles
  - One hurdle I faced was working the DateTime struct. At times, I struggled with working with it but through perseverance and time I was able to learn how to work with them in this project. I had previously used the DateTime struct but unlike in the past, this project gave me a chance to work more in depth with the DateTime struct and learn more about. For example, I learned about parsing and formatting strings to convert them into DateTime structs. Furthermore, I got a chance to work with DateOnly and TimeOnly structs as well which I had never worked with in the past.
  - Another hurdle I faced was with working with the raw SQL queries. While the queries were difficult, I had problems with minor syntax errors in the SQL queries which took time to figure out. I was able to work through this hurdle by debugging the code. Furthermore, this hurdle gave me a chance to build my attention to detail since I had to make sure a minor syntax error didn't exist (This is a bit difficult when there is no syntax highlight). Using a tool such as EF Core will probably be must in  best bet in the future which I have been learning and will work with in a future project.
  
  
- Things I learned:
+ ## Things I learned:
  - As talked about earlier, I got a chance to work with parsing/formatting the DateTime, DateOnly, and TimeOnly structs.
  - Improved my separation of concerns skills by separting different parts into their own separate classes based on what I believed would work best.
  - Working with SQLite databases in C# and working with SQL queries.
  - Learning to work with a configuration file to store data that's separate from the application but still used by the application such as the connection string.
  - Working with third-party nuget packages such as ConsoleTableExt.
  
-Resources:
+## Resources 
 - [ConsoleTableExt](https://github.com/minhhungit/ConsoleTableExt)
 - [Using a Configuration Manager](https://docs.microsoft.com/en-us/troubleshoot/dotnet/csharp/store-custom-information-config-file)
 - [Parsing/Formatting DateTime in C#](https://learn.microsoft.com/en-us/dotnet/api/system.datetime?view=net-7.0)
