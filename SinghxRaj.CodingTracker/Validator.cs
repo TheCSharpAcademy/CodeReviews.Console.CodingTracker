@@ -7,20 +7,19 @@
             return option >= 0 && option <= 2;
         }
 
-        internal static bool ValidateCodingSession(DateTime start, DateTime end)
+        internal static bool ValidateSessionDateTimes(DateTime start, DateTime end)
         {
-            // TODO
-            return false;
+            return start <= end;
         }
 
-        internal static bool ValidateStartDate(string? dateInput)
+        internal static bool ValidateDate(string? dateInput)
         {
-            throw new NotImplementedException();
+            return DateOnly.TryParseExact(dateInput, TimeFormat.SessionDateOnlyFormat, out var date);
         }
 
-        internal static bool ValidateEnd(DateTime end)
+        internal static bool ValidateTime(string? dateInput)
         {
-            throw new NotImplementedException();
+            return TimeOnly.TryParseExact(dateInput, TimeFormat.SessionTimeOnlyFormat, out var time);
         }
     }
 }
