@@ -6,8 +6,10 @@ internal class CodingTrackerController
 {
     public static void Run()
     {
+        HandleStartUp();
         bool isRunning = true;
         Display.PrintIntro();
+
         while (isRunning)
         {
             Display.PrintOptions();
@@ -16,6 +18,11 @@ internal class CodingTrackerController
             isRunning = HandleOption(option);
         }
         Display.PrintOutro();
+    }
+
+    private static void HandleStartUp()
+    {
+        DatabaseManager.CreateTable();
     }
 
     private static bool HandleOption(int option)
@@ -49,7 +56,13 @@ internal class CodingTrackerController
             session.Duration
         }).ToList();
 
-        ConsoleTableBuilder.From(convertedList).ExportAndWriteLine();
+        if (convertedList.Count == 0)
+        {
+            Console.WriteLine("No coding session entries.");
+        } else
+        {
+            ConsoleTableBuilder.From(convertedList).ExportAndWriteLine();
+        }
 
     }
 

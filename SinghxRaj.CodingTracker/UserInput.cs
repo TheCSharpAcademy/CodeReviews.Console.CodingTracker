@@ -39,7 +39,7 @@ internal class UserInput
         string startDate = GetStartDateInfo();
         string startTime = GetStartTimeInfo();
 
-        string startStr = startDate + startTime;
+        string startStr = $"{startDate} {startTime}";
 
         DateTime.TryParseExact(startStr, TimeFormat.SessionTimeStampFormat,
             CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime start);
@@ -78,15 +78,26 @@ internal class UserInput
     private static DateTime GetEndInfo(DateTime start)
     {
         DateTime end;
-        do {
-            string endDate = GetEndDateInfo();
-            string endTime = GetEndTimeInfo();
 
-            string endStr = $"{endDate} {endTime}";
+        string endDate = GetEndDateInfo();
+        string endTime = GetEndTimeInfo();
+
+        string endStr = $"{endDate} {endTime}";
+
+        DateTime.TryParseExact(endStr, TimeFormat.SessionTimeStampFormat,
+            CultureInfo.InvariantCulture, DateTimeStyles.None, out end);
+
+        while (!Validator.ValidateSessionDateTimes(start, end))
+        {
+            Console.WriteLine("Invalid end date-time for session. Try again.");
+            endDate = GetEndDateInfo();
+            endTime = GetEndTimeInfo();
+
+            endStr = $"{endDate} {endTime}";
 
             DateTime.TryParseExact(endStr, TimeFormat.SessionTimeStampFormat,
                 CultureInfo.InvariantCulture, DateTimeStyles.None, out end);
-        } while (!Validator.ValidateSessionDateTimes(start, end));
+        }
 
         return end;
     }

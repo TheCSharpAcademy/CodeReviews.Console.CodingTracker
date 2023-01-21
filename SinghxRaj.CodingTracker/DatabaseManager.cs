@@ -7,20 +7,24 @@ namespace SinghxRaj.CodingTracker;
 internal class DatabaseManager
 {
     private static string ConnectionString = ConfigurationManager.AppSettings.Get("ConnectionString")!;
+
     private const int SUCCESSFULLY_ADDED_ROW = 1;
 
     public static void CreateTable()
     {
-        string createTable = @"CREATE TABLE IF NOT EXISTS CODING_TRACKER (
-                                      Id INTEGER PRIMARY KEY AUTO INCREMENT
-                                      Start DATEIME,
-                                      End DATETIME,
-                                      Duration INTEGER";
+        string createTable = @"CREATE TABLE IF NOT EXISTS CODING_TRACKER(
+                                      Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                      Start TEXT,
+                                      End TEXT,
+                                      Duration INTEGER
+                                     )";
 
         using var connection = new SqliteConnection(ConnectionString);
+        connection.Open();
         using var command = connection.CreateCommand();
         command.CommandText = createTable;
         command.ExecuteNonQuery();
+
     }
 
     public static bool AddNewCodingSession(CodingSession session)
@@ -32,9 +36,10 @@ internal class DatabaseManager
         int durationInMinutes = (int)session.Duration.TotalMinutes;
 
         string newSession = @$"INSERT INTO CODING_TRACKER (Start, End, Duration)
-                                  VALUES ({ start }, { end }, { durationInMinutes }";
+                                  VALUES ('{start}', '{end}', {durationInMinutes})";
 
         using var connection = new SqliteConnection(ConnectionString);
+        connection.Open();
         using var command = connection.CreateCommand();
         command.CommandText = newSession;
         rowsAdded = command.ExecuteNonQuery();
@@ -43,10 +48,11 @@ internal class DatabaseManager
 
     public static List<CodingSession> GetCodingSessions()
     {
-        string getSessions = @"SELECT * FROM CODING_TRACKER;";
+        string getSessions = @"SELECT * FROM CODING_TRACKER";
         var sessions = new List<CodingSession>();
 
         using var connection = new SqliteConnection(ConnectionString);
+        connection.Open();
         using var command = connection.CreateCommand();
         command.CommandText = getSessions;
         var reader = command.ExecuteReader();
@@ -62,13 +68,14 @@ internal class DatabaseManager
             bool parseStart = DateTime.TryParseExact(startStr, TimeFormat.SessionTimeStampFormat,
             CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime start);
 
-            bool parseEnd =  DateTime.TryParseExact(startStr, TimeFormat.SessionTimeStampFormat,
+            bool parseEnd = DateTime.TryParseExact(startStr, TimeFormat.SessionTimeStampFormat,
             CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime end);
 
             if (parseStart && parseEnd)
             {
                 sessions.Add(new CodingSession(id, start, end, duration));
             }
+
         }
         return sessions;
     }
