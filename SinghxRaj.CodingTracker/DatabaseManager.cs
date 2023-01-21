@@ -68,7 +68,7 @@ internal class DatabaseManager
             bool parseStart = DateTime.TryParseExact(startStr, TimeFormat.SessionTimeStampFormat,
             CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime start);
 
-            bool parseEnd = DateTime.TryParseExact(startStr, TimeFormat.SessionTimeStampFormat,
+            bool parseEnd = DateTime.TryParseExact(endStr, TimeFormat.SessionTimeStampFormat,
             CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime end);
 
             if (parseStart && parseEnd)
