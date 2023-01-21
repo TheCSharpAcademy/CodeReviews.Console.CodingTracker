@@ -58,4 +58,4 @@ Resources:
 - [Using a Configuration Manager](https://docs.microsoft.com/en-us/troubleshoot/dotnet/csharp/store-custom-information-config-file)
 - [Parsing/Formatting DateTime in C#](https://learn.microsoft.com/en-us/dotnet/api/system.datetime?view=net-7.0)
 - For information about the SQLiteConnection class - [Microsoft.Data.SQLite documentation](https://learn.microsoft.com/en-us/dotnet/standard/data/sqlite/?tabs=netcore-cli)
-- StackOverflow
+- Various StackOverflow posts
