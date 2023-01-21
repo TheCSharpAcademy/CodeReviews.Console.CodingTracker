@@ -1,25 +1,24 @@
-﻿namespace SinghxRaj.CodingTracker
+﻿namespace SinghxRaj.CodingTracker;
+
+public class Validator
 {
-    internal class Validator
+    public static bool ValidateOption(int option)
     {
-        internal static bool ValidateOption(int option)
-        {
-            return option >= 0 && option <= 2;
-        }
+        return option >= 0 && option <= 2;
+    }
 
-        internal static bool ValidateSessionDateTimes(DateTime start, DateTime end)
-        {
-            return start <= end;
-        }
+    public static bool ValidateSessionDateTimes(DateTime start, DateTime end)
+    {
+        return start <= end;
+    }
 
-        internal static bool ValidateDate(string? dateInput)
-        {
-            return DateOnly.TryParseExact(dateInput, TimeFormat.SessionDateOnlyFormat, out var date);
-        }
+    public static bool ValidateDate(string? dateInput)
+    {
+        return DateOnly.TryParseExact(dateInput, TimeFormat.SessionDateOnlyFormat, out var date);
+    }
 
-        internal static bool ValidateTime(string? dateInput)
-        {
-            return TimeOnly.TryParseExact(dateInput, TimeFormat.SessionTimeOnlyFormat, out var time);
-        }
+    public static bool ValidateTime(string? dateInput)
+    {
+        return TimeOnly.TryParseExact(dateInput, TimeFormat.SessionTimeOnlyFormat, out var time);
     }
 }
