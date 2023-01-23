@@ -1,4 +1,3 @@
-﻿// See https://aka.ms/new-console-template for more information
-using SinghxRaj.CodingTracker;
+﻿using SinghxRaj.CodingTracker;
 
 CodingTrackerController.Run();

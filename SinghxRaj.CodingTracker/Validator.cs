@@ -4,7 +4,7 @@ public class Validator
 {
     public static bool ValidateOption(int option)
     {
-        return option >= 0 && option <= 2;
+        return option >= 0 && option <= 4;
     }
 
     public static bool ValidateSessionDateTimes(DateTime start, DateTime end)
@@ -20,5 +20,10 @@ public class Validator
     public static bool ValidateTime(string? dateInput)
     {
         return TimeOnly.TryParseExact(dateInput, TimeFormat.SessionTimeOnlyFormat, out var time);
+    }
+
+    internal static bool ValidateResponse(string? sessionStartResponse)
+    {
+        return sessionStartResponse != null && sessionStartResponse!.Length > 0;
     }
 }

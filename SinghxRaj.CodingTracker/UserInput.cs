@@ -127,4 +127,75 @@ internal class UserInput
         }
         return dateInput!;
     }
+
+    internal static int GetId()
+    {
+        Console.WriteLine("Type the id of the coding session:");
+        string? idInput = Console.ReadLine();
+        int id;
+        while(!int.TryParse(idInput, out id))
+        {
+            Console.WriteLine("Invalid input for id. Try again.");
+            idInput = Console.ReadLine();
+        }
+        return id;
+    }
+
+    internal static CodingSession GetUpdatedCodingSessionInfo(int sessionId)
+    {
+        CodingSession previousSession = DatabaseManager.GetCodingSession(sessionId);
+
+        if (previousSession == null)
+        {
+            return null!;
+        }
+
+        DateTime start = UpdateStartSession(previousSession); ;
+
+        DateTime end = UpdateEndSession(previousSession, start);
+
+        TimeSpan duration = CalculateDuration(start, end);  
+
+        return new CodingSession(sessionId, start, end, duration);
+    }
+
+    private static DateTime UpdateEndSession(CodingSession previousSession, DateTime start)
+    {
+        if (!Validator.ValidateSessionDateTimes(start, previousSession.EndTime))
+        {
+            Console.WriteLine("Since start time is now later than the end time. End time will have to change.");
+            return GetEndInfo(start);
+        } else
+        {
+            Console.WriteLine("Would you like to change the end time of the session? (yes or no)");
+            string? sessionStartResponse = Console.ReadLine();
+            sessionStartResponse = sessionStartResponse?.Trim().ToLower();
+            if (Validator.ValidateResponse(sessionStartResponse) && sessionStartResponse!.StartsWith("y"))
+            {
+                return GetEndInfo(start);
+            }
+            else
+            {
+                return previousSession.EndTime;
+            }
+        }
+       
+        
+    }
+
+    private static DateTime UpdateStartSession(CodingSession previousSession)
+    {
+        Console.WriteLine("Would you like to change the start time of the session? (yes or no)");
+        string? sessionStartResponse = Console.ReadLine();
+        sessionStartResponse = sessionStartResponse?.Trim().ToLower();
+        if (sessionStartResponse != null && sessionStartResponse!.Length > 0
+            && sessionStartResponse.StartsWith("y"))
+        {
+            return GetStartInfo();
+        }
+        else
+        {
+            return previousSession.StartTime;
+        }
+    }
 }
