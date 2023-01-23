@@ -1,5 +1,4 @@
-﻿using System;
-namespace SinghxRaj.CodingTracker
+﻿namespace SinghxRaj.CodingTracker
 {
 	public static class TimeFormat
 	{
