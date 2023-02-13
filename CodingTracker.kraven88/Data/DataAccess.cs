@@ -1,4 +1,5 @@
 ﻿using CodingTracker.kraven88.Models;
+using System.Data.SQLite;
 
 namespace CodingTracker.kraven88.Data;
 
@@ -29,10 +30,12 @@ internal class DataAccess
         throw new NotImplementedException();
     }
 
-    public void SaveSession()
+    public void SaveSession(CodingSession session)
 	{
-        // TODO
-        throw new NotImplementedException();
+        var sql = $@"INSERT INTO Sessions (StartDate, EndDate)
+            VALUES (@start, @end)";
+
+        db.SaveData(sql, session);
     }
 
     public void DeleteSession()

@@ -1,4 +1,5 @@
 ﻿using CodingTracker.kraven88.Data;
+using CodingTracker.kraven88.Models;
 
 namespace CodingTracker.kraven88.ConsoleUI;
 
@@ -27,7 +28,7 @@ internal class MainMenu
         var isRunning = true;
         while (isRunning)
         {
-            var selection = Helpers.SelectMenuItem("1234560");
+            var selection = UserInput.SelectMenuItem("1234560");
             isRunning = selection switch
             {
                 "1" => StartNewSession(),
@@ -40,6 +41,49 @@ internal class MainMenu
                 _ => true
             };
         }
+    }
+
+    private bool DeleteSelectedSession()
+    {
+        // TODO
+        throw new NotImplementedException();
+    }
+
+    private bool ViewSelectedSessions()
+    {
+        // TODO
+        throw new NotImplementedException();
+    }
+
+    private bool ViewAllSessions()
+    {
+        // TODO
+        throw new NotImplementedException();
+    }
+
+    private bool ViewLastSession()
+    {
+        // TODO
+        throw new NotImplementedException();
+    }
+
+    private bool LogPreviousSession()
+    {
+        var session = new CodingSession();
+
+        var startDate = UserInput.AskForDate("start");
+        var startTime = UserInput.AskForTime();
+        session.Start = DateTime.Parse($"{startDate}T{startTime}");
+
+        var endDate = UserInput.AskForDate("end");
+        var endTime = UserInput.AskForTime();
+        session.End = DateTime.Parse($"{endDate}T{endTime}");
+
+        db.SaveSession(session);
+        Console.WriteLine("Session logged succesfuly");
+        Console.ReadKey();
+
+        return true;
     }
 
     private void DisplayMenuItems()
