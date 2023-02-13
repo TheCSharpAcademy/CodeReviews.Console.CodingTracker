@@ -1,5 +1,4 @@
 ﻿using CodingTracker.kraven88.Models;
-using System.Data.SQLite;
 
 namespace CodingTracker.kraven88.Data;
 
@@ -14,20 +13,28 @@ internal class DataAccess
 
 	public List<CodingSession> LoadAllSessions()
 	{
-        var sql = "Select * FROM Sessions ORDER BY EndDate";
+        var sql = "Select * FROM Sessions " +
+            "ORDER BY EndDate";
+
         return db.LoadData(sql);
 	}
 
 	public List<CodingSession> LoadLastSession()
 	{
-        // TODO
-        throw new NotImplementedException();
+        var sql = "SELECT * FROM Sessions " +
+            "ORDER BY EndDate DESC " +
+            "LIMIT 1";
+
+        return db.LoadData(sql);
     }
 
-    public List<CodingSession> LoadSelectedSessions()
+    public List<CodingSession> LoadSelectedSessions(CodingSession session)
     {
-        // TODO
-        throw new NotImplementedException();
+        var sql = "SELECT * FROM Sessions " +
+            "WHERE StartDate BETWEEN @start AND @end " +
+            "ORDER BY EndDate";
+
+        return db.LoadData(sql, session);
     }
 
     public void SaveSession(CodingSession session)
@@ -38,9 +45,10 @@ internal class DataAccess
         db.SaveData(sql, session);
     }
 
-    public void DeleteSession()
+    public void DeleteSession(CodingSession session)
     {
-        // TODO
-        throw new NotImplementedException();
+        var sql = "DELETE FROM Sessions WHERE Id = @id";
+
+        db.DeleteById(sql, session);
     }
 }

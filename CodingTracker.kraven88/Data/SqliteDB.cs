@@ -117,4 +117,18 @@ internal class SqliteDB
 
         return output;
     }
+
+    internal void DeleteById(string sqlCommand, CodingSession session)
+    {
+        using (var connection = new SQLiteConnection(LoadConnectionString()))
+        {
+            connection.Open();
+            var sql = connection.CreateCommand();
+            sql.CommandText = sqlCommand;
+            sql.Parameters.AddWithValue("@id", session.Id);
+
+            sql.ExecuteNonQuery();
+            connection.Close();
+        }
+    }
 }

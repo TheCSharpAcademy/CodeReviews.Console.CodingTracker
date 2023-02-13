@@ -1,6 +1,6 @@
 ﻿namespace CodingTracker.kraven88.Models;
 
-internal class CodingSession
+public class CodingSession
 {
     public int Id { get; set; }
     public DateTime Start { get; set; }
