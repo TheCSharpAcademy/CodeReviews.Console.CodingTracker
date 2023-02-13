@@ -14,8 +14,8 @@ internal class DataAccess
 
 	public List<CodingSession> LoadAllSessions()
 	{
-		// TODO
-		throw new NotImplementedException();
+        var sql = "Select * FROM Sessions ORDER BY EndDate";
+        return db.LoadData(sql);
 	}
 
 	public List<CodingSession> LoadLastSession()

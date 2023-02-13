@@ -1,5 +1,6 @@
 ﻿using CodingTracker.kraven88.Data;
 using CodingTracker.kraven88.Models;
+using ConsoleTableExt;
 
 namespace CodingTracker.kraven88.ConsoleUI;
 
@@ -57,8 +58,18 @@ internal class MainMenu
 
     private bool ViewAllSessions()
     {
-        // TODO
-        throw new NotImplementedException();
+        Header();
+
+        var list = db.LoadAllSessions();
+
+        ConsoleTableBuilder
+            .From(list)
+            .WithFormat(ConsoleTableBuilderFormat.Alternative)
+            .WithTitle("All Sessions", ConsoleColor.Black, ConsoleColor.White)
+            .ExportAndWriteLine();
+        Console.ReadKey();
+
+        return true;
     }
 
     private bool ViewLastSession()
