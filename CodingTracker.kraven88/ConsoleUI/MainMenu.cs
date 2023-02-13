@@ -16,6 +16,7 @@ internal class MainMenu
 
     public void Header()
     {
+        Console.Clear();
         Console.WriteLine("==============================");
         Console.WriteLine("  Coding Tracker by kraven88  ");
         Console.WriteLine("==============================" + nl);
@@ -23,12 +24,13 @@ internal class MainMenu
 
     public void Menu()
     {
-        Header();
-        DisplayMenuItems();
-
         var isRunning = true;
+
         while (isRunning)
         {
+            Header();
+            DisplayMenuItems();
+
             var selection = UserInput.SelectMenuItem("1234560");
             isRunning = selection switch
             {
@@ -46,14 +48,46 @@ internal class MainMenu
 
     private bool DeleteSelectedSession()
     {
-        // TODO
-        throw new NotImplementedException();
+        Header();
+        var session = new CodingSession();
+        Console.WriteLine("Search for sessions to delete." + nl);
+        session.Start = DateTime.Parse(UserInput.AskForDate("From"));
+        session.End = DateTime.Parse(UserInput.AskForDate("Till")).AddDays(1);
+
+        var list = db.LoadSelectedSessions(session);
+
+        ConsoleTableBuilder
+            .From(list)
+            .WithFormat(ConsoleTableBuilderFormat.Alternative)
+            .WithTitle("Selected for deletion", ConsoleColor.Black, ConsoleColor.White)
+            .ExportAndWriteLine();
+
+        var id = int.Parse(UserInput.AskForID(list));
+        session.Id = id;
+        db.DeleteSession(session);
+
+        Console.ReadLine();
+        return true;
     }
 
     private bool ViewSelectedSessions()
     {
-        // TODO
-        throw new NotImplementedException();
+        Header();
+        var session = new CodingSession();
+        session.Start = DateTime.Parse(UserInput.AskForDate("From"));
+        session.End = DateTime.Parse(UserInput.AskForDate("Till")).AddDays(1);
+
+        var list = db.LoadSelectedSessions(session);
+
+        ConsoleTableBuilder
+            .From(list)
+            .WithFormat(ConsoleTableBuilderFormat.Alternative)
+            .WithTitle("Selected Sessions", ConsoleColor.Black, ConsoleColor.White)
+            .ExportAndWriteLine();
+
+        Console.ReadKey();
+
+        return true;
     }
 
     private bool ViewAllSessions()
@@ -67,6 +101,7 @@ internal class MainMenu
             .WithFormat(ConsoleTableBuilderFormat.Alternative)
             .WithTitle("All Sessions", ConsoleColor.Black, ConsoleColor.White)
             .ExportAndWriteLine();
+
         Console.ReadKey();
 
         return true;
@@ -74,12 +109,25 @@ internal class MainMenu
 
     private bool ViewLastSession()
     {
-        // TODO
-        throw new NotImplementedException();
+        Header();
+
+        var list = db.LoadLastSession();
+
+        ConsoleTableBuilder
+            .From(list)
+            .WithFormat(ConsoleTableBuilderFormat.Alternative)
+            .WithTitle("Last Session", ConsoleColor.Black, ConsoleColor.White)
+            .ExportAndWriteLine();
+
+        Console.ReadKey();
+
+        return true;
     }
 
     private bool LogPreviousSession()
     {
+        Header();
+
         var session = new CodingSession();
 
         var startDate = UserInput.AskForDate("start");
