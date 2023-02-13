@@ -1,4 +1,6 @@
-﻿namespace CodingTracker.kraven88.ConsoleUI;
+﻿using CodingTracker.kraven88.Models;
+
+namespace CodingTracker.kraven88.ConsoleUI;
 
 public static class UserInputExtensions
 {
@@ -34,6 +36,32 @@ public static class UserInputExtensions
                 Console.Write("Invalid input. Please try again: ");
                 input = Console.ReadLine()!.Trim().ValidateTime(format);
             } 
+        }
+
+        return output;
+    }
+
+    public static string ValidateID(this string input, List<CodingSession> list)
+    {
+        var output = "";
+        while (output == "")
+        {
+            if (int.TryParse(input, out int id))
+            {
+                var item = list.Find(x => x.Id == id);
+                if (item != null)
+                    output = id.ToString();
+                else
+                {
+                    Console.Write("Id not found. Please try again: ");
+                    input = Console.ReadLine()!.Trim().ValidateID(list);
+                }
+            }
+            else
+            {
+                Console.Write("Invalid number. Please try again: ");
+                input = Console.ReadLine()!.Trim().ValidateID(list);
+            }
         }
 
         return output;

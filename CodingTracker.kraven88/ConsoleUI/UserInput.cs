@@ -1,4 +1,6 @@
-﻿namespace CodingTracker.kraven88.ConsoleUI;
+﻿using CodingTracker.kraven88.Models;
+
+namespace CodingTracker.kraven88.ConsoleUI;
 
 public static class UserInput
 {
@@ -31,6 +33,13 @@ public static class UserInput
 
         Console.Write($"Please enter time in [{format}], 24h format: ");
 
-        return Console.ReadLine()!.Trim()!.ValidateTime(format);
+        return Console.ReadLine()!.Trim().ValidateTime(format);
+    }
+
+    public static string AskForID(List<CodingSession> list)
+    {
+        Console.Write("Please select the 'Id' of the session you want to delete: ");
+
+        return Console.ReadLine()!.Trim().ValidateID(list);
     }
 }
