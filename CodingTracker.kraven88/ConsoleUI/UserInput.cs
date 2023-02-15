@@ -38,8 +38,9 @@ public static class UserInput
 
     public static string AskForID(List<CodingSession> list)
     {
-        Console.Write("Please select the 'Id' of the session you want to delete: ");
-
-        return Console.ReadLine()!.Trim().ValidateID(list);
+        Console.Write("Please select the 'Id' of the session you want to delete (0 to return): ");
+        var input = Console.ReadLine()!.Trim();
+        if (input == "0") return "0";
+        else return input.ValidateID(list);
     }
 }

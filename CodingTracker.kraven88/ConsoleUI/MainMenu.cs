@@ -51,9 +51,10 @@ internal class MainMenu
         Header();
         var session = new CodingSession();
         Console.WriteLine("Search for sessions to delete." + nl);
+        
         session.Start = DateTime.Parse(UserInput.AskForDate("From"));
-        session.End = DateTime.Parse(UserInput.AskForDate("Till")).AddDays(1);
-
+        session.End = DateTime.Parse(UserInput.AskForDate("Till")).AddDays(1); 
+        
         var list = db.LoadSelectedSessions(session);
 
         ConsoleTableBuilder
@@ -63,11 +64,23 @@ internal class MainMenu
             .ExportAndWriteLine();
 
         var id = int.Parse(UserInput.AskForID(list));
+        if (id == 0) return true;
+
         session.Id = id;
         db.DeleteSession(session);
+        Console.WriteLine("Session succesfuly deleted.");
 
         Console.ReadLine();
         return true;
+    }
+
+    private bool ValidateSession(DateTime start, DateTime end)
+    {
+        var output = false;
+        if (end > start)
+            output = true;
+
+        return output;
     }
 
     private bool ViewSelectedSessions()
@@ -79,11 +92,16 @@ internal class MainMenu
 
         var list = db.LoadSelectedSessions(session);
 
-        ConsoleTableBuilder
-            .From(list)
-            .WithFormat(ConsoleTableBuilderFormat.Alternative)
-            .WithTitle("Selected Sessions", ConsoleColor.Black, ConsoleColor.White)
-            .ExportAndWriteLine();
+        if (list.Count > 0)
+        {
+            ConsoleTableBuilder
+                .From(list)
+                .WithFormat(ConsoleTableBuilderFormat.Alternative)
+                .WithTitle("Selected Sessions", ConsoleColor.Black, ConsoleColor.White)
+                .ExportAndWriteLine(); 
+        }
+        else
+            Console.WriteLine(nl + "No sessions found.");
 
         Console.ReadKey();
 
@@ -96,11 +114,16 @@ internal class MainMenu
 
         var list = db.LoadAllSessions();
 
-        ConsoleTableBuilder
-            .From(list)
-            .WithFormat(ConsoleTableBuilderFormat.Alternative)
-            .WithTitle("All Sessions", ConsoleColor.Black, ConsoleColor.White)
-            .ExportAndWriteLine();
+        if (list.Count > 0)
+        {
+            ConsoleTableBuilder
+                .From(list)
+                .WithFormat(ConsoleTableBuilderFormat.Alternative)
+                .WithTitle("All Sessions", ConsoleColor.Black, ConsoleColor.White)
+                .ExportAndWriteLine();
+        }
+        else
+            Console.WriteLine(nl + "No sessions found.");
 
         Console.ReadKey();
 
@@ -113,11 +136,16 @@ internal class MainMenu
 
         var list = db.LoadLastSession();
 
-        ConsoleTableBuilder
-            .From(list)
-            .WithFormat(ConsoleTableBuilderFormat.Alternative)
-            .WithTitle("Last Session", ConsoleColor.Black, ConsoleColor.White)
-            .ExportAndWriteLine();
+        if (list.Count > 0)
+        {
+            ConsoleTableBuilder
+                .From(list)
+                .WithFormat(ConsoleTableBuilderFormat.Alternative)
+                .WithTitle("Last Session", ConsoleColor.Black, ConsoleColor.White)
+                .ExportAndWriteLine();
+        }
+        else
+            Console.WriteLine(nl + "No sessions found.");
 
         Console.ReadKey();
 
@@ -129,14 +157,24 @@ internal class MainMenu
         Header();
 
         var session = new CodingSession();
+        var isValidSession = false;
 
-        var startDate = UserInput.AskForDate("start");
-        var startTime = UserInput.AskForTime();
-        session.Start = DateTime.Parse($"{startDate}T{startTime}");
+        while (isValidSession == false)
+        {
+            var startDate = UserInput.AskForDate("start");
+            var startTime = UserInput.AskForTime();
+            session.Start = DateTime.Parse($"{startDate}T{startTime}");
 
-        var endDate = UserInput.AskForDate("end");
-        var endTime = UserInput.AskForTime();
-        session.End = DateTime.Parse($"{endDate}T{endTime}");
+            var endDate = UserInput.AskForDate("end");
+            var endTime = UserInput.AskForTime();
+            session.End = DateTime.Parse($"{endDate}T{endTime}");
+            isValidSession = ValidateSession(session.Start, session.End);
+            if (isValidSession == false)
+            {
+                Console.WriteLine("Invalid dates. A session cannot end before it begun." + nl);
+            }
+
+        }
 
         db.SaveSession(session);
         Console.WriteLine("Session logged succesfuly");
