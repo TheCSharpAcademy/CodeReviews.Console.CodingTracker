@@ -1,6 +1,7 @@
 ﻿using CodingTracker.kraven88.Data;
 using CodingTracker.kraven88.Models;
 using ConsoleTableExt;
+using System.Diagnostics;
 
 namespace CodingTracker.kraven88.ConsoleUI;
 
@@ -14,7 +15,7 @@ internal class MainMenu
         db = new DataAccess();
     }
 
-    public void Header()
+    public static void Header()
     {
         Console.Clear();
         Console.WriteLine("==============================");
@@ -74,7 +75,7 @@ internal class MainMenu
         return true;
     }
 
-    private bool ValidateSession(DateTime start, DateTime end)
+    private static bool ValidateSession(DateTime start, DateTime end)
     {
         var output = false;
         if (end > start)
@@ -98,7 +99,12 @@ internal class MainMenu
                 .From(list)
                 .WithFormat(ConsoleTableBuilderFormat.Alternative)
                 .WithTitle("Selected Sessions", ConsoleColor.Black, ConsoleColor.White)
-                .ExportAndWriteLine(); 
+                .ExportAndWriteLine();
+            if (list.Count > 1)
+            {
+                Console.WriteLine($"Average duration:\t{list.AverageDuration()}");
+                Console.WriteLine($"Total duration:\t{list.TotalDuration()}");
+            }
         }
         else
             Console.WriteLine(nl + "No sessions found.");
@@ -121,6 +127,8 @@ internal class MainMenu
                 .WithFormat(ConsoleTableBuilderFormat.Alternative)
                 .WithTitle("All Sessions", ConsoleColor.Black, ConsoleColor.White)
                 .ExportAndWriteLine();
+            Console.WriteLine($"Average duration:\t{list.AverageDuration()}");
+            Console.WriteLine($"Total duration:\t{list.TotalDuration()}");
         }
         else
             Console.WriteLine(nl + "No sessions found.");
@@ -183,7 +191,7 @@ internal class MainMenu
         return true;
     }
 
-    private void DisplayMenuItems()
+    private static void DisplayMenuItems()
     {
         var menu = $@"What would you like to do?
     1 - Start new Coding Session
@@ -199,13 +207,34 @@ internal class MainMenu
 
     public bool StartNewSession()
     {
-        // TODO
-        throw new NotImplementedException();
+        Header();
+
+        Console.Write("Would you like to start a new session (Y/N): ");
+        var input = Console.ReadLine()!.Trim().ToUpper();
+        if (input == "Y")
+        {
+            var start = DateTime.Now;
+            start = start.AddTicks(-(start.Ticks % TimeSpan.TicksPerSecond));
+            Console.WriteLine("______________________________" + nl);
+            Console.WriteLine("     Session in progress!     ");
+            Console.WriteLine("    Press ENTER to finish.    ");
+            Console.WriteLine("______________________________");
+            Console.ReadLine();
+            EndCurrentSession(start);
+        }
+
+        return true;
     }
 
-    public void EndCurrentSession()
+    public void EndCurrentSession(DateTime start)
     {
-        // TODO
-        throw new NotImplementedException();
+        var s = new CodingSession();
+        s.Start = start;
+        var end = DateTime.Now;
+        s.End = end.AddTicks(-(end.Ticks % TimeSpan.TicksPerSecond));
+
+        db.SaveSession(s);
+        Console.WriteLine("Session saved!");
+        Console.ReadLine();
     }
 }
