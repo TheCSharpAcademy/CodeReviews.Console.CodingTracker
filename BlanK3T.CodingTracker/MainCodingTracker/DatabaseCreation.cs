@@ -84,8 +84,8 @@ namespace CodingTracker
                 newRecordName = Console.ReadLine();
             }
 
-            DatabaseCreation _ = new(newRecordName);
-            Console.WriteLine($"New record <<{newRecordName}>> created!");
+            DatabaseCreation newrecord = new(newRecordName);
+            Console.WriteLine($"New record <<{newrecord.Name}>> created!");
             Thread.Sleep(1000);
 
             return newRecordName;

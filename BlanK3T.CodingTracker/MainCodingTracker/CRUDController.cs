@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Configuration;
 
 namespace CodingTracker;
-public class CRUDController
+class CRUDController
 {        
     UserInput userInput = new();
 	Validation val = new();
@@ -259,7 +259,7 @@ public class CRUDController
                             EndTime = reader.GetString(3),
                             Duration = reader.GetInt32(4)
                         }
-                        ); ;
+                        );
                 }
             }
             else
@@ -287,7 +287,6 @@ public class CRUDController
 
         if (rowCount == 1) { return true; }
         else { return false; }
-
     }
 
     public void InsertGoal(string record, int time, int goal)
