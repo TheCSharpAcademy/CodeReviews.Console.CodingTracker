@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Configuration;
 
 namespace CodingTracker;
-class CRUDController
+class CrudController
 {        
     UserInput userInput = new();
 	Validation val = new();
@@ -105,7 +105,8 @@ class CRUDController
 			$@"UPDATE {record} SET date = '{date}', 
 			StartTime = '{timeInsert[0]}:{timeInsert[1]}',
 			EndTime = '{timeInsert[2]}:{timeInsert[3]}',
-			Duration = '{timeInsert[4]}'";
+			Duration = '{timeInsert[4]}'
+            WHERE Id = '{recordId}'";
         try
         {
             tableCmd.ExecuteNonQuery();

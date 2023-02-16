@@ -6,7 +6,7 @@
         
         public void GetRecordFromUser(string table)
         {
-            CRUDController action = new();
+            CrudController action = new();
             string dateInsert = GetDate();
             List<int> timeInsert = GetUserTime();
             action.Insert(table,dateInsert, timeInsert);
@@ -131,7 +131,7 @@
                 Console.WriteLine($"Stop Time: {endTime}");
                 Console.WriteLine("-------------------------------");
                 List<int> timerList = GetConcurrentTimeList(startTime, endTime);
-                CRUDController action = new();
+                CrudController action = new();
                 action.Insert(table, date, timerList);
                 Console.WriteLine("Timer added to the record.");                
             }
@@ -200,7 +200,7 @@
 
         public void GetUserGoal(string record)
         {
-            CRUDController action = new();
+            CrudController action = new();
             DatabaseCreation goal = new("Goal");
             goal.CheckGoalTableExist();
             Console.Clear();

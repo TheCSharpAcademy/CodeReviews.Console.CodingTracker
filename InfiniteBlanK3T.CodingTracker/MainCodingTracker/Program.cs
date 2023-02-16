@@ -2,6 +2,9 @@
 
 class Program
 {
+    // DONT MOVE INTO MainMenu()
+    //this make here so that when creating a new entry
+    // the default would not overwrite the new table
     static DatabaseCreation database = new();
     static void Main()
     {
@@ -10,8 +13,9 @@ class Program
     static void MainMenu()
     {
        
-        CRUDController action = new();
+        CrudController action = new();
         UserInput input = new();
+        
         bool endApp = false;
 
         while (!endApp)
@@ -92,7 +96,7 @@ class Program
 
     static void ReportTable(string table)
     {
-        CRUDController action = new();
+        CrudController action = new();
         UserInput input = new();
 
         bool reportable = action.Report(table);
