@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Configuration;
 
 namespace CodingTracker;
+
 class CrudController
 {        
     UserInput userInput = new();

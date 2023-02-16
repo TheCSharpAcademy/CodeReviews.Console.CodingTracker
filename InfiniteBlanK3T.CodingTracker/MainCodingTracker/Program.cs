@@ -6,10 +6,12 @@ class Program
     //this make here so that when creating a new entry
     // the default would not overwrite the new table
     static DatabaseCreation database = new();
+
     static void Main()
     {
         MainMenu();
     }
+
     static void MainMenu()
     {
        
