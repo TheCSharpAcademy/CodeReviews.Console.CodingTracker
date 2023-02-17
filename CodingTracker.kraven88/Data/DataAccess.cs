@@ -11,6 +11,13 @@ internal class DataAccess
 		db = new SqliteDB();
 	}
 
+    public void DeleteSession(CodingSession session)
+    {
+        var sql = "DELETE FROM Sessions WHERE Id = @id";
+
+        db.DeleteById(sql, session);
+    }
+
 	public List<CodingSession> LoadAllSessions()
 	{
         var sql = "Select * FROM Sessions " +
@@ -43,12 +50,5 @@ internal class DataAccess
             VALUES (@start, @end)";
 
         db.SaveData(sql, session);
-    }
-
-    public void DeleteSession(CodingSession session)
-    {
-        var sql = "DELETE FROM Sessions WHERE Id = @id";
-
-        db.DeleteById(sql, session);
     }
 }

@@ -22,25 +22,6 @@ public static class UserInputExtensions
         return output;
     }
 
-    public static string ValidateTime(this string input, string format)
-    {
-        var output = "";
-        while (String.IsNullOrWhiteSpace(output))
-        {
-            if (TimeOnly.TryParseExact(input, format, out var time))
-            {
-                output = time.ToString(format);
-            }
-            else
-            {
-                Console.Write("Invalid input. Please try again: ");
-                input = Console.ReadLine()!.Trim().ValidateTime(format);
-            } 
-        }
-
-        return output;
-    }
-
     public static string ValidateID(this string input, List<CodingSession> list)
     {
         var output = "";
@@ -62,6 +43,25 @@ public static class UserInputExtensions
                 Console.Write("Invalid number. Please try again: ");
                 input = Console.ReadLine()!.Trim().ValidateID(list);
             }
+        }
+
+        return output;
+    }
+
+    public static string ValidateTime(this string input, string format)
+    {
+        var output = "";
+        while (String.IsNullOrWhiteSpace(output))
+        {
+            if (TimeOnly.TryParseExact(input, format, out var time))
+            {
+                output = time.ToString(format);
+            }
+            else
+            {
+                Console.Write("Invalid input. Please try again: ");
+                input = Console.ReadLine()!.Trim().ValidateTime(format);
+            } 
         }
 
         return output;

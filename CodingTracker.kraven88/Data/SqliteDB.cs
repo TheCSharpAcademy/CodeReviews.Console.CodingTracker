@@ -33,6 +33,20 @@ internal class SqliteDB
         SaveData(sql);
     }
 
+    internal void DeleteById(string sqlCommand, CodingSession session)
+    {
+        using (var connection = new SQLiteConnection(LoadConnectionString()))
+        {
+            connection.Open();
+            var sql = connection.CreateCommand();
+            sql.CommandText = sqlCommand;
+            sql.Parameters.AddWithValue("@id", session.Id);
+
+            sql.ExecuteNonQuery();
+            connection.Close();
+        }
+    }
+
     public void SaveData(string sqlCommand)
     {
         using (var connection = new SQLiteConnection(LoadConnectionString()))
@@ -116,19 +130,5 @@ internal class SqliteDB
         }
 
         return output;
-    }
-
-    internal void DeleteById(string sqlCommand, CodingSession session)
-    {
-        using (var connection = new SQLiteConnection(LoadConnectionString()))
-        {
-            connection.Open();
-            var sql = connection.CreateCommand();
-            sql.CommandText = sqlCommand;
-            sql.Parameters.AddWithValue("@id", session.Id);
-
-            sql.ExecuteNonQuery();
-            connection.Close();
-        }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using CodingTracker.kraven88.Data;
 using CodingTracker.kraven88.Models;
 using ConsoleTableExt;
-using System.Diagnostics;
 
 namespace CodingTracker.kraven88.ConsoleUI;
 
@@ -13,38 +12,6 @@ internal class MainMenu
     public MainMenu()
     {
         db = new DataAccess();
-    }
-
-    public static void Header()
-    {
-        Console.Clear();
-        Console.WriteLine("==============================");
-        Console.WriteLine("  Coding Tracker by kraven88  ");
-        Console.WriteLine("==============================" + nl);
-    }
-
-    public void Menu()
-    {
-        var isRunning = true;
-
-        while (isRunning)
-        {
-            Header();
-            DisplayMenuItems();
-
-            var selection = UserInput.SelectMenuItem("1234560");
-            isRunning = selection switch
-            {
-                "1" => StartNewSession(),
-                "2" => LogPreviousSession(),
-                "3" => ViewLastSession(),
-                "4" => ViewAllSessions(),
-                "5" => ViewSelectedSessions(),
-                "6" => DeleteSelectedSession(),
-                "0" => false,
-                _ => true
-            };
-        }
     }
 
     private bool DeleteSelectedSession()
@@ -74,92 +41,41 @@ internal class MainMenu
         Console.ReadLine();
         return true;
     }
-
-    private static bool ValidateSession(DateTime start, DateTime end)
+    
+    private static void DisplayMenuItems()
     {
-        var output = false;
-        if (end > start)
-            output = true;
-
-        return output;
+        var menu = $@"What would you like to do?
+    1 - Start new Coding Session
+    2 - Log previous session
+    3 - View last session
+    4 - View all sessions
+    5 - View sessions for selected dates
+    6 - Delete selected session
+    0 - Exit
+    ";
+        Console.WriteLine(menu);
     }
-
-    private bool ViewSelectedSessions()
+    
+    public void EndCurrentSession(DateTime start)
     {
-        Header();
-        var session = new CodingSession();
-        session.Start = DateTime.Parse(UserInput.AskForDate("From"));
-        session.End = DateTime.Parse(UserInput.AskForDate("Till")).AddDays(1);
+        var s = new CodingSession();
+        s.Start = start;
+        var end = DateTime.Now;
+        s.End = end.AddTicks(-(end.Ticks % TimeSpan.TicksPerSecond));
 
-        var list = db.LoadSelectedSessions(session);
-
-        if (list.Count > 0)
-        {
-            ConsoleTableBuilder
-                .From(list)
-                .WithFormat(ConsoleTableBuilderFormat.Alternative)
-                .WithTitle("Selected Sessions", ConsoleColor.Black, ConsoleColor.White)
-                .ExportAndWriteLine();
-            if (list.Count > 1)
-            {
-                Console.WriteLine($"Average duration:\t{list.AverageDuration()}");
-                Console.WriteLine($"Total duration:\t{list.TotalDuration()}");
-            }
-        }
-        else
-            Console.WriteLine(nl + "No sessions found.");
-
-        Console.ReadKey();
-
-        return true;
+        db.SaveSession(s);
+        Console.WriteLine("Session saved!");
+        Console.ReadLine();
     }
-
-    private bool ViewAllSessions()
+    
+    public static void Header()
     {
-        Header();
-
-        var list = db.LoadAllSessions();
-
-        if (list.Count > 0)
-        {
-            ConsoleTableBuilder
-                .From(list)
-                .WithFormat(ConsoleTableBuilderFormat.Alternative)
-                .WithTitle("All Sessions", ConsoleColor.Black, ConsoleColor.White)
-                .ExportAndWriteLine();
-            Console.WriteLine($"Average duration:\t{list.AverageDuration()}");
-            Console.WriteLine($"Total duration:\t{list.TotalDuration()}");
-        }
-        else
-            Console.WriteLine(nl + "No sessions found.");
-
-        Console.ReadKey();
-
-        return true;
+        Console.Clear();
+        Console.WriteLine("==============================");
+        Console.WriteLine("  Coding Tracker by kraven88  ");
+        Console.WriteLine("==============================" + nl);
     }
-
-    private bool ViewLastSession()
-    {
-        Header();
-
-        var list = db.LoadLastSession();
-
-        if (list.Count > 0)
-        {
-            ConsoleTableBuilder
-                .From(list)
-                .WithFormat(ConsoleTableBuilderFormat.Alternative)
-                .WithTitle("Last Session", ConsoleColor.Black, ConsoleColor.White)
-                .ExportAndWriteLine();
-        }
-        else
-            Console.WriteLine(nl + "No sessions found.");
-
-        Console.ReadKey();
-
-        return true;
-    }
-
+    
     private bool LogPreviousSession()
     {
         Header();
@@ -190,21 +106,31 @@ internal class MainMenu
 
         return true;
     }
-
-    private static void DisplayMenuItems()
+    
+    public void Menu()
     {
-        var menu = $@"What would you like to do?
-    1 - Start new Coding Session
-    2 - Log previous session
-    3 - View last session
-    4 - View all sessions
-    5 - View sessions for selected dates
-    6 - Delete selected session
-    0 - Exit
-    ";
-        Console.WriteLine(menu);
-    }
+        var isRunning = true;
 
+        while (isRunning)
+        {
+            Header();
+            DisplayMenuItems();
+
+            var selection = UserInput.SelectMenuItem("1234560");
+            isRunning = selection switch
+            {
+                "1" => StartNewSession(),
+                "2" => LogPreviousSession(),
+                "3" => ViewLastSession(),
+                "4" => ViewAllSessions(),
+                "5" => ViewSelectedSessions(),
+                "6" => DeleteSelectedSession(),
+                "0" => false,
+                _ => true
+            };
+        }
+    }
+    
     public bool StartNewSession()
     {
         Header();
@@ -225,16 +151,89 @@ internal class MainMenu
 
         return true;
     }
-
-    public void EndCurrentSession(DateTime start)
+    
+    private static bool ValidateSession(DateTime start, DateTime end)
     {
-        var s = new CodingSession();
-        s.Start = start;
-        var end = DateTime.Now;
-        s.End = end.AddTicks(-(end.Ticks % TimeSpan.TicksPerSecond));
+        var output = false;
+        if (end > start)
+            output = true;
 
-        db.SaveSession(s);
-        Console.WriteLine("Session saved!");
-        Console.ReadLine();
+        return output;
+    }
+    
+    private bool ViewAllSessions()
+    {
+        Header();
+
+        var list = db.LoadAllSessions();
+
+        if (list.Count > 0)
+        {
+            ConsoleTableBuilder
+                .From(list)
+                .WithFormat(ConsoleTableBuilderFormat.Alternative)
+                .WithTitle("All Sessions", ConsoleColor.Black, ConsoleColor.White)
+                .ExportAndWriteLine();
+            Console.WriteLine($"Average duration:\t{list.AverageDuration()}");
+            Console.WriteLine($"Total duration:\t{list.TotalDuration()}");
+        }
+        else
+            Console.WriteLine(nl + "No sessions found.");
+
+        Console.ReadKey();
+
+        return true;
+    }
+    
+    private bool ViewLastSession()
+    {
+        Header();
+
+        var list = db.LoadLastSession();
+
+        if (list.Count > 0)
+        {
+            ConsoleTableBuilder
+                .From(list)
+                .WithFormat(ConsoleTableBuilderFormat.Alternative)
+                .WithTitle("Last Session", ConsoleColor.Black, ConsoleColor.White)
+                .ExportAndWriteLine();
+        }
+        else
+            Console.WriteLine(nl + "No sessions found.");
+
+        Console.ReadKey();
+
+        return true;
+    }
+    
+    private bool ViewSelectedSessions()
+    {
+        Header();
+        var session = new CodingSession();
+        session.Start = DateTime.Parse(UserInput.AskForDate("From"));
+        session.End = DateTime.Parse(UserInput.AskForDate("Till")).AddDays(1);
+
+        var list = db.LoadSelectedSessions(session);
+
+        if (list.Count > 0)
+        {
+            ConsoleTableBuilder
+                .From(list)
+                .WithFormat(ConsoleTableBuilderFormat.Alternative)
+                .WithTitle("Selected Sessions", ConsoleColor.Black, ConsoleColor.White)
+                .ExportAndWriteLine();
+            if (list.Count > 1)
+            {
+                Console.WriteLine($"Average duration:\t{list.AverageDuration()}");
+                Console.WriteLine($"Total duration:\t{list.TotalDuration()}");
+            }
+        }
+        else
+            Console.WriteLine(nl + "No sessions found.");
+
+        Console.ReadKey();
+
+        return true;
     }
 }
