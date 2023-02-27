@@ -45,8 +45,8 @@ public class DbCommands
             tableCmd.CommandText =
                 @$"CREATE TABLE IF NOT EXISTS {tableName}" +
                     "(Id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "Date TEXT," +
-                    "Quantity INTEGER)";
+                    "Day INTEGER, Month INTEGER, Year INTEGER, " +
+                    "Hour INTEGER, Minute INTEGER)";
 
             tableCmd.ExecuteNonQuery();
 

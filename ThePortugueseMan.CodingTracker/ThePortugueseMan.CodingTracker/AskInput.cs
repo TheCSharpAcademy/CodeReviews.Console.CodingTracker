@@ -44,14 +44,14 @@ public class AskInput
         int number;
         do
         {
-            Console.WriteLine(message);
+
             if (showError)
             {
-                ClearPreviousLines(3);
+                ClearPreviousLines(2);
                 Console.Write("Invalid Input. ");
             }
 
-            Console.WriteLine("Use positive numbers only.");
+            Console.WriteLine(message);
             input = Console.ReadLine();
             showError = true;
         }

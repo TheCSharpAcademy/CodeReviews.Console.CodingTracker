@@ -11,8 +11,10 @@ internal class Program
         string? connectionString = ConfigurationManager.AppSettings.Get("defaultConnectionString");
         string? mainTableName = ConfigurationManager.AppSettings.Get("defaultMainTableName");
         DbCommands dbCmd = new(connectionString, mainTableName);
+        Screens screen = new();
 
         dbCmd.Initialization();
+        screen.MainMenu();
 
         Console.ReadLine();
 
