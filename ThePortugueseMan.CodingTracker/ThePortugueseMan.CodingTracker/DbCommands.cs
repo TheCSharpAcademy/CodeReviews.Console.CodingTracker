@@ -15,6 +15,8 @@ public class DbCommands
         this.mainTableName = mainTableName;
     }
 
+    public DbCommands() { }
+
     //if the main table doesn't exist, it's created
     public void Initialization()
     {
@@ -26,36 +28,15 @@ public class DbCommands
             tableCmd.CommandText =
                 @$"CREATE TABLE IF NOT EXISTS {this.mainTableName}" +
                     "(Id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "Date TEXT," +
-                    "HabitUnit TEXT)";
+                    "StartDate STRING, EndDate STRING, Diff STRING)";
 
             tableCmd.ExecuteNonQuery();
 
             connection.Close();
         }
     }
-    //creates a new subtable represeting an habit - each entry has a string date and an int quantity
-    public void CreateSubTable(string? tableName)
-    {
-        using (var connection = new SqliteConnection(connectionString))
-        {
-            connection.Open();
-            var tableCmd = connection.CreateCommand();
-
-            tableCmd.CommandText =
-                @$"CREATE TABLE IF NOT EXISTS {tableName}" +
-                    "(Id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "Day INTEGER, Month INTEGER, Year INTEGER, " +
-                    "Hour INTEGER, Minute INTEGER)";
-
-            tableCmd.ExecuteNonQuery();
-
-            connection.Close();
-        }
-    }
-
     //Insert log to subtable - overload based on data types
-    public void Insert(string? subTableName, string? date, int quantity)
+    public void Insert(DateTime startDate, DateTime endDate, TimeSpan diff)
     {
         using (var connection = new SqliteConnection(connectionString))
         {
@@ -63,27 +44,10 @@ public class DbCommands
             var tableCmd = connection.CreateCommand();
 
             tableCmd.CommandText =
-                $"INSERT INTO {subTableName}(date, quantity) VALUES ('{date}',{quantity})";
+                $"INSERT INTO {mainTableName}() " +
+                $"VALUES ('{startDate.ToString("dd-MM-yy_HH:mm")}','{endDate.ToString("dd-MM-yy_HH:mm")}','{diff}')";
 
             tableCmd.ExecuteNonQuery();
-
-            connection.Close();
-        }
-    }
-    //Insert habit to main table - overload based on data types
-    public void Insert(string? mainTableName, string? subTableName, string? habitUnit)
-    {
-        using (var connection = new SqliteConnection(connectionString))
-        {
-            connection.Open();
-            var tableCmd = connection.CreateCommand();
-
-            tableCmd.CommandText =
-                $"INSERT INTO {mainTableName}(HabitTableName, HabitUnit)" +
-                $" VALUES ('{subTableName}','{habitUnit}')";
-
-            tableCmd.ExecuteNonQuery();
-
             connection.Close();
         }
     }

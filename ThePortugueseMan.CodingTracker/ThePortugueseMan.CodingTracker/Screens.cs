@@ -1,10 +1,13 @@
 ﻿using ConsoleTableExt;
+using System.Security.Cryptography;
 
 namespace ThePortugueseMan.CodingTracker;
 
 internal class Screens
 {
     AskInput askInput = new();
+    DbCommands dbCmds = new();
+
     public void MainMenu()
     {
         bool exitMenu = false;
@@ -33,21 +36,49 @@ internal class Screens
 
             }
         }
+        return;
     }
     private void ViewLogs()
     {
+        //View table
         throw new NotImplementedException();
     }
     private void InsertLogs()
     {
-        throw new NotImplementedException();
+        DateTime startDate;
+        DateTime endDate;
+        TimeSpan diff;
+        bool validEntry = false;
+
+        do
+        {
+            startDate = askInput.DateWithHours("Insert the start date.");
+            if (startDate != DateTime.MinValue)
+            {
+                endDate = askInput.DateWithHours("Insert the end date.");
+                diff = endDate.Subtract(startDate);
+                if (diff > TimeSpan.Zero) validEntry = true;
+                else
+                {
+                    Console.WriteLine("End date is earlier than the start date");
+                    askInput.AnyAndEnterToContinue();
+                    return;
+                }
+            }
+            validEntry = true;
+        } while (!validEntry);
+        dbCmds.Insert(startDate, endDate, diff);
     }
     private void UpdateLog()
     {
+        //Insert new start date
+
+        //Insert new end date
         throw new NotImplementedException();
     }
     private void DeleteLog()
     {
+        //Show all and select by index
         throw new NotImplementedException();
     }
 }
