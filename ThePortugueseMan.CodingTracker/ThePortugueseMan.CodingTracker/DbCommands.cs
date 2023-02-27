@@ -16,7 +16,7 @@ public class DbCommands
     }
 
     //if the main table doesn't exist, it's created
-    public void Initialization(string? mainTableName)
+    public void Initialization()
     {
         using (var connection = new SqliteConnection(connectionString))
         {
@@ -24,9 +24,9 @@ public class DbCommands
             var tableCmd = connection.CreateCommand();
 
             tableCmd.CommandText =
-                @$"CREATE TABLE IF NOT EXISTS {mainTableName}" +
+                @$"CREATE TABLE IF NOT EXISTS {this.mainTableName}" +
                     "(Id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "HabitTableName TEXT," +
+                    "Date TEXT," +
                     "HabitUnit TEXT)";
 
             tableCmd.ExecuteNonQuery();
@@ -119,7 +119,7 @@ public class DbCommands
             connection.Close();
             if (rowCount == 0) return false;
             //Deleting a row from the main Table means deleting an habit, including the habit's table
-            else if (tableName == s_MainTableName && !DeleteTable(subTableName)) return false;
+            else if (tableName == this.mainTableName && !DeleteTable(subTableName)) return false;
             else return true;
 
         }
