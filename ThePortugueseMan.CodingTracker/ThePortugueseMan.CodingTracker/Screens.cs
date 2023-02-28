@@ -41,8 +41,33 @@ internal class Screens
     }
     private void ViewLogs()
     {
-        //View table
-        dbCmds.ViewAll();
+        Console.Clear();
+        DisplayLogs(dbCmds.ReturnAll());
+    }
+
+    private void DisplayLogs(List<CodingSession> listToDisplay)
+    {
+        var tableDataDisplay = new List<List<object>>();
+
+        foreach (CodingSession session in listToDisplay)
+        {
+            tableDataDisplay.Add(
+                new List<object>
+                {
+                    session.Id,
+                    session.StartDateTime.ToString("dd-MM-yy"), session.StartDateTime.ToString("HH:mm"),
+                    session.EndDateTime.ToString("dd-MM-yy"), session.EndDateTime.ToString("HH:mm"),
+                    session.Duration.ToString("h\\:mm")
+                });
+        }
+
+        ConsoleTableBuilder.From(tableDataDisplay)
+            .WithTitle("VIEW")
+            .WithFormat(ConsoleTableBuilderFormat.Alternative)
+            .WithColumn("Id","Start date", "Start time", "End date", "End time", "Duration")
+            .ExportAndWriteLine();
+
+        return;
     }
     private void InsertLogs()
     {
