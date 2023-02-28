@@ -209,7 +209,8 @@ public class DbCommands
             tableCmd.CommandText =
                 $"SELECT * FROM {mainTableName}";
 
-            List<CodingSession> tableData = new();
+            var tableDisplayData = new List<List<string>>();
+            var tableData = new List<CodingSession>();
 
             SqliteDataReader reader = tableCmd.ExecuteReader();
 
@@ -225,14 +226,24 @@ public class DbCommands
                         EndDateTime = DateTime.ParseExact(reader.GetString(2), "dd-MM-yy_HH:mm", new CultureInfo("en-US")),
                         Duration = TimeSpan.ParseExact(reader.GetString(3), "h\\:mm", new CultureInfo("en-US"))
                     });
+
+                    tableDisplayData.Add(
+                        new List<string>
+                        { reader.GetString(1), reader.GetString(2), reader.GetString(3) });
                 }
             }
             else { Console.WriteLine("Empty"); }
 
             connection.Close();
 
-            ConsoleTableBuilder.From(tableData)
+            var displayTest= new List<List<object>>
+            {
+                new List<object>{ "Sakura Yamamoto", "Support Engineer", "London", 46},
+                new List<object>{ "Serge Baldwin", "Data Coordinator", "San Francisco", 28, "something else" },
+                new List<object>{ "Shad Decker", "Regional Director", "Edinburgh"},
+            };
 
+            ConsoleTableBuilder.From(tableDisplayData)
                 .WithFormat(ConsoleTableBuilderFormat.Alternative)
                 .WithColumn("Coding Tracker")
                 .ExportAndWriteLine();
