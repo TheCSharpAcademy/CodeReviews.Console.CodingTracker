@@ -130,7 +130,7 @@ public class AskInput
         else return returnTime;
     }
 
-    public DateTime DateWithHours(string message)
+    public DateTime AskForDateWithHours(string message)
     {
         DateTime auxDate = DateTime.MinValue;
         DateTime auxTime = DateTime.MinValue;
@@ -139,6 +139,7 @@ public class AskInput
         try
         {
             auxDate = AskForDate(message);
+            if(auxDate == DateTime.MinValue) return DateTime.MinValue;
             auxTime = AskForHoursAndMinutes("Insert the time.");
 
             returnDate = new(auxDate.Year, auxDate.Month, auxDate.Day, auxTime.Hour, auxTime.Minute, auxTime.Second);
@@ -159,7 +160,7 @@ public class AskInput
     }
     public bool ZeroOrAnyKeyAndEnterToContinue()
     {
-        Console.WriteLine("Press any key and Enter to continue. Or press 0 to return to the menu");
+        Console.WriteLine("Press any key and Enter to continue. Or press 0 to return");
         if (Console.ReadLine() == "0") return true;
         else return false;
 

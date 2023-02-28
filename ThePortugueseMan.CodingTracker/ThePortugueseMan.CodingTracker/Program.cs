@@ -11,8 +11,5 @@ internal class Program
 
         dbCmd.Initialization();
         screen.MainMenu();
-
-        Console.ReadLine();
-
     }
 }

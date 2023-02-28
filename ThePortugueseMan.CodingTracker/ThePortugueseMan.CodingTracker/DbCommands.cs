@@ -36,7 +36,7 @@ public class DbCommands
             connection.Close();
         }
     }
-    public bool Insert(ref CodingSession sessionToInsert)
+    public bool Insert(CodingSession sessionToInsert)
     {
         using (var connection = new SqliteConnection(connectionString))
         {
@@ -47,7 +47,7 @@ public class DbCommands
                 $"INSERT INTO {this.mainTableName}(StartDate, EndDate, Diff) " +
                 $"VALUES ('{sessionToInsert.StartDateTime.ToString(dateTimeFormat)}'," +
                 $"'{sessionToInsert.EndDateTime.ToString(dateTimeFormat)}'," +
-                $"'{sessionToInsert.Duration.ToString("h\\:mm")}')";
+                $"'{sessionToInsert.Duration.ToString(timeSpanFormat)}')";
 
             try 
             {
@@ -80,7 +80,35 @@ public class DbCommands
             else return true;
         }
     }
-    public bool DeleteByIndex(int index, string? tableName)
+    public CodingSession ReturnByIndex(int index)
+    {
+        CodingSession returnSession = new();
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            connection.Open();
+            var tableCmd = connection.CreateCommand();
+
+            tableCmd.CommandText =
+                $"SELECT * FROM {this.mainTableName} WHERE Id = {index}";
+
+            SqliteDataReader reader = tableCmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                returnSession = new CodingSession
+                {
+                    Id = reader.GetInt32(0),
+                    StartDateTime = DateTime.ParseExact(reader.GetString(1), dateTimeFormat, new CultureInfo("en-US")),
+                    EndDateTime = DateTime.ParseExact(reader.GetString(2), dateTimeFormat, new CultureInfo("en-US")),
+                    Duration = TimeSpan.ParseExact(reader.GetString(3), timeSpanFormat, new CultureInfo("en-US"))
+                };
+            }
+
+            connection.Close();
+            return returnSession;
+        }
+    }
+    public bool DeleteByIndex(int index)
     {
         using (var connection = new SqliteConnection(connectionString))
         {
@@ -88,7 +116,7 @@ public class DbCommands
             var tableCmd = connection.CreateCommand();
 
             tableCmd.CommandText =
-                $"DELETE from {tableName} WHERE Id = '{index}'";
+                $"DELETE from {this.mainTableName} WHERE Id = '{index}'";
 
             int rowCount = tableCmd.ExecuteNonQuery();
             connection.Close();
@@ -119,7 +147,7 @@ public class DbCommands
         }
     }
     //Updates entry on subTable by index - overload based on datatypes
-    public bool Update(string tableName, int index, string date, int quantity)
+    public bool Update(int index, CodingSession newSessionInfo)
     {
         using (var connection = new SqliteConnection(connectionString))
         {
@@ -127,7 +155,7 @@ public class DbCommands
             var checkCmd = connection.CreateCommand();
 
             checkCmd.CommandText =
-                $"SELECT EXISTS(SELECT 1 FROM {tableName} WHERE Id = {index})";
+                $"SELECT EXISTS(SELECT 1 FROM {this.mainTableName} WHERE Id = {index})";
             int checkQuery = Convert.ToInt32(checkCmd.ExecuteScalar());
 
             if (checkQuery == 0)
@@ -141,7 +169,11 @@ public class DbCommands
                 var tableCmd = connection.CreateCommand();
 
                 tableCmd.CommandText =
-                    $"UPDATE {tableName} SET date = '{date}', quantity = {quantity} WHERE Id = {index}";
+                    $"UPDATE {this.mainTableName} SET " +
+                    $"StartDate = '{newSessionInfo.StartDateTime.ToString(dateTimeFormat)}', " +
+                    $"EndDate = '{newSessionInfo.EndDateTime.ToString(dateTimeFormat)}'," +
+                    $"Diff = '{newSessionInfo.Duration.ToString(timeSpanFormat)}' " +
+                    $"WHERE Id = {index}";
 
                 tableCmd.ExecuteNonQuery();
 
@@ -151,6 +183,8 @@ public class DbCommands
             }
         }
     }
+
+
     public List<CodingSession> ReturnAll()
     {
         using (var connection = new SqliteConnection(connectionString))
