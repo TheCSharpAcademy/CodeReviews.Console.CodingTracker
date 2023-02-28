@@ -42,7 +42,7 @@ internal class Screens
     private void ViewLogs()
     {
         //View table
-        throw new NotImplementedException();
+        dbCmds.ViewAll();
     }
     private void InsertLogs()
     {

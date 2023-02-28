@@ -2,6 +2,7 @@
 using System.Globalization;
 using Microsoft.Data.Sqlite;
 using System.Text;
+using ConsoleTableExt;
 
 namespace ThePortugueseMan.CodingTracker;
 
@@ -33,25 +34,6 @@ public class DbCommands
             connection.Close();
         }
     }
-    //Insert log to subtable - overload based on data types
-    public void Insert(DateTime startDate, DateTime endDate, TimeSpan diff)
-    {
-        using (var connection = new SqliteConnection(connectionString))
-        {
-            connection.Open();
-            var tableCmd = connection.CreateCommand();
-
-            tableCmd.CommandText =
-                $"INSERT INTO {this.mainTableName}(StartDate, EndDate, Diff) " +
-                $"VALUES ('{startDate.ToString("dd-MM-yy_HH:mm")}'," +
-                $"'{endDate.ToString("dd-MM-yy_HH:mm")}'," +
-                $"'{diff.ToString(@"hh\:mm")}')";
-
-            tableCmd.ExecuteNonQuery();
-            connection.Close();
-        }
-    }
-
     public bool Insert(ref CodingSession sessionToInsert)
     {
         using (var connection = new SqliteConnection(connectionString))
@@ -210,14 +192,15 @@ public class DbCommands
             }
         }
     }
-    public void ViewAll(string tableName)
+    public void ViewAll()
     {
-        if (tableName == "HabitsTable") ViewMainTable(tableName);
-        else ViewSubTable(tableName);
+        ViewMainTable(this.mainTableName);
+
     }
     private void ViewMainTable(string mainTableName)
     {
         string? habitTableName_display = null;
+
         using (var connection = new SqliteConnection(connectionString))
         {
             connection.Open();
@@ -226,7 +209,7 @@ public class DbCommands
             tableCmd.CommandText =
                 $"SELECT * FROM {mainTableName}";
 
-            List<Habit> tableData = new();
+            List<CodingSession> tableData = new();
 
             SqliteDataReader reader = tableCmd.ExecuteReader();
 
@@ -235,11 +218,12 @@ public class DbCommands
                 while (reader.Read())
                 {
                     tableData.Add(
-                    new Habit
+                    new CodingSession
                     {
                         Id = reader.GetInt32(0),
-                        TableName = reader.GetString(1),
-                        Unit = reader.GetString(2)
+                        StartDateTime = DateTime.ParseExact(reader.GetString(1),"dd-MM-yy_HH:mm", new CultureInfo("en-US")),
+                        EndDateTime = DateTime.ParseExact(reader.GetString(2), "dd-MM-yy_HH:mm", new CultureInfo("en-US")),
+                        Duration = TimeSpan.ParseExact(reader.GetString(3), "h\\:mm", new CultureInfo("en-US"))
                     });
                 }
             }
@@ -247,14 +231,11 @@ public class DbCommands
 
             connection.Close();
 
-            Console.WriteLine("-----------------------------\n");
-            foreach (var dw in tableData)
-            {
-                //for display removes the [] at the beggining and end of the tableName to get to the habit name
-                if (dw.TableName is not null) { habitTableName_display = dw.TableName.TrimEnd(']').TrimStart('['); }
-                Console.WriteLine($"{dw.Id} - {habitTableName_display} - Unit: {dw.Unit}");
-            }
-            Console.WriteLine("\n-----------------------------");
+            ConsoleTableBuilder.From(tableData)
+
+                .WithFormat(ConsoleTableBuilderFormat.Alternative)
+                .WithColumn("Coding Tracker")
+                .ExportAndWriteLine();
         }
     }
     private void ViewSubTable(string subTableName)
