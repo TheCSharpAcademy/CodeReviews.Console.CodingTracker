@@ -15,7 +15,8 @@ internal class Screens
             "1 - View Logs", 
             "2 - Insert Log", 
             "3 - Update Log", 
-            "4 - Delete Log" };
+            "4 - Delete Log",
+            "0 - Exit App"};
 
         ConsoleTableBuilder.From(optionsString)
             .WithFormat(ConsoleTableBuilderFormat.Alternative)
@@ -45,29 +46,33 @@ internal class Screens
     }
     private void InsertLogs()
     {
-        DateTime startDate;
-        DateTime endDate;
-        TimeSpan diff;
-        bool validEntry = false;
+        CodingSession codingSession = new();
+        bool validEntry;
 
         do
         {
-            startDate = askInput.DateWithHours("Insert the start date.");
-            if (startDate != DateTime.MinValue)
+            codingSession.StartDateTime = askInput.DateWithHours("Insert the start date.");
+            if (codingSession.StartDateTime != DateTime.MinValue)
             {
-                endDate = askInput.DateWithHours("Insert the end date.");
-                diff = endDate.Subtract(startDate);
-                if (diff > TimeSpan.Zero) validEntry = true;
+                codingSession.EndDateTime = askInput.DateWithHours("Insert the end date.");
+                codingSession.Duration = 
+                    codingSession.EndDateTime.Subtract(codingSession.StartDateTime);
+
+                if (codingSession.Duration > TimeSpan.Zero)
+                {
+                    validEntry = true;
+                    dbCmds.Insert(ref codingSession);
+                }
                 else
                 {
                     Console.WriteLine("End date is earlier than the start date");
                     askInput.AnyAndEnterToContinue();
-                    return;
+                    validEntry = false;
                 }
             }
-            validEntry = true;
+            else validEntry = false;
         } while (!validEntry);
-        dbCmds.Insert(startDate, endDate, diff);
+        return;
     }
     private void UpdateLog()
     {

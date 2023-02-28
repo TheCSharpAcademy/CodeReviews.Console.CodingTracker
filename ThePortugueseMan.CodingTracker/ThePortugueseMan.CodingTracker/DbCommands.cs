@@ -7,15 +7,13 @@ namespace ThePortugueseMan.CodingTracker;
 
 public class DbCommands
 {
-    string? connectionString;
-    string? mainTableName;
-    public DbCommands(string? connectionString, string? mainTableName)
+    string? connectionString, mainTableName;
+    AppSettings appSettings = new();
+    public DbCommands() 
     {
-        this.connectionString = connectionString;
-        this.mainTableName = mainTableName;
+        this.connectionString = appSettings.GetConnectionString();
+        this.mainTableName = appSettings.GetMainTableName();
     }
-
-    public DbCommands() { }
 
     //if the main table doesn't exist, it's created
     public void Initialization()
@@ -44,15 +42,45 @@ public class DbCommands
             var tableCmd = connection.CreateCommand();
 
             tableCmd.CommandText =
-                $"INSERT INTO {mainTableName}() " +
-                $"VALUES ('{startDate.ToString("dd-MM-yy_HH:mm")}','{endDate.ToString("dd-MM-yy_HH:mm")}','{diff}')";
+                $"INSERT INTO {this.mainTableName}(StartDate, EndDate, Diff) " +
+                $"VALUES ('{startDate.ToString("dd-MM-yy_HH:mm")}'," +
+                $"'{endDate.ToString("dd-MM-yy_HH:mm")}'," +
+                $"'{diff.ToString(@"hh\:mm")}')";
 
             tableCmd.ExecuteNonQuery();
             connection.Close();
         }
     }
+
+    public bool Insert(ref CodingSession sessionToInsert)
+    {
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            connection.Open();
+            var tableCmd = connection.CreateCommand();
+
+            tableCmd.CommandText =
+                $"INSERT INTO {this.mainTableName}(StartDate, EndDate, Diff) " +
+                $"VALUES ('{sessionToInsert.StartDateTime.ToString("dd-MM-yy_HH:mm")}'," +
+                $"'{sessionToInsert.EndDateTime.ToString("dd-MM-yy_HH:mm")}'," +
+                $"'{sessionToInsert.Duration.ToString(@"hh\:mm")}')";
+
+            try 
+            {
+                tableCmd.ExecuteNonQuery();
+                connection.Close();
+                return true;
+            }
+            catch
+            {
+                connection.Close();
+                return false;
+            }
+            
+        }
+    }
     //checks if there is an entry at Id = index
-    public bool CheckIfIndexExists(int index, string? tableName)
+    public bool CheckIfIndexExists(int index)
     {
         using (var connection = new SqliteConnection(connectionString))
         {
@@ -60,7 +88,7 @@ public class DbCommands
             var checkCmd = connection.CreateCommand();
 
             checkCmd.CommandText =
-                $"SELECT EXISTS(SELECT 1 FROM {tableName} WHERE Id = {index})";
+                $"SELECT EXISTS(SELECT 1 FROM {this.mainTableName} WHERE Id = {index})";
             int checkQuery = Convert.ToInt32(checkCmd.ExecuteScalar());
             connection.Close();
 
