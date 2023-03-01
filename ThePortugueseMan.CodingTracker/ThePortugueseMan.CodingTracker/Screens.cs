@@ -7,7 +7,7 @@ internal class Screens
 {
     AskInput askInput = new();
     DbCommands dbCmds = new();
-
+    ListOperations listOp = new();
     public void MainMenu()
     {
         bool exitMenu = false;
@@ -41,10 +41,88 @@ internal class Screens
     }
     private void ViewLogs()
     {
+        bool exit = false;
+
+        while (!exit)
+        {
+            Console.Clear();
+            List<string> optionsString = new List<string> {
+                "1 - View All Logs",
+                "2 - View Ordered Logs",
+                "3 - View Reports",
+                "0 - Return"};
+
+            ConsoleTableBuilder.From(optionsString)
+                .WithFormat(ConsoleTableBuilderFormat.Alternative)
+                .WithColumn("View")
+                .ExportAndWriteLine();
+            Console.Write("\n");
+
+            switch (askInput.PositiveNumber("Please select an option or press 0 to exit"))
+            {
+                case 0: exit = true; break;
+                case 1:
+                    Console.Clear();
+                    DisplaySessions(dbCmds.ReturnAllLogsInTable(), "VIEW ALL");
+                    askInput.AnyKeyToContinue("\nPress any key to return");
+                    break;
+                case 2:
+                    ViewOrderedLogsScreen();
+                    break;
+                case 3: break;
+                default: break;
+            }
+        }
+    }
+    private void ViewOrderedLogsScreen()
+    {
+        bool exitMenu = false;
+        List<string> optionsString = new List<string> {
+            "1 - Ascending order",
+            "2 - Descending order",
+            "0 - Return"};
+
+
+        while (!exitMenu)
+        {
+            Console.Clear();
+            ConsoleTableBuilder.From(optionsString)
+                .WithFormat(ConsoleTableBuilderFormat.Alternative)
+                .WithColumn("View")
+                .ExportAndWriteLine();
+            Console.Write("\n");
+            switch (askInput.PositiveNumber("Please select an option or press 0 to exit"))
+            {
+                case 0: exitMenu = true; break;
+                case 1:
+                    ViewOrderedLogs("ASCENDING");
+                    askInput.AnyKeyToContinue("\nPress any key to return");
+                    break;
+                case 2:
+                    ViewOrderedLogs("DESCENDING");
+                    askInput.AnyKeyToContinue("\nPress any key to return");
+                    break;
+                case 3: break;
+                default: break;
+            }
+        }
+    }
+    private void ViewOrderedLogs (string? order)
+    {
+        List<CodingSession> listToDisplay = new();
         Console.Clear();
-        DisplaySessions(dbCmds.ReturnAllLogsInTable(), "VIEW");
-        Console.Write("\n");
-        askInput.AnyKeyToContinue("Press any key to return.");
+        if (order == "ASCENDING")
+        {
+            listToDisplay = listOp.ReturnOrderedByAscendingDate(dbCmds.ReturnAllLogsInTable());
+        }
+        else if (order == "DESCENDING")
+        {
+            listToDisplay = listOp.ReturnOrderedByDescendingDate(dbCmds.ReturnAllLogsInTable());
+
+        }
+        else throw new Exception($"ViewOrderedLogs order not valid: {order}");
+        DisplaySessions(listToDisplay, order);
+        return;
     }
 
     private void DisplaySessions(List<CodingSession> listToDisplay, string title)
