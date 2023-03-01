@@ -19,7 +19,7 @@ public class DbCommands
     }
 
     //if the main table doesn't exist, it's created
-    public void Initialization()
+    public void InitializeTable()
     {
         using (var connection = new SqliteConnection(connectionString))
         {
@@ -63,8 +63,7 @@ public class DbCommands
             
         }
     }
-    //checks if there is an entry at Id = index
-    public bool CheckIfIndexExists(int index)
+    public bool CheckIfIndexExistsInTable(int index)
     {
         using (var connection = new SqliteConnection(connectionString))
         {
@@ -80,7 +79,8 @@ public class DbCommands
             else return true;
         }
     }
-    public CodingSession ReturnByIndex(int index)
+
+    public CodingSession ReturnSessionByIndex(int index)
     {
         CodingSession returnSession = new();
         using (var connection = new SqliteConnection(connectionString))
@@ -185,7 +185,7 @@ public class DbCommands
     }
 
 
-    public List<CodingSession> ReturnAll()
+    public List<CodingSession> ReturnAllLogsInTable()
     {
         using (var connection = new SqliteConnection(connectionString))
         {

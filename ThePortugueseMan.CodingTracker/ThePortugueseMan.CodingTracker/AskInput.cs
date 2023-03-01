@@ -153,15 +153,29 @@ public class AskInput
 
         
     }
-    public void AnyAndEnterToContinue()
+    public void AnyKeyToContinue()
     {
-        Console.WriteLine("Press any key and Enter to continue");
-        Console.ReadLine();
+        Console.WriteLine("Press any key to continue");
+        Console.ReadKey();
     }
-    public bool ZeroOrAnyKeyAndEnterToContinue()
+
+    public void AnyKeyToContinue(string? message)
     {
-        Console.WriteLine("Press any key and Enter to continue. Or press 0 to return");
-        if (Console.ReadLine() == "0") return true;
+        Console.WriteLine(message);
+        Console.ReadKey();
+    }
+    public bool ZeroOrAnyOtherKeyToContinue()
+    {
+        Console.WriteLine("Press any key to continue. Or press 0 to return");
+        if (Console.ReadKey().ToString() == "0") return true;
+        else return false;
+
+    }
+
+    public bool ZeroOrOtherAnyKeyToContinue(string? message)
+    {
+        Console.WriteLine(message);
+        if (Console.ReadKey().ToString() == "0") return true;
         else return false;
 
     }

@@ -42,11 +42,12 @@ internal class Screens
     private void ViewLogs()
     {
         Console.Clear();
-        DisplaySessions(dbCmds.ReturnAll());
-        askInput.AnyAndEnterToContinue();
+        DisplaySessions(dbCmds.ReturnAllLogsInTable(), "VIEW");
+        Console.Write("\n");
+        askInput.AnyKeyToContinue("Press any key to return.");
     }
 
-    private void DisplaySessions(List<CodingSession> listToDisplay)
+    private void DisplaySessions(List<CodingSession> listToDisplay, string title)
     {
         var tableDataDisplay = new List<List<object>>();
         if (listToDisplay is not null)
@@ -65,7 +66,7 @@ internal class Screens
                     });
             }
             ConsoleTableBuilder.From(tableDataDisplay)
-                .WithTitle("VIEW")
+                .WithTitle(title)
                 .WithFormat(ConsoleTableBuilderFormat.Alternative)
                 .WithColumn("Id", "Start date", "Start time", "End date", "End time", "Duration")
                 .ExportAndWriteLine();
@@ -83,18 +84,47 @@ internal class Screens
     }
     private void InsertLogs()
     {
+        bool exit = false;
+
+        while(!exit)
+        {
+            Console.Clear();
+            List<string> optionsString = new List<string> {
+                "1 - Manual Insert",
+                "2 - StopWatch",
+                "0 - Return"};
+
+            ConsoleTableBuilder.From(optionsString)
+                .WithFormat(ConsoleTableBuilderFormat.Alternative)
+                .WithColumn("Insert")
+                .ExportAndWriteLine();
+            Console.Write("\n");
+
+            switch (askInput.PositiveNumber("Please select an option or press 0 to exit"))
+            {
+                case 0: exit = true; break;
+                case 1: ManualLogInsert(); break;
+                case 2: StopWatchInsert(); break;
+                default: break;
+            }
+        }
+    }
+
+    private void ManualLogInsert()
+    {
         CodingSession codingSession = new();
         bool validEntry;
 
         do
         {
+            Console.Write("\n");
             codingSession.StartDateTime = askInput.AskForDateWithHours("Insert the start date.");
             if (codingSession.StartDateTime != DateTime.MinValue)
             {
                 codingSession.EndDateTime = askInput.AskForDateWithHours("Insert the end date.");
                 if (codingSession.EndDateTime == DateTime.MinValue) return;
-                
-                codingSession.Duration = 
+
+                codingSession.Duration =
                     codingSession.EndDateTime.Subtract(codingSession.StartDateTime);
 
                 if (codingSession.Duration > TimeSpan.Zero)
@@ -105,15 +135,36 @@ internal class Screens
                 else
                 {
                     Console.WriteLine("End date is earlier than the start date.");
-                    askInput.AnyAndEnterToContinue();
+                    askInput.AnyKeyToContinue();
                     validEntry = false;
                 }
             }
             else return;
         } while (!validEntry);
         Console.WriteLine("Entry was logged successfully");
-        askInput.AnyAndEnterToContinue();
+        askInput.AnyKeyToContinue();
         Console.Clear();
+        return;
+    }
+
+    private void StopWatchInsert()
+    {
+        bool exit = false;
+        exit = askInput.ZeroOrOtherAnyKeyToContinue(
+            "Press any key to start the stopwatch. Or press 0 to return");
+
+        if(!exit)
+        {
+            CodingSession sessionToInsert = new();
+            sessionToInsert.StartDateTime = DateTime.Now;
+            askInput.AnyKeyToContinue("Press any key to stop the session");
+            sessionToInsert.EndDateTime = DateTime.Now;
+            sessionToInsert.Duration =
+                sessionToInsert.EndDateTime.Subtract(sessionToInsert.StartDateTime);
+            Console.WriteLine($"\nThis session was {sessionToInsert.Duration.ToString("hh\\:mm")}");
+            dbCmds.Insert(sessionToInsert);
+            askInput.AnyKeyToContinue();
+        }
         return;
     }
     private void UpdateLog()
@@ -125,13 +176,14 @@ internal class Screens
         while (!exit)
         {
             Console.Clear();
-            DisplaySessions(dbCmds.ReturnAll());
+            DisplaySessions(dbCmds.ReturnAllLogsInTable(), "UPDATE");
             do
             {
+                Console.Write("\n");
                 if (!showError) index = askInput.PositiveNumber("Select the index you want to update. Or press 0 to return");
                 else index = askInput.PositiveNumber("Please select a valid index");
                 if (index == 0) exit = true;
-            } while (!dbCmds.CheckIfIndexExists(index) && exit == false);
+            } while (!dbCmds.CheckIfIndexExistsInTable(index) && exit == false);
 
             if (!exit)
             {
@@ -152,7 +204,7 @@ internal class Screens
                     else
                     {
                         Console.WriteLine("End date is earlier than the start date.");
-                        askInput.AnyAndEnterToContinue();
+                        askInput.AnyKeyToContinue();
                     }
                 }
             }
@@ -167,19 +219,20 @@ internal class Screens
         while(!exit)
         {
             Console.Clear();
-            DisplaySessions(dbCmds.ReturnAll());
+            DisplaySessions(dbCmds.ReturnAllLogsInTable(), "DELETE");
             do
             {
+                Console.Write("\n");
                 if (!showError) index = askInput.PositiveNumber("Select the index you want to delete. Or press 0 to return");
                 else index = askInput.PositiveNumber("Please select a valid index");
                 if (index == 0) exit = true;
-            } while (!dbCmds.CheckIfIndexExists(index) || exit == false);
+            } while (!dbCmds.CheckIfIndexExistsInTable(index) && exit == false);
 
             if (!exit) 
             {
                 if (dbCmds.DeleteByIndex(index)) Console.WriteLine("Log successfully deleted");
                 else Console.WriteLine("Couldn't delete log...");
-                askInput.AnyAndEnterToContinue();
+                askInput.AnyKeyToContinue();
             }
         }
         return;
