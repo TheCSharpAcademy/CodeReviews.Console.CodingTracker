@@ -184,7 +184,6 @@ public class DbCommands
         }
     }
 
-
     public List<CodingSession> ReturnAllLogsInTable()
     {
         using (var connection = new SqliteConnection(connectionString))

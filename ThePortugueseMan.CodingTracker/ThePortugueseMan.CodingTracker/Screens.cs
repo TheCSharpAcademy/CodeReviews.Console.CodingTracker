@@ -1,5 +1,4 @@
 ﻿using ConsoleTableExt;
-using System.Security.Cryptography;
 
 namespace ThePortugueseMan.CodingTracker;
 
@@ -49,7 +48,8 @@ internal class Screens
             List<string> optionsString = new List<string> {
                 "1 - View All Logs",
                 "2 - View Ordered Logs",
-                "3 - View Reports",
+                "3 - View Logs in date interval",
+                "4 - View Reports",
                 "0 - Return"};
 
             ConsoleTableBuilder.From(optionsString)
@@ -67,14 +67,57 @@ internal class Screens
                     askInput.AnyKeyToContinue("\nPress any key to return");
                     break;
                 case 2:
-                    ViewOrderedLogsScreen();
+                    ViewOrderedLogsMenu();
                     break;
-                case 3: break;
+                case 3: ViewLogsInDateInterval(); break;
                 default: break;
             }
         }
     }
-    private void ViewOrderedLogsScreen()
+
+    private void ViewLogsInDateInterval()
+    {
+        CodingSession codingSession = new();
+        List<CodingSession> listToDisplay = new();
+        bool validInterval;
+
+        do
+        {
+            Console.Write("\n");
+            codingSession.StartDateTime = askInput.AskForDate("Insert the start date.");
+            if (codingSession.StartDateTime != DateTime.MinValue)
+            {
+                codingSession.EndDateTime = askInput.AskForDate("Insert the end date.");
+                if (codingSession.EndDateTime == DateTime.MinValue) return;
+
+                codingSession.Duration =
+                    codingSession.EndDateTime.Subtract(codingSession.StartDateTime);
+
+                if (codingSession.Duration >= TimeSpan.Zero)
+                {
+                    validInterval = true;
+                    listToDisplay = 
+                        listOp.ReturnLogsBetweenDates(dbCmds.ReturnAllLogsInTable(),
+                            codingSession.StartDateTime,codingSession.EndDateTime);
+                }
+                else
+                {
+                    Console.WriteLine("End date is earlier than the start date.");
+                    askInput.AnyKeyToContinue();
+                    validInterval = false;
+                }
+            }
+            else return;
+        } while (!validInterval);
+        Console.Clear();
+        Console.Write('\n');
+        DisplaySessions(listToDisplay, $"{codingSession.StartDateTime.ToString("dd-MM-yy")} to " +
+            $"{codingSession.EndDateTime.ToString("dd-MM-yy")}");
+        askInput.AnyKeyToContinue();
+        return;
+    }
+
+    private void ViewOrderedLogsMenu()
     {
         bool exitMenu = false;
         List<string> optionsString = new List<string> {
@@ -109,7 +152,7 @@ internal class Screens
     }
     private void ViewOrderedLogs (string? order)
     {
-        List<CodingSession> listToDisplay = new();
+        List<CodingSession> listToDisplay;
         Console.Clear();
         if (order == "ASCENDING")
         {
@@ -130,8 +173,6 @@ internal class Screens
         var tableDataDisplay = new List<List<object>>();
         if (listToDisplay is not null)
         {
-            
-
             foreach (CodingSession session in listToDisplay)
             {
                 tableDataDisplay.Add(
