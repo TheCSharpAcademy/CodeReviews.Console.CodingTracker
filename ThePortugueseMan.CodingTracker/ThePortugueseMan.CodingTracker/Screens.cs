@@ -15,6 +15,7 @@ internal class Screens
             "2 - Insert Log", 
             "3 - Update Log", 
             "4 - Delete Log",
+            "5 - View Reports",
             "0 - Exit App"};
 
         while (!exitMenu) 
@@ -28,17 +29,85 @@ internal class Screens
             switch (askInput.PositiveNumber("Please select an option or press 0 to exit"))
             {
                 case 0: exitMenu = true; break;
-                case 1: ViewLogs(); break;
-                case 2: InsertLogs(); break;
-                case 3: UpdateLog(); break;
-                case 4: DeleteLog(); break;
+                case 1: ViewLogsMenu(); break;
+                case 2: InsertLogsMenu(); break;
+                case 3: UpdateLogMenu(); break;
+                case 4: DeleteLogScreen(); break;
+                case 5: ReportsMenu(); break;
                 default: break;
 
             }
         }
         return;
     }
-    private void ViewLogs()
+
+    private void ReportsMenu()
+    {
+        bool exit = false;
+        while (!exit)
+        {
+            Console.Clear();
+            List<string> optionsString = new List<string> {
+                "1 - Overview",
+                "2 - Date interval",
+                "3 - Last week",
+                "0 - Return"};
+
+            ConsoleTableBuilder.From(optionsString)
+                .WithFormat(ConsoleTableBuilderFormat.Alternative)
+                .WithColumn("View")
+                .ExportAndWriteLine();
+            Console.Write("\n");
+
+            switch (askInput.PositiveNumber("Please select an option or press 0 to exit"))
+            {
+                case 0: exit = true; break;
+                case 1:
+                    Console.Clear();
+                    ReportsView(dbCmds.ReturnAllLogsInTable());
+                    askInput.AnyKeyToContinue("\n");
+                    break;
+                case 2:
+                    ViewOrderedLogsMenu();
+                    break;
+                case 3: ViewLogsInDateInterval(); break;
+                default: break;
+            }
+        }
+    }
+
+    private void ReportsView(List<CodingSession> listToReport)
+    {
+        if (listToReport == null)
+        {
+
+        }
+        else 
+        {
+            string totalTime = listOp.TotalTimeInList(listToReport).ToString("hh\\:mm");
+            string totalSessions = listOp.NumberOfSessionsInList(listToReport).ToString();
+            string averageTime = listOp.AverageTimeInList(listToReport).ToString("hh\\:mm");
+            string firstDate = listOp.FirstDateInList(listToReport).ToString("dd-MM-yy");
+            string lastDate = listOp.LastDateInList(listToReport).ToString("dd-MM-yy");
+            string diffBetweenFirstAndLast = listOp.DifferenceBetweenFirsAndLastDates(listToReport).Days.ToString();
+
+            var tableList = new List<List<object>>
+            {
+                new List<object>{"Total time spent", totalTime},
+                new List<object>{"Number of sessions", totalSessions},
+                new List<object>{"Number of days", diffBetweenFirstAndLast},
+                new List<object>{"Average time per session", averageTime},
+            };
+
+            ConsoleTableBuilder.From(tableList)
+                .WithTitle($"{firstDate} to {lastDate}")
+                .WithFormat(ConsoleTableBuilderFormat.Alternative)
+                .ExportAndWriteLine();
+        }
+        return;
+    }
+
+    private void ViewLogsMenu()
     {
         bool exit = false;
 
@@ -49,7 +118,6 @@ internal class Screens
                 "1 - View All Logs",
                 "2 - View Ordered Logs",
                 "3 - View Logs in date interval",
-                "4 - View Reports",
                 "0 - Return"};
 
             ConsoleTableBuilder.From(optionsString)
@@ -201,7 +269,7 @@ internal class Screens
         }
         return;
     }
-    private void InsertLogs()
+    private void InsertLogsMenu()
     {
         bool exit = false;
 
@@ -286,7 +354,7 @@ internal class Screens
         }
         return;
     }
-    private void UpdateLog()
+    private void UpdateLogMenu()
     {
         int index;
         bool showError = false, exit = false, validUpdate = false;
@@ -330,7 +398,7 @@ internal class Screens
         }
         return;
     }
-    private void DeleteLog()
+    private void DeleteLogScreen()
     {
         int index;
         bool showError = false, exit = false;

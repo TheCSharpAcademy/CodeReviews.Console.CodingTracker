@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Collections.Generic;
+using System.Globalization;
 
 namespace ThePortugueseMan.CodingTracker;
 
@@ -62,7 +63,7 @@ public class AskInput
     public DateTime AskForDate(string message)
     {
         string? input;
-        DateTime returnDate = DateTime.MinValue;
+        DateTime returnDate = new();
         bool showError = false;
         bool validDate = false;
         do
@@ -92,6 +93,41 @@ public class AskInput
         }
         while (!validDate);
         return returnDate;
+    }
+
+    public DateTime[] DateInterval(string startDateMessage, string endDateMessage)
+    {
+        DateTime[] result = new DateTime[2];
+
+        bool validInterval;
+
+        do
+        {
+            result[0] = AskForDate(startDateMessage);
+
+            if (result[0] == DateTime.MinValue) return null;
+            else
+            {
+                result[1] = AskForDate(endDateMessage);
+                if (result[1] == DateTime.MinValue) return null;
+                else
+                {
+                    if (result[1].Subtract(result[0]) >= TimeSpan.Zero)
+                    {
+                        return result;
+                    }
+                    else
+                    {
+                        //Console.WriteLine("End date is earlier than the start date.");
+                        validInterval = false;
+                        ClearPreviousLines(2);
+                    }
+                }
+
+            }
+        } while (!validInterval);
+
+        return result;
     }
 
     private DateTime AskForHoursAndMinutes(string message)

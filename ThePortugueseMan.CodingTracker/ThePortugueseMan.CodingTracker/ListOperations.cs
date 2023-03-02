@@ -45,7 +45,7 @@ internal class ListOperations
         TimeSpan totalTime = TimeSpan.Zero;
         foreach (CodingSession c in listToOperate)
         {
-            totalTime.Add(c.Duration);
+            totalTime = totalTime.Add(c.Duration);
         }
         return totalTime;
     }
@@ -56,4 +56,24 @@ internal class ListOperations
         TimeSpan averageTime = totalTime / listToOperate.Count();
         return averageTime;
     }
+
+    public DateTime FirstDateInList(List<CodingSession> listToOperate)
+    {
+        List<CodingSession> auxList = ReturnOrderedByAscendingDate(listToOperate);
+        return auxList.ElementAt(0).StartDateTime;
+    }
+
+    public DateTime LastDateInList(List<CodingSession> listToOperate)
+    {
+        List<CodingSession> auxList = ReturnOrderedByDescendingDate(listToOperate);
+        return auxList.ElementAt(0).EndDateTime;
+    }
+
+    public TimeSpan DifferenceBetweenFirsAndLastDates(List<CodingSession> listToOperate)
+    {
+        TimeSpan returnTime = LastDateInList(listToOperate).Subtract(FirstDateInList(listToOperate));
+        return returnTime;
+    }
+
+    public int NumberOfSessionsInList(List<CodingSession> listToOperate) { return listToOperate.Count(); }
 }

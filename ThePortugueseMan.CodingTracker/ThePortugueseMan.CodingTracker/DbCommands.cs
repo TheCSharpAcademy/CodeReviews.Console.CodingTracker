@@ -1,8 +1,5 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using Microsoft.Data.Sqlite;
-using System.Text;
-using ConsoleTableExt;
 
 namespace ThePortugueseMan.CodingTracker;
 
