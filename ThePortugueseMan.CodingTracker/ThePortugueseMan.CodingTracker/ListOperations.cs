@@ -25,17 +25,10 @@ internal class ListOperations
 
         foreach (CodingSession c in listToOperate)
         {
-            if (c.StartDateTime.Year >= startDate.Year && c.EndDateTime.Year <= endDate.Year)
+            if (c.StartDateTime.Date >= startDate && c.EndDateTime.Date <= endDate)
             {
-                if (c.StartDateTime.Month >= startDate.Month && c.EndDateTime.Month <= endDate.Month)
-                {
-                    if (c.StartDateTime.Day >= startDate.Day && c.EndDateTime.Day <= endDate.Day)
-                    {
-                        returnList.Add(c);
-                    }
-                }
+                returnList.Add(c);
             }
-            else continue;
         }
         return returnList;
     }

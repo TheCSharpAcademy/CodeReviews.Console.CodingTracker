@@ -65,14 +65,18 @@ internal class Screens
                 case 1:
                     Console.Clear();
                     ReportsView(dbCmds.ReturnAllLogsInTable());
-                    askInput.AnyKeyToContinue("\n");
                     break;
                 case 2:
-                    ViewOrderedLogsMenu();
+                    DateTime[] interval = askInput.DateInterval("Insert a start date.", "Insert an end date.");
+                    Console.Clear();
+                    ReportsView(listOp.ReturnLogsBetweenDates(dbCmds.ReturnAllLogsInTable(),
+                        interval[0], interval[1]));
+                    
                     break;
-                case 3: ViewLogsInDateInterval(); break;
-                default: break;
+                case 3: break;
+                default: continue; break;
             }
+            askInput.AnyKeyToContinue("\n");
         }
     }
 
@@ -147,40 +151,16 @@ internal class Screens
     {
         CodingSession codingSession = new();
         List<CodingSession> listToDisplay = new();
+        
         bool validInterval;
 
-        do
-        {
-            Console.Write("\n");
-            codingSession.StartDateTime = askInput.AskForDate("Insert the start date.");
-            if (codingSession.StartDateTime != DateTime.MinValue)
-            {
-                codingSession.EndDateTime = askInput.AskForDate("Insert the end date.");
-                if (codingSession.EndDateTime == DateTime.MinValue) return;
+        DateTime[] interval = askInput.DateInterval("Insert the start date", "Insert the end date");
+        listToDisplay = listOp.ReturnLogsBetweenDates(dbCmds.ReturnAllLogsInTable(), interval[0], interval[1]);
 
-                codingSession.Duration =
-                    codingSession.EndDateTime.Subtract(codingSession.StartDateTime);
-
-                if (codingSession.Duration >= TimeSpan.Zero)
-                {
-                    validInterval = true;
-                    listToDisplay = 
-                        listOp.ReturnLogsBetweenDates(dbCmds.ReturnAllLogsInTable(),
-                            codingSession.StartDateTime,codingSession.EndDateTime);
-                }
-                else
-                {
-                    Console.WriteLine("End date is earlier than the start date.");
-                    askInput.AnyKeyToContinue();
-                    validInterval = false;
-                }
-            }
-            else return;
-        } while (!validInterval);
         Console.Clear();
         Console.Write('\n');
-        DisplaySessions(listToDisplay, $"{codingSession.StartDateTime.ToString("dd-MM-yy")} to " +
-            $"{codingSession.EndDateTime.ToString("dd-MM-yy")}");
+        DisplaySessions(listToDisplay, $"{interval[0].ToString("dd-MM-yy")} to " +
+            $"{interval[1].ToString("dd-MM-yy")}");
         askInput.AnyKeyToContinue();
         return;
     }

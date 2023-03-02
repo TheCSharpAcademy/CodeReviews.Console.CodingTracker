@@ -114,11 +114,11 @@ public class AskInput
                 {
                     if (result[1].Subtract(result[0]) >= TimeSpan.Zero)
                     {
-                        return result;
+                        validInterval = true;
                     }
                     else
                     {
-                        //Console.WriteLine("End date is earlier than the start date.");
+                        Console.WriteLine("End date is earlier than the start date.");
                         validInterval = false;
                         ClearPreviousLines(2);
                     }
