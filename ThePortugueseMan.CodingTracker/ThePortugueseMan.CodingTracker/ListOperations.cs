@@ -30,6 +30,7 @@ internal class ListOperations
                 returnList.Add(c);
             }
         }
+        if (returnList.Count() == 0) return null;
         return returnList;
     }
 

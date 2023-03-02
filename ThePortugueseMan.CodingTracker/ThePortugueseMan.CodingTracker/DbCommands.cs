@@ -15,8 +15,32 @@ public class DbCommands
         this.timeSpanFormat = appSettings.GetTimeSpanFormatOfDB();
     }
 
+    public void Initialization()
+    {
+        InitializeMainTable();
+        InitializeGoalsTable();
+    }
+
     //if the main table doesn't exist, it's created
-    public void InitializeTable()
+    private void InitializeMainTable()
+    {
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            connection.Open();
+            var tableCmd = connection.CreateCommand();
+
+            tableCmd.CommandText =
+                @$"CREATE TABLE IF NOT EXISTS {this.mainTableName}" +
+                    "(Id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "StartDate STRING, EndDate STRING, Diff STRING)";
+
+            tableCmd.ExecuteNonQuery();
+
+            connection.Close();
+        }
+    }
+
+    private void InitializeGoalsTable()
     {
         using (var connection = new SqliteConnection(connectionString))
         {

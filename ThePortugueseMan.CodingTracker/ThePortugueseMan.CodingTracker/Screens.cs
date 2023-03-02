@@ -16,6 +16,7 @@ internal class Screens
             "3 - Update Log", 
             "4 - Delete Log",
             "5 - View Reports",
+            "6 - Goals",
             "0 - Exit App"};
 
         while (!exitMenu) 
@@ -34,11 +35,50 @@ internal class Screens
                 case 3: UpdateLogMenu(); break;
                 case 4: DeleteLogScreen(); break;
                 case 5: ReportsMenu(); break;
+                case 6: GoalsMenu(); break;
                 default: break;
 
             }
         }
         return;
+    }
+
+    private void GoalsMenu()
+    {
+        bool exit = false;
+        while (!exit)
+        {
+            Console.Clear();
+            List<string> optionsString = new List<string> {
+                "1 - View Goals",
+                "2 - Set Goals",
+                "0 - Return"};
+
+            ConsoleTableBuilder.From(optionsString)
+                .WithFormat(ConsoleTableBuilderFormat.Alternative)
+                .WithColumn("Goals")
+                .ExportAndWriteLine();
+            Console.Write("\n");
+
+            switch (askInput.PositiveNumber("Please select an option or press 0 to exit"))
+            {
+                case 0: exit = true; continue;
+                case 1:
+                    Console.Clear();
+                    ReportsView(dbCmds.ReturnAllLogsInTable());
+                    break;
+                case 2:
+                    DateTime[] interval = askInput.DateInterval("Insert a start date.", "Insert an end date.");
+                    Console.Clear();
+                    ReportsView(listOp.ReturnLogsBetweenDates(dbCmds.ReturnAllLogsInTable(),
+                        interval[0], interval[1]));
+
+                    break;
+                case 3: break;
+                default: continue;
+            }
+            askInput.AnyKeyToContinue("\n");
+        }
     }
 
     private void ReportsMenu()
@@ -50,7 +90,7 @@ internal class Screens
             List<string> optionsString = new List<string> {
                 "1 - Overview",
                 "2 - Date interval",
-                "3 - Last week",
+                "3 - Last X",
                 "0 - Return"};
 
             ConsoleTableBuilder.From(optionsString)
@@ -61,7 +101,7 @@ internal class Screens
 
             switch (askInput.PositiveNumber("Please select an option or press 0 to exit"))
             {
-                case 0: exit = true; break;
+                case 0: exit = true; continue;
                 case 1:
                     Console.Clear();
                     ReportsView(dbCmds.ReturnAllLogsInTable());
@@ -74,7 +114,7 @@ internal class Screens
                     
                     break;
                 case 3: break;
-                default: continue; break;
+                default: continue;
             }
             askInput.AnyKeyToContinue("\n");
         }
@@ -84,7 +124,8 @@ internal class Screens
     {
         if (listToReport == null)
         {
-
+            Console.WriteLine("Nothing to report on");
+            return;
         }
         else 
         {
@@ -110,7 +151,6 @@ internal class Screens
         }
         return;
     }
-
     private void ViewLogsMenu()
     {
         bool exit = false;
@@ -146,13 +186,10 @@ internal class Screens
             }
         }
     }
-
     private void ViewLogsInDateInterval()
     {
         CodingSession codingSession = new();
         List<CodingSession> listToDisplay = new();
-        
-        bool validInterval;
 
         DateTime[] interval = askInput.DateInterval("Insert the start date", "Insert the end date");
         listToDisplay = listOp.ReturnLogsBetweenDates(dbCmds.ReturnAllLogsInTable(), interval[0], interval[1]);
@@ -164,13 +201,12 @@ internal class Screens
         askInput.AnyKeyToContinue();
         return;
     }
-
     private void ViewOrderedLogsMenu()
     {
         bool exitMenu = false;
         List<string> optionsString = new List<string> {
-            "1 - Ascending order",
-            "2 - Descending order",
+            "1 - Ascending date",
+            "2 - Descending date",
             "0 - Return"};
 
 
@@ -202,20 +238,13 @@ internal class Screens
     {
         List<CodingSession> listToDisplay;
         Console.Clear();
-        if (order == "ASCENDING")
-        {
-            listToDisplay = listOp.ReturnOrderedByAscendingDate(dbCmds.ReturnAllLogsInTable());
-        }
-        else if (order == "DESCENDING")
-        {
-            listToDisplay = listOp.ReturnOrderedByDescendingDate(dbCmds.ReturnAllLogsInTable());
+        if (order == "ASCENDING") listToDisplay = listOp.ReturnOrderedByAscendingDate(dbCmds.ReturnAllLogsInTable());
 
-        }
+        else if (order == "DESCENDING") listToDisplay = listOp.ReturnOrderedByDescendingDate(dbCmds.ReturnAllLogsInTable());
         else throw new Exception($"ViewOrderedLogs order not valid: {order}");
         DisplaySessions(listToDisplay, order);
         return;
     }
-
     private void DisplaySessions(List<CodingSession> listToDisplay, string title)
     {
         var tableDataDisplay = new List<List<object>>();
@@ -252,7 +281,6 @@ internal class Screens
     private void InsertLogsMenu()
     {
         bool exit = false;
-
         while(!exit)
         {
             Console.Clear();
@@ -276,12 +304,12 @@ internal class Screens
             }
         }
     }
-
     private void ManualLogInsert()
     {
         CodingSession codingSession = new();
         bool validEntry;
 
+        askInput.DateInterval("Insert the start date.", "Insert the end date.");
         do
         {
             Console.Write("\n");
@@ -313,7 +341,6 @@ internal class Screens
         Console.Clear();
         return;
     }
-
     private void StopWatchInsert()
     {
         bool exit = false;

@@ -9,7 +9,7 @@ internal class Program
         
         Screens screen = new();
 
-        dbCmd.InitializeTable();
+        dbCmd.Initialization();
         screen.MainMenu();
         Console.Clear();
         Console.WriteLine("\n\nGoodbye!");
