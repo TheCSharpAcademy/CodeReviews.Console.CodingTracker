@@ -5,12 +5,13 @@ namespace ThePortugueseMan.CodingTracker;
 
 public class DbCommands
 {
-    string? connectionString, mainTableName, dateTimeFormat, timeSpanFormat;
+    string? connectionString, mainTableName, goalsTableName, dateTimeFormat, timeSpanFormat;
     AppSettings appSettings = new();
     public DbCommands() 
     {
         this.connectionString = appSettings.GetConnectionString();
         this.mainTableName = appSettings.GetMainTableName();
+        this.goalsTableName= appSettings.GetGoalsTableName();
         this.dateTimeFormat = appSettings.GetDateTimeFormatOfDB();
         this.timeSpanFormat = appSettings.GetTimeSpanFormatOfDB();
     }
@@ -48,9 +49,9 @@ public class DbCommands
             var tableCmd = connection.CreateCommand();
 
             tableCmd.CommandText =
-                @$"CREATE TABLE IF NOT EXISTS {this.mainTableName}" +
+                @$"CREATE TABLE IF NOT EXISTS {this.goalsTableName}" +
                     "(Id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "StartDate STRING, EndDate STRING, Diff STRING)";
+                    "StartDate STRING, EndDate STRING, GoalHours STRING, HoursIn)";
 
             tableCmd.ExecuteNonQuery();
 

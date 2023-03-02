@@ -10,7 +10,7 @@ internal class Screens
     public void MainMenu()
     {
         bool exitMenu = false;
-        List<string> optionsString = new List<string> { 
+        List<object> optionsString = new List<object> { 
             "1 - View Logs", 
             "2 - Insert Log", 
             "3 - Update Log", 
@@ -49,7 +49,7 @@ internal class Screens
         while (!exit)
         {
             Console.Clear();
-            List<string> optionsString = new List<string> {
+            List<object> optionsString = new List<object> {
                 "1 - View Goals",
                 "2 - Set Goals",
                 "0 - Return"};
@@ -309,8 +309,8 @@ internal class Screens
         CodingSession codingSession = new();
         bool validEntry;
 
-        askInput.DateInterval("Insert the start date.", "Insert the end date.");
-        do
+        DateTime[] interval = askInput.DateInterval("Insert the start date.", "Insert the end date.");
+        /*do
         {
             Console.Write("\n");
             codingSession.StartDateTime = askInput.AskForDateWithHours("Insert the start date.");
@@ -335,9 +335,16 @@ internal class Screens
                 }
             }
             else return;
-        } while (!validEntry);
-        Console.WriteLine("Entry was logged successfully");
-        askInput.AnyKeyToContinue();
+        } while (!validEntry);*/
+        if (interval is null) return;
+        else
+        {
+            CodingSession sessionToInsert = new(interval[0], interval[1], interval[1].Subtract(interval[0]));
+
+            Console.WriteLine("Entry was logged successfully");
+            askInput.AnyKeyToContinue();
+        }
+
         Console.Clear();
         return;
     }
@@ -381,6 +388,7 @@ internal class Screens
 
             if (!exit)
             {
+                askInput.DateInterval("Insert the updated start date.", "Insert the updated end date.");
                 validUpdate = false;
                 codingSession.StartDateTime = askInput.AskForDateWithHours("Insert the updated start date.");
                 if (codingSession.StartDateTime != DateTime.MinValue)

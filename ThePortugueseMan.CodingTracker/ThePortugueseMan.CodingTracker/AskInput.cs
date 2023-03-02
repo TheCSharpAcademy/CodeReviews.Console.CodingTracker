@@ -60,7 +60,7 @@ public class AskInput
         while (!(Int32.TryParse(input, out number) && number >= 0));
         return number;
     }
-    public DateTime AskForDate(string message)
+    public DateTime AskForSimpleDate(string message)
     {
         string? input;
         DateTime returnDate = new();
@@ -95,7 +95,7 @@ public class AskInput
         return returnDate;
     }
 
-    public DateTime[] DateInterval(string startDateMessage, string endDateMessage)
+    public DateTime[] DateInterval(string askStartDateMessage, string askEndDateMessage)
     {
         DateTime[] result = new DateTime[2];
 
@@ -103,12 +103,12 @@ public class AskInput
 
         do
         {
-            result[0] = AskForDate(startDateMessage);
+            result[0] = AskForSimpleDate(askStartDateMessage);
 
             if (result[0] == DateTime.MinValue) return null;
             else
             {
-                result[1] = AskForDate(endDateMessage);
+                result[1] = AskForSimpleDate(askEndDateMessage);
                 if (result[1] == DateTime.MinValue) return null;
                 else
                 {
@@ -130,6 +130,39 @@ public class AskInput
         return result;
     }
 
+    public DateTime[] DateIntervalWithHours(string askStartDateMessage, string askEndDateMessage)
+    {
+        DateTime[] result = new DateTime[2];
+
+        bool validInterval;
+
+        do
+        {
+            result[0] = AskForDateWithHours(askStartDateMessage);
+
+            if (result[0] == DateTime.MinValue) return null;
+            else
+            {
+                result[1] = AskForDateWithHours(askEndDateMessage);
+                if (result[1] == DateTime.MinValue) return null;
+                else
+                {
+                    if (result[1].Subtract(result[0]) >= TimeSpan.Zero)
+                    {
+                        validInterval = true;
+                    }
+                    else
+                    {
+                        AnyKeyToContinue("End date is earlier than the start date. Press any key to continue");
+                        validInterval = false;
+                    }
+                }
+
+            }
+        } while (!validInterval);
+
+        return result;
+    }
     private DateTime AskForHoursAndMinutes(string message)
     {
         DateTime returnTime = new();
@@ -174,7 +207,7 @@ public class AskInput
 
         try
         {
-            auxDate = AskForDate(message);
+            auxDate = AskForSimpleDate(message);
             if(auxDate == DateTime.MinValue) return DateTime.MinValue;
             auxTime = AskForHoursAndMinutes("Insert the time.");
 

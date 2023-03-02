@@ -20,6 +20,12 @@ public class CodingSession
         EndDateTime = endTime;
         Duration = duration;
     }
+    public CodingSession(DateTime startTime, DateTime endTime, TimeSpan duration)
+    {
+        StartDateTime = startTime;
+        EndDateTime = endTime;
+        Duration = duration;
+    }
 
     public CodingSession() {}
 }
