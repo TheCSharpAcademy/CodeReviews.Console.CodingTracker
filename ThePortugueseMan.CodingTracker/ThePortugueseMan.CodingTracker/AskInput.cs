@@ -210,6 +210,7 @@ public class AskInput
             auxDate = AskForSimpleDate(message);
             if(auxDate == DateTime.MinValue) return DateTime.MinValue;
             auxTime = AskForHoursAndMinutes("Insert the time.");
+            if (auxTime == DateTime.MinValue) return DateTime.MinValue;
 
             returnDate = new(auxDate.Year, auxDate.Month, auxDate.Day, auxTime.Hour, auxTime.Minute, auxTime.Second);
 

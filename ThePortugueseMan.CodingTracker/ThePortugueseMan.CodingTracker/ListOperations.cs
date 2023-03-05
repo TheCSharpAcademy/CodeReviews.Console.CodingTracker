@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ThePortugueseMan.CodingTracker;
+﻿namespace ThePortugueseMan.CodingTracker;
 
 internal class ListOperations
 {
@@ -19,8 +13,10 @@ internal class ListOperations
         return returnList;
     }
 
-    public List<CodingSession> ReturnLogsBetweenDates(List<CodingSession> listToOperate, DateTime startDate, DateTime endDate)
+    public List<CodingSession> GetLogsBetweenDates(List<CodingSession> listToOperate, DateTime startDate, DateTime endDate)
     {
+        if (listToOperate is null) return null;
+
         List<CodingSession> returnList = new List<CodingSession>();
 
         foreach (CodingSession c in listToOperate)
@@ -36,7 +32,10 @@ internal class ListOperations
 
     public TimeSpan TotalTimeInList(List<CodingSession> listToOperate)
     {
+        if (listToOperate is null) return TimeSpan.Zero;
+
         TimeSpan totalTime = TimeSpan.Zero;
+
         foreach (CodingSession c in listToOperate)
         {
             totalTime = totalTime.Add(c.Duration);
