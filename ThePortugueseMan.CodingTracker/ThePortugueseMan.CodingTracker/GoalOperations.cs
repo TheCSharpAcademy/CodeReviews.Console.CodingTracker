@@ -36,4 +36,20 @@ public class GoalOperations
         }
     }
 
+    public Goal GetActiveGoal()
+    {
+        List<Goal> allGoals = dbCmd.ReturnAllGoalsInTable();
+
+        if (allGoals == null) return null;
+
+        foreach (Goal goal in allGoals) 
+        {
+            if (goal.Status == "Active")
+            {
+                return goal;
+            }
+        }
+        return null;
+    }
+
 }

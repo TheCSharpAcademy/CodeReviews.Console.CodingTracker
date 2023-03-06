@@ -9,13 +9,14 @@ public class DbCommands
 {
     string? connectionString, mainTableName, goalsTableName, dateTimeFormat, timeSpanFormat;
     AppSettings appSettings = new();
+    Format format = new();
 
     public DbCommands() 
     {
         this.connectionString = appSettings.GetConnectionString();
         this.mainTableName = appSettings.GetMainTableName();
         this.goalsTableName= appSettings.GetGoalsTableName();
-        this.dateTimeFormat = appSettings.GetDateTimeFormatOfDB();
+        this.dateTimeFormat = appSettings.GetDateTimeDisplayFormat();
         this.timeSpanFormat = appSettings.GetTimeSpanFormatOfDB();
     }
 
@@ -64,9 +65,9 @@ public class DbCommands
 
             tableCmd.CommandText =
                 $"INSERT INTO {this.mainTableName}(StartDate, EndDate, Diff) " +
-                $"VALUES ('{sessionToInsert.StartDateTime.ToString(dateTimeFormat)}'," +
-                $"'{sessionToInsert.EndDateTime.ToString(dateTimeFormat)}'," +
-                $"'{Math.Truncate(sessionToInsert.Duration.TotalHours).ToString("00")}:{sessionToInsert.Duration.ToString("mm")}')";
+                $"VALUES ('{format.DateToDateString(sessionToInsert.StartDateTime)}'," +
+                $"'{format.DateToDateString(sessionToInsert.EndDateTime)}'," +
+                $"'{format.TimeSpanToStringFormat(sessionToInsert.Duration)}')";
             try 
             {
                 tableCmd.ExecuteNonQuery();
@@ -90,10 +91,10 @@ public class DbCommands
 
             tableCmd.CommandText =
                 $"INSERT INTO {this.goalsTableName}(StartDate, EndDate, TargetHours, HoursSpent, Status) " +
-                $"VALUES ('{goalToInsert.StartDate.ToString("dd-MM-yy")}'," +
-                $"'{goalToInsert.EndDate.ToString("dd-MM-yy")}'," +
-                $"'{goalToInsert.TargetHours.ToString(timeSpanFormat)}'," +
-                $"'{goalToInsert.HoursSpent.ToString(timeSpanFormat)}'," +
+                $"VALUES ('{format.DateToDateString(goalToInsert.StartDate)}'," +
+                $"'{format.DateToDateString(goalToInsert.EndDate)}'," +
+                $"'{format.TimeSpanToStringFormat(goalToInsert.TargetHours)}'," +
+                $"'{format.TimeSpanToStringFormat(goalToInsert.HoursSpent)}'," +
                 $"'Active')";
 
             try
@@ -107,23 +108,6 @@ public class DbCommands
                 connection.Close();
                 return false;
             }
-        }
-    }
-
-    public bool CheckIfThereIsActiveGoal()
-    {
-        using (var connection = new SqliteConnection(connectionString))
-        {
-            connection.Open();
-            var checkCmd = connection.CreateCommand();
-
-            checkCmd.CommandText =
-                $"SELECT EXISTS(SELECT 1 FROM {this.goalsTableName} WHERE Status = 'Active')";
-            int checkQuery = Convert.ToInt32(checkCmd.ExecuteScalar());
-            connection.Close();
-
-            if (checkQuery == 0) return false;
-            else return true;
         }
     }
 
@@ -185,9 +169,9 @@ public class DbCommands
 
                 tableCmd.CommandText =
                     $"UPDATE {this.mainTableName} SET " +
-                    $"StartDate = '{newSessionInfo.StartDateTime.ToString(dateTimeFormat)}', " +
-                    $"EndDate = '{newSessionInfo.EndDateTime.ToString(dateTimeFormat)}'," +
-                    $"Diff = '{newSessionInfo.Duration.ToString(timeSpanFormat)}' " +
+                    $"StartDate = '{format.DateToDateString(newSessionInfo.StartDateTime)}', " +
+                    $"EndDate = '{format.DateToDateString(newSessionInfo.EndDateTime)}'," +
+                    $"Diff = '{format.TimeSpanToStringFormat(newSessionInfo.Duration)}' " +
                     $"WHERE Id = {index}";
 
                 tableCmd.ExecuteNonQuery();
@@ -222,9 +206,9 @@ public class DbCommands
 
                 tableCmd.CommandText =
                     $"UPDATE {this.goalsTableName} SET " +
-                    $"StartDate = '{newGoalInfo.StartDate.ToString("dd-MM-yy")}', " +
-                    $"EndDate = '{newGoalInfo.EndDate.ToString("dd-MM-yy")}'," +
-                    $"HoursSpent = '{newGoalInfo.HoursSpent.ToString(timeSpanFormat)}'," +
+                    $"StartDate = '{format.DateToDateString(newGoalInfo.StartDate)}', " +
+                    $"EndDate = '{format.DateToDateString(newGoalInfo.EndDate)}'," +
+                    $"HoursSpent = '{format.TimeSpanToStringFormat(newGoalInfo.HoursSpent)}'," +
                     $"Status = '{newGoalInfo.Status}'" +
                     $"WHERE Id = {index}";
 
@@ -254,19 +238,14 @@ public class DbCommands
             if (reader.HasRows)
             {
                 while (reader.Read())
-                {
-                    string[] durationSplit = reader.GetString(3).Split(":");
-                    Int32.TryParse(durationSplit[0], out int fullHours);
-                    Int32.TryParse(durationSplit[1], out int fullMinutes);
-                    
+                {                    
                     tableData.Add(
                     new CodingSession
                     {
                         Id = reader.GetInt32(0),
-                        StartDateTime = DateTime.ParseExact(reader.GetString(1), dateTimeFormat, new CultureInfo("en-US")),
-                        EndDateTime = DateTime.ParseExact(reader.GetString(2), dateTimeFormat, new CultureInfo("en-US")),
-                        Duration = 
-                            TimeSpan.Zero.Add(TimeSpan.FromHours(fullHours)).Add(TimeSpan.FromMinutes(fullMinutes))
+                        StartDateTime = format.StringToDate(reader.GetString(1)),
+                        EndDateTime = format.StringToDate(reader.GetString(2)),
+                        Duration = format.StringToTimeSpan(reader.GetString(3)),
                     });
                 }
             }
@@ -300,10 +279,10 @@ public class DbCommands
                     new Goal
                     {
                         Id = reader.GetInt32(0),
-                        StartDate = DateTime.ParseExact(reader.GetString(1), "dd-MM-yy", new CultureInfo("en-US")),
-                        EndDate = DateTime.ParseExact(reader.GetString(2), "dd-MM-yy", new CultureInfo("en-US")),
-                        TargetHours = TimeSpan.ParseExact(reader.GetString(3), timeSpanFormat, new CultureInfo("en-US")),
-                        HoursSpent = TimeSpan.ParseExact(reader.GetString(4), timeSpanFormat, new CultureInfo("en-US")),
+                        StartDate = format.StringToDate(reader.GetString(1)),
+                        EndDate = format.StringToDate(reader.GetString(2)),
+                        TargetHours = format.StringToTimeSpan(reader.GetString(3)),
+                        HoursSpent = format.StringToTimeSpan(reader.GetString(4)),
                         Status = reader.GetString(5)
                     });
                 }

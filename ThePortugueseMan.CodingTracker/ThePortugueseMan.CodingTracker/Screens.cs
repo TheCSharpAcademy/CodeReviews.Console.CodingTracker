@@ -5,8 +5,10 @@ namespace ThePortugueseMan.CodingTracker;
 internal class Screens
 {
     AskInput askInput = new();
+    Format format = new();
     DbCommands dbCmds = new();
     ListOperations listOp = new();
+    GoalOperations goalOp = new();
     public void MainMenu()
     {
         bool exitMenu = false;
@@ -45,7 +47,6 @@ internal class Screens
     
     private void GoalsMenu()
     {
-        GoalOperations goalOp = new();
         goalOp.UpdateGoals();
         bool exit = false;
         while (!exit)
@@ -78,6 +79,25 @@ internal class Screens
                 default: continue;
             }
             askInput.AnyKeyToContinue();
+        }
+    }
+
+    private void CurrentGoalDisplay()
+    {
+        Goal activeGoal = goalOp.GetActiveGoal();
+        if(activeGoal != null)
+        {
+            TimeSpan daysLeft = activeGoal.EndDate.Subtract(DateTime.Now);
+            if (daysLeft < TimeSpan.Zero) daysLeft = TimeSpan.Zero;
+            var tableList = new List<List<object>>
+            {
+                new List<object>{"Start Date", activeGoal.StartDate.ToString("dd-MM-yy")},
+                new List<object>{"End Date", activeGoal.EndDate.ToString("dd-MM-yy")},
+                new List<object>{"Target time", activeGoal.TargetHours},
+                new List<object>{"Time spent", activeGoal.HoursSpent},
+                new List<object>{"", daysLeft.TotalDays},
+                new List<object>{"Target time", activeGoal.TargetHours },
+            };
         }
     }
 
@@ -123,7 +143,7 @@ internal class Screens
 
     private void InsertGoal()
     {
-        if (dbCmds.CheckIfThereIsActiveGoal())
+        if (goalOp.GetActiveGoal() != null)
         {
             Console.WriteLine("There's already an active goal");
             return; 
@@ -198,11 +218,11 @@ internal class Screens
         }
         else 
         {
-            string totalTime = listOp.TotalTimeInList(listToReport).ToString("hh\\:mm");
+            string totalTime = format.TimeSpanToStringFormat(listOp.TotalTimeInList(listToReport));
             string totalSessions = listOp.NumberOfSessionsInList(listToReport).ToString();
-            string averageTime = listOp.AverageTimeInList(listToReport).ToString("hh\\:mm");
-            string firstDate = listOp.FirstDateInList(listToReport).ToString("dd-MM-yy");
-            string lastDate = listOp.LastDateInList(listToReport).ToString("dd-MM-yy");
+            string averageTime = format.TimeSpanToStringFormat(listOp.AverageTimeInList(listToReport));
+            string firstDate = format.DateToDateString(listOp.FirstDateInList(listToReport));
+            string lastDate = format.DateToDateString(listOp.LastDateInList(listToReport));
             string diffBetweenFirstAndLast = listOp.DifferenceBetweenFirsAndLastDates(listToReport).Days.ToString();
 
             var tableList = new List<List<object>>
@@ -326,14 +346,13 @@ internal class Screens
         {
             foreach (CodingSession session in listToDisplay)
             {
-                var debug = Math.Truncate(session.Duration.TotalHours);
                 tableDataDisplay.Add(
                     new List<object>
                     {
                     session.Id,
-                    session.StartDateTime.ToString("dd-MM-yy"), session.StartDateTime.ToString("HH:mm"),
-                    session.EndDateTime.ToString("dd-MM-yy"), session.EndDateTime.ToString("HH:mm"),
-                    $"{Math.Truncate(session.Duration.TotalHours).ToString("00")}:{session.Duration.ToString("mm")}"
+                    format.DateToDateString(session.StartDateTime), format.DateToTimeString(session.StartDateTime),
+                    format.DateToDateString(session.EndDateTime), format.DateToTimeString(session.EndDateTime),
+                    format.TimeSpanToStringFormat(session.Duration)
                     });
             }
             ConsoleTableBuilder.From(tableDataDisplay)
@@ -384,7 +403,6 @@ internal class Screens
     
     private void ManualLogInsert()
     {
-        CodingSession codingSession = new();
         bool validEntry;
 
         DateTime[] interval = askInput.DateIntervalWithHours("Insert the start date.", "Insert the end date.");
@@ -413,7 +431,8 @@ internal class Screens
             sessionToInsert.EndDateTime = DateTime.Now;
             sessionToInsert.Duration =
                 sessionToInsert.EndDateTime.Subtract(sessionToInsert.StartDateTime);
-            Console.WriteLine($"\nThis session was {sessionToInsert.Duration.ToString("hh\\:mm")}");
+            Console.WriteLine($"\nThis session was " +
+                $"{Math.Truncate(sessionToInsert.Duration.TotalHours).ToString("00")}:{sessionToInsert.Duration.ToString("mm")}");
             dbCmds.Insert(sessionToInsert);
         }
         return;
@@ -422,8 +441,7 @@ internal class Screens
     private void UpdateLogMenu()
     {
         int index;
-        bool showError = false, exit = false, validUpdate = false;
-        CodingSession codingSession = new();
+        bool showError = false, exit = false;
 
         while (!exit)
         {
@@ -446,9 +464,8 @@ internal class Screens
             CodingSession sessionToInsert = new(interval[0], interval[1], interval[1].Subtract(interval[0]));
             if (dbCmds.Update(index, sessionToInsert)) Console.WriteLine("Entry was updated successfully");
             else Console.WriteLine("Couldn't update log...");
-
+            askInput.AnyKeyToContinue();
             return;
-
         }
         return;
     }
