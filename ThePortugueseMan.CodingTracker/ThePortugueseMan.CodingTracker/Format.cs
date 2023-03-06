@@ -12,27 +12,29 @@ namespace ThePortugueseMan.CodingTracker;
 
 internal class Format
 {
-    string? dateDbFormat, dateDisplayFormat, timeSpanFormat;
+    string? dateMainDbFormat, dateGoalsDbFormat, dateDisplayFormat, timeSpanFormat;
     AppSettings appSettings = new();
 
     public Format()
     {
-        this.dateDbFormat = appSettings.GetDateTimeDbFormat();
+        this.dateMainDbFormat = appSettings.GetDateTimeMainDbFormat();
+        this.dateGoalsDbFormat = appSettings.GetDateTimeGoalsDbFormat();
         this.dateDisplayFormat = appSettings.GetDateTimeDisplayFormat();
         this.timeSpanFormat = appSettings.GetTimeSpanFormatOfDB();
     }
 
-    public string DateToDateString(DateTime dateTimeToFormat)
-    {
-        return dateTimeToFormat.ToString(dateDisplayFormat);
-    }
+    public string DateToMainDbString(DateTime dateTimeToFormat) {return dateTimeToFormat.ToString(dateMainDbFormat);}
 
+    public string DateToGoalsDbString(DateTime dateTimeToFormat) { return dateTimeToFormat.ToString(dateGoalsDbFormat); }
+
+    public string DateToDisplayString(DateTime dateTimeToFormat) { return dateTimeToFormat.ToString(dateDisplayFormat); }
+    
     public string DateToTimeString(DateTime dateTimeToFormat) 
     {
         return dateTimeToFormat.ToString("HH:mm");    
     }
 
-    public string TimeSpanToStringFormat(TimeSpan timeToFormat) 
+    public string TimeSpanToString(TimeSpan timeToFormat) 
     {
         string formatted = 
             $"{Math.Truncate(timeToFormat.TotalHours).ToString("00")}:{timeToFormat.ToString("mm")}";
@@ -41,8 +43,19 @@ internal class Format
 
     public DateTime StringToDate(string inputString)
     {
-        DateTime returnDate = 
-            DateTime.ParseExact(inputString, dateDbFormat, new CultureInfo("en-US"));
+        DateTime returnDate;
+        if (DateTime.TryParseExact(inputString, dateMainDbFormat,
+            new CultureInfo("en-US"), DateTimeStyles.None, out returnDate))
+        {
+            return returnDate;
+        }
+        else if (DateTime.TryParseExact(inputString, dateGoalsDbFormat,
+        new CultureInfo("en-US"), DateTimeStyles.None, out returnDate))
+        {
+            return returnDate;
+        }
+        else return DateTime.MinValue;
+        
         return returnDate ;
     }
 

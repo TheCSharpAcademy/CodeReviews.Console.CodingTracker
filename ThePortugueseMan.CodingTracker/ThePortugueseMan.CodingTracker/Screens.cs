@@ -67,7 +67,7 @@ internal class Screens
             switch (askInput.PositiveNumber("Please select an option or press 0 to exit"))
             {
                 case 0: exit = true; continue;
-                case 1: break;
+                case 1: Console.Clear(); CurrentGoalDisplay(); break;
 
                 case 2:
                     InsertGoal();
@@ -87,17 +87,27 @@ internal class Screens
         Goal activeGoal = goalOp.GetActiveGoal();
         if(activeGoal != null)
         {
-            TimeSpan daysLeft = activeGoal.EndDate.Subtract(DateTime.Now);
-            if (daysLeft < TimeSpan.Zero) daysLeft = TimeSpan.Zero;
+            TimeSpan daysLeftToEnd = activeGoal.EndDate.Date.Subtract(DateTime.Now.Date);
+            if (daysLeftToEnd < TimeSpan.Zero) daysLeftToEnd = TimeSpan.Zero;
+            TimeSpan timeLeftToGoal = activeGoal.TargetHours.Subtract(activeGoal.HoursSpent);
+            if (timeLeftToGoal < TimeSpan.Zero) daysLeftToEnd = TimeSpan.Zero;
             var tableList = new List<List<object>>
             {
-                new List<object>{"Start Date", activeGoal.StartDate.ToString("dd-MM-yy")},
-                new List<object>{"End Date", activeGoal.EndDate.ToString("dd-MM-yy")},
-                new List<object>{"Target time", activeGoal.TargetHours},
-                new List<object>{"Time spent", activeGoal.HoursSpent},
-                new List<object>{"", daysLeft.TotalDays},
-                new List<object>{"Target time", activeGoal.TargetHours },
+                new List<object>{"Start Date", format.DateToDisplayString(activeGoal.StartDate)},
+                new List<object>{"End Date", format.DateToDisplayString(activeGoal.EndDate)},
+                new List<object>{"Target time", format.TimeSpanToString(activeGoal.TargetHours)},
+                new List<object>{"Time spent", format.TimeSpanToString(activeGoal.HoursSpent)},
+                new List<object>{"Days Left", daysLeftToEnd.TotalDays},
+                new List<object>{"Time needed", format.TimeSpanToString(timeLeftToGoal)},
+                new List<object>{"Time/day needed", format.TimeSpanToString(timeLeftToGoal.Divide(daysLeftToEnd.TotalDays))},
             };
+
+            ConsoleTableBuilder.From(tableList)
+                .WithTitle("Goal")
+                .WithFormat(ConsoleTableBuilderFormat.Alternative)
+                .ExportAndWriteLine();
+            Console.Write("\n");
+
         }
     }
 
@@ -218,11 +228,11 @@ internal class Screens
         }
         else 
         {
-            string totalTime = format.TimeSpanToStringFormat(listOp.TotalTimeInList(listToReport));
+            string totalTime = format.TimeSpanToString(listOp.TotalTimeInList(listToReport));
             string totalSessions = listOp.NumberOfSessionsInList(listToReport).ToString();
-            string averageTime = format.TimeSpanToStringFormat(listOp.AverageTimeInList(listToReport));
-            string firstDate = format.DateToDateString(listOp.FirstDateInList(listToReport));
-            string lastDate = format.DateToDateString(listOp.LastDateInList(listToReport));
+            string averageTime = format.TimeSpanToString(listOp.AverageTimeInList(listToReport));
+            string firstDate = format.DateToMainDbString(listOp.FirstDateInList(listToReport));
+            string lastDate = format.DateToMainDbString(listOp.LastDateInList(listToReport));
             string diffBetweenFirstAndLast = listOp.DifferenceBetweenFirsAndLastDates(listToReport).Days.ToString();
 
             var tableList = new List<List<object>>
@@ -350,9 +360,9 @@ internal class Screens
                     new List<object>
                     {
                     session.Id,
-                    format.DateToDateString(session.StartDateTime), format.DateToTimeString(session.StartDateTime),
-                    format.DateToDateString(session.EndDateTime), format.DateToTimeString(session.EndDateTime),
-                    format.TimeSpanToStringFormat(session.Duration)
+                    format.DateToDisplayString(session.StartDateTime), format.DateToTimeString(session.StartDateTime),
+                    format.DateToDisplayString(session.EndDateTime), format.DateToTimeString(session.EndDateTime),
+                    format.TimeSpanToString(session.Duration)
                     });
             }
             ConsoleTableBuilder.From(tableDataDisplay)
@@ -403,11 +413,14 @@ internal class Screens
     
     private void ManualLogInsert()
     {
-        bool validEntry;
-
         DateTime[] interval = askInput.DateIntervalWithHours("Insert the start date.", "Insert the end date.");
 
         if (interval is null) return;
+        if (listOp.TotalTimeBetweenDates(dbCmds.ReturnAllLogsInTable(), interval[0], interval[1]) != TimeSpan.Zero)
+        {
+            Console.WriteLine("Time overlap. Couldn't insert log...");
+            return;
+        }
 
         CodingSession sessionToInsert = new(interval[0], interval[1], interval[1].Subtract(interval[0]));
         if (dbCmds.Insert(sessionToInsert)) Console.WriteLine("Entry was logged successfully");

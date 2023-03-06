@@ -7,6 +7,7 @@ internal class ListOperations
         List<CodingSession> returnList = listToOrder.OrderBy(c => c.StartDateTime).ToList();
         return returnList;
     }
+    
     public List<CodingSession> ReturnOrderedByDescendingDate(List<CodingSession> listToOrder)
     {
         List<CodingSession> returnList = listToOrder.OrderByDescending(c => c.StartDateTime).ToList();
@@ -44,14 +45,15 @@ internal class ListOperations
         return totalTime;
     }
 
-    public TimeSpan TotalTimeInListBetweenDates(List<CodingSession> listToOperate, DateTime startDate, DateTime endDate)
+    public TimeSpan TotalTimeBetweenDates(List<CodingSession> listToOperate, DateTime startDate, DateTime endDate)
     {
         if (listToOperate is null || startDate == DateTime.MinValue || endDate == DateTime.MinValue) return TimeSpan.Zero;
 
         long totalTicks = 0;
         foreach (CodingSession c in listToOperate)
         {
-            long auxStartTicks, auxEndTicks;
+            long auxStartTicks = 0, auxEndTicks = 0;
+            if (c.EndDateTime.Ticks <= startDate.Ticks || c.StartDateTime.Ticks >= endDate.Ticks) continue;
             if(c.StartDateTime.Ticks <= startDate.Ticks) { auxStartTicks = startDate.Ticks; }
             else { auxStartTicks = c.StartDateTime.Ticks; }
 

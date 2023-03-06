@@ -65,9 +65,9 @@ public class DbCommands
 
             tableCmd.CommandText =
                 $"INSERT INTO {this.mainTableName}(StartDate, EndDate, Diff) " +
-                $"VALUES ('{format.DateToDateString(sessionToInsert.StartDateTime)}'," +
-                $"'{format.DateToDateString(sessionToInsert.EndDateTime)}'," +
-                $"'{format.TimeSpanToStringFormat(sessionToInsert.Duration)}')";
+                $"VALUES ('{format.DateToMainDbString(sessionToInsert.StartDateTime)}'," +
+                $"'{format.DateToMainDbString(sessionToInsert.EndDateTime)}'," +
+                $"'{format.TimeSpanToString(sessionToInsert.Duration)}')";
             try 
             {
                 tableCmd.ExecuteNonQuery();
@@ -91,10 +91,10 @@ public class DbCommands
 
             tableCmd.CommandText =
                 $"INSERT INTO {this.goalsTableName}(StartDate, EndDate, TargetHours, HoursSpent, Status) " +
-                $"VALUES ('{format.DateToDateString(goalToInsert.StartDate)}'," +
-                $"'{format.DateToDateString(goalToInsert.EndDate)}'," +
-                $"'{format.TimeSpanToStringFormat(goalToInsert.TargetHours)}'," +
-                $"'{format.TimeSpanToStringFormat(goalToInsert.HoursSpent)}'," +
+                $"VALUES ('{format.DateToGoalsDbString(goalToInsert.StartDate)}'," +
+                $"'{format.DateToGoalsDbString(goalToInsert.EndDate)}'," +
+                $"'{format.TimeSpanToString(goalToInsert.TargetHours)}'," +
+                $"'{format.TimeSpanToString(goalToInsert.HoursSpent)}'," +
                 $"'Active')";
 
             try
@@ -169,9 +169,9 @@ public class DbCommands
 
                 tableCmd.CommandText =
                     $"UPDATE {this.mainTableName} SET " +
-                    $"StartDate = '{format.DateToDateString(newSessionInfo.StartDateTime)}', " +
-                    $"EndDate = '{format.DateToDateString(newSessionInfo.EndDateTime)}'," +
-                    $"Diff = '{format.TimeSpanToStringFormat(newSessionInfo.Duration)}' " +
+                    $"StartDate = '{format.DateToMainDbString(newSessionInfo.StartDateTime)}', " +
+                    $"EndDate = '{format.DateToMainDbString(newSessionInfo.EndDateTime)}'," +
+                    $"Diff = '{format.TimeSpanToString(newSessionInfo.Duration)}' " +
                     $"WHERE Id = {index}";
 
                 tableCmd.ExecuteNonQuery();
@@ -206,9 +206,9 @@ public class DbCommands
 
                 tableCmd.CommandText =
                     $"UPDATE {this.goalsTableName} SET " +
-                    $"StartDate = '{format.DateToDateString(newGoalInfo.StartDate)}', " +
-                    $"EndDate = '{format.DateToDateString(newGoalInfo.EndDate)}'," +
-                    $"HoursSpent = '{format.TimeSpanToStringFormat(newGoalInfo.HoursSpent)}'," +
+                    $"StartDate = '{format.DateToGoalsDbString(newGoalInfo.StartDate)}', " +
+                    $"EndDate = '{format.DateToGoalsDbString(newGoalInfo.EndDate)}'," +
+                    $"HoursSpent = '{format.TimeSpanToString(newGoalInfo.HoursSpent)}'," +
                     $"Status = '{newGoalInfo.Status}'" +
                     $"WHERE Id = {index}";
 
