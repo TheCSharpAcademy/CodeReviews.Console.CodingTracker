@@ -326,13 +326,14 @@ internal class Screens
         {
             foreach (CodingSession session in listToDisplay)
             {
+                var debug = Math.Truncate(session.Duration.TotalHours);
                 tableDataDisplay.Add(
                     new List<object>
                     {
                     session.Id,
                     session.StartDateTime.ToString("dd-MM-yy"), session.StartDateTime.ToString("HH:mm"),
                     session.EndDateTime.ToString("dd-MM-yy"), session.EndDateTime.ToString("HH:mm"),
-                    session.Duration.ToString("hh\\:mm")
+                    $"{Math.Truncate(session.Duration.TotalHours).ToString("00")}:{session.Duration.ToString("mm")}"
                     });
             }
             ConsoleTableBuilder.From(tableDataDisplay)
@@ -448,30 +449,6 @@ internal class Screens
 
             return;
 
-            /*if (!exit)
-            {
-                askInput.DateInterval("Insert the updated start date.", "Insert the updated end date.");
-                validUpdate = false;
-                codingSession.StartDateTime = askInput.AskForDateWithHours("Insert the updated start date.");
-                if (codingSession.StartDateTime != DateTime.MinValue)
-                {
-                    codingSession.EndDateTime = askInput.AskForDateWithHours("Insert the updated end date.");
-                    if (codingSession.EndDateTime == DateTime.MinValue) break; ;
-
-                    codingSession.Duration =
-                        codingSession.EndDateTime.Subtract(codingSession.StartDateTime);
-
-                    if (codingSession.Duration > TimeSpan.Zero)
-                    {
-                        validUpdate = dbCmds.Update(index, codingSession);
-                    }
-                    else
-                    {
-                        Console.WriteLine("End date is earlier than the start date.");
-                        askInput.AnyKeyToContinue();
-                    }
-                }
-            }*/
         }
         return;
     }

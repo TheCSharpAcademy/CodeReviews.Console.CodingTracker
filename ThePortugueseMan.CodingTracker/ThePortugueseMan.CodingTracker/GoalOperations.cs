@@ -21,7 +21,8 @@ public class GoalOperations
         {
             Goal updatedGoal = new();
             List<CodingSession> sessionsInGoalRange = listOp.GetLogsBetweenDates(allSessions, goal.StartDate, goal.EndDate);
-            updatedGoal.HoursSpent = listOp.TotalTimeInList(sessionsInGoalRange);
+            updatedGoal.HoursSpent = listOp.TotalTimeInListBetweenDates(sessionsInGoalRange, 
+                goal.StartDate, goal.EndDate.AddTicks(TimeSpan.TicksPerDay - 1));
 
             if (goal.TargetHours.Subtract(updatedGoal.HoursSpent) <= TimeSpan.Zero) updatedGoal.Status = "Complete";
             else if (goal.Status != "Active") updatedGoal.Status = "Incomplete";

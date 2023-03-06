@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using Microsoft.Data.Sqlite;
+using static System.Collections.Specialized.BitVector32;
 
 namespace ThePortugueseMan.CodingTracker;
 
@@ -65,8 +66,7 @@ public class DbCommands
                 $"INSERT INTO {this.mainTableName}(StartDate, EndDate, Diff) " +
                 $"VALUES ('{sessionToInsert.StartDateTime.ToString(dateTimeFormat)}'," +
                 $"'{sessionToInsert.EndDateTime.ToString(dateTimeFormat)}'," +
-                $"'{sessionToInsert.Duration.ToString(timeSpanFormat)}')";
-
+                $"'{Math.Truncate(sessionToInsert.Duration.TotalHours).ToString("00")}:{sessionToInsert.Duration.ToString("mm")}')";
             try 
             {
                 tableCmd.ExecuteNonQuery();
@@ -255,13 +255,18 @@ public class DbCommands
             {
                 while (reader.Read())
                 {
+                    string[] durationSplit = reader.GetString(3).Split(":");
+                    Int32.TryParse(durationSplit[0], out int fullHours);
+                    Int32.TryParse(durationSplit[1], out int fullMinutes);
+                    
                     tableData.Add(
                     new CodingSession
                     {
                         Id = reader.GetInt32(0),
-                        StartDateTime = DateTime.ParseExact(reader.GetString(1),dateTimeFormat, new CultureInfo("en-US")),
+                        StartDateTime = DateTime.ParseExact(reader.GetString(1), dateTimeFormat, new CultureInfo("en-US")),
                         EndDateTime = DateTime.ParseExact(reader.GetString(2), dateTimeFormat, new CultureInfo("en-US")),
-                        Duration = TimeSpan.ParseExact(reader.GetString(3), timeSpanFormat, new CultureInfo("en-US"))
+                        Duration = 
+                            TimeSpan.Zero.Add(TimeSpan.FromHours(fullHours)).Add(TimeSpan.FromMinutes(fullMinutes))
                     });
                 }
             }
