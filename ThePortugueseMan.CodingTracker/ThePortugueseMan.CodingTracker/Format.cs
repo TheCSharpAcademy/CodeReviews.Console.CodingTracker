@@ -29,16 +29,11 @@ internal class Format
 
     public string DateToDisplayString(DateTime dateTimeToFormat) { return dateTimeToFormat.ToString(dateDisplayFormat); }
     
-    public string DateToTimeString(DateTime dateTimeToFormat) 
-    {
-        return dateTimeToFormat.ToString("HH:mm");    
-    }
+    public string DateToTimeString(DateTime dateTimeToFormat) { return dateTimeToFormat.ToString("HH:mm"); }
 
     public string TimeSpanToString(TimeSpan timeToFormat) 
-    {
-        string formatted = 
-            $"{Math.Truncate(timeToFormat.TotalHours).ToString("00")}:{timeToFormat.ToString("mm")}";
-        return formatted ;
+    {            
+        return $"{Math.Truncate(timeToFormat.TotalHours).ToString("00")}:{timeToFormat.ToString("mm")}";
     }
 
     public DateTime StringToDate(string inputString)
@@ -55,19 +50,18 @@ internal class Format
             return returnDate;
         }
         else return DateTime.MinValue;
-        
-        return returnDate ;
     }
 
-    public TimeSpan StringToTimeSpan(string inputString) 
+    public TimeSpan StringToTimeSpan(string inputString)
     {
         string[] durationSplit = inputString.Split(":");
-        Int32.TryParse(durationSplit[0], out int fullHours);
-        Int32.TryParse(durationSplit[1], out int fullMinutes);
-
-        TimeSpan returnTime = TimeSpan.Zero.Add(TimeSpan.FromHours(fullHours)).Add(TimeSpan.FromMinutes(fullMinutes));
-
-        return returnTime ;
-
+        if (Int32.TryParse(durationSplit[0], out int fullHours))
+        {
+            if (Int32.TryParse(durationSplit[1], out int fullMinutes))
+            {
+                return TimeSpan.Zero.Add(TimeSpan.FromHours(fullHours)).Add(TimeSpan.FromMinutes(fullMinutes));
+            }
+        }
+        return TimeSpan.MinValue ;
     }
 }

@@ -9,6 +9,7 @@ internal class Screens
     DbCommands dbCmds = new();
     ListOperations listOp = new();
     GoalOperations goalOp = new();
+
     public void MainMenu()
     {
         bool exitMenu = false;
@@ -56,6 +57,7 @@ internal class Screens
                 "1 - View current goal",
                 "2 - Set goal",
                 "3 - View All goals",
+                "4 - Delete goals",
                 "0 - Return"};
 
             ConsoleTableBuilder.From(optionsString)
@@ -76,6 +78,10 @@ internal class Screens
                     Console.Clear();
                     ViewGoals();
                     break;
+                case 4:
+                    Console.Clear();
+                    DeleteGoals();
+                    break;
                 default: continue;
             }
             askInput.AnyKeyToContinue();
@@ -85,7 +91,7 @@ internal class Screens
     private void CurrentGoalDisplay()
     {
         Goal activeGoal = goalOp.GetActiveGoal();
-        if(activeGoal != null)
+        if (activeGoal != null)
         {
             TimeSpan daysLeftToEnd = activeGoal.EndDate.Date.Subtract(DateTime.Now.Date);
             if (daysLeftToEnd < TimeSpan.Zero) daysLeftToEnd = TimeSpan.Zero;
@@ -109,6 +115,8 @@ internal class Screens
             Console.Write("\n");
 
         }
+
+        else Console.WriteLine("\nThere's no active goal...\n");
     }
 
     private void ViewGoals()
@@ -147,6 +155,33 @@ internal class Screens
                 .WithFormat(ConsoleTableBuilderFormat.Alternative)
                 .WithColumn("Id", "Start date", "Start time", "End date", "End time", "Duration")
                 .ExportAndWriteLine();
+        }
+        return;
+    }
+
+    private void DeleteGoals()
+    {
+        int index;
+        bool showError = false, exit = false;
+
+        while (!exit)
+        {
+            Console.Clear();
+            ViewGoals();
+            do
+            {
+                Console.Write("\n");
+                if (!showError) index = askInput.PositiveNumber("Select the index you want to delete. Or press 0 to return");
+                else index = askInput.PositiveNumber("Please select a valid index");
+                if (index == 0) exit = true;
+            } while (!dbCmds.CheckIfIndexExistsInTable(index, "Goals") && exit == false);
+
+            if (!exit)
+            {
+                if (dbCmds.DeleteByIndex(index, "Goals")) Console.WriteLine("Log successfully deleted");
+                else Console.WriteLine("Couldn't delete log...");
+                askInput.AnyKeyToContinue();
+            }
         }
         return;
     }
@@ -426,7 +461,6 @@ internal class Screens
         if (dbCmds.Insert(sessionToInsert)) Console.WriteLine("Entry was logged successfully");
         else Console.WriteLine("Couldn't insert log...");
 
-        askInput.AnyKeyToContinue();
         return;
     }
     
@@ -438,15 +472,35 @@ internal class Screens
 
         if(!exit)
         {
+            askInput.ClearPreviousLines(1);
+            Console.WriteLine("Press any key to stop.");
             CodingSession sessionToInsert = new();
             sessionToInsert.StartDateTime = DateTime.Now;
-            askInput.AnyKeyToContinue("Press any key to stop the session");
+
+            while (!Console.KeyAvailable)
+            {
+                TimeSpan duration =
+                    DateTime.Now.Subtract(sessionToInsert.StartDateTime);
+                Console.Write(duration.ToString("hh\\:mm\\:ss"));
+                Console.SetCursorPosition(0, Console.CursorTop);
+            }
+
+            Console.Write("\n");
+            Console.ReadKey();
+
             sessionToInsert.EndDateTime = DateTime.Now;
             sessionToInsert.Duration =
                 sessionToInsert.EndDateTime.Subtract(sessionToInsert.StartDateTime);
-            Console.WriteLine($"\nThis session was " +
-                $"{Math.Truncate(sessionToInsert.Duration.TotalHours).ToString("00")}:{sessionToInsert.Duration.ToString("mm")}");
-            dbCmds.Insert(sessionToInsert);
+            
+            if (sessionToInsert.Duration <= TimeSpan.FromMinutes(5))
+            {
+                Console.WriteLine("This session was too short to register.");
+            }
+            else
+            {
+                Console.WriteLine($"\nThis session was {format.TimeSpanToString(sessionToInsert.Duration)}");
+                dbCmds.Insert(sessionToInsert);
+            }
         }
         return;
     }
@@ -466,7 +520,7 @@ internal class Screens
                 if (!showError) index = askInput.PositiveNumber("Select the index you want to update. Or press 0 to return");
                 else index = askInput.PositiveNumber("Please select a valid index");
                 if (index == 0) exit = true;
-            } while (!dbCmds.CheckIfIndexExistsInTable(index) && exit == false);
+            } while (!dbCmds.CheckIfIndexExistsInTable(index, "Main") && exit == false);
 
             if (exit) continue;
 
@@ -498,11 +552,11 @@ internal class Screens
                 if (!showError) index = askInput.PositiveNumber("Select the index you want to delete. Or press 0 to return");
                 else index = askInput.PositiveNumber("Please select a valid index");
                 if (index == 0) exit = true;
-            } while (!dbCmds.CheckIfIndexExistsInTable(index) && exit == false);
+            } while (!dbCmds.CheckIfIndexExistsInTable(index, "Main") && exit == false);
 
             if (!exit) 
             {
-                if (dbCmds.DeleteByIndex(index)) Console.WriteLine("Log successfully deleted");
+                if (dbCmds.DeleteByIndex(index, "Main")) Console.WriteLine("Log successfully deleted");
                 else Console.WriteLine("Couldn't delete log...");
                 askInput.AnyKeyToContinue();
             }

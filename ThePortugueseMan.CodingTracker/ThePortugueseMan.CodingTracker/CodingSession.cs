@@ -13,13 +13,6 @@ public class CodingSession
     public DateTime EndDateTime;
     public TimeSpan Duration;
 
-    public CodingSession (int id, DateTime startTime, DateTime endTime, TimeSpan duration)
-    {
-        Id = id;
-        StartDateTime = startTime;
-        EndDateTime = endTime;
-        Duration = duration;
-    }
     public CodingSession(DateTime startTime, DateTime endTime, TimeSpan duration)
     {
         StartDateTime = startTime;

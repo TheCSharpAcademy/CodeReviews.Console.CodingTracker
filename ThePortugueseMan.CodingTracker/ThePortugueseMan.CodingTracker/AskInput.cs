@@ -16,6 +16,7 @@ public class AskInput
             Console.SetCursorPosition(0, currentLineCursor);
         }
     }
+    
     public string? LettersNumberAndSpaces(string message)
     {
         string? returnString;
@@ -38,6 +39,7 @@ public class AskInput
         returnString.Trim();
         return returnString;
     }
+    
     public int PositiveNumber(string message)
     {
         string? input;
@@ -60,6 +62,7 @@ public class AskInput
         while (!(Int32.TryParse(input, out number) && number >= 0));
         return number;
     }
+    
     public DateTime AskForSimpleDate(string message)
     {
         string? input;
@@ -163,6 +166,7 @@ public class AskInput
 
         return result;
     }
+    
     private DateTime AskForHoursAndMinutes(string message)
     {
         DateTime returnTime = new();
@@ -234,6 +238,7 @@ public class AskInput
         Console.WriteLine(message);
         Console.ReadKey();
     }
+
     public bool ZeroOrAnyOtherKeyToContinue()
     {
         Console.WriteLine("Press any key to continue. Or press 0 to return");

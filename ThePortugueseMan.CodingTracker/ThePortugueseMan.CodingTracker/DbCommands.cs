@@ -1,7 +1,5 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using Microsoft.Data.Sqlite;
-using static System.Collections.Specialized.BitVector32;
 
 namespace ThePortugueseMan.CodingTracker;
 
@@ -111,15 +109,19 @@ public class DbCommands
         }
     }
 
-    public bool CheckIfIndexExistsInTable(int index)
+    public bool CheckIfIndexExistsInTable(int index, string table)
     {
+        string tableName;
+        if (table == "Main") tableName = this.mainTableName;
+        else if (table == "Goals") tableName = this.goalsTableName;
+        else throw new Exception("Wrong table name");
         using (var connection = new SqliteConnection(connectionString))
         {
             connection.Open();
             var checkCmd = connection.CreateCommand();
 
             checkCmd.CommandText =
-                $"SELECT EXISTS(SELECT 1 FROM {this.mainTableName} WHERE Id = {index})";
+                $"SELECT EXISTS(SELECT 1 FROM {tableName} WHERE Id = {index})";
             int checkQuery = Convert.ToInt32(checkCmd.ExecuteScalar());
             connection.Close();
 
@@ -128,15 +130,19 @@ public class DbCommands
         }
     }
 
-    public bool DeleteByIndex(int index)
+    public bool DeleteByIndex(int index, string table)
     {
+        string tableName;
+        if (table == "Main") tableName = this.mainTableName;
+        else if (table == "Goals") tableName = this.goalsTableName;
+        else throw new Exception("Wrong table name");
         using (var connection = new SqliteConnection(connectionString))
         {
             connection.Open();
             var tableCmd = connection.CreateCommand();
 
             tableCmd.CommandText =
-                $"DELETE from {this.mainTableName} WHERE Id = '{index}'";
+                $"DELETE from {tableName} WHERE Id = '{index}'";
 
             int rowCount = tableCmd.ExecuteNonQuery();
             connection.Close();

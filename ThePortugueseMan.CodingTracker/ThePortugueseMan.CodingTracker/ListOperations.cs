@@ -2,17 +2,9 @@
 
 internal class ListOperations
 {
-    public List<CodingSession> ReturnOrderedByAscendingDate(List<CodingSession> listToOrder)
-    {
-        List<CodingSession> returnList = listToOrder.OrderBy(c => c.StartDateTime).ToList();
-        return returnList;
-    }
+    public List<CodingSession> ReturnOrderedByAscendingDate(List<CodingSession> listToOrder) { return listToOrder.OrderBy(c => c.StartDateTime).ToList(); }
     
-    public List<CodingSession> ReturnOrderedByDescendingDate(List<CodingSession> listToOrder)
-    {
-        List<CodingSession> returnList = listToOrder.OrderByDescending(c => c.StartDateTime).ToList();
-        return returnList;
-    }
+    public List<CodingSession> ReturnOrderedByDescendingDate(List<CodingSession> listToOrder){ return listToOrder.OrderByDescending(c => c.StartDateTime).ToList(); }
 
     public List<CodingSession> GetLogsBetweenDates(List<CodingSession> listToOperate, DateTime startDate, DateTime endDate)
     {
@@ -54,43 +46,25 @@ internal class ListOperations
         {
             long auxStartTicks = 0, auxEndTicks = 0;
             if (c.EndDateTime.Ticks <= startDate.Ticks || c.StartDateTime.Ticks >= endDate.Ticks) continue;
+
             if(c.StartDateTime.Ticks <= startDate.Ticks) { auxStartTicks = startDate.Ticks; }
             else { auxStartTicks = c.StartDateTime.Ticks; }
 
             if(c.EndDateTime.Ticks <= endDate.Ticks) { auxEndTicks = c.EndDateTime.Ticks; }
             else { auxEndTicks = c.EndDateTime.Ticks; }
 
-            totalTicks += auxEndTicks - auxStartTicks;
+            totalTicks += (auxEndTicks - auxStartTicks);
         }
-
-        TimeSpan returnTime = new TimeSpan(totalTicks);
-        return returnTime;
+        return new TimeSpan(totalTicks);
     }
 
-    public TimeSpan AverageTimeInList(List<CodingSession> listToOperate)
-    {
-        TimeSpan totalTime = TotalTimeInList(listToOperate);
-        TimeSpan averageTime = totalTime / listToOperate.Count();
-        return averageTime;
-    }
+    public TimeSpan AverageTimeInList(List<CodingSession> listToOperate){ return TotalTimeInList(listToOperate) / listToOperate.Count(); }
 
-    public DateTime FirstDateInList(List<CodingSession> listToOperate)
-    {
-        List<CodingSession> auxList = ReturnOrderedByAscendingDate(listToOperate);
-        return auxList.ElementAt(0).StartDateTime;
-    }
+    public DateTime FirstDateInList(List<CodingSession> listToOperate){ return ReturnOrderedByAscendingDate(listToOperate).ElementAt(0).StartDateTime; }
 
-    public DateTime LastDateInList(List<CodingSession> listToOperate)
-    {
-        List<CodingSession> auxList = ReturnOrderedByDescendingDate(listToOperate);
-        return auxList.ElementAt(0).EndDateTime;
-    }
+    public DateTime LastDateInList(List<CodingSession> listToOperate) { return ReturnOrderedByDescendingDate(listToOperate).ElementAt(0).EndDateTime; }
 
-    public TimeSpan DifferenceBetweenFirsAndLastDates(List<CodingSession> listToOperate)
-    {
-        TimeSpan returnTime = LastDateInList(listToOperate).Subtract(FirstDateInList(listToOperate));
-        return returnTime;
-    }
+    public TimeSpan DifferenceBetweenFirsAndLastDates(List<CodingSession> listToOperate){ return LastDateInList(listToOperate).Subtract(FirstDateInList(listToOperate)); }
 
     public int NumberOfSessionsInList(List<CodingSession> listToOperate) { return listToOperate.Count(); }
 }
