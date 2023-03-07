@@ -34,7 +34,9 @@ A CRUD based console application that allows the user to track the time spent co
 - Allows the user the view statistic about all logs or a date interval of his choice
 
 ### Goals
-- The user can 
+- The user can set a goal for his coding sessions
+  - A goal has a start date, an end date and a target number of hours
+  - The user can view the statistics of his goal
   
 
 
