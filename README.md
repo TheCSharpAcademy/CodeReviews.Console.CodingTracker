@@ -10,6 +10,7 @@ A CRUD based console application that allows the user to track the time spent co
   - If no database exists, or the correct table does not exist they will be created on program start.
   
 ### Console Based UI
+- Most UI elements make use of the [ConsoleTableExt Library](https://github.com/minhhungit/ConsoleTableExt) to write the content in neat tables
 
 ### View
 - View all logs by their table order
@@ -45,3 +46,30 @@ A CRUD based console application that allows the user to track the time spent co
   
 
 
+## Challenges
+- Learning deal with the DateTime's immutable properties
+- Working with ConsoleTableExt for the first time
+- Working with appsettings
+- Continuing to work with SQLite
+- Planning ahead when using classes
+
+
+## Lessons learned
+- Became a bit more familiar with SQL(ite)
+- Organized my code better, with more classes
+- Learned to use appsettings, which will definitely use in future projects
+
+
+## Areas to improve
+- Keep learning more SQL
+- Separate classes even further. Towards the end of the project I realized I should've had more classes, but at that point I was to close to finishing to go restructure
+- Be more efficient, and organize what I am currently working on. When a new bug pops up, I try to immediately solve it and I end up losing track of what I was doing before, which ends up costing me a lot of unnecessary time.
+
+
+
+## Resources
+- The [C#Academy project](https://www.thecsharpacademy.com/project/13) was the project guide.
+- I used a lot of code from my [previous project](https://github.com/ThePortugueseMan/CodeReviews.Console.HabitTracker).
+- The [C#Academy discord community](https://discord.com/invite/JVnwYdM79C) that are always ready to help!
+- The [C#Academy coding coventions](https://thecsharpacademy.com/article/58) to help clean up the code and stick to the coding conventions.
+- Various resources from all over the web.
