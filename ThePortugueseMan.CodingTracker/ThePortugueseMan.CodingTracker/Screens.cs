@@ -40,7 +40,6 @@ internal class Screens
                 case 5: ReportsMenu(); break;
                 case 6: GoalsMenu(); break;
                 default: break;
-
             }
         }
         return;
@@ -69,18 +68,13 @@ internal class Screens
             switch (askInput.PositiveNumber("Please select an option or press 0 to exit"))
             {
                 case 0: exit = true; continue;
-                case 1: Console.Clear(); CurrentGoalDisplay(); break;
-
-                case 2:
-                    InsertGoal();
+                case 1: Console.Clear(); CurrentGoalDisplay(); 
                     break;
-                case 3:
-                    Console.Clear();
-                    ViewGoals();
+                case 2: InsertGoal();
                     break;
-                case 4:
-                    Console.Clear();
-                    DeleteGoals();
+                case 3: Console.Clear(); ViewGoals();
+                    break;
+                case 4: Console.Clear(); DeleteGoals();
                     break;
                 default: continue;
             }
@@ -95,8 +89,10 @@ internal class Screens
         {
             TimeSpan daysLeftToEnd = activeGoal.EndDate.Date.Subtract(DateTime.Now.Date);
             if (daysLeftToEnd < TimeSpan.Zero) daysLeftToEnd = TimeSpan.Zero;
+            
             TimeSpan timeLeftToGoal = activeGoal.TargetHours.Subtract(activeGoal.HoursSpent);
             if (timeLeftToGoal < TimeSpan.Zero) daysLeftToEnd = TimeSpan.Zero;
+            
             var tableList = new List<List<object>>
             {
                 new List<object>{"Start Date", format.DateToDisplayString(activeGoal.StartDate)},
@@ -107,15 +103,12 @@ internal class Screens
                 new List<object>{"Time needed", format.TimeSpanToString(timeLeftToGoal)},
                 new List<object>{"Time/day needed", format.TimeSpanToString(timeLeftToGoal.Divide(daysLeftToEnd.TotalDays))},
             };
-
             ConsoleTableBuilder.From(tableList)
                 .WithTitle("Goal")
                 .WithFormat(ConsoleTableBuilderFormat.Alternative)
                 .ExportAndWriteLine();
             Console.Write("\n");
-
         }
-
         else Console.WriteLine("\nThere's no active goal...\n");
     }
 
@@ -123,12 +116,14 @@ internal class Screens
     {
         List<Goal> listToDisplay = dbCmds.ReturnAllGoalsInTable();
         var tableDataDisplay = new List<List<object>>();
+        
         if (listToDisplay is not null)
         {
             foreach (Goal goal in listToDisplay)
             {
                 string timeLeftDisplay;
                 TimeSpan timeLeft = goal.TargetHours.Subtract(goal.HoursSpent);
+                
                 if (timeLeft <= TimeSpan.Zero) timeLeftDisplay = "00:00";
                 else timeLeftDisplay = timeLeft.ToString("hh\\:mm");
 
@@ -209,10 +204,8 @@ internal class Screens
             HoursSpent = hoursSpent
         };
             
-
         if (dbCmds.Insert(goalToInsert)) Console.WriteLine("Goal inserted successfully!");
         else Console.WriteLine("Can't insert goal...");
-
     }
 
     private void ReportsMenu()
@@ -236,16 +229,13 @@ internal class Screens
             switch (askInput.PositiveNumber("Please select an option or press 0 to exit"))
             {
                 case 0: exit = true; continue;
-                case 1:
-                    Console.Clear();
-                    ReportsView(dbCmds.ReturnAllLogsInTable());
+                case 1: Console.Clear(); ReportsView(dbCmds.ReturnAllLogsInTable());
                     break;
                 case 2:
                     DateTime[] interval = askInput.DateInterval("Insert a start date.", "Insert an end date.");
                     Console.Clear();
                     ReportsView(listOp.GetLogsBetweenDates(dbCmds.ReturnAllLogsInTable(),
                         interval[0], interval[1]));
-                    
                     break;
                 case 3: break;
                 default: continue;
@@ -313,10 +303,10 @@ internal class Screens
                     DisplaySessions(dbCmds.ReturnAllLogsInTable(), "VIEW ALL");
                     askInput.AnyKeyToContinue("\nPress any key to return");
                     break;
-                case 2:
-                    ViewOrderedLogsMenu();
+                case 2: ViewOrderedLogsMenu();
                     break;
-                case 3: ViewLogsInDateInterval(); break;
+                case 3: ViewLogsInDateInterval(); 
+                    break;
                 default: break;
             }
         }
@@ -334,6 +324,7 @@ internal class Screens
         Console.Write('\n');
         DisplaySessions(listToDisplay, $"{interval[0].ToString("dd-MM-yy")} to " +
             $"{interval[1].ToString("dd-MM-yy")}");
+        
         askInput.AnyKeyToContinue();
         return;
     }
@@ -341,11 +332,10 @@ internal class Screens
     private void ViewOrderedLogsMenu()
     {
         bool exitMenu = false;
-        List<string> optionsString = new List<string> {
+        List<object> optionsString = new List<object> {
             "1 - Ascending date",
             "2 - Descending date",
             "0 - Return"};
-
 
         while (!exitMenu)
         {
@@ -355,20 +345,18 @@ internal class Screens
                 .WithColumn("View")
                 .ExportAndWriteLine();
             Console.Write("\n");
+
             switch (askInput.PositiveNumber("Please select an option or press 0 to exit"))
             {
                 case 0: exitMenu = true; break;
-                case 1:
-                    ViewOrderedLogs("ASCENDING");
-                    askInput.AnyKeyToContinue("\nPress any key to return");
+                case 1: ViewOrderedLogs("ASCENDING");
                     break;
-                case 2:
-                    ViewOrderedLogs("DESCENDING");
-                    askInput.AnyKeyToContinue("\nPress any key to return");
+                case 2: ViewOrderedLogs("DESCENDING");
                     break;
                 case 3: break;
                 default: break;
             }
+            askInput.AnyKeyToContinue("\nPress any key to return");
         }
     }
     
@@ -377,9 +365,10 @@ internal class Screens
         List<CodingSession> listToDisplay;
         Console.Clear();
         if (order == "ASCENDING") listToDisplay = listOp.ReturnOrderedByAscendingDate(dbCmds.ReturnAllLogsInTable());
-
         else if (order == "DESCENDING") listToDisplay = listOp.ReturnOrderedByDescendingDate(dbCmds.ReturnAllLogsInTable());
+        
         else throw new Exception($"ViewOrderedLogs order not valid: {order}");
+        
         DisplaySessions(listToDisplay, order);
         return;
     }
@@ -387,6 +376,7 @@ internal class Screens
     private void DisplaySessions(List<CodingSession> listToDisplay, string title)
     {
         var tableDataDisplay = new List<List<object>>();
+        
         if (listToDisplay is not null)
         {
             foreach (CodingSession session in listToDisplay)
@@ -438,8 +428,10 @@ internal class Screens
             switch (askInput.PositiveNumber("Please select an option or press 0 to exit"))
             {
                 case 0: exit = true; continue;
-                case 1: ManualLogInsert(); break;
-                case 2: StopWatchInsert(); break;
+                case 1: ManualLogInsert(); 
+                    break;
+                case 2: StopWatchInsert(); 
+                    break;
                 default: break;
             }
             askInput.AnyKeyToContinue();
@@ -449,18 +441,17 @@ internal class Screens
     private void ManualLogInsert()
     {
         DateTime[] interval = askInput.DateIntervalWithHours("Insert the start date.", "Insert the end date.");
-
         if (interval is null) return;
+
         if (listOp.TotalTimeBetweenDates(dbCmds.ReturnAllLogsInTable(), interval[0], interval[1]) != TimeSpan.Zero)
         {
             Console.WriteLine("Time overlap. Couldn't insert log...");
             return;
         }
-
         CodingSession sessionToInsert = new(interval[0], interval[1], interval[1].Subtract(interval[0]));
+        
         if (dbCmds.Insert(sessionToInsert)) Console.WriteLine("Entry was logged successfully");
         else Console.WriteLine("Couldn't insert log...");
-
         return;
     }
     
@@ -484,7 +475,6 @@ internal class Screens
                 Console.Write(duration.ToString("hh\\:mm\\:ss"));
                 Console.SetCursorPosition(0, Console.CursorTop);
             }
-
             Console.Write("\n");
             Console.ReadKey();
 
@@ -531,6 +521,7 @@ internal class Screens
             CodingSession sessionToInsert = new(interval[0], interval[1], interval[1].Subtract(interval[0]));
             if (dbCmds.Update(index, sessionToInsert)) Console.WriteLine("Entry was updated successfully");
             else Console.WriteLine("Couldn't update log...");
+            
             askInput.AnyKeyToContinue();
             return;
         }

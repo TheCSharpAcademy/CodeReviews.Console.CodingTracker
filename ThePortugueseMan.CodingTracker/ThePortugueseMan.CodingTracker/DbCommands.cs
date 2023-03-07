@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using Microsoft.Data.Sqlite;
+﻿using Microsoft.Data.Sqlite;
 
 namespace ThePortugueseMan.CodingTracker;
 
@@ -11,11 +10,11 @@ public class DbCommands
 
     public DbCommands() 
     {
-        this.connectionString = appSettings.GetConnectionString();
-        this.mainTableName = appSettings.GetMainTableName();
-        this.goalsTableName= appSettings.GetGoalsTableName();
-        this.dateTimeFormat = appSettings.GetDateTimeDisplayFormat();
-        this.timeSpanFormat = appSettings.GetTimeSpanFormatOfDB();
+        connectionString = appSettings.GetConnectionString();
+        mainTableName = appSettings.GetMainTableName();
+        goalsTableName= appSettings.GetGoalsTableName();
+        dateTimeFormat = appSettings.GetDateTimeDisplayFormat();
+        timeSpanFormat = appSettings.GetTimeSpanFormatOfDB();
     }
 
     public void InitializeMainTable()
@@ -49,7 +48,6 @@ public class DbCommands
                     "StartDate STRING, EndDate STRING, TargetHours STRING, HoursSpent STRING, Status STRING)";
 
             tableCmd.ExecuteNonQuery();
-
             connection.Close();
         }
     }
@@ -136,6 +134,7 @@ public class DbCommands
         if (table == "Main") tableName = this.mainTableName;
         else if (table == "Goals") tableName = this.goalsTableName;
         else throw new Exception("Wrong table name");
+
         using (var connection = new SqliteConnection(connectionString))
         {
             connection.Open();
@@ -146,9 +145,9 @@ public class DbCommands
 
             int rowCount = tableCmd.ExecuteNonQuery();
             connection.Close();
+
             if (rowCount == 0) return false;
             else return true;
-
         }
     }
 
@@ -168,7 +167,6 @@ public class DbCommands
                 connection.Close();
                 return false;
             }
-
             else
             {
                 var tableCmd = connection.CreateCommand();
@@ -181,9 +179,7 @@ public class DbCommands
                     $"WHERE Id = {index}";
 
                 tableCmd.ExecuteNonQuery();
-
                 connection.Close();
-
                 return true;
             }
         }
@@ -198,14 +194,13 @@ public class DbCommands
 
             checkCmd.CommandText =
                 $"SELECT EXISTS(SELECT 1 FROM {this.goalsTableName} WHERE Id = {index})";
+            
             int checkQuery = Convert.ToInt32(checkCmd.ExecuteScalar());
-
             if (checkQuery == 0)
             {
                 connection.Close();
                 return false;
             }
-
             else
             {
                 var tableCmd = connection.CreateCommand();
@@ -219,9 +214,7 @@ public class DbCommands
                     $"WHERE Id = {index}";
 
                 tableCmd.ExecuteNonQuery();
-
                 connection.Close();
-
                 return true;
             }
         }
@@ -237,12 +230,10 @@ public class DbCommands
             tableCmd.CommandText =
                 $"SELECT * FROM {this.mainTableName}";
 
-            var tableData = new List<CodingSession>();
-
             SqliteDataReader reader = tableCmd.ExecuteReader();
-
             if (reader.HasRows)
             {
+                var tableData = new List<CodingSession>();
                 while (reader.Read())
                 {                    
                     tableData.Add(
@@ -254,12 +245,14 @@ public class DbCommands
                         Duration = format.StringToTimeSpan(reader.GetString(3)),
                     });
                 }
+                connection.Close();
+                return tableData;
             }
-            else { return null; }
-
-            connection.Close();
-
-            return tableData;
+            else 
+            {
+                connection.Close();
+                return null; 
+            }
         }
     }
 
@@ -273,12 +266,10 @@ public class DbCommands
             tableCmd.CommandText =
                 $"SELECT * FROM {this.goalsTableName}";
 
-            var tableData = new List<Goal>();
-
             SqliteDataReader reader = tableCmd.ExecuteReader();
-
             if (reader.HasRows)
             {
+                var tableData = new List<Goal>();
                 while (reader.Read())
                 {
                     tableData.Add(
@@ -292,12 +283,15 @@ public class DbCommands
                         Status = reader.GetString(5)
                     });
                 }
+
+                connection.Close();
+                return tableData;
             }
-            else { return null; }
-
-            connection.Close();
-
-            return tableData;
+            else
+            {
+                connection.Close();
+                return null;
+            }
         }
     }
 
@@ -335,18 +329,16 @@ public class DbCommands
                 $"SELECT * FROM {this.mainTableName} WHERE Id = {index}";
 
             SqliteDataReader reader = tableCmd.ExecuteReader();
-
             while (reader.Read())
             {
                 returnSession = new CodingSession
                 {
                     Id = reader.GetInt32(0),
-                    StartDateTime = DateTime.ParseExact(reader.GetString(1), dateTimeFormat, new CultureInfo("en-US")),
-                    EndDateTime = DateTime.ParseExact(reader.GetString(2), dateTimeFormat, new CultureInfo("en-US")),
-                    Duration = TimeSpan.ParseExact(reader.GetString(3), timeSpanFormat, new CultureInfo("en-US"))
+                    StartDateTime = format.StringToDate(reader.GetString(1)),
+                    EndDateTime = format.StringToDate(reader.GetString(2)),
+                    Duration = format.StringToTimeSpan(reader.GetString(3))
                 };
             }
-
             connection.Close();
             return returnSession;
         }

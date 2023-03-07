@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Globalization;
 
 namespace ThePortugueseMan.CodingTracker;
 
@@ -15,29 +14,6 @@ public class AskInput
             Console.Write(new string(' ', Console.BufferWidth));
             Console.SetCursorPosition(0, currentLineCursor);
         }
-    }
-    
-    public string? LettersNumberAndSpaces(string message)
-    {
-        string? returnString;
-        bool showError = false;
-        do
-        {
-            if (showError)
-            {
-                ClearPreviousLines(2);
-                Console.Write("Invalid Input.");
-            }
-            else Console.Write(message);
-
-            Console.WriteLine(" Use only letters, numbers and spaces");
-            returnString = Console.ReadLine();
-            showError = true;
-        }
-        while (!(returnString.All(c => Char.IsLetterOrDigit(c) || c == ' ') && returnString != ""));
-
-        returnString.Trim();
-        return returnString;
     }
     
     public int PositiveNumber(string message)
@@ -58,7 +34,6 @@ public class AskInput
             input = Console.ReadLine();
             showError = true;
         }
-        //while it's not a number OR not a positive number
         while (!(Int32.TryParse(input, out number) && number >= 0));
         return number;
     }
@@ -101,7 +76,6 @@ public class AskInput
     public DateTime[] DateInterval(string askStartDateMessage, string askEndDateMessage)
     {
         DateTime[] result = new DateTime[2];
-
         bool validInterval;
 
         do
@@ -126,17 +100,14 @@ public class AskInput
                         ClearPreviousLines(2);
                     }
                 }
-
             }
         } while (!validInterval);
-
         return result;
     }
 
     public DateTime[] DateIntervalWithHours(string askStartDateMessage, string askEndDateMessage)
     {
         DateTime[] result = new DateTime[2];
-
         bool validInterval;
 
         do
@@ -160,17 +131,14 @@ public class AskInput
                         validInterval = false;
                     }
                 }
-
             }
         } while (!validInterval);
-
         return result;
     }
     
     private DateTime AskForHoursAndMinutes(string message)
     {
         DateTime returnTime = new();
-
         string? input;
         bool showError = false;
         bool validInput = false;
@@ -199,20 +167,17 @@ public class AskInput
         while (!validInput);
 
         if (!validInput) return DateTime.MinValue;
-
         else return returnTime;
     }
 
     public DateTime AskForDateWithHours(string message)
     {
-        DateTime auxDate = DateTime.MinValue;
-        DateTime auxTime = DateTime.MinValue;
-        DateTime returnDate;
+        DateTime auxDate, auxTime, returnDate;
 
         try
         {
             auxDate = AskForSimpleDate(message);
-            if(auxDate == DateTime.MinValue) return DateTime.MinValue;
+            if (auxDate == DateTime.MinValue) return DateTime.MinValue;
             auxTime = AskForHoursAndMinutes("Insert the time.");
             if (auxTime == DateTime.MinValue) return DateTime.MinValue;
 
@@ -224,9 +189,8 @@ public class AskInput
         {
             return DateTime.MinValue;
         }
-
-        
     }
+    
     public void AnyKeyToContinue()
     {
         Console.WriteLine("Press any key to continue");
@@ -239,19 +203,10 @@ public class AskInput
         Console.ReadKey();
     }
 
-    public bool ZeroOrAnyOtherKeyToContinue()
-    {
-        Console.WriteLine("Press any key to continue. Or press 0 to return");
-        if (Console.ReadKey().ToString() == "0") return true;
-        else return false;
-
-    }
-
     public bool ZeroOrOtherAnyKeyToContinue(string? message)
     {
         Console.WriteLine(message);
         if (Console.ReadKey().ToString() == "0") return true;
         else return false;
-
     }
 }

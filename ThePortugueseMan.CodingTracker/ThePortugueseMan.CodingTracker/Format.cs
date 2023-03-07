@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Reflection.PortableExecutable;
-using System.Runtime.Serialization;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 
 namespace ThePortugueseMan.CodingTracker;
 
@@ -31,10 +23,8 @@ internal class Format
     
     public string DateToTimeString(DateTime dateTimeToFormat) { return dateTimeToFormat.ToString("HH:mm"); }
 
-    public string TimeSpanToString(TimeSpan timeToFormat) 
-    {            
-        return $"{Math.Truncate(timeToFormat.TotalHours).ToString("00")}:{timeToFormat.ToString("mm")}";
-    }
+    public string TimeSpanToString(TimeSpan timeToFormat)
+    { return $"{Math.Truncate(timeToFormat.TotalHours).ToString("00")}:{timeToFormat.ToString("mm")}"; }
 
     public DateTime StringToDate(string inputString)
     {

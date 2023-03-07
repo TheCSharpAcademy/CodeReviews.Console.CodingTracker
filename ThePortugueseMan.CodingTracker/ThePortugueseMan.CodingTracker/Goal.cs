@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ThePortugueseMan.CodingTracker;
+﻿namespace ThePortugueseMan.CodingTracker;
 
 public class Goal
 {
@@ -14,5 +8,4 @@ public class Goal
     public TimeSpan TargetHours;
     public TimeSpan HoursSpent;
     public string Status;
-
 }
