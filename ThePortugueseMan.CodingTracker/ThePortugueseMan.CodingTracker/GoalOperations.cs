@@ -7,9 +7,9 @@ public class GoalOperations
     
     public void UpdateGoals()
     {
-        List<Goal> allGoals = dbCmd.ReturnAllGoalsInTable();
+        List<Goal> allGoals = dbCmd.GetAllGoalsInTable();
         if (allGoals is null) return;
-        List<CodingSession> allSessions = dbCmd.ReturnAllLogsInTable();
+        List<CodingSession> allSessions = dbCmd.GetAllLogsInTable();
 
         foreach (Goal goal in allGoals) 
         {
@@ -32,7 +32,7 @@ public class GoalOperations
 
     public Goal GetActiveGoal()
     {
-        List<Goal> allGoals = dbCmd.ReturnAllGoalsInTable();
+        List<Goal> allGoals = dbCmd.GetAllGoalsInTable();
 
         if (allGoals == null) return null;
 

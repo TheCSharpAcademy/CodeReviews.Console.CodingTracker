@@ -38,7 +38,7 @@ public class AskInput
         return number;
     }
     
-    public DateTime AskForSimpleDate(string message)
+    public DateTime SimpleDate(string message)
     {
         string? input;
         DateTime returnDate = new();
@@ -80,12 +80,12 @@ public class AskInput
 
         do
         {
-            result[0] = AskForSimpleDate(askStartDateMessage);
+            result[0] = SimpleDate(askStartDateMessage);
 
             if (result[0] == DateTime.MinValue) return null;
             else
             {
-                result[1] = AskForSimpleDate(askEndDateMessage);
+                result[1] = SimpleDate(askEndDateMessage);
                 if (result[1] == DateTime.MinValue) return null;
                 else
                 {
@@ -95,9 +95,10 @@ public class AskInput
                     }
                     else
                     {
-                        Console.WriteLine("End date is earlier than the start date.");
+                        AnyKeyToContinue("End date is earlier than the start date. Press any key to try again.");
                         validInterval = false;
-                        ClearPreviousLines(2);
+                        ClearPreviousLines(5);
+                        continue;
                     }
                 }
             }
@@ -112,12 +113,12 @@ public class AskInput
 
         do
         {
-            result[0] = AskForDateWithHours(askStartDateMessage);
+            result[0] = DateWithHours(askStartDateMessage);
 
             if (result[0] == DateTime.MinValue) return null;
             else
             {
-                result[1] = AskForDateWithHours(askEndDateMessage);
+                result[1] = DateWithHours(askEndDateMessage);
                 if (result[1] == DateTime.MinValue) return null;
                 else
                 {
@@ -127,8 +128,10 @@ public class AskInput
                     }
                     else
                     {
-                        AnyKeyToContinue("End date is earlier than the start date. Press any key to continue");
+                        AnyKeyToContinue("End date is earlier than the start date. Press any key to try again.");
                         validInterval = false;
+                        ClearPreviousLines(9);
+                        continue;
                     }
                 }
             }
@@ -136,7 +139,7 @@ public class AskInput
         return result;
     }
     
-    private DateTime AskForHoursAndMinutes(string message)
+    private DateTime HoursAndMinutes(string message)
     {
         DateTime returnTime = new();
         string? input;
@@ -170,15 +173,15 @@ public class AskInput
         else return returnTime;
     }
 
-    public DateTime AskForDateWithHours(string message)
+    public DateTime DateWithHours(string message)
     {
         DateTime auxDate, auxTime, returnDate;
 
         try
         {
-            auxDate = AskForSimpleDate(message);
+            auxDate = SimpleDate(message);
             if (auxDate == DateTime.MinValue) return DateTime.MinValue;
-            auxTime = AskForHoursAndMinutes("Insert the time.");
+            auxTime = HoursAndMinutes("Insert the time.");
             if (auxTime == DateTime.MinValue) return DateTime.MinValue;
 
             returnDate = new(auxDate.Year, auxDate.Month, auxDate.Day, auxTime.Hour, auxTime.Minute, auxTime.Second);

@@ -2,9 +2,11 @@
 
 internal class ListOperations
 {
-    public List<CodingSession> ReturnOrderedByAscendingDate(List<CodingSession> listToOrder) { return listToOrder.OrderBy(c => c.StartDateTime).ToList(); }
+    public List<CodingSession> GetOrderedByAscendingDate(List<CodingSession> listToOrder) 
+        { return listToOrder.OrderBy(c => c.StartDateTime).ToList(); }
     
-    public List<CodingSession> ReturnOrderedByDescendingDate(List<CodingSession> listToOrder){ return listToOrder.OrderByDescending(c => c.StartDateTime).ToList(); }
+    public List<CodingSession> GetOrderedByDescendingDate(List<CodingSession> listToOrder)
+        { return listToOrder.OrderByDescending(c => c.StartDateTime).ToList(); }
 
     public List<CodingSession> GetLogsBetweenDates(List<CodingSession> listToOperate, DateTime startDate, DateTime endDate)
     {
@@ -24,7 +26,7 @@ internal class ListOperations
         return returnList;
     }
 
-    public TimeSpan TotalTimeInList(List<CodingSession> listToOperate)
+    public TimeSpan TotalTimeSpent(List<CodingSession> listToOperate)
     {
         if (listToOperate is null) return TimeSpan.Zero;
 
@@ -58,13 +60,18 @@ internal class ListOperations
         return new TimeSpan(totalTicks);
     }
 
-    public TimeSpan AverageTimeInList(List<CodingSession> listToOperate){ return TotalTimeInList(listToOperate) / listToOperate.Count(); }
+    public TimeSpan AverageTime(List<CodingSession> listToOperate)
+        { return TotalTimeSpent(listToOperate) / listToOperate.Count(); }
 
-    public DateTime FirstDateInList(List<CodingSession> listToOperate){ return ReturnOrderedByAscendingDate(listToOperate).ElementAt(0).StartDateTime; }
+    public DateTime FirstDate(List<CodingSession> listToOperate)
+        { return GetOrderedByAscendingDate(listToOperate).ElementAt(0).StartDateTime; }
 
-    public DateTime LastDateInList(List<CodingSession> listToOperate) { return ReturnOrderedByDescendingDate(listToOperate).ElementAt(0).EndDateTime; }
+    public DateTime LastDate(List<CodingSession> listToOperate) 
+        { return GetOrderedByDescendingDate(listToOperate).ElementAt(0).EndDateTime; }
 
-    public TimeSpan DifferenceBetweenFirsAndLastDates(List<CodingSession> listToOperate){ return LastDateInList(listToOperate).Subtract(FirstDateInList(listToOperate)); }
+    public TimeSpan DiffBetweenFirsAndLastDates(List<CodingSession> listToOperate)
+        { return LastDate(listToOperate).Subtract(FirstDate(listToOperate)); }
 
-    public int NumberOfSessionsInList(List<CodingSession> listToOperate) { return listToOperate.Count(); }
+    public int NumberOfSessionsInList(List<CodingSession> listToOperate) 
+        { return listToOperate.Count(); }
 }

@@ -29,6 +29,7 @@ internal class Format
     public DateTime StringToDate(string inputString)
     {
         DateTime returnDate;
+
         if (DateTime.TryParseExact(inputString, dateMainDbFormat,
             new CultureInfo("en-US"), DateTimeStyles.None, out returnDate))
         {

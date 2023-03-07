@@ -220,7 +220,7 @@ public class DbCommands
         }
     }
 
-    public List<CodingSession> ReturnAllLogsInTable()
+    public List<CodingSession> GetAllLogsInTable()
     {
         using (var connection = new SqliteConnection(connectionString))
         {
@@ -256,7 +256,7 @@ public class DbCommands
         }
     }
 
-    public List<Goal> ReturnAllGoalsInTable()
+    public List<Goal> GetAllGoalsInTable()
     {
         using (var connection = new SqliteConnection(connectionString))
         {
@@ -317,7 +317,7 @@ public class DbCommands
         }
     }
 
-    public CodingSession ReturnSessionByIndex(int index)
+    public CodingSession GetSessionByIndex(int index)
     {
         CodingSession returnSession = new();
         using (var connection = new SqliteConnection(connectionString))
