@@ -70,7 +70,7 @@ internal class ListOperations
         { return GetOrderedByDescendingDate(listToOperate).ElementAt(0).EndDateTime; }
 
     public TimeSpan DiffBetweenFirsAndLastDates(List<CodingSession> listToOperate)
-        { return LastDate(listToOperate).Subtract(FirstDate(listToOperate)); }
+        { return LastDate(listToOperate).Date.Subtract(FirstDate(listToOperate).Date); }
 
     public int NumberOfSessionsInList(List<CodingSession> listToOperate) 
         { return listToOperate.Count(); }

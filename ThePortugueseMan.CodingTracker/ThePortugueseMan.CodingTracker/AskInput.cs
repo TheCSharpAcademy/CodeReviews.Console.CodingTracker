@@ -209,7 +209,7 @@ public class AskInput
     public bool ZeroOrOtherAnyKeyToContinue(string? message)
     {
         Console.WriteLine(message);
-        if (Console.ReadKey().ToString() == "0") return true;
+        if (Console.ReadKey().KeyChar == '0') return true;
         else return false;
     }
 }

@@ -5,45 +5,22 @@ public class GoalOperations
     DbCommands dbCmd = new();
     ListOperations listOp = new();
     
-    public void UpdateGoals()
+    public void UpdateGoal()
     {
-        List<Goal> allGoals = dbCmd.GetAllGoalsInTable();
-        if (allGoals is null) return;
+        Goal goal = dbCmd.GetGoalInTable();
+        if (goal is null) return;
+        
         List<CodingSession> allSessions = dbCmd.GetAllLogsInTable();
+        List<CodingSession> sessionsInGoalRange = listOp.GetLogsBetweenDates(allSessions, goal.StartDate, goal.EndDate);
 
-        foreach (Goal goal in allGoals) 
-        {
-            Goal updatedGoal = new();
-            List<CodingSession> sessionsInGoalRange = listOp.GetLogsBetweenDates(allSessions, goal.StartDate, goal.EndDate);
-            updatedGoal.HoursSpent = listOp.TotalTimeBetweenDates(sessionsInGoalRange, 
-                goal.StartDate, goal.EndDate.AddTicks(TimeSpan.TicksPerDay - 1));
+        Goal updatedGoal = new();
+        updatedGoal.HoursSpent = listOp.TotalTimeBetweenDates(sessionsInGoalRange, 
+            goal.StartDate, goal.EndDate.AddTicks(TimeSpan.TicksPerDay - 1));
 
-            if (goal.TargetHours.Subtract(updatedGoal.HoursSpent) <= TimeSpan.Zero) updatedGoal.Status = "Complete";
-            else if (goal.Status != "Active") updatedGoal.Status = "Incomplete";
-            else updatedGoal.Status = goal.Status;
+        updatedGoal.StartDate = goal.StartDate;
+        updatedGoal.EndDate = goal.EndDate;
+        updatedGoal.TargetHours = goal.TargetHours;
 
-            updatedGoal.StartDate = goal.StartDate;
-            updatedGoal.EndDate = goal.EndDate;
-            updatedGoal.TargetHours = goal.TargetHours;
-
-            dbCmd.Update(goal.Id, updatedGoal);
-        }
+        dbCmd.Update(goal.Id, updatedGoal);
     }
-
-    public Goal GetActiveGoal()
-    {
-        List<Goal> allGoals = dbCmd.GetAllGoalsInTable();
-
-        if (allGoals == null) return null;
-
-        foreach (Goal goal in allGoals) 
-        {
-            if (goal.Status == "Active")
-            {
-                return goal;
-            }
-        }
-        return null;
-    }
-
 }

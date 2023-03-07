@@ -368,7 +368,8 @@ internal class Screens
             string averageTime = format.TimeSpanToString(listOp.AverageTime(listToReport));
             string firstDate = format.DateToDisplayString(listOp.FirstDate(listToReport));
             string lastDate = format.DateToDisplayString(listOp.LastDate(listToReport));
-            string diffBetweenFirstAndLast = listOp.DiffBetweenFirsAndLastDates(listToReport).Days.ToString();
+            string diffBetweenFirstAndLast = 
+                ((listOp.DiffBetweenFirsAndLastDates(listToReport).Days)+1).ToString();
 
             var tableList = new List<List<object>>
             {
@@ -388,16 +389,14 @@ internal class Screens
 
     private void GoalsMenu()
     {
-        goalOp.UpdateGoals();
+        goalOp.UpdateGoal();
         bool exit = false;
         while (!exit)
         {
             Console.Clear();
             List<object> optionsString = new List<object> {
                 "1 - View current goal",
-                "2 - Set goal",
-                "3 - View All goals",
-                "4 - Delete goals",
+                "2 - Set new goal",
                 "0 - Return"};
 
             ConsoleTableBuilder.From(optionsString)
@@ -413,36 +412,48 @@ internal class Screens
                     break;
                 case 2: InsertGoal();
                     break;
-                case 3: Console.Clear(); ViewGoals();
-                    break;
-                case 4: Console.Clear(); DeleteGoals();
-                    break;
                 default: continue;
             }
-            askInput.AnyKeyToContinue();
         }
     }
 
     private void CurrentGoalDisplay()
     {
-        Goal activeGoal = goalOp.GetActiveGoal();
+        Goal activeGoal = dbCmds.GetGoalInTable();
+        string status  = null, timePerDayNeeded;
         if (activeGoal != null)
         {
             TimeSpan daysLeftToEnd = activeGoal.EndDate.Date.Subtract(DateTime.Now.Date);
-            if (daysLeftToEnd < TimeSpan.Zero) daysLeftToEnd = TimeSpan.Zero;
+            if (daysLeftToEnd <= TimeSpan.Zero)
+            { 
+                daysLeftToEnd = TimeSpan.Zero;
+                status = "Not achieved";
+            }
             
             TimeSpan timeLeftToGoal = activeGoal.TargetHours.Subtract(activeGoal.HoursSpent);
-            if (timeLeftToGoal < TimeSpan.Zero) daysLeftToEnd = TimeSpan.Zero;
+            if (timeLeftToGoal <= TimeSpan.Zero)
+            {
+                daysLeftToEnd = TimeSpan.Zero;
+                status = "Achieved!";
+            }
+            if (daysLeftToEnd > TimeSpan.Zero && timeLeftToGoal > TimeSpan.Zero) status = "Active";
             
+            try
+            {
+                timePerDayNeeded = format.TimeSpanToString(timeLeftToGoal.Divide(daysLeftToEnd.TotalDays));
+            }
+            catch { timePerDayNeeded = "It's too late now..."; }
+
             var tableList = new List<List<object>>
             {
+                new List<object>{"Status", status},
                 new List<object>{"Start Date", format.DateToDisplayString(activeGoal.StartDate)},
                 new List<object>{"End Date", format.DateToDisplayString(activeGoal.EndDate)},
                 new List<object>{"Target time", format.TimeSpanToString(activeGoal.TargetHours)},
                 new List<object>{"Time spent", format.TimeSpanToString(activeGoal.HoursSpent)},
                 new List<object>{"Days Left", daysLeftToEnd.TotalDays},
                 new List<object>{"Time needed", format.TimeSpanToString(timeLeftToGoal)},
-                new List<object>{"Time/day needed", format.TimeSpanToString(timeLeftToGoal.Divide(daysLeftToEnd.TotalDays))},
+                new List<object>{"Time/day needed", timePerDayNeeded},
             };
             ConsoleTableBuilder.From(tableList)
                 .WithTitle("Goal")
@@ -451,84 +462,27 @@ internal class Screens
             Console.Write("\n");
         }
         else Console.WriteLine("\nThere's no active goal...\n");
-    }
 
-    private void ViewGoals()
-    {
-        List<Goal> listToDisplay = dbCmds.GetAllGoalsInTable();
-        var tableDataDisplay = new List<List<object>>();
-        
-        if (listToDisplay is not null)
-        {
-            foreach (Goal goal in listToDisplay)
-            {
-                string timeLeftDisplay;
-                TimeSpan timeLeft = goal.TargetHours.Subtract(goal.HoursSpent);
-                
-                if (timeLeft <= TimeSpan.Zero) timeLeftDisplay = "00:00";
-                else timeLeftDisplay = timeLeft.ToString("hh\\:mm");
-
-                tableDataDisplay.Add(
-                    new List<object>
-                    {
-                    goal.Id,
-                    goal.StartDate.ToString("dd-MM-yy"), goal.EndDate.ToString("dd-MM-yy"),
-                    goal.TargetHours.ToString("hh\\:mm"), goal.HoursSpent.ToString("hh\\:mm"),
-                    timeLeftDisplay, goal.Status
-                    }) ;
-            }
-            ConsoleTableBuilder.From(tableDataDisplay)
-                .WithTitle("Goals")
-                .WithFormat(ConsoleTableBuilderFormat.Alternative)
-                .WithColumn("Id", "Start date", "End date", "Target time", "Time Spent", "Time left", "Status")
-                .ExportAndWriteLine();
-        }
-        else
-        {
-            tableDataDisplay.Add(new List<object> { "", "", "", "", "", "" });
-            ConsoleTableBuilder.From(tableDataDisplay)
-                .WithTitle("EMPTY")
-                .WithFormat(ConsoleTableBuilderFormat.Alternative)
-                .WithColumn("Id", "Start date", "Start time", "End date", "End time", "Duration")
-                .ExportAndWriteLine();
-        }
-        return;
-    }
-
-    private void DeleteGoals()
-    {
-        int index;
-        bool showError = false, exit = false;
-
-        while (!exit)
-        {
-            Console.Clear();
-            ViewGoals();
-            do
-            {
-                Console.Write("\n");
-                if (!showError) index = askInput.PositiveNumber("Select the index you want to delete. Or press 0 to return");
-                else index = askInput.PositiveNumber("Please select a valid index");
-                if (index == 0) exit = true;
-            } while (!dbCmds.CheckIfIndexExistsInTable(index, "Goals") && exit == false);
-
-            if (!exit)
-            {
-                if (dbCmds.DeleteByIndex(index, "Goals")) Console.WriteLine("Log successfully deleted");
-                else Console.WriteLine("Couldn't delete log...");
-            }
-        }
-        return;
+        askInput.AnyKeyToContinue();
     }
 
     private void InsertGoal()
     {
-        if (goalOp.GetActiveGoal() != null)
+        if (dbCmds.GetGoalInTable() != null)
         {
-            Console.WriteLine("There's already an active goal");
-            return; 
+            Console.WriteLine("This will delete your current goal. Are you sure you want to start a new goal?");
+            if(askInput.ZeroOrOtherAnyKeyToContinue("Press any key to continue, or 0 to abort")) { Console.Write('\n'); return; }
+
+            if (!dbCmds.DeleteGoalsTableContents()) 
+            {
+                Console.WriteLine("Couldn't delete previous goal...");
+                askInput.AnyKeyToContinue();
+                return;
+            }
         }
         DateTime[] interval = askInput.DateInterval("Insert a start date.", "Insert an end date.");
+        if (interval is null) return;
+
         TimeSpan targetHours = 
             TimeSpan.FromHours(askInput.PositiveNumber("Insert the number of hours you want to code."));
 
@@ -546,6 +500,8 @@ internal class Screens
             
         if (dbCmds.Insert(goalToInsert)) Console.WriteLine("Goal inserted successfully!");
         else Console.WriteLine("Can't insert goal...");
+
+        askInput.AnyKeyToContinue();
     }
 
     private void DisplaySessions(List<CodingSession> listToDisplay, string title)

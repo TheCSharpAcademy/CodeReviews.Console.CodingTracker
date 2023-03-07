@@ -45,7 +45,7 @@ public class DbCommands
             tableCmd.CommandText =
                 @$"CREATE TABLE IF NOT EXISTS {this.goalsTableName}" +
                     "(Id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "StartDate STRING, EndDate STRING, TargetHours STRING, HoursSpent STRING, Status STRING)";
+                    "StartDate STRING, EndDate STRING, TargetHours STRING, HoursSpent STRING)";
 
             tableCmd.ExecuteNonQuery();
             connection.Close();
@@ -86,12 +86,11 @@ public class DbCommands
             var tableCmd = connection.CreateCommand();
 
             tableCmd.CommandText =
-                $"INSERT INTO {this.goalsTableName}(StartDate, EndDate, TargetHours, HoursSpent, Status) " +
+                $"INSERT INTO {this.goalsTableName}(StartDate, EndDate, TargetHours, HoursSpent) " +
                 $"VALUES ('{format.DateToGoalsDbString(goalToInsert.StartDate)}'," +
                 $"'{format.DateToGoalsDbString(goalToInsert.EndDate)}'," +
                 $"'{format.TimeSpanToString(goalToInsert.TargetHours)}'," +
-                $"'{format.TimeSpanToString(goalToInsert.HoursSpent)}'," +
-                $"'Active')";
+                $"'{format.TimeSpanToString(goalToInsert.HoursSpent)}')";
 
             try
             {
@@ -209,8 +208,7 @@ public class DbCommands
                     $"UPDATE {this.goalsTableName} SET " +
                     $"StartDate = '{format.DateToGoalsDbString(newGoalInfo.StartDate)}', " +
                     $"EndDate = '{format.DateToGoalsDbString(newGoalInfo.EndDate)}'," +
-                    $"HoursSpent = '{format.TimeSpanToString(newGoalInfo.HoursSpent)}'," +
-                    $"Status = '{newGoalInfo.Status}'" +
+                    $"HoursSpent = '{format.TimeSpanToString(newGoalInfo.HoursSpent)}'" +
                     $"WHERE Id = {index}";
 
                 tableCmd.ExecuteNonQuery();
@@ -256,7 +254,7 @@ public class DbCommands
         }
     }
 
-    public List<Goal> GetAllGoalsInTable()
+    public Goal GetGoalInTable()
     {
         using (var connection = new SqliteConnection(connectionString))
         {
@@ -269,10 +267,10 @@ public class DbCommands
             SqliteDataReader reader = tableCmd.ExecuteReader();
             if (reader.HasRows)
             {
-                var tableData = new List<Goal>();
+                var currGoal = new Goal();
                 while (reader.Read())
                 {
-                    tableData.Add(
+                    currGoal =
                     new Goal
                     {
                         Id = reader.GetInt32(0),
@@ -280,12 +278,11 @@ public class DbCommands
                         EndDate = format.StringToDate(reader.GetString(2)),
                         TargetHours = format.StringToTimeSpan(reader.GetString(3)),
                         HoursSpent = format.StringToTimeSpan(reader.GetString(4)),
-                        Status = reader.GetString(5)
-                    });
+                    };
                 }
 
                 connection.Close();
-                return tableData;
+                return currGoal;
             }
             else
             {
@@ -295,14 +292,14 @@ public class DbCommands
         }
     }
 
-    public bool DeleteTable(string? tableName)
+    public bool DeleteGoalsTableContents()
     {
         using (var connection = new SqliteConnection(connectionString))
         {
             connection.Open();
             var tableCmd = connection.CreateCommand();
 
-            tableCmd.CommandText = $"DROP TABLE {tableName}";
+            tableCmd.CommandText = $"DELETE FROM {this.goalsTableName}";
 
             if (tableCmd.ExecuteNonQuery() == 0)
             {
@@ -314,33 +311,6 @@ public class DbCommands
                 connection.Close();
                 return true;
             }
-        }
-    }
-
-    public CodingSession GetSessionByIndex(int index)
-    {
-        CodingSession returnSession = new();
-        using (var connection = new SqliteConnection(connectionString))
-        {
-            connection.Open();
-            var tableCmd = connection.CreateCommand();
-
-            tableCmd.CommandText =
-                $"SELECT * FROM {this.mainTableName} WHERE Id = {index}";
-
-            SqliteDataReader reader = tableCmd.ExecuteReader();
-            while (reader.Read())
-            {
-                returnSession = new CodingSession
-                {
-                    Id = reader.GetInt32(0),
-                    StartDateTime = format.StringToDate(reader.GetString(1)),
-                    EndDateTime = format.StringToDate(reader.GetString(2)),
-                    Duration = format.StringToTimeSpan(reader.GetString(3))
-                };
-            }
-            connection.Close();
-            return returnSession;
         }
     }
 }
