@@ -86,11 +86,8 @@ internal class Screens
 
     private void ViewLogsInDateInterval()
     {
-        CodingSession codingSession = new();
-        List<CodingSession> listToDisplay = new();
-
         DateTime[] interval = askInput.DateInterval("Insert the start date.", "Insert the end date.");
-        listToDisplay = listOp.GetLogsBetweenDates(dbCmds.GetAllLogsInTable(), interval[0], interval[1]);
+        List<CodingSession> listToDisplay = listOp.GetLogsBetweenDates(dbCmds.GetAllLogsInTable(), interval[0], interval[1]);
 
         Console.Clear();
         Console.Write('\n');
