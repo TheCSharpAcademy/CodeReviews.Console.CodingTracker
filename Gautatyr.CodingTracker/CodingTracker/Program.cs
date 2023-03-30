@@ -7,6 +7,6 @@ bool closeApp = false;
 
 do
 {
-    displayMenu();
+    DisplayMenu();
 } while (closeApp == false);
 

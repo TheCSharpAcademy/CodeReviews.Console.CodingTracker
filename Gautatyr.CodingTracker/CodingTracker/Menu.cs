@@ -5,7 +5,7 @@ namespace CodingTracker;
 
 public static class Menu
 {
-    public static void displayMenu(string message = "")
+    public static void DisplayMenu(string message = "")
     {
         Console.Clear();
         Console.WriteLine("\nMAIN MENU\n");
@@ -82,7 +82,7 @@ public static class Menu
 
                 break;
             default:
-                displayMenu("\n|---> Invalid Input ! Please type a number from 0 to 4 ! <---|\n");
+                DisplayMenu("\n|---> Invalid Input ! Please type a number from 0 to 4 ! <---|\n");
                 break;
         }
     }

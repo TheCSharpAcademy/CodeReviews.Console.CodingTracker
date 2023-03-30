@@ -1,5 +1,4 @@
-﻿using System.Configuration;
-using Microsoft.Data.Sqlite;
+﻿using Microsoft.Data.Sqlite;
 using CodingTracker.Models;
 using System.Globalization;
 using static CodingTracker.Helpers;
@@ -8,7 +7,7 @@ namespace CodingTracker;
 
 public static class DataAccess
 {
-    private static string connectionString = ConfigurationManager.AppSettings.Get("connectionString");
+    private static string connectionString = System.Configuration.ConfigurationManager.AppSettings.Get("connectionString");
 
     public static void InitializeDatabase()
     {
@@ -82,7 +81,7 @@ public static class DataAccess
                         Id = reader.GetInt32(0),
                         ShortDate = (DateTime.ParseExact(reader.GetString(1), "d-M-yy", new CultureInfo("en-US"))).ToShortDateString(),
                         TimeSpentCoding = reader.GetString(2)
-                    }); ;
+                    }); 
                 }
             }
             else
