@@ -1,4 +1,6 @@
-﻿namespace CodingTracker.jwhitt3r
+﻿using System.Globalization;
+
+namespace CodingTracker.jwhitt3r
 {
     internal class GetUserInput
     {
@@ -70,7 +72,69 @@
 
         private void ProcessAdd()
         {
-            throw new NotImplementedException();
+            var date = GetDateInput();
+            var duration = GetDurationInput();
+
+            Coding coding = new();
+
+            coding.Date = date;
+
+            coding.Duration = duration;
+
+            codingController.Post(coding);
+        }
+
+        private string GetDurationInput()
+        {
+            Console.WriteLine("\n\nPlease insert the duration: (Format: hh:mm). Type 0 to return to main menu.\n\n");
+            string durationInput = Console.ReadLine();
+
+            if (durationInput == "0")
+            {
+                MainMenu();
+            }
+
+            while (!TimeSpan.TryParseExact(durationInput, "h\\:mm", CultureInfo.InvariantCulture, out _))
+            {
+                Console.WriteLine("\n\nDuration invalid. Please insert the duration: (Format: hh:mm) or type 0 to return to main menu\n\n");
+                durationInput = Console.ReadLine();
+                if(durationInput == "0")
+                {
+                    MainMenu();
+                }
+
+                var parsedDuration = TimeSpan.Parse(durationInput);
+
+                long date = parsedDuration.Ticks;
+                if (date < 0)
+                {
+                    Console.WriteLine("\n\nNegative time not allowed. \n\n");
+                    GetDurationInput();
+                }
+
+            }
+
+            return durationInput;
+
+        }
+
+        private string GetDateInput()
+        {
+            Console.WriteLine("\n\nPlease insert the date: (Format: dd-mm-yy). Type 0 to return to main menu.\n\n");
+
+            string dateInput = Console.ReadLine();
+
+            if (dateInput == "0")
+            {
+                MainMenu();
+            }
+
+            while (!DateTime.TryParseExact(dateInput, "dd-MM-yy", new CultureInfo("en-US"), DateTimeStyles.None, out _))
+            {
+                Console.WriteLine("\n\nNot a valid date. Please insert the date with the format: dd-mm-yy.\n\n");
+                dateInput = Console.ReadLine();
+            }
+            return dateInput;
         }
     }
 }
