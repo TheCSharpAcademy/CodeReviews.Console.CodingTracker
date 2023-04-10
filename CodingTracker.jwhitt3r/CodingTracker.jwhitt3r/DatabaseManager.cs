@@ -8,7 +8,8 @@ namespace CodingTracker.jwhitt3r
         {
             using (var connection = new SqliteConnection(connectionString))
             {
-                using (var tableCmd = connection.CreateCommand()) { 
+                using (var tableCmd = connection.CreateCommand())
+                {
                     connection.Open();
                     tableCmd.CommandText =
                         @"CREATE TABLE IF NOT EXISTS coding (
@@ -18,6 +19,7 @@ namespace CodingTracker.jwhitt3r
                         )";
 
                     tableCmd.ExecuteNonQuery();
+                }
             }
         }
     }
