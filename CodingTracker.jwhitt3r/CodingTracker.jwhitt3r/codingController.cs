@@ -1,6 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
 using System.Configuration;
-using System.Text;
 
 namespace CodingTracker.jwhitt3r
 {
