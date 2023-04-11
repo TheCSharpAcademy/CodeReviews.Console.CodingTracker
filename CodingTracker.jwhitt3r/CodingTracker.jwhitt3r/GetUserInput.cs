@@ -2,9 +2,18 @@
 
 namespace CodingTracker.jwhitt3r
 {
+    /// <summary>
+    /// GetUserInput provides a menu interface for the user, as well as,
+    /// providing the processing layer for the application before the data
+    /// is interacted to the database
+    /// </summary>
     internal class GetUserInput
     {
         CodingController codingController = new();
+
+        /// <summary>
+        /// Provides the main menu for the user to interact with
+        /// </summary>
         internal void MainMenu()
         {
             bool closeApp = false;
@@ -53,6 +62,9 @@ namespace CodingTracker.jwhitt3r
             }
         }
 
+        /// <summary>
+        /// ProcessUpdate manages the users input for the ID as to ensure that the Id is correct and an integer
+        /// </summary>
         private void ProcessUpdate()
         {
             codingController.Get();
@@ -118,6 +130,9 @@ namespace CodingTracker.jwhitt3r
             MainMenu();
         }
 
+        /// <summary>
+        /// ProcessDelete ensures that the user has entered a valid Id for the record
+        /// </summary>
         private void ProcessDelete()
         {
             codingController.Get();
@@ -148,6 +163,9 @@ namespace CodingTracker.jwhitt3r
             MainMenu();
         }
 
+        /// <summary>
+        /// ProcessAdd creates and populates a new record to be added to the database
+        /// </summary>
         private void ProcessAdd()
         {
             var date = GetDateInput();
@@ -162,6 +180,11 @@ namespace CodingTracker.jwhitt3r
             codingController.Post(coding);
         }
 
+        /// <summary>
+        /// GetDurationInput is used to get a correctly formatted hour and minute representation of how long
+        /// a coding session took
+        /// </summary>
+        /// <returns>The duration is then returned to the caller</returns>
         private string GetDurationInput()
         {
             Console.WriteLine("\n\nPlease insert the duration: (Format: hh:mm). Type 0 to return to main menu.\n\n");
@@ -196,6 +219,10 @@ namespace CodingTracker.jwhitt3r
 
         }
 
+        /// <summary>
+        /// GetDateInput ensures that the user has input a valid format before submitting it to the database
+        /// </summary>
+        /// <returns>A correctly formatted date is returned to the caller</returns>
         private string GetDateInput()
         {
             Console.WriteLine("\n\nPlease insert the date: (Format: dd-mm-yy). Type 0 to return to main menu.\n\n");

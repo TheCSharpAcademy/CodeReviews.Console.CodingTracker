@@ -4,10 +4,20 @@ using System.Text;
 
 namespace CodingTracker.jwhitt3r
 {
+    /// <summary>
+    /// The CodingController is the class responsible for interacting with the database
+    /// </summary>
     internal class CodingController
     {
+        /// <summary>
+        /// Connection string that takes the parameter from the configuration file
+        /// </summary>
         static string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
 
+        /// <summary>
+        /// Deletes a record based on the ID provided by the user
+        /// </summary>
+        /// <param name="id">The primary key used within the database</param>
         internal void Delete(int id)
         {
             using (var connection = new SqliteConnection(connectionString))
@@ -24,6 +34,9 @@ namespace CodingTracker.jwhitt3r
             }
         }
 
+        /// <summary>
+        /// Get retrieves all the records found within the database table 'coding'
+        /// </summary>
         internal void Get()
         {
             List<Coding> tableData = new List<Coding>();
@@ -60,6 +73,11 @@ namespace CodingTracker.jwhitt3r
             TableVisualisation.ShowTable(tableData);
         }
 
+        /// <summary>
+        /// GetById finds the record from the Database by the primary key id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         internal Coding GetById(int id)
         {
             using (var connection = new SqliteConnection(connectionString))
@@ -89,6 +107,10 @@ namespace CodingTracker.jwhitt3r
             }
         }
 
+        /// <summary>
+        /// Post submits the data into the database, this holds the date and duration of the session
+        /// </summary>
+        /// <param name="coding"></param>
         internal void Post(Coding coding)
         {
             using (var connection = new SqliteConnection(connectionString))
@@ -102,6 +124,11 @@ namespace CodingTracker.jwhitt3r
             }
         }
 
+        /// <summary>
+        /// Update finds the the record with the ID and updates the chosen field based on the updated elements.
+        /// This will submit a new object regardless of the field not being changed
+        /// </summary>
+        /// <param name="coding"></param>
         internal void Update(Coding coding)
         {
             using (var connection = new SqliteConnection(connectionString))

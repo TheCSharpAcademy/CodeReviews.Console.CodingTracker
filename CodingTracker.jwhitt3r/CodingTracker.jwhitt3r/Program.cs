@@ -6,6 +6,9 @@ namespace CodingTracker.jwhitt3r
     class Program
     {
         static string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
+        /// <summary>
+        /// Simple entry to the program
+        /// </summary>
         static void Main()
         {
 

@@ -2,6 +2,9 @@
 
 namespace CodingTracker.jwhitt3r
 {
+    /// <summary>
+    /// Ensures that a database table is correctly setup before any interaction has occurred
+    /// </summary>
     internal class DatabaseManager
     {
         internal void CreateTable(string connectionString)
