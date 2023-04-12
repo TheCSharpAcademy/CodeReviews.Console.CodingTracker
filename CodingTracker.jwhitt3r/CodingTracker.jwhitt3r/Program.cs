@@ -1,5 +1,4 @@
-﻿
-using System.Configuration;
+﻿using System.Configuration;
 
 namespace CodingTracker.jwhitt3r
 {

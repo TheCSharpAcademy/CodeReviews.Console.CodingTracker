@@ -38,7 +38,7 @@ namespace CodingTracker.jwhitt3r
         /// </summary>
         internal void Get()
         {
-            List<Coding> tableData = new List<Coding>();
+            List<CodingSession> tableData = new List<CodingSession>();
             using (var connection = new SqliteConnection(connectionString))
             {
                 using (var tableCmd = connection.CreateCommand())
@@ -53,12 +53,14 @@ namespace CodingTracker.jwhitt3r
                             while (reader.Read())
                             {
                                 tableData.Add(
-                                    new Coding
+                                    new CodingSession
                                     {
                                         Id = reader.GetInt32(0),
                                         Date = reader.GetString(1),
-                                        Duration = reader.GetString(2)
-                                    });
+                                        Duration = reader.GetString(2),
+                                        StartTime = reader.GetString(3),
+                                        EndTime = reader.GetString(4),
+                            });
                             }
                         } else
                         {
@@ -77,7 +79,7 @@ namespace CodingTracker.jwhitt3r
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        internal Coding GetById(int id)
+        internal CodingSession GetById(int id)
         {
             using (var connection = new SqliteConnection(connectionString))
             {
@@ -89,13 +91,15 @@ namespace CodingTracker.jwhitt3r
 
                     using (var reader = tableCmd.ExecuteReader())
                     {
-                        Coding coding = new();
+                        CodingSession coding = new();
                         if (reader.HasRows)
                         {
                             reader.Read();
                             coding.Id = reader.GetInt32(0);
                             coding.Date = reader.GetString(1);
                             coding.Duration = reader.GetString(2);
+                            coding.StartTime = reader.GetString(3);
+                            coding.EndTime = reader.GetString(4);
                         }
 
                         Console.WriteLine("\n\n");
@@ -110,14 +114,14 @@ namespace CodingTracker.jwhitt3r
         /// Post submits the data into the database, this holds the date and duration of the session
         /// </summary>
         /// <param name="coding"></param>
-        internal void Post(Coding coding)
+        internal void Post(CodingSession coding)
         {
             using (var connection = new SqliteConnection(connectionString))
             {
                 using (var tableCmd = connection.CreateCommand())
                 {
                     connection.Open();
-                    tableCmd.CommandText = $"INSERT INTO coding (date, duration) VALUES ('{coding.Date}', '{coding.Duration}')";
+                    tableCmd.CommandText = $"INSERT INTO coding (date, duration, starttime, endtime) VALUES ('{coding.Date}', '{coding.Duration}', '{coding.StartTime}', '{coding.EndTime}')";
                     tableCmd.ExecuteNonQuery();
                 }
             }
@@ -128,7 +132,7 @@ namespace CodingTracker.jwhitt3r
         /// This will submit a new object regardless of the field not being changed
         /// </summary>
         /// <param name="coding"></param>
-        internal void Update(Coding coding)
+        internal void Update(CodingSession coding)
         {
             using (var connection = new SqliteConnection(connectionString))
             {
@@ -138,7 +142,9 @@ namespace CodingTracker.jwhitt3r
                     tableCmd.CommandText =
                     $@"UPDATE coding SET 
                           Date = '{coding.Date}', 
-                          Duration = '{coding.Duration}' 
+                          Duration = '{coding.Duration}',
+                          StartTime = '{coding.StartTime}' ,
+                          EndTime = '{coding.EndTime}' 
                           WHERE 
                           Id = {coding.Id}
                     ";

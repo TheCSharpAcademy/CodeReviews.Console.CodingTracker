@@ -96,7 +96,7 @@ namespace CodingTracker.jwhitt3r
             while (updating == true)
             {
                 Console.WriteLine($"\nType 'd' for Date \n");
-                Console.WriteLine($"\nType 't' for Duration \n");
+                Console.WriteLine($"\nType 't' for time session \n");
                 Console.WriteLine($"\nType 's' to save update \n");
                 Console.WriteLine($"\nType '0' to Go Back to Main Menu \n");
 
@@ -109,7 +109,9 @@ namespace CodingTracker.jwhitt3r
                         break;
 
                     case "t":
-                        coding.Duration = GetDurationInput();
+                        coding.StartTime = GetTimeInput();
+                        coding.EndTime = GetTimeInput();
+                        coding.Duration = GetDuration(coding.StartTime, coding.EndTime);
                         break;
 
                     case "0":
@@ -128,6 +130,15 @@ namespace CodingTracker.jwhitt3r
             }
             codingController.Update(coding);
             MainMenu();
+        }
+
+        private string GetDuration(string startTime, string endTime)
+        {
+            Console.WriteLine(startTime, endTime);
+            int start = int.Parse(String.Join("", startTime.Split(':')));
+            int end = int.Parse(String.Join("", endTime.Split(':')));
+            string result = (end - start).ToString("##:##");
+            return result;
         }
 
         /// <summary>
@@ -168,14 +179,15 @@ namespace CodingTracker.jwhitt3r
         /// </summary>
         private void ProcessAdd()
         {
-            var date = GetDateInput();
-            var duration = GetDurationInput();
+            CodingSession coding = new();
 
-            Coding coding = new();
+            coding.Date = GetDateInput();
 
-            coding.Date = date;
+            //coding.Duration = duration;
 
-            coding.Duration = duration;
+            coding.StartTime = GetTimeInput();
+            coding.EndTime = GetTimeInput();
+            coding.Duration = GetDuration(coding.StartTime, coding.EndTime);
 
             codingController.Post(coding);
         }
@@ -185,37 +197,37 @@ namespace CodingTracker.jwhitt3r
         /// a coding session took
         /// </summary>
         /// <returns>The duration is then returned to the caller</returns>
-        private string GetDurationInput()
+        private string GetTimeInput()
         {
-            Console.WriteLine("\n\nPlease insert the duration: (Format: hh:mm). Type 0 to return to main menu.\n\n");
-            string durationInput = Console.ReadLine();
+            Console.WriteLine("\n\nPlease insert a Time: (Format: hh:mm). Type 0 to return to main menu.\n\n");
+            string timeInput = Console.ReadLine();
 
-            if (durationInput == "0")
+            if (timeInput == "0")
             {
                 MainMenu();
             }
 
-            while (!TimeSpan.TryParseExact(durationInput, "h\\:mm", CultureInfo.InvariantCulture, out _))
+            while (!TimeSpan.TryParseExact(timeInput, "h\\:mm", CultureInfo.InvariantCulture, out _))
             {
-                Console.WriteLine("\n\nDuration invalid. Please insert the duration: (Format: hh:mm) or type 0 to return to main menu\n\n");
-                durationInput = Console.ReadLine();
-                if(durationInput == "0")
+                Console.WriteLine("\n\nDuration invalid. Please insert a Time: (Format: hh:mm) or type 0 to return to main menu\n\n");
+                timeInput = Console.ReadLine();
+                if(timeInput == "0")
                 {
                     MainMenu();
                 }
 
-                var parsedDuration = TimeSpan.Parse(durationInput);
+                var parsedDuration = TimeSpan.Parse(timeInput);
 
                 long date = parsedDuration.Ticks;
                 if (date < 0)
                 {
                     Console.WriteLine("\n\nNegative time not allowed. \n\n");
-                    GetDurationInput();
+                    GetTimeInput();
                 }
 
             }
 
-            return durationInput;
+            return timeInput;
 
         }
 
