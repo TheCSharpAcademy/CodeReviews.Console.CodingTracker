@@ -77,8 +77,8 @@ namespace CodingTracker.jwhitt3r
         /// <summary>
         /// GetById finds the record from the Database by the primary key id
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">An integer to represent the record in the database</param>
+        /// <returns>Returns a CodingSession object</returns>
         internal CodingSession GetById(int id)
         {
             using (var connection = new SqliteConnection(connectionString))
@@ -105,7 +105,7 @@ namespace CodingTracker.jwhitt3r
                         Console.WriteLine("\n\n");
 
                         return coding;
-                    };
+                    }
                 }
             }
         }
@@ -113,7 +113,7 @@ namespace CodingTracker.jwhitt3r
         /// <summary>
         /// Post submits the data into the database, this holds the date and duration of the session
         /// </summary>
-        /// <param name="coding"></param>
+        /// <param name="coding">passes a coding object to be posted to the database</param>
         internal void Post(CodingSession coding)
         {
             using (var connection = new SqliteConnection(connectionString))
@@ -131,7 +131,7 @@ namespace CodingTracker.jwhitt3r
         /// Update finds the the record with the ID and updates the chosen field based on the updated elements.
         /// This will submit a new object regardless of the field not being changed
         /// </summary>
-        /// <param name="coding"></param>
+        /// <param name="coding">passes a coding object to be posted to the database</param>
         internal void Update(CodingSession coding)
         {
             using (var connection = new SqliteConnection(connectionString))

@@ -11,7 +11,7 @@ namespace CodingTracker.jwhitt3r
         static void Main()
         {
 
-            GetUserInput getUserInput = new();
+            GetUserInput getUserInput = new();rati
             DatabaseManager databaseManager = new();
             databaseManager.CreateTable(connectionString);
 

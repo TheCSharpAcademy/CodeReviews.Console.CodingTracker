@@ -182,9 +182,6 @@ namespace CodingTracker.jwhitt3r
             CodingSession coding = new();
 
             coding.Date = GetDateInput();
-
-            //coding.Duration = duration;
-
             coding.StartTime = GetTimeInput();
             coding.EndTime = GetTimeInput();
             coding.Duration = GetDuration(coding.StartTime, coding.EndTime);
