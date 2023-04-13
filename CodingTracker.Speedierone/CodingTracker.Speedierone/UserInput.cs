@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
-
 namespace CodingTracker;
+
 internal class UserInput
 {
     private static void ViewRecords()
@@ -8,12 +8,13 @@ internal class UserInput
 
     }
 
-    public static void AddRecord()
+    internal static void AddRecord()
     {
         Console.Clear();
         string date = Helpers.GetDate();
         string timeStart = Helpers.GetTime();
-        string timeEnd = Helpers.GetTime();
+        string timeEnd = Helpers.GetEndTime();
+        string timeSpan = Helpers.GetTimeDifference();
         string connectionString = "Data Source=Coding-Tracker.db";
 
         using (var connection = new SqliteConnection(connectionString))
@@ -21,7 +22,7 @@ internal class UserInput
             connection.Open();
             var tableCmd = connection.CreateCommand();
             tableCmd.CommandText =
-                $"INSERT INTO code_tracker(Date, StartTime, EndTime) VALUES('{date}', '{timeStart}', '{timeEnd}')";
+                $"INSERT INTO code_tracker(Date, StartTime, EndTime, TimeSpan) VALUES('{date}', '{timeStart}', '{timeEnd}', '{timeSpan}')";
 
             tableCmd.ExecuteNonQuery();
             connection.Close();
