@@ -18,8 +18,10 @@ namespace CodingTracker.jwhitt3r
                         @"CREATE TABLE IF NOT EXISTS coding (
                             Id INTEGER PRIMARY KEY AUTOINCREMENT,
                             Date TEXT,
-                            Duration TEXT
-                        )";
+                            Duration TEXT,
+                            StartTime TEXT,
+                            EndTime TEXT
+                        )";d
 
                     tableCmd.ExecuteNonQuery();
                 }

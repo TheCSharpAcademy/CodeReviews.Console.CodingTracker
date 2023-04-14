@@ -1,5 +1,4 @@
-﻿
-using ConsoleTableExt;
+﻿using ConsoleTableExt;
 
 namespace CodingTracker.jwhitt3r
 {
