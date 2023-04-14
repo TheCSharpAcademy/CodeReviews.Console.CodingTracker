@@ -21,7 +21,7 @@ namespace CodingTracker.jwhitt3r
                             Duration TEXT,
                             StartTime TEXT,
                             EndTime TEXT
-                        )";d
+                        )";
 
                     tableCmd.ExecuteNonQuery();
                 }
