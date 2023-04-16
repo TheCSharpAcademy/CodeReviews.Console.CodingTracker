@@ -1,4 +1,6 @@
-﻿namespace CodingTracker;
+﻿using ConsoleTableExt;
+
+namespace CodeTracker;
 
 internal class MainMenu
 {
@@ -8,6 +10,7 @@ internal class MainMenu
         bool closeapp = false;
         while (closeapp == false)
         {
+            Console.Clear() ;
             Console.WriteLine("Welcome, what would you like to do today?");
             Console.WriteLine("Type 0 to exit program");
             Console.WriteLine("Type 1 to view records");
@@ -25,17 +28,17 @@ internal class MainMenu
                     Environment.Exit(0);
                     break;
                 case "1":
- //                   ViewRecords();
- //                   break;
+                    UserInput.ViewRecords();
+                    break;
                 case "2":
-                       UserInput.AddRecord();
-                       break;
+                    UserInput.AddRecord();
+                    break;
                 case "3":
- /*                   DeleteRecord();
-                        break;
+                    UserInput.DeleteRecord();
+                    break;
                 case "4":
-                    UpdateRecord();
-                    break;*/
+                    UserInput.UpdateRecord();
+                    break;
                 default:
                     Console.WriteLine("Invalid Input");
                     Console.Clear();

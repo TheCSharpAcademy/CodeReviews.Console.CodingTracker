@@ -1,7 +1,8 @@
 ﻿using Microsoft.Data.Sqlite;
-namespace CodingTracker;
 
-//come back to link to config file.
+namespace CodeTracker;
+
+//TODO come back to link to config file.
 class Program
 {
     static string connectionString = "Data Source=Coding-Tracker.db";
@@ -14,13 +15,12 @@ class Program
             tableCmd.CommandText = @"CREATE TABLE IF NOT EXISTS code_tracker(
             Id INTEGER PRIMARY KEY AUTOINCREMENT,
             Date TEXT,
-            StartTime TEXT,
-            EndTime TEXT,
-            Length TEXT)";
+            TimeSpan TEXT)";
 
             tableCmd.ExecuteNonQuery();
             connection.Close();
         }
+        Console.Clear();
         MainMenu.ShowMenu();
     }
 }
