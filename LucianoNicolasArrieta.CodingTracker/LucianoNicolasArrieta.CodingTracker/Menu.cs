@@ -17,6 +17,8 @@ Type 0 to Close the App
         {
             bool closeApp = false;
             string choosen_option;
+            UserInput userInput = new UserInput();
+            CodingController codingController = new CodingController();
             while (!closeApp)
             {
                 PrintMenu();
@@ -25,8 +27,8 @@ Type 0 to Close the App
                 switch (choosen_option)
                 {
                     case "i":
-                        Console.WriteLine("Insert");
-                        //Insert();
+                        CodingSession codSession = userInput.CodingSessionInput();
+                        codingController.Insert(codSession);
                         break;
                     case "u":
                         Console.WriteLine("Update");
