@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+	<appSettings>
+		<add key="DBPath" value="./coding-tracker.db"/>
+		<add key="ConnectionString" value="@Data Source=coding-tracker.db"/>
+	</appSettings>
+</configuration>
