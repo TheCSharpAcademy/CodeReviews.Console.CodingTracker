@@ -22,7 +22,7 @@ Type 0 to Close the App
             while (!closeApp)
             {
                 PrintMenu();
-                choosen_option = Console.ReadLine();
+                choosen_option = Console.ReadLine().Trim().ToLower();
 
                 switch (choosen_option)
                 {
@@ -32,16 +32,16 @@ Type 0 to Close the App
                         break;
                     case "u":
                         codingController.ViewAll();
-                        int id = userInput.IdInput();
-                        codingController.Update(id);
-                        //Update();
+                        int idToUpdate = userInput.IdInput();
+                        codingController.Update(idToUpdate);
                         break;
                     case "v":
                         codingController.ViewRecords();
                         break;
                     case "d":
-                        Console.WriteLine("Delete");
-                        //Delete();
+                        codingController.ViewAll();
+                        int idToDelete = userInput.IdInput();
+                        codingController.Delete(idToDelete);
                         break;
                     /*
                     case "r":
@@ -54,6 +54,7 @@ Type 0 to Close the App
                         Environment.Exit(0);
                         break;
                     default:
+                        Console.Clear();
                         Console.WriteLine("Error: Invalid option. Try again");
                         break;
                 }

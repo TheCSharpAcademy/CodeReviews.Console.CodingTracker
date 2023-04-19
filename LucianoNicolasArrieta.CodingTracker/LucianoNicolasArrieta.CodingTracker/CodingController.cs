@@ -110,5 +110,30 @@ namespace coding_tracker
             Console.ReadKey();
             Console.Clear();
         }
+
+        internal void Delete(int id)
+        {
+            UserInput user_input = new UserInput();
+
+            if (!CheckIdExists(id))
+            {
+                Console.WriteLine($"Record with Id = {id} doesn't exist. Please try again.");
+                Update(user_input.IdInput());
+            }
+
+            using (SQLiteConnection myConnection = new SQLiteConnection(connectionString))
+            {
+                myConnection.Open();
+
+                string query = $"DELETE FROM coding_tracker WHERE Id = {id}";
+                SQLiteCommand command = new SQLiteCommand(query, myConnection);
+                command.ExecuteNonQuery();
+
+                myConnection.Close();
+            }
+
+            Console.Clear();
+            Console.WriteLine("Record deleted successfully!");
+        }
     }
 }
