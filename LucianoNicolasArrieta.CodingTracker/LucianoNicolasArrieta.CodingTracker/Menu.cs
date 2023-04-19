@@ -9,6 +9,7 @@
 Type 'u' to Update Record
 Type 'v' to View All Records
 Type 'd' to Delete Record
+Type 't' to Track your session while you code
 Type 0 to Close the App
 ----------------------------------"); // Type 'r' to View Reports
         }
@@ -42,6 +43,11 @@ Type 0 to Close the App
                         codingController.ViewAll();
                         int idToDelete = userInput.IdInput();
                         codingController.Delete(idToDelete);
+                        break;
+                    case "t":
+                        CodingSession currentSession = new CodingSession();
+                        currentSession.TrackCurrentSession();
+                        codingController.Insert(currentSession);
                         break;
                     /*
                     case "r":
