@@ -31,12 +31,13 @@ Type 0 to Close the App
                         codingController.Insert(codSession);
                         break;
                     case "u":
-                        Console.WriteLine("Update");
+                        codingController.ViewAll();
+                        int id = userInput.IdInput();
+                        codingController.Update(id);
                         //Update();
                         break;
                     case "v":
-                        Console.WriteLine("View");
-                        //ViewRecords();
+                        codingController.ViewRecords();
                         break;
                     case "d":
                         Console.WriteLine("Delete");
