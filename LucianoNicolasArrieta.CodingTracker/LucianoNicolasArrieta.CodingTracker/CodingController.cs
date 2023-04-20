@@ -10,8 +10,8 @@ namespace coding_tracker
 
         public void Insert(CodingSession codingSession)
         {
-            string start_time = codingSession.StartTime.ToString("d/M/yyyy H:m", System.Globalization.CultureInfo.InvariantCulture);
-            string end_time = codingSession.EndTime.ToString("d/M/yyyy H:m", System.Globalization.CultureInfo.InvariantCulture);
+            string start_time = codingSession.StartTime.ToString("d/M/yyyy HH:mm", System.Globalization.CultureInfo.InvariantCulture);
+            string end_time = codingSession.EndTime.ToString("d/M/yyyy HH:mm", System.Globalization.CultureInfo.InvariantCulture);
             string duration = codingSession.Duration.Hours.ToString() + "h " + codingSession.Duration.Minutes.ToString() + "min";
 
             using (SQLiteConnection myConnection = new SQLiteConnection(connectionString))
@@ -68,8 +68,8 @@ namespace coding_tracker
             }
 
             CodingSession newCodingSession = user_input.CodingSessionInput();
-            string startTime = newCodingSession.StartTime.ToString("d/M/yyyy H:m", System.Globalization.CultureInfo.InvariantCulture);
-            string endTime = newCodingSession.EndTime.ToString("d/M/yyyy H:m", System.Globalization.CultureInfo.InvariantCulture);
+            string startTime = newCodingSession.StartTime.ToString("d/M/yyyy HH:mm", System.Globalization.CultureInfo.InvariantCulture);
+            string endTime = newCodingSession.EndTime.ToString("d/M/yyyy HH:mm", System.Globalization.CultureInfo.InvariantCulture);
             string duration = newCodingSession.Duration.Hours.ToString() + "h " + newCodingSession.Duration.Minutes.ToString() + "min";
 
             using (SQLiteConnection myConnection = new SQLiteConnection(connectionString))
@@ -134,6 +134,32 @@ namespace coding_tracker
 
             Console.Clear();
             Console.WriteLine("Record deleted successfully!");
+        }
+
+        internal void ViewRecordBetweenDates(string fromDate, string toDate, string order)
+        {
+            using (SQLiteConnection myConnection = new SQLiteConnection(connectionString))
+            {
+                myConnection.Open();
+
+                string query = $"SELECT * FROM coding_tracker WHERE start_time >= '{fromDate}' AND end_time <= '{toDate}' ORDER BY start_time {order}";
+                SQLiteCommand command = new SQLiteCommand(query, myConnection);
+                SQLiteDataReader records = command.ExecuteReader();
+
+                if (records != null)
+                {
+                    var tableData = new List<CodingSession>();
+
+                    while (records.Read())
+                    {
+                        CodingSession cs = new CodingSession(records[1].ToString(), records[2].ToString());
+                        cs.Id = Convert.ToInt32(records[0]);
+                        tableData.Add(cs);
+                    }
+
+                    ConsoleTableBuilder.From(tableData).ExportAndWriteLine();
+                }
+            }
         }
     }
 }

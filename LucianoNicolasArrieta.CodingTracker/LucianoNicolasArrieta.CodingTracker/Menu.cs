@@ -10,6 +10,7 @@ Type 'u' to Update Record
 Type 'v' to View All Records
 Type 'd' to Delete Record
 Type 't' to Track your session while you code
+Type 'f' to View Records between two dates
 Type 0 to Close the App
 ----------------------------------"); // Type 'r' to View Reports
         }
@@ -48,6 +49,12 @@ Type 0 to Close the App
                         CodingSession currentSession = new CodingSession();
                         currentSession.TrackCurrentSession();
                         codingController.Insert(currentSession);
+                        break;
+                    case "f":
+                        string from = userInput.DateInput();
+                        string to = userInput.DateInput();
+                        string order = userInput.OrderInput();
+                        codingController.ViewRecordBetweenDates(from, to,order);
                         break;
                     /*
                     case "r":
