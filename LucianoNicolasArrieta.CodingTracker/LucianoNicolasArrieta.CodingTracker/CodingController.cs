@@ -161,5 +161,45 @@ namespace coding_tracker
                 }
             }
         }
+
+        internal void GetReports(string fromDate, string toDate)
+        {
+            using (SQLiteConnection myConnection = new SQLiteConnection(connectionString))
+            {
+                myConnection.Open();
+
+                string query = $"SELECT * FROM coding_tracker WHERE start_time >= '{fromDate}' AND end_time <= '{toDate}'";
+                SQLiteCommand command = new SQLiteCommand(query, myConnection);
+                SQLiteDataReader records = command.ExecuteReader();
+
+                if (records != null)
+                {
+                    var tableData = new List<CodingSession>();
+
+                    while (records.Read())
+                    {
+                        CodingSession cs = new CodingSession(records[1].ToString(), records[2].ToString());
+                        cs.Id = Convert.ToInt32(records[0]);
+                        tableData.Add(cs);
+                    }
+
+                    TimeSpan timeSpan = new TimeSpan();
+                    foreach (CodingSession cs in tableData)
+                    {
+                        timeSpan = timeSpan.Add(cs.Duration);
+                    }
+                    int numberOfSessions = tableData.Count;
+
+                    //ConsoleTableBuilder.From(tableData).ExportAndWriteLine();
+                    Console.WriteLine($"In the period you enter you code for: {timeSpan.Hours}h {timeSpan.Minutes}min in {numberOfSessions} sessions");
+                    long averageCodingTime = timeSpan.Ticks / numberOfSessions;
+                    TimeSpan averageTimeSpan = TimeSpan.FromTicks(averageCodingTime);
+                    Console.WriteLine($"Average coding time per session: {averageTimeSpan.Hours}h {averageTimeSpan.Minutes}min");
+                    Console.WriteLine("Press any key to continue.");
+                    Console.ReadKey();
+                    Console.Clear();
+                }
+            }
+        }
     }
 }

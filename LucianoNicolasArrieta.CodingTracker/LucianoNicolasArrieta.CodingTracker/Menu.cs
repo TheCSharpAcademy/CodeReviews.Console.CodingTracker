@@ -11,8 +11,9 @@ Type 'v' to View All Records
 Type 'd' to Delete Record
 Type 't' to Track your session while you code
 Type 'f' to View Records between two dates
+Type 'r' to View Reports about Coding time between two dates
 Type 0 to Close the App
-----------------------------------"); // Type 'r' to View Reports
+----------------------------------");
         }
 
         public void GetUserOption()
@@ -51,16 +52,18 @@ Type 0 to Close the App
                         codingController.Insert(currentSession);
                         break;
                     case "f":
-                        string from = userInput.DateInput();
-                        string to = userInput.DateInput();
+                        string fromF = userInput.DateInput();
+                        string toF = userInput.DateInput();
                         string order = userInput.OrderInput();
-                        codingController.ViewRecordBetweenDates(from, to,order);
+                        codingController.ViewRecordBetweenDates(fromF, toF, order);
                         break;
-                    /*
+                    
                     case "r":
-                        ViewReports();
+                        string fromR = userInput.DateInput();
+                        string toR = userInput.DateInput();
+                        codingController.GetReports(fromR, toR);
                         break;
-                    */
+                    
                     case "0":
                         closeApp = true;
                         Console.WriteLine("See you!");
