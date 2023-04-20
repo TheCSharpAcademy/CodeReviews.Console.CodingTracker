@@ -1,6 +1,8 @@
 ﻿using ConsoleTableExt;
+using LucianoNicolasArrieta.CodingTracker;
 using System.Configuration;
 using System.Data.SQLite;
+using System.Globalization;
 
 namespace coding_tracker
 {
@@ -190,11 +192,52 @@ namespace coding_tracker
                     }
                     int numberOfSessions = tableData.Count;
 
-                    //ConsoleTableBuilder.From(tableData).ExportAndWriteLine();
                     Console.WriteLine($"In the period you enter you code for: {timeSpan.Hours}h {timeSpan.Minutes}min in {numberOfSessions} sessions");
                     long averageCodingTime = timeSpan.Ticks / numberOfSessions;
                     TimeSpan averageTimeSpan = TimeSpan.FromTicks(averageCodingTime);
                     Console.WriteLine($"Average coding time per session: {averageTimeSpan.Hours}h {averageTimeSpan.Minutes}min");
+                    Console.WriteLine("Press any key to continue.");
+                    Console.ReadKey();
+                    Console.Clear();
+                }
+            }
+        }
+
+        internal void trackGoal()
+        {
+            using (SQLiteConnection myConnection = new SQLiteConnection(connectionString))
+            {
+                myConnection.Open();
+
+                string query = $"SELECT * FROM coding_tracker WHERE start_time LIKE '%/{GoalInfo.Default.Month}/%'";
+                SQLiteCommand command = new SQLiteCommand(query, myConnection);
+                SQLiteDataReader records = command.ExecuteReader();
+
+                if (records != null)
+                {
+                    var tableData = new List<CodingSession>();
+
+                    while (records.Read())
+                    {
+                        CodingSession cs = new CodingSession(records[1].ToString(), records[2].ToString());
+                        cs.Id = Convert.ToInt32(records[0]);
+                        tableData.Add(cs);
+                    }
+
+                    TimeSpan timeSpan = new TimeSpan();
+                    foreach (CodingSession cs in tableData)
+                    {
+                        timeSpan = timeSpan.Add(cs.Duration);
+                    }
+
+                    TimeSpan goalTimeSpan = new TimeSpan(GoalInfo.Default.Goal, 0, 0);
+                    long percentage = timeSpan.Ticks * 100 / goalTimeSpan.Ticks;
+                    Console.WriteLine($"This {CultureInfo.CreateSpecificCulture("en").DateTimeFormat.GetMonthName(DateTime.Now.Month)} your goal ({GoalInfo.Default.Goal}h) is at: {percentage}%");
+
+                    int daysLeft = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
+                    long timeLeft = goalTimeSpan.Ticks - timeSpan.Ticks;
+                    TimeSpan timePerDay = TimeSpan.FromTicks(timeLeft/daysLeft);
+                    Console.WriteLine($"You will need to code for about {timePerDay.Hours}h {timePerDay.Minutes}min in rest of the days in this month to reach the goal.");
                     Console.WriteLine("Press any key to continue.");
                     Console.ReadKey();
                     Console.Clear();

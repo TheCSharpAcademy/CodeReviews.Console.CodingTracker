@@ -1,5 +1,7 @@
 ﻿using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Globalization;
+using System.Runtime.Intrinsics.X86;
+using LucianoNicolasArrieta.CodingTracker;
 
 namespace coding_tracker
 {
@@ -73,6 +75,25 @@ namespace coding_tracker
             }
 
             return date;
+        }
+
+        internal void GoalInput()
+        {
+            Console.WriteLine("How many hours would you like to code this month?");
+            string time = Console.ReadLine();
+            int goal;
+            while (!Int32.TryParse(time, out goal))
+            {
+                Console.WriteLine("Please enter a number. Try again");
+                time = Console.ReadLine();
+            }
+
+            GoalInfo.Default.Goal = goal;
+            GoalInfo.Default.Month = DateTime.Now.Month.ToString();
+            GoalInfo.Default.Save();
+
+            Console.Clear();
+            Console.WriteLine("Goal set successfully.");
         }
 
         internal string OrderInput()

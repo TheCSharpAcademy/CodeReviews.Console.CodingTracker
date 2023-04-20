@@ -1,4 +1,6 @@
-﻿namespace coding_tracker
+﻿using LucianoNicolasArrieta.CodingTracker;
+
+namespace coding_tracker
 {
     internal class Menu
     {
@@ -12,6 +14,7 @@ Type 'd' to Delete Record
 Type 't' to Track your session while you code
 Type 'f' to View Records between two dates
 Type 'r' to View Reports about Coding time between two dates
+Type 'g' to Set or Track a Monthly Goal
 Type 0 to Close the App
 ----------------------------------");
         }
@@ -57,13 +60,20 @@ Type 0 to Close the App
                         string order = userInput.OrderInput();
                         codingController.ViewRecordBetweenDates(fromF, toF, order);
                         break;
-                    
                     case "r":
                         string fromR = userInput.DateInput();
                         string toR = userInput.DateInput();
                         codingController.GetReports(fromR, toR);
                         break;
-                    
+                    case "g":
+                        if (!DateTime.Now.Month.ToString().Equals(GoalInfo.Default.Month))
+                        {
+                            userInput.GoalInput();
+                        } else
+                        {
+                            codingController.trackGoal();
+                        }
+                        break;
                     case "0":
                         closeApp = true;
                         Console.WriteLine("See you!");

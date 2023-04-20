@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using LucianoNicolasArrieta.CodingTracker;
+using System.Configuration;
 using System.Data.SQLite;
 
 namespace coding_tracker
