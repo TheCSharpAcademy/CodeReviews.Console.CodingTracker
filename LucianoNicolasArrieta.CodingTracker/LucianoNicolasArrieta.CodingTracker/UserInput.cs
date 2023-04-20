@@ -1,7 +1,4 @@
-﻿using static System.Runtime.InteropServices.JavaScript.JSType;
-using System.Globalization;
-using System.Runtime.Intrinsics.X86;
-using LucianoNicolasArrieta.CodingTracker;
+﻿using LucianoNicolasArrieta.CodingTracker;
 
 namespace coding_tracker
 {

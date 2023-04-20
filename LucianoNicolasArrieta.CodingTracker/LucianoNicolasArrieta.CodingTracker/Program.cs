@@ -1,6 +1,4 @@
-﻿using LucianoNicolasArrieta.CodingTracker;
-using System.Configuration;
-using System.Data.SQLite;
+﻿using System.Data.SQLite;
 
 namespace coding_tracker
 {
@@ -13,9 +11,9 @@ namespace coding_tracker
 
         private static void Main(string[] args)
         {
-            connectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
-            path = ConfigurationManager.AppSettings.Get("DBPath");
-            name = ConfigurationManager.AppSettings.Get("DBName");
+            connectionString = System.Configuration.ConfigurationManager.AppSettings.Get("ConnectionString");
+            path = System.Configuration.ConfigurationManager.AppSettings.Get("DBPath");
+            name = System.Configuration.ConfigurationManager.AppSettings.Get("DBName");
 
             if (!File.Exists(path))
             {

@@ -1,6 +1,5 @@
 ﻿using ConsoleTableExt;
 using LucianoNicolasArrieta.CodingTracker;
-using System.Configuration;
 using System.Data.SQLite;
 using System.Globalization;
 
@@ -8,7 +7,7 @@ namespace coding_tracker
 {
     internal class CodingController
     {
-        string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
+        string connectionString = System.Configuration.ConfigurationManager.AppSettings.Get("ConnectionString");
 
         public void Insert(CodingSession codingSession)
         {
@@ -203,7 +202,7 @@ namespace coding_tracker
             }
         }
 
-        internal void trackGoal()
+        internal void TrackGoal()
         {
             using (SQLiteConnection myConnection = new SQLiteConnection(connectionString))
             {

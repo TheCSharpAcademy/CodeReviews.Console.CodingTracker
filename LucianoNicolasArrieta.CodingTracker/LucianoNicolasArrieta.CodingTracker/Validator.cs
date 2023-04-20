@@ -1,6 +1,4 @@
-﻿using System.Runtime.Intrinsics.X86;
-
-namespace coding_tracker
+﻿namespace coding_tracker
 {
     internal class Validator
     {

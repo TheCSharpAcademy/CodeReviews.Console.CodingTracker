@@ -71,7 +71,7 @@ Type 0 to Close the App
                             userInput.GoalInput();
                         } else
                         {
-                            codingController.trackGoal();
+                            codingController.TrackGoal();
                         }
                         break;
                     case "0":
