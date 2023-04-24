@@ -2,7 +2,7 @@
 {
     internal class Validator
     {
-        public bool ValidateStartDate(string start)
+        public bool ValidateDateFormat(string start)
         {
             DateTime aux;
             return DateTime.TryParseExact(start, "d/M/yyyy HH:mm", null, System.Globalization.DateTimeStyles.AssumeUniversal, out aux);
@@ -10,18 +10,19 @@
 
         public bool ValidateEndDate(string start, string end)
         {
-            DateTime aux;
-            if (!DateTime.TryParseExact(end, "d/M/yyyy HH:mm", null, System.Globalization.DateTimeStyles.AssumeUniversal, out aux))
+            if (!this.ValidateDateFormat(end))
             {
                 Console.WriteLine("The input doesn't follow the specified format (d/M/yyyy HH:mm). Try again:");
                 return false;
-            } else if (DateTime.ParseExact(start, "d/M/yyyy HH:mm", System.Globalization.CultureInfo.InvariantCulture) <= aux)
-            {
-                Console.WriteLine("Error: The date you finish the session is before it starts. Try again.");
-                return false;
             } else
             {
-                return true;
+                DateTime startDate = DateTime.ParseExact(start, "d/M/yyyy HH:mm", System.Globalization.CultureInfo.InvariantCulture);
+                DateTime endDate = DateTime.ParseExact(end, "d/M/yyyy HH:mm", System.Globalization.CultureInfo.InvariantCulture);
+
+                bool validEndDate = startDate.CompareTo(endDate) <= 0;
+                if (!validEndDate) Console.WriteLine("Error: The date you finished the session is before it started. Try again.");
+
+                return validEndDate;
             }
         }
 

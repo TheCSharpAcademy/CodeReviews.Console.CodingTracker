@@ -10,7 +10,7 @@ namespace coding_tracker
         {
             Console.WriteLine("\nWhen did you start coding? Please follow this format: 'd/M/yyyy HH:mm' (Type 0 to return to menu)");
             string startTime = Console.ReadLine();
-            while (!validator.ValidateStartDate(startTime) && !startTime.Equals("0"))
+            while (!validator.ValidateDateFormat(startTime) && !startTime.Equals("0"))
             {
                 Console.WriteLine("The input doesn't follow the specified format (d/M/yyyy HH:mm). Try again:");
                 startTime = Console.ReadLine();
@@ -59,7 +59,7 @@ namespace coding_tracker
         {
             Console.WriteLine("Please enter a date that follows this format: 'd/M/yyyy HH:mm' (Type 0 to return to menu)");
             string date = Console.ReadLine();
-            while (!validator.ValidateStartDate(date) && !date.Equals("0"))
+            while (!validator.ValidateDateFormat(date) && !date.Equals("0"))
             {
                 Console.WriteLine("The input doesn't follow the specified format (d/M/yyyy H:m). Try again:");
                 date = Console.ReadLine();
