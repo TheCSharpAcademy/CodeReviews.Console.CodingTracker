@@ -2,23 +2,24 @@
 using Microsoft.VisualBasic;
 
 
-namespace CodeTracker
+namespace CodeTracker;
+
+internal class TableLayout
 {
-    internal class TableLayout
+    public static void DisplayTable(List<CodingSession> sessions)
     {
-        public static void DisplayTable(List<CodingSession> sessions)
+        var tableData = new List<List<Object>>();
+        foreach (CodingSession codingSession in sessions)
         {
-            var tableData = new List<List<Object>>();
-            foreach (CodingSession codingSession in sessions)
+            tableData.Add(new List<Object>
             {
-                tableData.Add(new List<Object>
-                {
-                    codingSession.Id,
-                    codingSession.Date,
-                    codingSession.TimeSpan
-                });
-            }
-            ConsoleTableBuilder.From(tableData).WithColumn("Id", "Date", "Time Spent Coding").ExportAndWriteLine();
+                codingSession.Id,
+                codingSession.Date,
+                codingSession.TimeStart,
+                codingSession.TimeEnd,
+                codingSession.TimeSpan
+            });
         }
+        ConsoleTableBuilder.From(tableData).WithColumn("Id", "Date", "Time Start", "Time End", "Time Spent Coding").ExportAndWriteLine();
     }
 }

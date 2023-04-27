@@ -1,9 +1,12 @@
-﻿using System.Globalization;
+﻿using SQLitePCL;
+using System.Diagnostics;
+using System.Globalization;
+using System.Security.Cryptography.X509Certificates;
 
 namespace CodeTracker;
-
 internal class Helpers
 {
+    
     internal static string GetDate()
     {
         Console.WriteLine("Please enter date in format dd-mm-yy");
@@ -17,35 +20,47 @@ internal class Helpers
         }
         return dateInput;
     }
-
-    internal static string GetTime()
+    internal static string GetStartTime()
     {
-        Console.WriteLine("Please enter start time in format hh:mm (24hr clock)");
-        string timeInput = Console.ReadLine();
-        if (timeInput == "0") MainMenu.ShowMenu();
-
-        while (!DateTime.TryParseExact(timeInput, "HH:mm", new CultureInfo("en-GB"), DateTimeStyles.None, out _))
+        Console.WriteLine("Please enter start time in format HH:mm (24hr clock)");
+        var startTime = Console.ReadLine();
+        if (startTime == "0") MainMenu.ShowMenu();
+        while (!DateTime.TryParseExact(startTime, "HH:mm", new CultureInfo("en-GB"), DateTimeStyles.None, out _))
         {
-            Console.WriteLine("Invalid time (Format needed hh:mm)");
-            timeInput = Console.ReadLine();
+            Console.WriteLine("Invalid input. Please enter time in format hh:mm");
+            startTime = Console.ReadLine();
         }
-
-        Console.WriteLine("Please enter end time in format hh:mm (24hr clock");
-        string timeInputEnd = Console.ReadLine();
-        if (timeInputEnd == "0") MainMenu.ShowMenu();
-
-        while (!DateTime.TryParseExact(timeInputEnd, "HH:mm", new CultureInfo("en-GB"), DateTimeStyles.None, out _))
-        {
-            Console.WriteLine("Invalid time (Format needed hh:mm");
-            timeInputEnd = Console.ReadLine();
-        }
-
-        var startTime = timeInput;
-        var endTime = timeInputEnd;
-        var parsedStartTime = DateTime.Parse(startTime);
-        var parsedEndTime = DateTime.Parse(endTime);
-        TimeSpan timeSpan = parsedEndTime - parsedStartTime;
-        string stringTimeSpan = timeSpan.ToString();
-        return stringTimeSpan;
+        return startTime;
     }
+    internal static string GetEndTime()
+    {
+        Console.WriteLine("Please enter end time in format hh:mm (24hr clock)");
+        var endTime = Console.ReadLine();
+        if (endTime == "0") MainMenu.ShowMenu();
+        while (!DateTime.TryParseExact(endTime, "HH:mm", new CultureInfo("en-GB"), DateTimeStyles.None, out _))
+        {
+            Console.WriteLine("Invalid input. Please enter time in format hh-mm");
+            endTime = Console.ReadLine();
+        }   
+        return endTime;
+    }
+    internal static string CodingTime(string timeStart, string timeEnd)
+    {
+        var parsedTimeStart = DateTime.Parse(timeStart);
+        var parsedTimeEnd = DateTime.Parse(timeEnd);
+        TimeSpan codingTime = parsedTimeEnd - parsedTimeStart;
+        var stringCodingTime = codingTime.ToString();
+        return stringCodingTime;
+    }
+ /*   internal static string StartTimer()
+    {
+        var timer = new Stopwatch();
+        DateTime startDate;
+  
+        timer.Start();
+        startDate = DateTime.Now;
+        var parsedStartTime = startDate.ToString("HH:mm");
+
+        return parsedStartTime;
+    }*/
 }

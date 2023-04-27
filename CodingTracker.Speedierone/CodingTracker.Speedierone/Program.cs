@@ -6,7 +6,7 @@ namespace CodeTracker;
 class Program
 {
     static string connectionString = "Data Source=Coding-Tracker.db";
-    static void Main(string[] args)
+    static void Main (string[] args)
     {
         using (var connection = new SqliteConnection(connectionString))
         {
@@ -15,6 +15,8 @@ class Program
             tableCmd.CommandText = @"CREATE TABLE IF NOT EXISTS code_tracker(
             Id INTEGER PRIMARY KEY AUTOINCREMENT,
             Date TEXT,
+            TimeStart TEXT,
+            TimeEnd TEXT,
             TimeSpan TEXT)";
 
             tableCmd.ExecuteNonQuery();
