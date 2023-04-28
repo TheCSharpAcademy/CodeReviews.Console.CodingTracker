@@ -81,7 +81,7 @@ internal class UserInput
         string timeStart = Helpers.GetStartTime();
         string endTime = Helpers.GetEndTime();
         CheckDate(DateTime.Parse(timeStart), DateTime.Parse(endTime));
-        string timeSpan = Helpers.CodingTime(timeStart.ToString(), endTime.ToString());
+        string timeSpan = Helpers.CodingTime(timeStart, endTime);
         string connectionString = ConfigurationManager.AppSettings.Get("dbconnectionString");
 
         using (var connection = new SqliteConnection(connectionString))
