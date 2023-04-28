@@ -1,1 +1,3 @@
-﻿Console.WriteLine("HELLO WORLD");
+﻿using CodingTracker.barakisbrown;
+
+var contol = new CodingController();
