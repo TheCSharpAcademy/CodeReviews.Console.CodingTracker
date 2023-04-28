@@ -1,12 +1,8 @@
-﻿using SQLitePCL;
-using System.Diagnostics;
-using System.Globalization;
-using System.Security.Cryptography.X509Certificates;
+﻿using System.Globalization;
 
 namespace CodeTracker;
 internal class Helpers
 {
-    
     internal static string GetDate()
     {
         Console.WriteLine("Please enter date in format dd-mm-yy");
@@ -52,15 +48,4 @@ internal class Helpers
         var stringCodingTime = codingTime.ToString();
         return stringCodingTime;
     }
- /*   internal static string StartTimer()
-    {
-        var timer = new Stopwatch();
-        DateTime startDate;
-  
-        timer.Start();
-        startDate = DateTime.Now;
-        var parsedStartTime = startDate.ToString("HH:mm");
-
-        return parsedStartTime;
-    }*/
 }

@@ -1,13 +1,13 @@
 ﻿using Microsoft.Data.Sqlite;
+using System.Configuration;
 
 namespace CodeTracker;
 
-//TODO come back to link to config file.
 class Program
 {
-    static string connectionString = "Data Source=Coding-Tracker.db";
-    static void Main (string[] args)
-    {
+    static void Main ()
+    {       
+        var connectionString = ConfigurationManager.AppSettings.Get("dbconnectionString");
         using (var connection = new SqliteConnection(connectionString))
         {
             connection.Open();

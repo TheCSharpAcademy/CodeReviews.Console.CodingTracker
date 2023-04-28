@@ -1,6 +1,4 @@
-﻿using ConsoleTableExt;
-
-namespace CodeTracker;
+﻿namespace CodeTracker;
 
 internal class MainMenu
 {
