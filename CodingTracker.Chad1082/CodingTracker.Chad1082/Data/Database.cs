@@ -22,10 +22,8 @@ namespace CodingTracker.Chad1082.Data
             doesExist = File.Exists(DBLocation);
             return doesExist;
         }
-        private static bool CreateDatabase()
+        private static void CreateDatabase()
         {
-            bool created = false;
-
             using (SqliteConnection conn = new SqliteConnection(connString))
             {
                 conn.Open();
@@ -40,12 +38,7 @@ namespace CodingTracker.Chad1082.Data
 
                 command.ExecuteNonQuery();
                 conn.Close();
-                created = true;
-
             }
-
-            return created;
         }
-
     }
 }
