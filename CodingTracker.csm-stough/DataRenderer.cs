@@ -19,7 +19,7 @@ namespace CodeTracker.csm_stough
         {
             resultsPerPage = int.Parse(ConfigurationManager.AppSettings.Get("resultsPerPage"));
             currentPage = 0;
-            lastPage = (Database.GetCount() / resultsPerPage) - 1;
+            lastPage = (Database.GetCount() / resultsPerPage);
         }
 
         public static void DisplayData()
