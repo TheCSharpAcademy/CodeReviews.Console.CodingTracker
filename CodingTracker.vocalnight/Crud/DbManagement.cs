@@ -1,12 +1,11 @@
 ﻿using Microsoft.Data.Sqlite;
-using System.Configuration;
 
 namespace CodingTracker.Crud
 {
     public static class DbManagement {
 
 
-        private static string dbAdress = ConfigurationManager.ConnectionStrings["DbConnection"].ConnectionString;
+        private static string dbAdress = System.Configuration.ConfigurationManager.ConnectionStrings["DbConnection"].ConnectionString;
 
         public static void CreateTable()
         {
