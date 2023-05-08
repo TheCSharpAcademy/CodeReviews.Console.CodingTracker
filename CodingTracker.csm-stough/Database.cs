@@ -91,18 +91,18 @@ namespace CodeTracker.csm_stough
                 SqliteCommand command = connection.CreateCommand();
 
                 command.CommandText = $"SELECT * FROM coding_records ";
-                if(!string.IsNullOrEmpty(between))
+                command.CommandText += ascending ? "ASC " : "DESC ";
+                if (!string.IsNullOrEmpty(between))
                 {
                     command.CommandText += $"WHERE {between} BETWEEN {low} AND {high} ";
                 }
-                command.CommandText += ascending ? "ASC " : "DESC ";
                 command.CommandText += $"LIMIT {limit} OFFSET {offset} ";
 
                 SqliteDataReader reader = command.ExecuteReader();
 
                 if (reader.HasRows)
                 {
-                    while (reader.Read())
+                    while (reader.Read()) 
                     {
                         records.Add(new CodingSession(reader.GetInt32(0), reader.GetDateTime(1), reader.GetDateTime(2), reader.GetTimeSpan(3)));
                     }
@@ -146,7 +146,7 @@ namespace CodeTracker.csm_stough
             }
         }
 
-        public static List<ReportRecord> GetAllGroupedByTime(string dateFormat = "%Y-%m-%d", int limit = int.MaxValue, int offset = 0)
+        public static List<ReportRecord> GetAllGroupedByTime(string dateFormat = "%Y-%m-%d", int limit = int.MaxValue, int offset = 0, bool ascending = true)
         {
             List<ReportRecord> records = new List<ReportRecord>();
 
@@ -156,13 +156,15 @@ namespace CodeTracker.csm_stough
 
                 SqliteCommand command = connection.CreateCommand();
 
-                command.CommandText = $@"SELECT 
- STRFTIME('{dateFormat}', Start) date,
- COUNT(*) records_number,
- TIME(SUM(STRFTIME('%s', Duration) - STRFTIME('%s', '00:00:00')), 'unixepoch') total_duration
-FROM coding_records
-GROUP BY date
-ORDER BY date ASC ";
+                command.CommandText =
+                    $@"SELECT 
+                     STRFTIME('{dateFormat}', Start) date,
+                     COUNT(*) records_number,
+                     TIME(SUM(STRFTIME('%s', Duration) - STRFTIME('%s', '00:00:00')), 'unixepoch') total_duration
+                    FROM coding_records
+                    GROUP BY date
+                    ORDER BY date ";
+                command.CommandText += ascending ? "ASC " : "DESC ";
                 command.CommandText += $"LIMIT {limit} OFFSET {offset}";
 
                 SqliteDataReader reader = command.ExecuteReader();
@@ -191,13 +193,14 @@ ORDER BY date ASC ";
 
                 SqliteCommand command = connection.CreateCommand();
 
-                command.CommandText = $@"SELECT COUNT(*) FROM (SELECT 
- STRFTIME('{dateFormat}', Start) date,
- COUNT(*) records_number,
- TIME(SUM(STRFTIME('%s', Duration) - STRFTIME('%s', '00:00:00')), 'unixepoch') total_duration
-FROM coding_records
-GROUP BY date
-ORDER BY date ASC)";
+                command.CommandText = 
+                    $@"SELECT COUNT(*) FROM (SELECT 
+                     STRFTIME('{dateFormat}', Start) date,
+                     COUNT(*) records_number,
+                     TIME(SUM(STRFTIME('%s', Duration) - STRFTIME('%s', '00:00:00')), 'unixepoch') total_duration
+                    FROM coding_records
+                    GROUP BY date
+                    ORDER BY date ASC)";
 
                 count = Convert.ToInt32(command.ExecuteScalar());
 

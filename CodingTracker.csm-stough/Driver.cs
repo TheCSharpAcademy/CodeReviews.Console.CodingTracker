@@ -48,20 +48,38 @@ namespace CodeTracker.csm_stough
         {
             Menu filterMenu = new Menu("Filter Records");
 
-            filterMenu.AddOption("Y", "By Year...", () => { FilterByTimeInterval("%Y"); });
-            filterMenu.AddOption("M", "By Month...", () => { FilterByTimeInterval("%Y-%m"); });
-            filterMenu.AddOption("D", "By Day...", () => { FilterByTimeInterval("%Y-%m-%d"); });
-            filterMenu.AddOption("R", "Between Dates/Times...", () => { });
+            filterMenu.AddOption("Y", "By Year...", () => { FilterByTimeInterval("%Y", "Year"); });
+            filterMenu.AddOption("M", "By Month...", () => { FilterByTimeInterval("%Y-%m", "Month"); });
+            filterMenu.AddOption("D", "By Day...", () => { FilterByTimeInterval("%Y-%m-%d", "Day"); });
+            filterMenu.AddOption("R", "Between Dates/Times...", () => { FilterBetweenDates(); });
             filterMenu.AddOption("B", "Go Back To Main Menu...", () => { MainMenu(); });
 
             filterMenu.SelectOption();
         }
 
-        static void FilterByTimeInterval(string timeFormat)
+        static void FilterByTimeInterval(string timeFormat, string unit)
         {
-            ReportsRenderer dataRenderer = new ReportsRenderer(timeFormat, limit: resultsPerPage);
+            ReportsRenderer dataRenderer = new ReportsRenderer(timeFormat, unit, limit: resultsPerPage);
             dataRenderer.DisplayTable();
             FilterRecordsMenu();
+        }
+
+        static void FilterBetweenDates()
+        {
+            DateTime[] range = null;
+
+            Form betweenDatesForm = new Form("Enter a datetime range", (values) =>
+            {
+                range = (DateTime[])values[0];
+            });
+
+            betweenDatesForm.AddDateTimeRangeQuery("Enter a DateTime", "yyyy-MM-dd hh:mm:ss");
+
+            betweenDatesForm.Start();
+
+            RecordsRenderer dataRenderer = new RecordsRenderer(limit: resultsPerPage, between:"Start", low: $"'{range[0].ToString("yyyy-MM-dd hh:mm:ss")}'", high: $"'{range[1].ToString("yyyy-MM-dd hh:mm:ss")}'");
+            dataRenderer.DisplayTable();
+            MainMenu();
         }
 
         static void AllRecordsMenu()

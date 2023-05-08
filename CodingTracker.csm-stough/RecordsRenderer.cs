@@ -12,7 +12,7 @@ namespace CodeTracker.csm_stough
         public RecordsRenderer(int limit = int.MaxValue, int offset = 0, string between = "", string low = "", string high = "") : 
             base(limit, offset, between, low, high)
         {
-            lastPage = (int)Math.Ceiling(Database.GetCount(between, low, high) / (float)limit) - 1;
+            lastPage = (int)Math.Max(Math.Ceiling(Database.GetCount(between, low, high) / (float)limit) - 1, 0);
         }
 
         public override void DisplayTable()
@@ -38,7 +38,7 @@ namespace CodeTracker.csm_stough
                 tableData.Add(new List<object>());
                 tableData[s].Add((data[s] as CodingSession).startTime);
                 tableData[s].Add((data[s] as CodingSession).endTime);
-                tableData[s].Add((data[s] as CodingSession).duration);
+                tableData[s].Add((data[s] as CodingSession).duration.ToString("hh\\:mm"));
             }
 
             return tableData;
