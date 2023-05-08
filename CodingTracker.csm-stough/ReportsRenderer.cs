@@ -1,4 +1,5 @@
 ﻿using ConsoleTableExt;
+using ConsoleUtilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +13,8 @@ namespace CodeTracker.csm_stough
         private string timeFormat;
         private string unit;
 
-        public ReportsRenderer(string timeFormat, string unit, int limit = int.MaxValue, int offset = 0, string between = "", string low = "", string high = "") :
-            base(limit, offset, between, low, high)
+        public ReportsRenderer(string timeFormat, string unit, GetPage getPage, GetCount getCount, int limit = int.MaxValue, int offset = 0) :
+            base(getPage, getCount, limit, offset)
         {
             this.timeFormat = timeFormat;
             this.unit = unit;
@@ -26,11 +27,41 @@ namespace CodeTracker.csm_stough
 
             Console.Clear();
 
-            ConsoleTableBuilder.From(translateData(reports))
-                .WithTitle($"All Records By {unit} ~ Page {currentPage + 1} of {lastPage + 1}")
-                .WithColumn("Date Logged", "Number Of Records", "Total Duration", "Average Hours")
-                .ExportAndWriteLine(TableAligntment.Left);
-            base.DisplayTable();
+            Menu recordsMenu = new Menu($"Logs Filtered By {unit} ~ Page {currentPage + 1} of {lastPage + 1}");
+
+            if (currentPage != 0)
+            {
+                recordsMenu.AddOption("F", "First Page...", () => { currentPage = 0; DisplayTable(); });
+                recordsMenu.AddOption("P", "Previous Page...", () => { currentPage--; DisplayTable(); });
+            }
+
+            int num = 1;
+            reports.ForEach(report =>
+            {
+                recordsMenu.AddOption(num.ToString(), string.Format($"{report.Start} : {report.RecordsCount} records : {report.Duration} hours"), () => {
+                    RecordsRenderer recordsRenderer = new RecordsRenderer((limit, offset) =>
+                    {
+                        return new List<Object>(Database.GetAll(limit, offset, $"STRFTIME('{timeFormat}', Start) = '{report.Start}'"));
+                    },
+                    () =>
+                    {
+                        return Database.GetCount($"STRFTIME('{timeFormat}', Start) = '{report.Start}'");
+                    },
+                    resultsPerPage);
+                    recordsRenderer.DisplayTable();
+                });
+                num++;
+            });
+
+            if (currentPage != lastPage)
+            {
+                recordsMenu.AddOption("N", "Next Page...", () => { currentPage++; DisplayTable(); });
+                recordsMenu.AddOption("L", "Last Page...", () => { currentPage = lastPage; DisplayTable(); });
+            }
+
+            recordsMenu.AddOption("B", "Go Back...", () => { });
+
+            recordsMenu.SelectOption(false);
         }
 
         protected override List<List<object>> translateData<T>(List<T> data)

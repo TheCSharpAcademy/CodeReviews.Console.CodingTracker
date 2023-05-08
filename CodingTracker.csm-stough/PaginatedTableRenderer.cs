@@ -9,21 +9,21 @@ namespace CodeTracker.csm_stough
 {
     public abstract class PaginatedTableRenderer
     {
+        public delegate List<Object> GetPage(int limit, int offset);
+        public delegate int GetCount();
+        public GetPage getPage;
+        public GetCount getCount;
+
         protected int currentPage;
         protected int lastPage;
         protected int resultsPerPage;
-        protected string between;
-        protected string low;
-        protected string high;
 
-        public PaginatedTableRenderer(int limit = int.MaxValue, int offset = 0, string between = "", string low = "", string high = "")
+        public PaginatedTableRenderer(GetPage getPage, GetCount getDataCount, int limit = int.MaxValue, int offset = 0)
         {
+            this.getPage = getPage;
+            this.getCount = getDataCount;
             resultsPerPage = limit;
             currentPage = offset;
-            lastPage = 10;
-            this.between = between;
-            this.low = low;
-            this.high = high;
         }
 
         public virtual void DisplayTable()

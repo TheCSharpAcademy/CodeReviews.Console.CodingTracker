@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Configuration;
 using System.Collections.Specialized;
 using Microsoft.Data.Sqlite;
+using Microsoft.VisualBasic;
 
 namespace CodeTracker.csm_stough
 {
@@ -37,7 +38,7 @@ namespace CodeTracker.csm_stough
             }
         }
 
-        public static int GetCount(string between = "", string low = "", string high = "")
+        public static int GetCount(string where = "")
         {
             int count = 0;
 
@@ -49,9 +50,9 @@ namespace CodeTracker.csm_stough
                 command.CommandText =
                 $@"SELECT COUNT(*) FROM coding_records ";
 
-                if (!string.IsNullOrEmpty(between))
+                if (!string.IsNullOrEmpty(where))
                 {
-                    command.CommandText += $"WHERE {between} BETWEEN {low} AND {high}";
+                    command.CommandText += "WHERE " + where;
                 }
 
                 count = Convert.ToInt32(command.ExecuteScalar());
@@ -80,7 +81,7 @@ namespace CodeTracker.csm_stough
             return session;
         }
 
-        public static List<CodingSession> GetAll(int limit = int.MaxValue, int offset = 0, string between = "", string low = "", string high = "", bool ascending = true)
+        public static List<CodingSession> GetAll(int limit = int.MaxValue, int offset = 0, string where="", bool ascending = true)
         {
             List<CodingSession> records = new List<CodingSession>();
 
@@ -91,18 +92,19 @@ namespace CodeTracker.csm_stough
                 SqliteCommand command = connection.CreateCommand();
 
                 command.CommandText = $"SELECT * FROM coding_records ";
-                command.CommandText += ascending ? "ASC " : "DESC ";
-                if (!string.IsNullOrEmpty(between))
+                if(!string.IsNullOrEmpty(where))
                 {
-                    command.CommandText += $"WHERE {between} BETWEEN {low} AND {high} ";
+                    command.CommandText += "WHERE " + where;
                 }
+                command.CommandText += "ORDER BY Start ";
+                command.CommandText += ascending ? "ASC " : "DESC ";
                 command.CommandText += $"LIMIT {limit} OFFSET {offset} ";
 
                 SqliteDataReader reader = command.ExecuteReader();
 
                 if (reader.HasRows)
                 {
-                    while (reader.Read()) 
+                    while (reader.Read())
                     {
                         records.Add(new CodingSession(reader.GetInt32(0), reader.GetDateTime(1), reader.GetDateTime(2), reader.GetTimeSpan(3)));
                     }
@@ -207,6 +209,87 @@ namespace CodeTracker.csm_stough
                 connection.Close();
             }
             return count;
+        }
+
+        public static int ExecuteScalar(string sql)
+        {
+            int scalar;
+
+            using (SqliteConnection connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+
+                SqliteCommand command = connection.CreateCommand();
+
+                command.CommandText = sql;
+
+                scalar = Convert.ToInt32(command.ExecuteScalar());
+
+                connection.Close();
+            }
+            return scalar;
+        }
+
+        public static TimeSpan FetchTotalDuration(int day)
+        {
+            TimeSpan duration = TimeSpan.Zero;
+
+            using (SqliteConnection connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+
+                SqliteCommand command = connection.CreateCommand();
+
+                command.CommandText =
+                    $@"SELECT CAST(STRFTIME('%d', Start) AS INTEGER) day, TIME(SUM(STRFTIME('%s', Duration) - STRFTIME('%s', '00:00:00')), 'unixepoch') total_duration
+                        FROM coding_records
+                        ASC
+                        WHERE Start BETWEEN DATE('now', 'start of month') AND DATE('now', 'start of month', '+1 month', '-1 day')
+                        AND day = {day}
+                        GROUP BY day";
+
+                SqliteDataReader reader = command.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        duration = reader.GetTimeSpan(1);
+                    }
+                }
+
+                connection.Close();
+            }
+
+            return duration;
+        }
+
+        public static string ExecuteString(string sql)
+        {
+            string text = string.Empty;
+
+            using (SqliteConnection connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+
+                SqliteCommand command = connection.CreateCommand();
+
+                command.CommandText = sql;
+
+                SqliteDataReader reader = command.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        text = reader.GetString(0);
+                    }
+                }
+
+                connection.Close();
+            }
+
+            return text;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
@@ -14,6 +15,7 @@ namespace CodeTracker.csm_stough
     {
 
         private static int resultsPerPage = int.Parse(ConfigurationManager.AppSettings.Get("resultsPerPage"));
+        private static string dateFormat = ConfigurationManager.AppSettings.Get("dateFormat");
 
         public static void Main(string[] args)
         {
@@ -24,21 +26,26 @@ namespace CodeTracker.csm_stough
 
         static void MainMenu()
         {
-            Menu mainMenu = new Menu("Main Menu\nPlease select an option below");
+            Console.Clear();
 
-            mainMenu.AddOption("R", "View Records...", () => { RecordsMenu(); });
-            mainMenu.AddOption("N", "Create New Record...", () => { NewRecordMenu(); });
+            Calender calender = new Calender();
+            
+            Menu mainMenu = new Menu("Main Menu ~~~~~~~~~~~~~~~~~");
+
+            mainMenu.AddOption("L", "Logs...", () => { RecordsMenu(); });
+            mainMenu.AddOption("N", "New Log...", () => { NewRecordMenu(); });
+            mainMenu.AddOption("G", "Goals...", () => { });
             mainMenu.AddOption("Q", "Quit Program", () => { Environment.Exit(0); });
 
-            mainMenu.SelectOption();
+            mainMenu.SelectOption(false);
         }
 
         static void RecordsMenu()
         {
-            Menu recordsMenu = new Menu("Record Menu");
+            Menu recordsMenu = new Menu("Logs");
 
-            recordsMenu.AddOption("A", "View All Records", () => { AllRecordsMenu(); });
-            recordsMenu.AddOption("F", "Filter Records...", () => { FilterRecordsMenu(); });
+            recordsMenu.AddOption("A", "View All Logs", () => { AllRecordsMenu(); });
+            recordsMenu.AddOption("F", "Filter Logs...", () => { FilterRecordsMenu(); });
             recordsMenu.AddOption("B", "Go Back To Main Menu...", () => { MainMenu(); });
 
             recordsMenu.SelectOption();
@@ -46,7 +53,7 @@ namespace CodeTracker.csm_stough
 
         static void FilterRecordsMenu()
         {
-            Menu filterMenu = new Menu("Filter Records");
+            Menu filterMenu = new Menu("Filter Logs");
 
             filterMenu.AddOption("Y", "By Year...", () => { FilterByTimeInterval("%Y", "Year"); });
             filterMenu.AddOption("M", "By Month...", () => { FilterByTimeInterval("%Y-%m", "Month"); });
@@ -59,10 +66,13 @@ namespace CodeTracker.csm_stough
 
         static void FilterByTimeInterval(string timeFormat, string unit)
         {
-            ReportsRenderer dataRenderer = new ReportsRenderer(timeFormat, unit, limit: resultsPerPage);
-            dataRenderer.DisplayTable();
+            ReportsRenderer reportsRenderer = new ReportsRenderer(timeFormat, unit, null, null, resultsPerPage);
+            reportsRenderer.DisplayTable();
             FilterRecordsMenu();
         }
+
+        /**************OLD CODE *******************/
+
 
         static void FilterBetweenDates()
         {
@@ -72,20 +82,34 @@ namespace CodeTracker.csm_stough
             {
                 range = (DateTime[])values[0];
             });
-
-            betweenDatesForm.AddDateTimeRangeQuery("Enter a DateTime", "yyyy-MM-dd hh:mm:ss");
-
+            betweenDatesForm.AddDateTimeRangeQuery("Enter a DateTime", dateFormat);
             betweenDatesForm.Start();
-
-            RecordsRenderer dataRenderer = new RecordsRenderer(limit: resultsPerPage, between:"Start", low: $"'{range[0].ToString("yyyy-MM-dd hh:mm:ss")}'", high: $"'{range[1].ToString("yyyy-MM-dd hh:mm:ss")}'");
-            dataRenderer.DisplayTable();
-            MainMenu();
+            RecordsRenderer recordRenderer = new RecordsRenderer(
+                (limit, offset) =>
+                {
+                    return new List<Object>(Database.GetAll(limit, offset, "Start BETWEEN '{range[0].ToString(dateFormat)}' AND '{range[1].ToString(dateFormat)}'"));
+                },
+                () =>
+                {
+                    return Database.GetCount($"Start BETWEEN '{range[0].ToString(dateFormat)}' AND '{range[1].ToString(dateFormat)}'");
+                },
+                resultsPerPage);
+            recordRenderer.DisplayTable();
+            FilterRecordsMenu();
         }
 
         static void AllRecordsMenu()
         {
-            //DataRenderer dataRenderer = new DataRenderer(limit: resultsPerPage, between:"Start", low:"'2020-01-01 00:00:00'", high:"'2023-05-06 07:00:00'");
-            RecordsRenderer dataRenderer = new RecordsRenderer(limit: resultsPerPage);
+            RecordsRenderer dataRenderer = new RecordsRenderer(
+                (limit, offset) =>
+                {
+                    return new List<Object>(Database.GetAll(limit, offset));
+                },
+                () =>
+                {
+                    return Database.GetCount();
+                },
+                resultsPerPage);
             dataRenderer.DisplayTable();
             MainMenu();
         }
@@ -105,15 +129,15 @@ namespace CodeTracker.csm_stough
         {
             Form manualForm = new Form(
                 "Manual Record Entry Form.\n" +
-                "Please enter dates/times in the format (yyyy-MM-dd hh:mm:ss)\n" +
+                $"Please enter dates/times in the format ({dateFormat})\n" +
                 "Example: 2015-05-29 05:50:00", 
                 (values) =>
             {
                 Database.Insert((DateTime)values[0], (DateTime)values[1]);
             });
 
-            manualForm.AddDateTimeQuery("Please enter the starting date/time", "yyyy-MM-dd hh:mm:ss");
-            manualForm.AddDateTimeQuery("Please enter the ending date/time", "yyyy-MM-dd hh:mm:ss");
+            manualForm.AddDateTimeQuery("Please enter the starting date/time", dateFormat);
+            manualForm.AddDateTimeQuery("Please enter the ending date/time", dateFormat);
 
             manualForm.Start();
 

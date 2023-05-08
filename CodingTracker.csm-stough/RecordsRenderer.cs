@@ -9,15 +9,13 @@ namespace CodeTracker.csm_stough
 {
     public class RecordsRenderer : PaginatedTableRenderer
     {
-        public RecordsRenderer(int limit = int.MaxValue, int offset = 0, string between = "", string low = "", string high = "") : 
-            base(limit, offset, between, low, high)
-        {
-            lastPage = (int)Math.Max(Math.Ceiling(Database.GetCount(between, low, high) / (float)limit) - 1, 0);
+        public RecordsRenderer(GetPage getPage, GetCount getCount, int limit = int.MaxValue, int offset = 0) : base(getPage, getCount, limit, offset) {
+            lastPage = (int)Math.Max(Math.Ceiling(getCount() / (float)limit) - 1, 0);
         }
 
         public override void DisplayTable()
         {
-            List<CodingSession> sessions = Database.GetAll(resultsPerPage, resultsPerPage * currentPage, between, low, high);
+            List<Object> sessions = getPage(resultsPerPage, resultsPerPage * currentPage);
 
             Console.Clear();
 
