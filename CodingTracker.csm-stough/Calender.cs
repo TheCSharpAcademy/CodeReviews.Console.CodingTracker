@@ -12,7 +12,7 @@ namespace CodeTracker.csm_stough
 
         public Calender()
         {
-            Console.WriteLine("Logs This Month ~~~~~~~~~~~~~~~~~");
+            Console.WriteLine("Time Per Day This Month ~~~~~~~~~~~~~~~~~");
             ConsoleTableBuilder.From(CreateCurrentCalenderData())
                 .WithTitle($"{Database.ExecuteString("select strftime('%Y-%m', 'now')")}")
                 .WithColumn("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
@@ -23,7 +23,7 @@ namespace CodeTracker.csm_stough
         {
             int chunkSize = 7;
             int daysThisMonth = Database.ExecuteScalar("SELECT CAST(STRFTIME('%d', DATE('now', 'start of month','+1 month', '-1 day')) AS INTEGER)");
-            int startingOffset = Database.ExecuteScalar("SELECT strftime('%w','now')");
+            int startingOffset = Database.ExecuteScalar("SELECT strftime('%w','now')") - 1;
             string text = "";
             List<Object> source = new List<Object>();
 

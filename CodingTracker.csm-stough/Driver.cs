@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
+using System.Diagnostics.SymbolStore;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,14 +28,17 @@ namespace CodeTracker.csm_stough
         static void MainMenu()
         {
             Console.Clear();
+            GoalManager.UpdateGoals();
 
             Calender calender = new Calender();
+            Console.Write("\n");
+            GoalManager.DisplayCurrentGoals();
             
-            Menu mainMenu = new Menu("Main Menu ~~~~~~~~~~~~~~~~~");
+            Menu mainMenu = new Menu("\nMain Menu ~~~~~~~~~~~~~~~~~");
 
             mainMenu.AddOption("L", "Logs...", () => { RecordsMenu(); });
             mainMenu.AddOption("N", "New Log...", () => { NewRecordMenu(); });
-            mainMenu.AddOption("G", "Goals...", () => { });
+            mainMenu.AddOption("G", "Goals...", () => { GoalMenu(); });
             mainMenu.AddOption("Q", "Quit Program", () => { Environment.Exit(0); });
 
             mainMenu.SelectOption(false);
@@ -49,6 +53,33 @@ namespace CodeTracker.csm_stough
             recordsMenu.AddOption("B", "Go Back To Main Menu...", () => { MainMenu(); });
 
             recordsMenu.SelectOption();
+        }
+
+        static void AllRecordsMenu()
+        {
+            bool ascending = true;
+
+            Form orderForm = new Form("", (values) =>
+            {
+                ascending = (values[0].ToString() == "Oldest to newest") ? true : false;
+            });
+
+            orderForm.AddChoiceQuery("Please select an ordering", "Oldest to newest", "Newest to oldest");
+
+            orderForm.Start();
+
+            RecordsRenderer dataRenderer = new RecordsRenderer(
+                (limit, offset) =>
+                {
+                    return new List<Object>(Database.GetAll(limit, offset, ascending: ascending));
+                },
+                () =>
+                {
+                    return Database.GetCount();
+                },
+                resultsPerPage);
+            dataRenderer.DisplayTable();
+            MainMenu();
         }
 
         static void FilterRecordsMenu()
@@ -70,9 +101,6 @@ namespace CodeTracker.csm_stough
             reportsRenderer.DisplayTable();
             FilterRecordsMenu();
         }
-
-        /**************OLD CODE *******************/
-
 
         static void FilterBetweenDates()
         {
@@ -98,25 +126,9 @@ namespace CodeTracker.csm_stough
             FilterRecordsMenu();
         }
 
-        static void AllRecordsMenu()
-        {
-            RecordsRenderer dataRenderer = new RecordsRenderer(
-                (limit, offset) =>
-                {
-                    return new List<Object>(Database.GetAll(limit, offset));
-                },
-                () =>
-                {
-                    return Database.GetCount();
-                },
-                resultsPerPage);
-            dataRenderer.DisplayTable();
-            MainMenu();
-        }
-
         static void NewRecordMenu()
         {
-            Menu newRecordMenu = new Menu("Create A New Record");
+            Menu newRecordMenu = new Menu("Create A New Log");
 
             newRecordMenu.AddOption("M", "Manual Entry", () => { ManualRecordEntry(); });
             newRecordMenu.AddOption("S", "Stopwatch Entry", () => { StopwatchMenu(); });
@@ -192,6 +204,50 @@ namespace CodeTracker.csm_stough
                 Console.WriteLine("\nPress 'Enter' to end the stopwatch...");
                 Thread.Sleep(500);
             }
+        }
+
+        static void GoalMenu()
+        {
+            Menu goalsMenu = new Menu("Goals");
+
+            goalsMenu.AddOption("A", "All Goals", () => { AllGoals(); });
+            goalsMenu.AddOption("N", "New Goal", () => { NewGoal(); });
+
+            goalsMenu.SelectOption();
+        }
+
+        static void AllGoals()
+        {
+            Console.Clear();
+
+            Console.WriteLine("Active Goals ~~~~~~~~~~~~~~");
+            GoalManager.currentGoals.ForEach(goal => GoalManager.DisplayGoal(goal));
+
+            Console.WriteLine("\nUpcoming Goals ~~~~~~~~~~~~~~");
+            GoalManager.upcomingGoals.ForEach(goal => GoalManager.DisplayGoal(goal));
+
+            Console.WriteLine("\nExpired Goals ~~~~~~~~~~~~~~");
+            GoalManager.pastGoals.ForEach(goal => GoalManager.DisplayGoal(goal));
+
+            Console.WriteLine("\n\nPress any key to return to the Main Menu...");
+            Console.ReadLine();
+            MainMenu();
+        }
+
+        static void NewGoal()
+        {
+            Form goalForm = new Form("New Goal", (values) =>
+            {
+                DateTime[] range = (DateTime[])values[0];
+                Database.InsertGoal(range[0], range[1], TimeSpan.FromHours(int.Parse(values[1].ToString())));
+            });
+
+            goalForm.AddDateTimeRangeQuery("Enter a Start and End date for this goal", dateFormat);
+            goalForm.AddFloatQuery("Please enter a target amount of hours for this goal", true);
+
+            goalForm.Start();
+
+            MainMenu();
         }
     }
 }

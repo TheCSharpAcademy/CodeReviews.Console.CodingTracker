@@ -38,7 +38,7 @@ namespace CodeTracker.csm_stough
             int num = 1;
             reports.ForEach(report =>
             {
-                recordsMenu.AddOption(num.ToString(), string.Format($"{report.Start} : {report.RecordsCount} records : {report.Duration} hours"), () => {
+                recordsMenu.AddOption(num.ToString(), string.Format($"{report.Start} : {report.RecordsCount} records : {report.Duration} hours : {report.AverageHours.ToString("hh\\:mm")} hours/{unit}"), () => {
                     RecordsRenderer recordsRenderer = new RecordsRenderer((limit, offset) =>
                     {
                         return new List<Object>(Database.GetAll(limit, offset, $"STRFTIME('{timeFormat}', Start) = '{report.Start}'"));
