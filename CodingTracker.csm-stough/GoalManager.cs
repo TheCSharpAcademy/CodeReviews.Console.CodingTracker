@@ -4,21 +4,21 @@ namespace CodeTracker.csm_stough
 {
     internal class GoalManager
     {
-        public static List<CodingGoal> currentGoals
+        public static List<CodingGoal> CurrentGoals
         {
             get
             {
                 return Database.GetAllGoals(where: "date('now') <= End AND date('now') >= Start");
             }
         }
-        public static List<CodingGoal> upcomingGoals
+        public static List<CodingGoal> UpcomingGoals
         {
             get
             {
                 return Database.GetAllGoals(where: "date('now') < Start");
             }
         }
-        public static List<CodingGoal> pastGoals
+        public static List<CodingGoal> PastGoals
         {
             get
             {

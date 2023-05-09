@@ -20,7 +20,7 @@ namespace CodeTracker.csm_stough
             Console.Clear();
             GoalManager.UpdateGoals();
 
-            Calender calender = new Calender();
+            new Calender();
             Console.Write("\n");
             GoalManager.DisplayCurrentGoals();
             
@@ -211,13 +211,13 @@ namespace CodeTracker.csm_stough
             Console.Clear();
 
             Console.WriteLine("Active Goals ~~~~~~~~~~~~~~");
-            GoalManager.currentGoals.ForEach(goal => GoalManager.DisplayGoal(goal));
+            GoalManager.CurrentGoals.ForEach(goal => GoalManager.DisplayGoal(goal));
 
             Console.WriteLine("\nUpcoming Goals ~~~~~~~~~~~~~~");
-            GoalManager.upcomingGoals.ForEach(goal => GoalManager.DisplayGoal(goal));
+            GoalManager.UpcomingGoals.ForEach(goal => GoalManager.DisplayGoal(goal));
 
             Console.WriteLine("\nExpired Goals ~~~~~~~~~~~~~~");
-            GoalManager.pastGoals.ForEach(goal => GoalManager.DisplayGoal(goal));
+            GoalManager.PastGoals.ForEach(goal => GoalManager.DisplayGoal(goal));
 
             Console.WriteLine("\n\nPress any key to return to the Main Menu...");
             Console.ReadLine();

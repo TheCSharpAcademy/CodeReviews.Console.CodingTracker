@@ -14,7 +14,7 @@ namespace CodeTracker.csm_stough
 
             Console.Clear();
 
-            ConsoleTableBuilder.From(translateData(sessions))
+            ConsoleTableBuilder.From(TranslateData(sessions))
                 .WithTitle($"All Records ~ Page {currentPage + 1} of {lastPage + 1}")
                 .WithColumn("Start Date", "End Date", "Duration")
                 .ExportAndWriteLine(TableAligntment.Left);
@@ -22,7 +22,7 @@ namespace CodeTracker.csm_stough
             base.DisplayTable();
         }
 
-        protected override List<List<object>> translateData<T>(List<T> data)
+        protected override List<List<object>> TranslateData<T>(List<T> data)
         {
             List<List<Object>> tableData = new List<List<Object>>();
 

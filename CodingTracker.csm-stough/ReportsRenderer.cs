@@ -57,7 +57,7 @@ namespace CodeTracker.csm_stough
             recordsMenu.SelectOption(false);
         }
 
-        protected override List<List<object>> translateData<T>(List<T> data)
+        protected override List<List<object>> TranslateData<T>(List<T> data)
         {
             List<List<Object>> tableData = new List<List<Object>>();
 

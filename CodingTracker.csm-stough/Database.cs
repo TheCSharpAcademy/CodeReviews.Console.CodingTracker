@@ -1,5 +1,5 @@
-﻿using System.Configuration;
-using Microsoft.Data.Sqlite;
+﻿using Microsoft.Data.Sqlite;
+using System.Configuration;
 
 namespace CodeTracker.csm_stough
 {

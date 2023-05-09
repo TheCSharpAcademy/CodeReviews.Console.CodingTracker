@@ -42,6 +42,6 @@ namespace CodeTracker.csm_stough
             recordsMenu.SelectOption(false);
         }
 
-        protected abstract List<List<Object>> translateData<T>(List<T> data);
+        protected abstract List<List<Object>> TranslateData<T>(List<T> data);
     }
 }
