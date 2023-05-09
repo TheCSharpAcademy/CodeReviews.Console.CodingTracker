@@ -8,7 +8,6 @@ namespace CodeTracker.csm_stough
     {
         private static string connectionString = ConfigurationManager.AppSettings.Get("connectionString");
 
-
         public Calender()
         {
             Console.WriteLine("Time Per Day This Month ~~~~~~~~~~~~~~~~~");
