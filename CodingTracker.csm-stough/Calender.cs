@@ -33,7 +33,6 @@ namespace CodeTracker.csm_stough
             {
                 DateTime date = DateTime.Parse($"{yearMonth}-{(d + 1).ToString().PadLeft(2, '0')}");
                 TimeSpan duration = SessionDAO.GetTotalDuration(date);
-                string date1 = date.ToString("yyyy-MM-dd");
                 string durationLabel = duration == TimeSpan.Zero ? "" : ": " + duration.ToString();
                 source.Add((d + 1).ToString() + durationLabel);
             }

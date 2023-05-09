@@ -1,6 +1,4 @@
-﻿using System.Configuration;
-
-namespace CodeTracker.csm_stough
+﻿namespace CodeTracker.csm_stough
 {
     internal class GoalManager
     {
@@ -25,7 +23,7 @@ namespace CodeTracker.csm_stough
                 return GoalDAO.GetAllGoals(where: "date('now') > End");
             }
         }
-        private static string dateFormat = ConfigurationManager.AppSettings.Get("dateFormat");
+        private static string dateFormat = System.Configuration.ConfigurationManager.AppSettings.Get("dateFormat");
 
         public static void DisplayCurrentGoals()
         {
