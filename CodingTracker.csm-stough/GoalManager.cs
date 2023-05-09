@@ -30,16 +30,16 @@ namespace CodeTracker.csm_stough
         public static void DisplayCurrentGoals()
         {
             Console.WriteLine("Current Goals ~~~~~~~~~~~~~~~~~~~~~~");
-            if(currentGoals.Count == 0)
+            if(CurrentGoals.Count == 0)
             {
                 Console.WriteLine("No Current Goals...");
             }
-            currentGoals.ForEach(goal => { DisplayGoal(goal); });
+            CurrentGoals.ForEach(goal => { DisplayGoal(goal); });
         }
 
         public static void UpdateGoals()
         {
-            currentGoals.ForEach((goal) => {
+            CurrentGoals.ForEach((goal) => {
                 List<CodingSession> records = Database.GetAll(where: $"Start BETWEEN '{goal.Start.ToString(dateFormat)}' AND '{goal.End.ToString(dateFormat)}'");
                 goal.CurrentHours = TimeSpan.FromSeconds(records.Sum(record => record.duration.TotalSeconds));
                 Database.UpdateGoal(goal);
