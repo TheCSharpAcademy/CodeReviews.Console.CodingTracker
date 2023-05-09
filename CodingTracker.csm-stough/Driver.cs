@@ -1,12 +1,11 @@
-﻿using System.Configuration;
-using ConsoleUtilities;
+﻿using ConsoleUtilities;
 
 namespace CodeTracker.csm_stough
 {
     internal class Driver
     {
-        private static int resultsPerPage = int.Parse(ConfigurationManager.AppSettings.Get("resultsPerPage"));
-        private static string dateFormat = ConfigurationManager.AppSettings.Get("dateFormat");
+        private static int resultsPerPage = int.Parse(System.Configuration.ConfigurationManager.AppSettings.Get("resultsPerPage"));
+        private static string dateFormat = System.Configuration.ConfigurationManager.AppSettings.Get("dateFormat");
 
         public static void Main(string[] args)
         {

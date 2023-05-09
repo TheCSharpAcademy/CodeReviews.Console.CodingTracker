@@ -1,12 +1,11 @@
 ﻿using ConsoleTableExt;
 using Microsoft.Data.Sqlite;
-using System.Configuration;
 
 namespace CodeTracker.csm_stough
 {
     public class Calender
     {
-        private static string connectionString = ConfigurationManager.AppSettings.Get("connectionString");
+        private static string connectionString = System.Configuration.ConfigurationManager.AppSettings.Get("connectionString");
 
         public Calender()
         {
