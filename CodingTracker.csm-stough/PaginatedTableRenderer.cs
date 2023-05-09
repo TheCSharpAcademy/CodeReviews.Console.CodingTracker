@@ -1,9 +1,4 @@
 ﻿using ConsoleUtilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CodeTracker.csm_stough
 {
@@ -48,6 +43,5 @@ namespace CodeTracker.csm_stough
         }
 
         protected abstract List<List<Object>> translateData<T>(List<T> data);
-
     }
 }

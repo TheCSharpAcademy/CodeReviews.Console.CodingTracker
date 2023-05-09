@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ConsoleTableExt;
+﻿using ConsoleTableExt;
 
 namespace CodeTracker.csm_stough
 {
     public class Calender
     {
-
         public Calender()
         {
             Console.WriteLine("Time Per Day This Month ~~~~~~~~~~~~~~~~~");
@@ -44,8 +38,5 @@ namespace CodeTracker.csm_stough
                 .Select(x => x.Select(v => v.Value).ToList())
                 .ToList();
         }
-
-
-
     }
 }

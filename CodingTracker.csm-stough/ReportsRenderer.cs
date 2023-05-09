@@ -1,10 +1,4 @@
-﻿using ConsoleTableExt;
-using ConsoleUtilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ConsoleUtilities;
 
 namespace CodeTracker.csm_stough
 {
@@ -13,8 +7,7 @@ namespace CodeTracker.csm_stough
         private string timeFormat;
         private string unit;
 
-        public ReportsRenderer(string timeFormat, string unit, GetPage getPage, GetCount getCount, int limit = int.MaxValue, int offset = 0) :
-            base(getPage, getCount, limit, offset)
+        public ReportsRenderer(string timeFormat, string unit, GetPage getPage, GetCount getCount, int limit = int.MaxValue, int offset = 0) : base(getPage, getCount, limit, offset)
         {
             this.timeFormat = timeFormat;
             this.unit = unit;

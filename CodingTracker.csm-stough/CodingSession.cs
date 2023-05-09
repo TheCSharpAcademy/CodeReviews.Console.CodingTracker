@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CodeTracker.csm_stough
+﻿namespace CodeTracker.csm_stough
 {
     public class CodingSession
     {

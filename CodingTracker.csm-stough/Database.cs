@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Configuration;
-using System.Collections.Specialized;
+﻿using System.Configuration;
 using Microsoft.Data.Sqlite;
-using Microsoft.VisualBasic;
 
 namespace CodeTracker.csm_stough
 {

@@ -1,20 +1,10 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Diagnostics;
-using System.Diagnostics.SymbolStore;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ConsoleTableExt;
+﻿using System.Configuration;
 using ConsoleUtilities;
 
 namespace CodeTracker.csm_stough
 {
     internal class Driver
     {
-
         private static int resultsPerPage = int.Parse(ConfigurationManager.AppSettings.Get("resultsPerPage"));
         private static string dateFormat = ConfigurationManager.AppSettings.Get("dateFormat");
 
