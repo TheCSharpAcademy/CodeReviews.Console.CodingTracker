@@ -1,14 +1,19 @@
 ﻿using ConsoleTableExt;
+using Microsoft.Data.Sqlite;
+using System.Configuration;
 
 namespace CodeTracker.csm_stough
 {
     public class Calender
     {
+        private static string connectionString = ConfigurationManager.AppSettings.Get("connectionString");
+
+
         public Calender()
         {
             Console.WriteLine("Time Per Day This Month ~~~~~~~~~~~~~~~~~");
             ConsoleTableBuilder.From(CreateCurrentCalenderData())
-                .WithTitle($"{Database.ExecuteString("select strftime('%Y-%m', 'now')")}")
+                .WithTitle(GetYearMonth())
                 .WithColumn("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
                 .ExportAndWriteLine(TableAligntment.Left);
         }
@@ -16,19 +21,23 @@ namespace CodeTracker.csm_stough
         public static List<List<Object>> CreateCurrentCalenderData()
         {
             int chunkSize = 7;
-            int daysThisMonth = Database.ExecuteScalar("SELECT CAST(STRFTIME('%d', DATE('now', 'start of month','+1 month', '-1 day')) AS INTEGER)");
-            int startingOffset = Database.ExecuteScalar("SELECT strftime('%w','now')") - 1;
+            int daysThisMonth = GetDaysThisMonth();
+            int startingOffset = GetDateOfFirst();
+            string yearMonth = GetYearMonth();
             List<Object> source = new List<Object>();
 
-            for(int d = 0; d < startingOffset; d++)
+            for(int d = 1; d < startingOffset; d++)
             {
                 source.Add("");
             }
 
             for(int d = 0; d < daysThisMonth; d++)
             {
-                string duration = Database.FetchTotalDuration(d + 1) == TimeSpan.Zero ? "" : ": " + Database.FetchTotalDuration(d + 1).ToString();
-                source.Add((d + 1).ToString() + duration);
+                DateTime date = DateTime.Parse($"{yearMonth}-{(d + 1).ToString().PadLeft(2, '0')}");
+                TimeSpan duration = SessionDAO.GetTotalDuration(date);
+                string date1 = date.ToString("yyyy-MM-dd");
+                string durationLabel = duration == TimeSpan.Zero ? "" : ": " + duration.ToString();
+                source.Add((d + 1).ToString() + durationLabel);
             }
 
             return source
@@ -36,6 +45,72 @@ namespace CodeTracker.csm_stough
                 .GroupBy(x => x.Index / chunkSize)
                 .Select(x => x.Select(v => v.Value).ToList())
                 .ToList();
+        }
+
+        private static int GetDaysThisMonth()
+        {
+            int scalar;
+
+            using (SqliteConnection connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+
+                SqliteCommand command = connection.CreateCommand();
+
+                command.CommandText = "SELECT CAST(STRFTIME('%d', DATE('now', 'start of month','+1 month', '-1 day')) AS INTEGER)";
+
+                scalar = Convert.ToInt32(command.ExecuteScalar());
+
+                connection.Close();
+            }
+            return scalar;
+        }
+
+        private static int GetDateOfFirst()
+        {
+            int scalar;
+
+            using (SqliteConnection connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+
+                SqliteCommand command = connection.CreateCommand();
+
+                command.CommandText = "SELECT strftime('%w','now', 'start of day')";
+
+                scalar = Convert.ToInt32(command.ExecuteScalar());
+
+                connection.Close();
+            }
+            return scalar;
+        }
+
+        private static string GetYearMonth()
+        {
+            string text = string.Empty;
+
+            using (SqliteConnection connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+
+                SqliteCommand command = connection.CreateCommand();
+
+                command.CommandText = "SELECT STRFTIME('%Y-%m', 'now')";
+
+                SqliteDataReader reader = command.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        text = reader.GetString(0);
+                    }
+                }
+
+                connection.Close();
+            }
+
+            return text;
         }
     }
 }

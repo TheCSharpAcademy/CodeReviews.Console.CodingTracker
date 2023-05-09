@@ -10,7 +10,8 @@ namespace CodeTracker.csm_stough
 
         public static void Main(string[] args)
         {
-            Database.Init();
+            SessionDAO.Init();
+            GoalDAO.Init();
 
             MainMenu();
         }
@@ -61,11 +62,11 @@ namespace CodeTracker.csm_stough
             RecordsRenderer dataRenderer = new RecordsRenderer(
                 (limit, offset) =>
                 {
-                    return new List<Object>(Database.GetAll(limit, offset, ascending: ascending));
+                    return new List<Object>(SessionDAO.GetAll(limit, offset, ascending: ascending));
                 },
                 () =>
                 {
-                    return Database.GetCount();
+                    return SessionDAO.GetCount();
                 },
                 resultsPerPage);
             dataRenderer.DisplayTable();
@@ -105,11 +106,11 @@ namespace CodeTracker.csm_stough
             RecordsRenderer recordRenderer = new RecordsRenderer(
                 (limit, offset) =>
                 {
-                    return new List<Object>(Database.GetAll(limit, offset, "Start BETWEEN '{range[0].ToString(dateFormat)}' AND '{range[1].ToString(dateFormat)}'"));
+                    return new List<Object>(SessionDAO.GetAll(limit, offset, "Start BETWEEN '{range[0].ToString(dateFormat)}' AND '{range[1].ToString(dateFormat)}'"));
                 },
                 () =>
                 {
-                    return Database.GetCount($"Start BETWEEN '{range[0].ToString(dateFormat)}' AND '{range[1].ToString(dateFormat)}'");
+                    return SessionDAO.GetCount($"Start BETWEEN '{range[0].ToString(dateFormat)}' AND '{range[1].ToString(dateFormat)}'");
                 },
                 resultsPerPage);
             recordRenderer.DisplayTable();
@@ -132,10 +133,10 @@ namespace CodeTracker.csm_stough
             Form manualForm = new Form(
                 "Manual Record Entry Form.\n" +
                 $"Please enter dates/times in the format ({dateFormat})\n" +
-                "Example: 2015-05-29 05:50:00", 
+                "Example: 2015-05-29 05:50:00 AM", 
                 (values) =>
             {
-                Database.Insert((DateTime)values[0], (DateTime)values[1]);
+                SessionDAO.Insert((DateTime)values[0], (DateTime)values[1]);
             });
 
             manualForm.AddDateTimeQuery("Please enter the starting date/time", dateFormat);
@@ -158,7 +159,7 @@ namespace CodeTracker.csm_stough
             {
                 if (values[0].ToString().ToLower() == "yes")
                 {
-                    Database.Insert(start, end);
+                    SessionDAO.Insert(start, end);
                 }
             });
 
@@ -229,7 +230,7 @@ namespace CodeTracker.csm_stough
             Form goalForm = new Form("New Goal", (values) =>
             {
                 DateTime[] range = (DateTime[])values[0];
-                Database.InsertGoal(range[0], range[1], TimeSpan.FromHours(int.Parse(values[1].ToString())));
+                GoalDAO.InsertGoal(range[0], range[1], TimeSpan.FromHours(int.Parse(values[1].ToString())));
             });
 
             goalForm.AddDateTimeRangeQuery("Enter a Start and End date for this goal", dateFormat);

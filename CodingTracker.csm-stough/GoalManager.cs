@@ -8,21 +8,21 @@ namespace CodeTracker.csm_stough
         {
             get
             {
-                return Database.GetAllGoals(where: "date('now') <= End AND date('now') >= Start");
+                return GoalDAO.GetAllGoals(where: "date('now') <= End AND date('now') >= Start");
             }
         }
         public static List<CodingGoal> UpcomingGoals
         {
             get
             {
-                return Database.GetAllGoals(where: "date('now') < Start");
+                return GoalDAO.GetAllGoals(where: "date('now') < Start");
             }
         }
         public static List<CodingGoal> PastGoals
         {
             get
             {
-                return Database.GetAllGoals(where: "date('now') > End");
+                return GoalDAO.GetAllGoals(where: "date('now') > End");
             }
         }
         private static string dateFormat = ConfigurationManager.AppSettings.Get("dateFormat");
@@ -40,9 +40,9 @@ namespace CodeTracker.csm_stough
         public static void UpdateGoals()
         {
             CurrentGoals.ForEach((goal) => {
-                List<CodingSession> records = Database.GetAll(where: $"Start BETWEEN '{goal.Start.ToString(dateFormat)}' AND '{goal.End.ToString(dateFormat)}'");
+                List<CodingSession> records = SessionDAO.GetAll(where: $"Start BETWEEN '{goal.Start.ToString(dateFormat)}' AND '{goal.End.ToString(dateFormat)}'");
                 goal.CurrentHours = TimeSpan.FromSeconds(records.Sum(record => record.duration.TotalSeconds));
-                Database.UpdateGoal(goal);
+                GoalDAO.UpdateGoal(goal);
             });
         }
 

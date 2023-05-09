@@ -3,14 +3,12 @@ using System.Configuration;
 
 namespace CodeTracker.csm_stough
 {
-    public class Database
+    public class SessionDAO
     {
-        private static string connectionString;
+        private static string connectionString = ConfigurationManager.AppSettings.Get("connectionString");
 
         public static void Init()
         {
-            connectionString = ConfigurationManager.AppSettings.Get("connectionString");
-
             using (SqliteConnection connection = new SqliteConnection(connectionString))
             {
                 connection.Open();
@@ -23,13 +21,6 @@ namespace CodeTracker.csm_stough
                         Start TEXT,
                         End TEXT,
                         Duration TEXT
-                        );
-                        CREATE TABLE IF NOT EXISTS coding_goals (
-                        Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        Start TEXT,
-                        End TEXT,
-                        Target TEXT,
-                        Current TEXT
                         )";
 
                 command.ExecuteNonQuery();
@@ -211,26 +202,7 @@ namespace CodeTracker.csm_stough
             return count;
         }
 
-        public static int ExecuteScalar(string sql)
-        {
-            int scalar;
-
-            using (SqliteConnection connection = new SqliteConnection(connectionString))
-            {
-                connection.Open();
-
-                SqliteCommand command = connection.CreateCommand();
-
-                command.CommandText = sql;
-
-                scalar = Convert.ToInt32(command.ExecuteScalar());
-
-                connection.Close();
-            }
-            return scalar;
-        }
-
-        public static TimeSpan FetchTotalDuration(int day)
+        public static TimeSpan GetTotalDuration(DateTime date)
         {
             TimeSpan duration = TimeSpan.Zero;
 
@@ -241,12 +213,12 @@ namespace CodeTracker.csm_stough
                 SqliteCommand command = connection.CreateCommand();
 
                 command.CommandText =
-                    $@"SELECT CAST(STRFTIME('%d', Start) AS INTEGER) day, TIME(SUM(STRFTIME('%s', Duration) - STRFTIME('%s', '00:00:00')), 'unixepoch') total_duration
+                    $@"SELECT STRFTIME('%Y-%m-%d', Start) date, TIME(SUM(STRFTIME('%s', Duration) - STRFTIME('%s', '00:00:00')), 'unixepoch') total_duration
                         FROM coding_records
                         ASC
                         WHERE Start BETWEEN DATE('now', 'start of month') AND DATE('now', 'start of month', '+1 month', '-1 day')
-                        AND day = {day}
-                        GROUP BY day";
+                        AND date = '{date.ToString("yyyy-MM-dd")}'
+                        GROUP BY date";
 
                 SqliteDataReader reader = command.ExecuteReader();
 
@@ -262,104 +234,6 @@ namespace CodeTracker.csm_stough
             }
 
             return duration;
-        }
-
-        public static string ExecuteString(string sql)
-        {
-            string text = string.Empty;
-
-            using (SqliteConnection connection = new SqliteConnection(connectionString))
-            {
-                connection.Open();
-
-                SqliteCommand command = connection.CreateCommand();
-
-                command.CommandText = sql;
-
-                SqliteDataReader reader = command.ExecuteReader();
-
-                if (reader.HasRows)
-                {
-                    while (reader.Read())
-                    {
-                        text = reader.GetString(0);
-                    }
-                }
-
-                connection.Close();
-            }
-
-            return text;
-        }
-
-        public static CodingGoal InsertGoal(DateTime start, DateTime end, TimeSpan goal)
-        {
-            CodingGoal codingGoal = null;
-
-            using (SqliteConnection connection = new SqliteConnection(connectionString))
-            {
-                connection.Open();
-
-                SqliteCommand command = connection.CreateCommand();
-                command.CommandText =
-                $@"INSERT INTO coding_goals(Start, End, Target, Current) VALUES('{start.ToString("yyyy-MM-dd hh:mm:ss")}', '{end.ToString("yyyy-MM-dd hh:mm:ss")}', '{goal}', '{TimeSpan.Zero}'); SELECT last_insert_rowid();";
-                int id = Convert.ToInt32(command.ExecuteScalar());
-                codingGoal = new CodingGoal(id, start, end, TimeSpan.Zero, goal);
-                connection.Close();
-            }
-
-            return codingGoal;
-        }
-
-        public static List<CodingGoal> GetAllGoals(int limit = int.MaxValue, int offset = 0, string where = "", bool ascending = true)
-        {
-            List<CodingGoal> goals = new List<CodingGoal>();
-
-            using (SqliteConnection connection = new SqliteConnection(connectionString))
-            {
-                connection.Open();
-
-                SqliteCommand command = connection.CreateCommand();
-
-                command.CommandText = $"SELECT * FROM coding_goals ";
-                if (!string.IsNullOrEmpty(where))
-                {
-                    command.CommandText += "WHERE " + where + " ";
-                }
-                command.CommandText += "ORDER BY Start ";
-                command.CommandText += ascending ? "ASC " : "DESC ";
-                command.CommandText += $"LIMIT {limit} OFFSET {offset} ";
-
-                SqliteDataReader reader = command.ExecuteReader();
-
-                if (reader.HasRows)
-                {
-                    while (reader.Read())
-                    {
-                        goals.Add(new CodingGoal(reader.GetInt32(0), reader.GetDateTime(1), reader.GetDateTime(2), reader.GetTimeSpan(4), reader.GetTimeSpan(3)));
-                    }
-                }
-
-                connection.Close();
-            }
-
-            return goals;
-        }
-
-        public static void UpdateGoal(CodingGoal goal)
-        {
-            using (SqliteConnection connection = new SqliteConnection(connectionString))
-            {
-                connection.Open();
-
-                SqliteCommand command = connection.CreateCommand();
-                command.CommandText =
-                    $@"UPDATE coding_goals SET Current='{goal.CurrentHours}' WHERE Id={goal.Id}";
-
-                command.ExecuteNonQuery();
-
-                connection.Close();
-            }
         }
     }
 }
