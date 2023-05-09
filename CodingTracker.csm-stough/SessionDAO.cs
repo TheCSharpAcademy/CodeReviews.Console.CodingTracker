@@ -2,7 +2,7 @@
 
 namespace CodeTracker.csm_stough
 {
-    public class SessionDAO
+    public class SessionDao
     {
         private static string connectionString = System.Configuration.ConfigurationManager.AppSettings.Get("connectionString");
 

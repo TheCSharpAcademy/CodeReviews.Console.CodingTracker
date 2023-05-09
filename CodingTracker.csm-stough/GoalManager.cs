@@ -6,21 +6,21 @@
         {
             get
             {
-                return GoalDAO.GetAllGoals(where: "date('now') <= End AND date('now') >= Start");
+                return GoalDao.GetAllGoals(where: "date('now') <= End AND date('now') >= Start");
             }
         }
         public static List<CodingGoal> UpcomingGoals
         {
             get
             {
-                return GoalDAO.GetAllGoals(where: "date('now') < Start");
+                return GoalDao.GetAllGoals(where: "date('now') < Start");
             }
         }
         public static List<CodingGoal> PastGoals
         {
             get
             {
-                return GoalDAO.GetAllGoals(where: "date('now') > End");
+                return GoalDao.GetAllGoals(where: "date('now') > End");
             }
         }
         private static string dateFormat = System.Configuration.ConfigurationManager.AppSettings.Get("dateFormat");
@@ -38,9 +38,9 @@
         public static void UpdateGoals()
         {
             CurrentGoals.ForEach((goal) => {
-                List<CodingSession> records = SessionDAO.GetAll(where: $"Start BETWEEN '{goal.Start.ToString(dateFormat)}' AND '{goal.End.ToString(dateFormat)}'");
+                List<CodingSession> records = SessionDao.GetAll(where: $"Start BETWEEN '{goal.Start.ToString(dateFormat)}' AND '{goal.End.ToString(dateFormat)}'");
                 goal.CurrentHours = TimeSpan.FromSeconds(records.Sum(record => record.duration.TotalSeconds));
-                GoalDAO.UpdateGoal(goal);
+                GoalDao.UpdateGoal(goal);
             });
         }
 

@@ -11,12 +11,12 @@ namespace CodeTracker.csm_stough
         {
             this.timeFormat = timeFormat;
             this.unit = unit;
-            lastPage = (int)Math.Max(Math.Ceiling(SessionDAO.GetCountGroupedByTime(timeFormat) / (float)limit) - 1, 0);
+            lastPage = (int)Math.Max(Math.Ceiling(SessionDao.GetCountGroupedByTime(timeFormat) / (float)limit) - 1, 0);
         }
 
         public override void DisplayTable()
         {
-            List<ReportRecord> reports = SessionDAO.GetAllGroupedByTime(timeFormat, resultsPerPage, resultsPerPage * currentPage);
+            List<ReportRecord> reports = SessionDao.GetAllGroupedByTime(timeFormat, resultsPerPage, resultsPerPage * currentPage);
 
             Console.Clear();
 
@@ -34,11 +34,11 @@ namespace CodeTracker.csm_stough
                 recordsMenu.AddOption(num.ToString(), string.Format($"{report.Start} : {report.RecordsCount} records : {report.Duration} hours : {report.AverageHours.ToString("hh\\:mm")} hours/{unit}"), () => {
                     RecordsRenderer recordsRenderer = new RecordsRenderer((limit, offset) =>
                     {
-                        return new List<Object>(SessionDAO.GetAll(limit, offset, $"STRFTIME('{timeFormat}', Start) = '{report.Start}'"));
+                        return new List<Object>(SessionDao.GetAll(limit, offset, $"STRFTIME('{timeFormat}', Start) = '{report.Start}'"));
                     },
                     () =>
                     {
-                        return SessionDAO.GetCount($"STRFTIME('{timeFormat}', Start) = '{report.Start}'");
+                        return SessionDao.GetCount($"STRFTIME('{timeFormat}', Start) = '{report.Start}'");
                     },
                     resultsPerPage);
                     recordsRenderer.DisplayTable();

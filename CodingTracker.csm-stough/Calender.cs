@@ -32,7 +32,7 @@ namespace CodeTracker.csm_stough
             for(int d = 0; d < daysThisMonth; d++)
             {
                 DateTime date = DateTime.Parse($"{yearMonth}-{(d + 1).ToString().PadLeft(2, '0')}");
-                TimeSpan duration = SessionDAO.GetTotalDuration(date);
+                TimeSpan duration = SessionDao.GetTotalDuration(date);
                 string durationLabel = duration == TimeSpan.Zero ? "" : ": " + duration.ToString();
                 source.Add((d + 1).ToString() + durationLabel);
             }

@@ -2,7 +2,7 @@
 
 namespace CodeTracker.csm_stough
 {
-    public class GoalDAO
+    public class GoalDao
     {
         private static string connectionString = System.Configuration.ConfigurationManager.AppSettings.Get("connectionString");
 
