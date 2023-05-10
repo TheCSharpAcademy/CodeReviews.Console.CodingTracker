@@ -1,6 +1,7 @@
 ﻿namespace CodingTracker.barakisbrown;
 
 using Microsoft.Data.Sqlite;
+using Serilog;
 using System;
 using System.Configuration;
 using System.Text;
@@ -23,6 +24,7 @@ public class CodingController
 
     public CodingController()
     {
+        Log.Information("F> CodingController. Initializing DataSource and DB IF IT DOES NOT EXIST.");
         DataSource = GetConnectionString();
         if (!DBExist)
             CreateDB();
@@ -40,8 +42,9 @@ public class CodingController
         }
         catch (Exception e)
         {
-            Console.WriteLine("Error Creating Database. ");
-            Console.WriteLine("Exception Message is {0}", e.Message);
+            Log.Error("F> CreateDB: Issue can not create database");
+            Log.Error("F> CreateDB: Exception Message is {0}", e.Message);
+            Console.WriteLine("Can not create DB. Check Error Logs for more detail.");
             throw;
         }
     }
@@ -69,11 +72,12 @@ public class CodingController
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Error: Something went wrong.");
-            Console.WriteLine($"Exception Message is {ex.Message}");
+            Log.Error("F> ExecuteNonQuery. Something went wrong here.");
+            Log.Error("F> ExecuteNonQuery. Exception Message is {0}", ex.Message);
+            Console.WriteLine("Error: Something went wrong. Please check error logs");
             throw;
         }
     }
 
-    private bool DBExist => File.Exists(CodingController.DBPATH + CodingController.DBNAME);
+    private static bool DBExist => File.Exists(CodingController.DBPATH + CodingController.DBNAME);
 }
