@@ -3,6 +3,7 @@
 using Microsoft.Data.Sqlite;
 using System;
 using System.Configuration;
+using System.Text;
 
 public class CodingController
 {
@@ -12,13 +13,18 @@ public class CodingController
 	EndTime	TEXT NOT NULL,
 	Duration	TEXT NOT NULL,
 	PRIMARY KEY(ID AUTOINCREMENT));";
+
     private static readonly string ConnectionName = "myDB";
+    private static readonly string DbNameKey = "DbName";
+    private static readonly string DbPathKey = "DbPath";
+
+    private readonly string? TableName = "sessions";
     private readonly string? DataSource;
 
     public CodingController()
     {
-        DataSource = CodingController.GetConnectionString();
-        if (!DBExist())
+        DataSource = GetConnectionString();
+        if (!DBExist)
             CreateDB();
     }
 
@@ -35,20 +41,24 @@ public class CodingController
         catch (Exception e)
         {
             Console.WriteLine("Error Creating Database. ");
-            Console.WriteLine("Exception Message is {0}",e.Message);
+            Console.WriteLine("Exception Message is {0}", e.Message);
             throw;
         }
     }
 
-    private static string? GetDbPath()
-    {
-        return ConfigurationManager.AppSettings.Get("DbPath");
-    }
+    private static string? DBPATH => ConfigurationManager.AppSettings.Get(DbPathKey);
+
+    private static string? DBNAME => ConfigurationManager.AppSettings.Get(DbNameKey);
 
     private static string? GetConnectionString()
     {
         ConnectionStringSettings settings = ConfigurationManager.ConnectionStrings[ConnectionName];
-        return settings?.ConnectionString;
+
+        StringBuilder builder = new();
+        builder.Append(settings);
+        builder.Append(DBPATH);
+        builder.Append(DBNAME);
+        return builder.ToString();
     }
 
     private static int ExecuteNonQuery(SqliteCommand cmd)
@@ -65,9 +75,5 @@ public class CodingController
         }
     }
 
-    private static bool DBExist()
-    {
-        string ?DbName = ConfigurationManager.AppSettings.Get("DbName");
-        return File.Exists(GetDbPath() + DbName);       
-    }
+    private bool DBExist => File.Exists(CodingController.DBPATH + CodingController.DBNAME);
 }
