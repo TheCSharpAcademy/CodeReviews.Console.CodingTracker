@@ -39,14 +39,5 @@ public class Menu
             result = Console.ReadLine();
         }
         return amount;
-    }
-
-    public static bool GetYesNo()
-    {
-        ConsoleKeyInfo input = Console.ReadKey(true);
-        if (input.Key == ConsoleKey.Y)
-            return true;
-        else 
-            return false;
-    }
+    }   
 }
