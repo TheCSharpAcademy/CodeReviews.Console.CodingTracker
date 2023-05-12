@@ -43,20 +43,33 @@ while(option != 0)
 
 void ShowAllSessions()
 {
-    throw new NotImplementedException();
+    Console.Clear();
+    Console.WriteLine("Delete a Session");
+
+    menu.GetKeyReturnMenu();
 }
 
 void UpdateSession()
 {
-    throw new NotImplementedException();
+    Console.Clear();
+    Console.WriteLine("Delete a Session");
+
+    menu.GetKeyReturnMenu();
 }
 
-void DeleteSession()
+    void DeleteSession()
 {
-    throw new NotImplementedException();
+    Console.Clear();
+    Console.WriteLine("Delete a Session");
+
+    menu.GetKeyReturnMenu();
 }
 
 void AddSession()
 {
-    throw new NotImplementedException();
+    Console.Clear();
+    Console.WriteLine("Adding Session.");
+
+
+    menu.GetKeyReturnMenu();
 }
