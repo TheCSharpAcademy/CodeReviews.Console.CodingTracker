@@ -6,6 +6,15 @@ public class Menu
 {
     private readonly int[] _menuOptions = new int[] { 0, 1, 2, 3, 4 };
     private readonly string _menuInputString = "Please Select a menu option or 0 to exit?";
+    private readonly CodingController ?_controller;
+
+    public Menu(CodingController ?controller)
+    {
+        if (controller is not null)
+        {
+            _controller = controller;
+        }
+    }
 
     public void GetMenu()
     {
@@ -32,7 +41,7 @@ public class Menu
         string? result = Console.ReadLine();
         int amount;
 
-        while(string.IsNullOrEmpty(result) || !Int32.TryParse(result, out amount) || _menuOptions.Contains(amount))
+        while(string.IsNullOrEmpty(result) || !Int32.TryParse(result, out amount) || !_menuOptions.Contains(amount))
         {
             Console.WriteLine("Your answer need to be an acceptable result");
             Console.WriteLine(_menuInputString);
