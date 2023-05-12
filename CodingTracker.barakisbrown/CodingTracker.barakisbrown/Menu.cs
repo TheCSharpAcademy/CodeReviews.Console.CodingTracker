@@ -1,5 +1,6 @@
 ﻿namespace CodingTracker.barakisbrown;
 
+using Serilog;
 using System;
 
 public class Menu
@@ -38,15 +39,29 @@ public class Menu
     public int GetMenuSelection()
     {
         Console.WriteLine(_menuInputString);
-        string? result = Console.ReadLine();
-        int amount;
+        int option;
 
-        while(string.IsNullOrEmpty(result) || !Int32.TryParse(result, out amount) || !_menuOptions.Contains(amount))
+        while(true)
         {
-            Console.WriteLine("Your answer need to be an acceptable result");
-            Console.WriteLine(_menuInputString);
-            result = Console.ReadLine();
+            ConsoleKeyInfo input = Console.ReadKey(true);
+            try
+            {
+                option = int.Parse(input.KeyChar.ToString());
+                return option;
+            }
+            catch (FormatException _)
+            {
+                Log.Error("F>GetMenuSelection() has fired an exception and was caught. {0}", _.Message);
+                Console.WriteLine($"Input needs to be betwen {_menuOptions}");
+                Console.WriteLine(_menuInputString);
+            }
         }
-        return amount;
-    }   
+    }
+    
+    public void GetKeyReturnMenu()
+    {
+        Console.ReadKey(true);
+        Thread.Sleep(800);
+        Console.Clear();
+    }
 }
