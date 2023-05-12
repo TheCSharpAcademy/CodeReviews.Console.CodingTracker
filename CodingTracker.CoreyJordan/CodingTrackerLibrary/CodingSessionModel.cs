@@ -1,10 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CodingTrackerLibrary;
-internal class CodingSessionModel
+﻿namespace CodingTrackerLibrary;
+public class CodingSessionModel
 {
+    public int SessionId { get; set; }
+    public DateTime StartTime { get; set; }
+    public DateTime EndTime { get; set; }
+    public TimeSpan Duration 
+    {
+        get
+        {
+            return EndTime - StartTime;
+        } 
+    }
 }
