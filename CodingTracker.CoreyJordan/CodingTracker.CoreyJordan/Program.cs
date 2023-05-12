@@ -1,2 +1,10 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using CodingTrackerLibrary;
+
+try
+{
+    CrudController.InitDatabase();
+}
+catch (Exception ex)
+{
+    Console.WriteLine(ex.Message);
+}
