@@ -128,4 +128,19 @@ public static class CrudController
             command.ExecuteNonQuery();
         }
     }
+
+    public static void CreateLiveSession(DateTime startDate, DateTime endDate)
+    {
+        using (var connection = new SqliteConnection(ConnString(conn)))
+        {
+            connection.Open();
+            var command = connection.CreateCommand();
+
+            command.CommandText =
+                @$"INSERT INTO CodingSession (StartTime, EndTime)
+                VALUES ('{startDate:g}', '{endDate:g}')";
+
+            command.ExecuteNonQuery();
+        }
+    }
 }

@@ -1,5 +1,6 @@
 ﻿using CodingTracker.CoreyJordan;
 using CodingTrackerLibrary;
+using System.Diagnostics;
 
 CrudController.InitDatabase();
 ConsoleDisplay display = new();
@@ -15,25 +16,63 @@ while(!exitApp)
 
 bool ExecuteUserChoice(string userChoice)
 {
+    bool exit = false;
     switch (userChoice.ToUpper())
     {
         case "Q":
-            return true;
+            exit = true;
+            break;
         case "V":
             GetCodingSessions();
-            return false;
+            break;
         case "N":
             CreateCodingSession();
-            return false;
+            break;
         case "E":
             CloseCodingSession();
-            return false;
+            break;
+        case "L":
+            RecordLiveSession();
+            break;
         case "D":
             DeleteCodingSession();
-            return false;
+            break;
         default:
             display.InvalidInput(userChoice);
-            return false;
+            break;
+    }
+    return exit;
+}
+
+void RecordLiveSession()
+{
+    Stopwatch liveSession = new();
+
+    Console.Clear();
+    Console.WriteLine("Press any key to begin...");
+    Console.ReadKey();
+    DateTime start = DateTime.Now;
+    liveSession.Start();
+
+    Console.WriteLine("\nRecording - press any key to end session...");
+    Console.ReadKey();
+    DateTime end = DateTime.Now;
+    liveSession.Stop();
+
+    Console.WriteLine($"\nYour coding session lasted {liveSession.Elapsed}");
+    Console.WriteLine("Press any key to log session.");
+    Console.ReadKey();
+
+    try
+    {
+        CrudController.CreateLiveSession(start, end);
+        display.Success("Session logged");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+        Console.Write("Press any key...");
+        Console.ReadKey();
     }
 }
 
