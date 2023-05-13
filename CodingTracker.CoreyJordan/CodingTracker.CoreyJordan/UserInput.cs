@@ -31,4 +31,22 @@ internal static class UserInput
 
         return date;
     }
+
+    internal static int GetInteger(string prompt)
+    {
+        ConsoleDisplay display = new();
+        int output;
+
+        Console.Write(prompt);
+        string input = Console.ReadLine()!;
+
+        while (!int.TryParse(input, out output))
+        {
+            display.InvalidInput(input);
+            Console.Write(prompt);
+            input = Console.ReadLine()!;
+        }
+
+        return output;
+    }
 }

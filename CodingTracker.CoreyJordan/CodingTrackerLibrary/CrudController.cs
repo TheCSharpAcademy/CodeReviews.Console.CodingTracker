@@ -59,9 +59,16 @@ public static class CrudController
             SqliteDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                CodingSessionModel session = new();
-                session.SessionId = reader.GetInt32(0);
-                session.StartTime = DateTime.ParseExact(reader.GetString(1), "g", new CultureInfo("en-US"));
+                CodingSessionModel session = new()
+                {
+                    SessionId = reader.GetInt32(0),
+                    StartTime = DateTime.ParseExact(reader.GetString(1), "g", new CultureInfo("en-US"))
+                };
+
+                if (!reader.IsDBNull(2))
+                {
+                    session.EndTime = DateTime.ParseExact(reader.GetString(2), "g", new CultureInfo("en-US"));
+                }
                 sessions.Add(session);
             }
         }
@@ -82,12 +89,29 @@ public static class CrudController
             SqliteDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                CodingSessionModel session = new();
-                session.SessionId = reader.GetInt32(0);
-                session.StartTime = DateTime.ParseExact(reader.GetString(1), "g", new CultureInfo("en-US"));
+                CodingSessionModel session = new()
+                {
+                    SessionId = reader.GetInt32(0),
+                    StartTime = DateTime.ParseExact(reader.GetString(1), "g", new CultureInfo("en-US"))
+                };
                 sessions.Add(session);
             }
         }
         return sessions;
+    }
+
+    public static void CloseSession(DateTime endTime, int primaryKey)
+    {
+        using (var connection = new SqliteConnection(ConnString(conn)))
+        {
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText =
+                @$"UPDATE CodingSession
+                SET EndTime = '{endTime:g}'
+                WHERE Id = {primaryKey}";
+
+            command.ExecuteNonQuery();
+        }
     }
 }

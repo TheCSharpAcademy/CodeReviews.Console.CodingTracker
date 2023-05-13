@@ -28,7 +28,7 @@ internal class ConsoleDisplay
             return;
         }
 
-        sessions.Sort((y, x) => x.Status.CompareTo(y.Status));
+        sessions.Sort((x, y) => x.Status.CompareTo(y.Status));
 
         ConsoleTableBuilder
             .From(sessions)
@@ -48,8 +48,14 @@ internal class ConsoleDisplay
             Console.Write($"\n\"{input}\" is not valid. ");
         }
         Console.WriteLine("Please try again.");
-        Console.Write("Press anykey to continue...");
+        Console.WriteLine("Press anykey to continue...");
         Console.ReadKey();
-        Console.Clear();
+    }
+
+    internal void Success(string prompt)
+    {
+        Console.WriteLine($"{prompt} successfully");
+        Console.Write("Press any key to continue...");
+        Console.ReadKey();
     }
 }

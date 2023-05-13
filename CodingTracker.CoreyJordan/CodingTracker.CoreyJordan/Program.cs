@@ -1,5 +1,6 @@
 ﻿using CodingTracker.CoreyJordan;
 using CodingTrackerLibrary;
+using System.Security.Cryptography.X509Certificates;
 
 CrudController.InitDatabase();
 ConsoleDisplay display = new();
@@ -25,9 +26,9 @@ bool ExecuteUserChoice(string userChoice)
         case "N":
             CreateCodingSession();
             return false;
-        //case "E":
-        //    CloseCodingSession();
-        //    return false;
+        case "E":
+            CloseCodingSession();
+            return false;
         //case "D":
         //    DeleteCodingSession();
         //    return false;
@@ -57,7 +58,26 @@ void DeleteCodingSession()
 
 void CloseCodingSession()
 {
-    throw new NotImplementedException();
+    try
+    {
+        List<CodingSessionModel> sessions = CrudController.GetOpenSessions();
+        display.DisplaySessions(sessions, "Sessions");
+
+        int key = UserInput.GetInteger("Select a session: ");
+        while (!sessions.Any(x => x.SessionId == key))
+        {
+            display.InvalidInput(key.ToString());
+            display.DisplaySessions(sessions, "Sessions");
+            key = UserInput.GetInteger("Select a session: ");
+        }
+
+        CrudController.CloseSession(UserInput.GetDate(Session.Finish), key);
+        display.Success("Session updated");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+    }
 }
 
 void CreateCodingSession()
@@ -65,6 +85,7 @@ void CreateCodingSession()
     try
     {
         CrudController.CreateSession(UserInput.GetDate(Session.Start));
+        display.Success("Session created");
     }
     catch (Exception ex)
     {
@@ -83,6 +104,6 @@ void GetCodingSessions()
     }
     catch (Exception ex)
     {
-        Console.WriteLine(ex);
+        Console.WriteLine(ex.Message);
     }
 }
