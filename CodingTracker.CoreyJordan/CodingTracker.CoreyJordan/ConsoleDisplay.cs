@@ -1,4 +1,7 @@
-﻿namespace CodingTracker.CoreyJordan;
+﻿using CodingTrackerLibrary;
+using ConsoleTableExt;
+
+namespace CodingTracker.CoreyJordan;
 internal class ConsoleDisplay
 {
     internal string Bar { get; set; } = "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n";
@@ -18,6 +21,17 @@ internal class ConsoleDisplay
     internal void DisplayOpenSessions()
     {
         Console.WriteLine($"{Bar}\tPlaceholder Open Session\n{Bar}");
+    }
+
+    internal void DisplaySessions(List<CodingSessionModel> sessions)
+    {
+        sessions.Sort((y, x) => x.Status.CompareTo(y.Status));
+
+        Console.Clear();
+        ConsoleTableBuilder
+            .From(sessions)
+            .ExportAndWriteLine();
+        Console.WriteLine();
     }
 
     internal void InvalidInput(string input)

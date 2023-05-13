@@ -7,10 +7,12 @@ ConsoleDisplay display = new();
 bool exitApp = false;
 while(!exitApp)
 {
+    //GetOpenCodingSessions();
     display.DisplayOpenSessions();
     display.DisplayMainMenu();
     exitApp = ExecuteUserChoice(UserInput.GetString());
 }
+
 
 bool ExecuteUserChoice(string userChoice)
 {
@@ -18,9 +20,9 @@ bool ExecuteUserChoice(string userChoice)
     {
         case "Q":
             return true;
-        //case "V":
-        //    GetCodingSessions();
-        //    return false;
+        case "V":
+            GetCodingSessions();
+            return false;
         case "N":
             CreateCodingSession();
             return false;
@@ -34,6 +36,11 @@ bool ExecuteUserChoice(string userChoice)
             display.InvalidInput(userChoice);
             return false;
     }
+}
+
+void GetOpenCodingSessions()
+{
+    throw new NotImplementedException();
 }
 
 void DeleteCodingSession()
@@ -60,5 +67,13 @@ void CreateCodingSession()
 
 void GetCodingSessions()
 {
-    throw new NotImplementedException();
+    try
+    {
+        List<CodingSessionModel> sessions = CrudController.GetAllSessions();
+        display.DisplaySessions(sessions);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex);
+    }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 using System.Configuration;
+using System.Globalization;
 
 namespace CodingTrackerLibrary;
 public static class CrudController
@@ -36,9 +37,34 @@ public static class CrudController
 
             command.CommandText =
                 @$"INSERT INTO CodingSession (StartTime)
-                VALUES ('{startDate:MM/dd/yy}')";
+                VALUES ('{startDate:MM/dd/yy hh:mm}')";
 
             command.ExecuteNonQuery();
         }
+    }
+
+    public static List<CodingSessionModel> GetAllSessions()
+    {
+        List<CodingSessionModel> sessions = new();
+        using (var connection = new SqliteConnection(ConnString("CodingDb")))
+        {
+            connection.Open();
+            var command = connection.CreateCommand();
+
+            command.CommandText =
+                @$"SELECT * FROM CodingSession";
+            
+            SqliteDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                CodingSessionModel session = new();
+                session.SessionId = reader.GetInt32(0);
+                session.StartTime = DateTime.ParseExact(reader.GetString(1), 
+                                                        "MM/dd/yy hh:mm",
+                                                        new CultureInfo("en-US"));
+                sessions.Add(session);
+            }
+        }
+        return sessions;
     }
 }
