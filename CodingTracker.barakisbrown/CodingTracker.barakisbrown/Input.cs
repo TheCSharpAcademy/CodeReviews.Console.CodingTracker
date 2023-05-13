@@ -45,14 +45,19 @@ public static class Input
     }
 
     public static TimeOnly GetTime()
-    {
-        Console.WriteLine(_timeInputString);
-        string? result = Console.ReadLine();
-
+    {       
         while (true)
         {
+            Console.WriteLine(_timeInputString);
+            string? result = Console.ReadLine();
+
             if (result == string.Empty)
                 return TimeOnly.FromDateTime(DateTime.Now);
+            else if (!result.Contains(':'))
+            {
+                Log.Debug("F> GetTime() -- User entered wrong information. Will be told to reenter.");
+                Console.WriteLine("Invalid Time Entered. It must be HH:MM");                
+            }
             else
             {
                 var parse = result?.Split(":");
@@ -62,6 +67,7 @@ public static class Input
                     hourInt = int.Parse(parse[0]);
                     if (hourInt >= 24)
                     {
+                        Log.Debug("F> GetTime() -- User entered wrong information. Will be told to reenter.");
                         Console.WriteLine("Invalid Hour : Hour should be between 0 and 24");
                         continue;
                     }
@@ -77,7 +83,9 @@ public static class Input
                     minuteInt = int.Parse(parse[1]);
                     if (minuteInt >= 60)
                     {
+                        Log.Debug("F> GetTime() -- User entered wrong information. Will be told to reenter.");
                         Console.WriteLine("Invalid time. Time should be between 0 and 60.");
+                        continue;
                     }
                 }
                 catch (FormatException _)
@@ -87,11 +95,7 @@ public static class Input
                     continue;
                 }
 
-                var time = new TimeOnly();
-                time = time.AddHours(hourInt);
-                time = time.AddMinutes(minuteInt);
-
-                return time;
+                return new TimeOnly(hourInt, minuteInt);
             }
         }
     }
