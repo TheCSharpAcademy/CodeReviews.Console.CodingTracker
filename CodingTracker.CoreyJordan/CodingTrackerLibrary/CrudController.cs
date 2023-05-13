@@ -84,7 +84,8 @@ public static class CrudController
             var command = connection.CreateCommand();
 
             command.CommandText =
-                @$"SELECT * FROM CodingSession WHERE EndTime IS NULL";
+                @$"SELECT * FROM CodingSession 
+                WHERE EndTime IS NULL";
 
             SqliteDataReader reader = command.ExecuteReader();
             while (reader.Read())
@@ -111,6 +112,19 @@ public static class CrudController
                 SET EndTime = '{endTime:g}'
                 WHERE Id = {primaryKey}";
 
+            command.ExecuteNonQuery();
+        }
+    }
+
+    public static void DeleteSession(int key)
+    {
+        using (var connection = new SqliteConnection(ConnString(conn)))
+        {
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText =
+                @$"DELETE FROM CodingSession
+                WHERE Id = {key}";
             command.ExecuteNonQuery();
         }
     }

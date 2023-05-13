@@ -28,9 +28,9 @@ bool ExecuteUserChoice(string userChoice)
         case "E":
             CloseCodingSession();
             return false;
-        //case "D":
-        //    DeleteCodingSession();
-        //    return false;
+        case "D":
+            DeleteCodingSession();
+            return false;
         default:
             display.InvalidInput(userChoice);
             return false;
@@ -41,32 +41,66 @@ void GetOpenCodingSessions()
 {
     try
     {
-        List<CodingSessionModel> sessions = CrudController.GetOpenSessions();
-        display.DisplaySessions(sessions, State.Open.ToString());
+        List<CodingSessionModel> openSessions = CrudController.GetOpenSessions();
+        display.DisplaySessions(openSessions, State.Open.ToString());
     }
     catch (Exception ex)
     {
         Console.WriteLine(ex);
+        Console.Write("Press any key...");
+        Console.ReadKey();
     }
 }
 
 void DeleteCodingSession()
 {
-    throw new NotImplementedException();
+    try
+    {
+        List<CodingSessionModel> allSessions = CrudController.GetAllSessions();
+        display.DisplaySessions(allSessions, "All Coding Sessions");
+
+        int key = UserInput.GetInteger("Select a session: ");
+        while (!DataValidation.IsInRange(key, allSessions))
+        {
+            display.InvalidInput(key.ToString());
+            display.DisplaySessions(allSessions, "All Coding Sessions");
+            key = UserInput.GetInteger("Select a session: ");
+        }
+
+        Console.Write($"Are you sure you wish to delete coding session ");
+        Console.Write($"{allSessions.First(x => x.SessionId == key).SessionId} Y/N: ");
+        string yesNo = Console.ReadLine()!;
+        if (yesNo.ToUpper() == "Y")
+        {
+            CrudController.DeleteSession(key);
+            display.Success("Session deleted");
+        }
+        else
+        {
+            display.Success("Canceled");
+        }
+
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+        Console.Write("Press any key...");
+        Console.ReadKey();
+    }
 }
 
 void CloseCodingSession()
 {
     try
     {
-        List<CodingSessionModel> sessions = CrudController.GetOpenSessions();
-        display.DisplaySessions(sessions, "Sessions");
+        List<CodingSessionModel> openSessions = CrudController.GetOpenSessions();
+        display.DisplaySessions(openSessions, $"{State.Open} Sessions");
 
         int key = UserInput.GetInteger("Select a session: ");
-        while (!sessions.Any(x => x.SessionId == key))
+        while (!DataValidation.IsInRange(key, openSessions))
         {
             display.InvalidInput(key.ToString());
-            display.DisplaySessions(sessions, "Sessions");
+            display.DisplaySessions(openSessions, $"{State.Open} Sessions");
             key = UserInput.GetInteger("Select a session: ");
         }
 
@@ -76,6 +110,8 @@ void CloseCodingSession()
     catch (Exception ex)
     {
         Console.WriteLine(ex.Message);
+        Console.Write("Press any key...");
+        Console.ReadKey();
     }
 }
 
@@ -89,6 +125,8 @@ void CreateCodingSession()
     catch (Exception ex)
     {
         Console.WriteLine(ex.Message);
+        Console.Write("Press any key...");
+        Console.ReadKey();
     }
 }
 
@@ -96,13 +134,15 @@ void GetCodingSessions()
 {
     try
     {
-        List<CodingSessionModel> sessions = CrudController.GetAllSessions();
-        display.DisplaySessions(sessions, "Sessions");
+        List<CodingSessionModel> allSessions = CrudController.GetAllSessions();
+        display.DisplaySessions(allSessions, "All Coding Sessions");
         Console.Write("Press any key to continue...");
         Console.ReadKey();
     }
     catch (Exception ex)
     {
         Console.WriteLine(ex.Message);
+        Console.Write("Press any key...");
+        Console.ReadKey();
     }
 }
