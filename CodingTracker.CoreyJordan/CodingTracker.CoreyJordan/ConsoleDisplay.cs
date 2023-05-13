@@ -1,7 +1,8 @@
 ﻿namespace CodingTracker.CoreyJordan;
-public class ConsoleDisplay
+internal class ConsoleDisplay
 {
-    public string Bar { get; set; } = "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n";
+    internal string Bar { get; set; } = "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n";
+
 
     internal void DisplayMainMenu()
     {

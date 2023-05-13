@@ -26,4 +26,19 @@ public static class CrudController
             command.ExecuteNonQuery();
         }
     }
+
+    public static void CreateSession(DateTime startDate)
+    {
+        using (var connection = new SqliteConnection(ConnString("CodingDb")))
+        {
+            connection.Open();
+            var command = connection.CreateCommand();
+
+            command.CommandText =
+                @$"INSERT INTO CodingSession (StartTime)
+                VALUES ('{startDate:MM/dd/yy}')";
+
+            command.ExecuteNonQuery();
+        }
+    }
 }

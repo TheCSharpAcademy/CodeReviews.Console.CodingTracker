@@ -3,14 +3,13 @@ using CodingTrackerLibrary;
 
 CrudController.InitDatabase();
 ConsoleDisplay display = new();
-UserInput input = new();
 
 bool exitApp = false;
 while(!exitApp)
 {
     display.DisplayOpenSessions();
     display.DisplayMainMenu();
-    exitApp = ExecuteUserChoice(input.GetString());
+    exitApp = ExecuteUserChoice(UserInput.GetString());
 }
 
 bool ExecuteUserChoice(string userChoice)
@@ -22,9 +21,9 @@ bool ExecuteUserChoice(string userChoice)
         //case "V":
         //    GetCodingSessions();
         //    return false;
-        //case "N":
-        //    CreateCodingSession();
-        //    return false;
+        case "N":
+            CreateCodingSession();
+            return false;
         //case "E":
         //    CloseCodingSession();
         //    return false;
@@ -49,7 +48,14 @@ void CloseCodingSession()
 
 void CreateCodingSession()
 {
-    throw new NotImplementedException();
+    try
+    {
+        CrudController.CreateSession(UserInput.GetDate(Session.Start));
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+    }
 }
 
 void GetCodingSessions()
