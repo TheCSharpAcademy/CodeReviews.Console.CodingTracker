@@ -3,11 +3,7 @@ using System.Globalization;
 
 namespace CodingTracker.CoreyJordan;
 internal static class UserInput
-{
-    // General short form date format - "g"
-    private const string dateForm = "(mm/dd/yyyy hh:mm AM/PM)";
-
-    internal static string GetString()
+{    internal static string GetString()
     {
         string input = Console.ReadLine()!;
         return input;
@@ -15,14 +11,25 @@ internal static class UserInput
 
     internal static DateTime GetDate(Session part)
     {
+        const string dateForm = "(mm/dd/yyyy hh:mm AM/PM)";
         ConsoleDisplay display = new();
         DateTime date;
 
         Console.Clear();
-        Console.Write($"Enter {part} date {dateForm}: ");
+        Console.Write($"Enter {part} date {dateForm} or \"now\" to enter current time: ");
         string input = Console.ReadLine()!;
 
-        while (!DateTime.TryParseExact(input, "g", new CultureInfo("en-US"), DateTimeStyles.None, out date))
+        if (input.ToLower() == "now")
+        {
+            return DateTime.Now;
+        }
+
+        while (!DateTime.TryParseExact(input,
+                                       "g",
+                                       new CultureInfo("en-US"),
+                                       DateTimeStyles.None,
+                                       out date) ||
+            date > DateTime.Now)
         {
             display.InvalidInput(input);
             Console.Write($"Enter {part} date {dateForm}: ");

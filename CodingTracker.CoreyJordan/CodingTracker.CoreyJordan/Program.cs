@@ -1,6 +1,5 @@
 ﻿using CodingTracker.CoreyJordan;
 using CodingTrackerLibrary;
-using System.Security.Cryptography.X509Certificates;
 
 CrudController.InitDatabase();
 ConsoleDisplay display = new();
