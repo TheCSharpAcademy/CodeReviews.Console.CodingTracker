@@ -18,18 +18,21 @@ internal class ConsoleDisplay
         Console.Write("\n\tWhat would you like to do? ");
     }
 
-    internal void DisplayOpenSessions()
+    internal void DisplaySessions(List<CodingSessionModel> sessions, string title)
     {
-        Console.WriteLine($"{Bar}\tPlaceholder Open Session\n{Bar}");
-    }
+        Console.Clear();
 
-    internal void DisplaySessions(List<CodingSessionModel> sessions)
-    {
+        if (sessions.Count == 0)
+        {
+            Console.WriteLine("No records found");
+            return;
+        }
+
         sessions.Sort((y, x) => x.Status.CompareTo(y.Status));
 
-        Console.Clear();
         ConsoleTableBuilder
             .From(sessions)
+            .WithTitle(title)
             .ExportAndWriteLine();
         Console.WriteLine();
     }

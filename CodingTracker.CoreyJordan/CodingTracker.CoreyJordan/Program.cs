@@ -7,8 +7,7 @@ ConsoleDisplay display = new();
 bool exitApp = false;
 while(!exitApp)
 {
-    //GetOpenCodingSessions();
-    display.DisplayOpenSessions();
+    GetOpenCodingSessions();
     display.DisplayMainMenu();
     exitApp = ExecuteUserChoice(UserInput.GetString());
 }
@@ -40,7 +39,15 @@ bool ExecuteUserChoice(string userChoice)
 
 void GetOpenCodingSessions()
 {
-    throw new NotImplementedException();
+    try
+    {
+        List<CodingSessionModel> sessions = CrudController.GetOpenSessions();
+        display.DisplaySessions(sessions, State.Open.ToString());
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex);
+    }
 }
 
 void DeleteCodingSession()
@@ -70,7 +77,9 @@ void GetCodingSessions()
     try
     {
         List<CodingSessionModel> sessions = CrudController.GetAllSessions();
-        display.DisplaySessions(sessions);
+        display.DisplaySessions(sessions, "Sessions");
+        Console.Write("Press any key to continue...");
+        Console.ReadKey();
     }
     catch (Exception ex)
     {

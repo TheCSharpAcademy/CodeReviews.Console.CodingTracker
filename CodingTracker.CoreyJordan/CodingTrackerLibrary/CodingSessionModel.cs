@@ -5,17 +5,17 @@ public class CodingSessionModel
     public DateTime StartTime { get; set; }
     public DateTime EndTime { get; set; }
 
-    public string Status
+    public State Status
     {
         get
         {
             if (EndTime == DateTime.MinValue)
             {
-                return "Open";
+                return State.Open;
             }
             else
             {
-                return "Closed";
+                return State.Closed;
             }
         }
     }
@@ -24,7 +24,7 @@ public class CodingSessionModel
     {
         get
         {
-            if (Status == "Open")
+            if (Status == State.Open)
             {
                 return TimeSpan.Zero;
             }

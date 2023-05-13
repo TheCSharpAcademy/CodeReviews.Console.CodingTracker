@@ -5,6 +5,8 @@ using System.Globalization;
 namespace CodingTrackerLibrary;
 public static class CrudController
 {
+    private const string conn = "CodingDb";
+
     private static string ConnString(string name)
     {
         return ConfigurationManager.ConnectionStrings[name].ConnectionString;
@@ -12,7 +14,7 @@ public static class CrudController
 
     public static void InitDatabase()
     {
-        using (var connection = new SqliteConnection(ConnString("CodingDb")))
+        using (var connection = new SqliteConnection(ConnString(conn)))
         {
             connection.Open();
             var command = connection.CreateCommand();
@@ -30,14 +32,14 @@ public static class CrudController
 
     public static void CreateSession(DateTime startDate)
     {
-        using (var connection = new SqliteConnection(ConnString("CodingDb")))
+        using (var connection = new SqliteConnection(ConnString(conn)))
         {
             connection.Open();
             var command = connection.CreateCommand();
 
             command.CommandText =
                 @$"INSERT INTO CodingSession (StartTime)
-                VALUES ('{startDate:MM/dd/yy hh:mm}')";
+                VALUES ('{startDate:g}')";
 
             command.ExecuteNonQuery();
         }
@@ -46,7 +48,7 @@ public static class CrudController
     public static List<CodingSessionModel> GetAllSessions()
     {
         List<CodingSessionModel> sessions = new();
-        using (var connection = new SqliteConnection(ConnString("CodingDb")))
+        using (var connection = new SqliteConnection(ConnString(conn)))
         {
             connection.Open();
             var command = connection.CreateCommand();
@@ -59,9 +61,30 @@ public static class CrudController
             {
                 CodingSessionModel session = new();
                 session.SessionId = reader.GetInt32(0);
-                session.StartTime = DateTime.ParseExact(reader.GetString(1), 
-                                                        "MM/dd/yy hh:mm",
-                                                        new CultureInfo("en-US"));
+                session.StartTime = DateTime.ParseExact(reader.GetString(1), "g", new CultureInfo("en-US"));
+                sessions.Add(session);
+            }
+        }
+        return sessions;
+    }
+
+    public static List<CodingSessionModel> GetOpenSessions()
+    {
+        List<CodingSessionModel> sessions = new();
+        using (var connection = new SqliteConnection(ConnString(conn)))
+        {
+            connection.Open();
+            var command = connection.CreateCommand();
+
+            command.CommandText =
+                @$"SELECT * FROM CodingSession WHERE EndTime IS NULL";
+
+            SqliteDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                CodingSessionModel session = new();
+                session.SessionId = reader.GetInt32(0);
+                session.StartTime = DateTime.ParseExact(reader.GetString(1), "g", new CultureInfo("en-US"));
                 sessions.Add(session);
             }
         }
