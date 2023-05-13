@@ -68,7 +68,29 @@ void UpdateSession()
 void AddSession()
 {
     Console.Clear();
-    Console.WriteLine("Adding Session.");
+    Console.WriteLine("Adding Session.\n");
+
+    Console.WriteLine("Begin Date.");
+    DateOnly beginDate = Input.GetDate();
+
+    Console.WriteLine("Begin Time");
+    TimeOnly beginTime = Input.GetTime();
+
+    Console.WriteLine("End Date.");
+    DateOnly endDate = Input.GetDate();
+
+    Console.WriteLine("End Time");
+    TimeOnly endTime = Input.GetTime();
+
+    if (beginTime > endTime)
+        Console.WriteLine("Begin Time has to be less than the end time");
+    else
+    {
+        TimeOnly duration = TimeOnly.FromTimeSpan(endTime - beginTime);
+        Console.WriteLine($"Time List : {beginTime}");
+        Console.WriteLine($"Time List : {endTime}");
+        Console.WriteLine($"Time List : {duration}");
+    }
 
 
     menu.GetKeyReturnMenu();
