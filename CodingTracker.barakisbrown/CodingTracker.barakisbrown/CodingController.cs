@@ -8,11 +8,12 @@ using System.Text;
 
 public class CodingController
 {
-    private readonly string CreateTableString = @"CREATE TABLE sessions (
-	ID	INTEGER UNIQUE,
-	StartTime	TEXT NOT NULL,
-	EndTime	TEXT NOT NULL,
-	Duration	TEXT NOT NULL,
+    private readonly string CreateTableString = @"
+    CREATE TABLE sessions (
+	    ID	INTEGER UNIQUE,
+	    StartTime	TEXT NOT NULL,
+	    EndTime	    TEXT NOT NULL,
+	    Duration	TEXT NOT NULL,
 	PRIMARY KEY(ID AUTOINCREMENT));";
 
     private static readonly string ConnectionName = "myDB";
@@ -27,7 +28,10 @@ public class CodingController
         Log.Information("F> CodingController. Initializing DataSource and DB IF IT DOES NOT EXIST.");
         DataSource = GetConnectionString();
         if (!DBExist)
+        {
+            Log.Error("Database does not exist. It will be created with table needed.");
             CreateDB();
+        }
     }
 
     private void CreateDB()
