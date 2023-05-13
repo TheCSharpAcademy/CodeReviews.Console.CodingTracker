@@ -7,7 +7,7 @@ public class CodingSession
     public int Id { get; set; }
     public DateTime StartTime { get; set; }
     public DateTime EndTime { get; set; }
-    public DateTime Duration { get; set; }
+    public TimeSpan Duration { get; set; }
 
     public override string ToString()
     {
@@ -15,4 +15,6 @@ public class CodingSession
         Log.Information("F> CodingSession: toString => {0}", retString);
         return retString;
     }
+
+    public TimeSpan CalculateDuration(TimeOnly begin, TimeOnly end) => end - begin;
 }
