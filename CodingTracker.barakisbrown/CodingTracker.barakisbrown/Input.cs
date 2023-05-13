@@ -99,4 +99,14 @@ public static class Input
             }
         }
     }
+
+    public static DTSeperated BeginSession()
+    {
+        throw new NotImplementedException();
+    }
+
+    public static DTSeperated EndSession()
+    {
+        throw new NotImplementedException();
+    }
 }
