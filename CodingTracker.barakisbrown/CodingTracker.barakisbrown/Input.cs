@@ -88,8 +88,8 @@ public static class Input
                 }
 
                 var time = new TimeOnly();
-                time.AddHours(hourInt);
-                time.AddMinutes(minuteInt);
+                time = time.AddHours(hourInt);
+                time = time.AddMinutes(minuteInt);
 
                 return time;
             }
