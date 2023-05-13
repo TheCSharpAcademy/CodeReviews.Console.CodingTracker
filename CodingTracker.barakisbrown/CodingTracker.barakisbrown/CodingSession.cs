@@ -17,4 +17,15 @@ public class CodingSession
     }
 
     public TimeSpan CalculateDuration(TimeOnly begin, TimeOnly end) => end - begin;
+
+    public void CombineDTSeperated(DTSeperated begin, DTSeperated end)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+public struct DTSeperated
+{
+    public DateOnly Date { get; set; }
+    public TimeOnly Time { get; set; }
 }
