@@ -24,4 +24,16 @@ public static class DataValidation
             return true;
         }
     }
+
+    public static bool IsChronological(DateTime startDate, DateTime endDate)
+    {
+        if (startDate > endDate)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
 }

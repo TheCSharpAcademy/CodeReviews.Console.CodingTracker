@@ -104,6 +104,14 @@ void CloseCodingSession()
             key = UserInput.GetInteger("Select a session: ");
         }
 
+        DateTime startDate = openSessions.FirstOrDefault(x => x.SessionId == key)!.StartTime;
+        DateTime endDate = UserInput.GetDate(Session.Finish);
+        while (!DataValidation.IsChronological(startDate, endDate))
+        {
+            display.InvalidInput($"{endDate} is prior to start date and");
+            endDate = UserInput.GetDate(Session.Finish);
+        }
+
         CrudController.CloseSession(UserInput.GetDate(Session.Finish), key);
         display.Success("Session updated");
     }
