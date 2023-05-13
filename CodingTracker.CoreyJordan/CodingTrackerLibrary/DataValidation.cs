@@ -12,4 +12,16 @@ public static class DataValidation
             return false;
         }
     }
+
+    public static bool IsNotFuture(DateTime date)
+    {
+        if (date > DateTime.Now)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
 }

@@ -117,9 +117,16 @@ void CloseCodingSession()
 
 void CreateCodingSession()
 {
+    DateTime startDate = UserInput.GetDate(Session.Start);
+    while (!DataValidation.IsNotFuture(startDate))
+    {
+        display.InvalidInput($"{startDate:g} is in the future and");
+        startDate = UserInput.GetDate(Session.Start);
+    }
+
     try
     {
-        CrudController.CreateSession(UserInput.GetDate(Session.Start));
+        CrudController.CreateSession(startDate);
         display.Success("Session created");
     }
     catch (Exception ex)

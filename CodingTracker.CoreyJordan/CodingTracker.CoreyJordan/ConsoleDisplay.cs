@@ -45,7 +45,7 @@ internal class ConsoleDisplay
         }
         else
         {
-            Console.Write($"\n\"{input}\" is not valid. ");
+            Console.Write($"\n{input} is not valid. ");
         }
         Console.WriteLine("Please try again.");
         Console.WriteLine("Press anykey to continue...");

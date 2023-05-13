@@ -24,8 +24,7 @@ internal static class UserInput
             return DateTime.Now;
         }
 
-        while (!DateTime.TryParseExact(input, "g", new CultureInfo("en-US"), DateTimeStyles.None, out date) ||
-            date > DateTime.Now)
+        while (!DateTime.TryParseExact(input, "g", new CultureInfo("en-US"), DateTimeStyles.None, out date))
         {
             display.InvalidInput(input);
             Console.Write($"Enter {part} date {dateForm}: ");
