@@ -27,7 +27,8 @@ internal class ConsoleDisplay
         Console.WriteLine($"\tCoding Sessions: {report.ReportCount}");
         Console.WriteLine($"\tTotal time coding: {report.Time}");
         Console.WriteLine($"\tAverage time per session: {report.Average}");
-        Console.WriteLine("\n\tPress any key to return");
+        Console.WriteLine($"\n{Bar}");
+        Console.WriteLine("\n\tPress any key to return...");
         Console.ReadKey();
     }
 

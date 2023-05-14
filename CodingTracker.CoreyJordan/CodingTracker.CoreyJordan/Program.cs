@@ -218,10 +218,10 @@ bool ExecuteSessionChoice(string userChoice, List<CodingSessionModel> sessions)
             display.DisplayReport(report);
             break;
         case "P":
-            FilterByDate();
+            FilterByDate(sessions);
             break;
         case "R":
-            FilterByRange();
+            FilterByRange(sessions);
             break;
         default:
             display.InvalidInput(userChoice);
@@ -230,12 +230,26 @@ bool ExecuteSessionChoice(string userChoice, List<CodingSessionModel> sessions)
     return exit;
 }
 
-void FilterByRange()
+void FilterByRange(List<CodingSessionModel> sessions)
 {
     throw new NotImplementedException();
 }
 
-void FilterByDate()
+void FilterByDate(List<CodingSessionModel> sessions)
 {
-    throw new NotImplementedException();
+    DateTime start = UserInput.GetDate(Session.Start);
+    DateTime end = UserInput.GetDate(Session.Finish);
+
+    List<CodingSessionModel> filteredSessions = new();
+    foreach (CodingSessionModel session in sessions)
+    {
+        if (session.StartTime >  start && session.StartTime < end)
+        {
+            filteredSessions.Add(session);
+        }
+    }
+
+    display.DisplaySessions(filteredSessions, $"Sessions started between {start} and {end}");
+    Console.WriteLine("Press any key to return...");
+    Console.ReadKey();
 }
