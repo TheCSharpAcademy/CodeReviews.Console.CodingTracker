@@ -217,11 +217,14 @@ bool ExecuteSessionChoice(string userChoice, List<CodingSessionModel> sessions)
             CodingReportModel report = new(sessions);
             display.DisplayReport(report);
             break;
-        case "P":
+        case "F":
             FilterByDate(sessions);
             break;
         case "R":
             FilterByRange(sessions);
+            break;
+        case "D":
+            DeleteCodingSession();
             break;
         default:
             display.InvalidInput(userChoice);

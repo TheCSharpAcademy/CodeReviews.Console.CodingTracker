@@ -72,8 +72,9 @@ internal class ConsoleDisplay
         Console.WriteLine($"{Bar}\t\tSESSION MENU\n{Bar}");
         Console.WriteLine("\tX: Return to Main Menu");
         Console.WriteLine("\tG: Get report");
-        Console.WriteLine("\tP: Filter by date");
+        Console.WriteLine("\tF: Filter by date");
         Console.WriteLine("\tR: Filter by range");
+        Console.WriteLine("\tD: Delete coding session");
         Console.WriteLine("\n\tWhat would you like to do? ");
     }
 
