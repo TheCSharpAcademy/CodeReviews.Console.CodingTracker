@@ -1,5 +1,4 @@
 ﻿using Microsoft.Data.Sqlite;
-using System.Configuration;
 using System.Globalization;
 
 namespace CodingTrackerLibrary;
@@ -9,7 +8,7 @@ public static class CrudController
 
     private static string ConnString(string name)
     {
-        return ConfigurationManager.ConnectionStrings[name].ConnectionString;
+        return System.Configuration.ConfigurationManager.ConnectionStrings[name].ConnectionString;
     }
 
     public static void InitDatabase()
