@@ -66,7 +66,7 @@ void RecordLiveSession()
     try
     {
         CrudController.CreateLiveSession(start, end);
-        display.Success("Session logged");
+        display.Success("\nSession logged");
     }
     catch (Exception ex)
     {
@@ -189,9 +189,13 @@ void GetCodingSessions()
     try
     {
         List<CodingSessionModel> allSessions = CrudController.GetAllSessions();
-        display.DisplaySessions(allSessions, "All Coding Sessions");
-        Console.Write("Press any key to continue...");
-        Console.ReadKey();
+        bool returnToMain = false;
+        while (!returnToMain)
+        {
+            display.DisplaySessions(allSessions, "All Coding Sessions");
+            display.SessionMenu();
+            returnToMain = ExecuteSessionChoice(UserInput.GetString(), allSessions);
+        }
     }
     catch (Exception ex)
     {
@@ -199,4 +203,39 @@ void GetCodingSessions()
         Console.Write("Press any key...");
         Console.ReadKey();
     }
+}
+
+bool ExecuteSessionChoice(string userChoice, List<CodingSessionModel> sessions)
+{
+    bool exit = false;
+    switch (userChoice.ToUpper())
+    {
+        case "X":
+            exit = true;
+            break;
+        case "G":
+            CodingReportModel report = new(sessions);
+            display.DisplayReport(report);
+            break;
+        case "P":
+            FilterByDate();
+            break;
+        case "R":
+            FilterByRange();
+            break;
+        default:
+            display.InvalidInput(userChoice);
+            break;
+    }
+    return exit;
+}
+
+void FilterByRange()
+{
+    throw new NotImplementedException();
+}
+
+void FilterByDate()
+{
+    throw new NotImplementedException();
 }

@@ -19,6 +19,18 @@ internal class ConsoleDisplay
         Console.Write("\n\tWhat would you like to do? ");
     }
 
+    internal void DisplayReport(CodingReportModel report)
+    {
+        Console.Clear();
+
+        Console.WriteLine($"{Bar}\t\tCODING REPORT\n{Bar}");
+        Console.WriteLine($"\tCoding Sessions: {report.ReportCount}");
+        Console.WriteLine($"\tTotal time coding: {report.Time}");
+        Console.WriteLine($"\tAverage time per session: {report.Average}");
+        Console.WriteLine("\n\tPress any key to return");
+        Console.ReadKey();
+    }
+
     internal void DisplaySessions(List<CodingSessionModel> sessions, string title)
     {
         Console.Clear();
@@ -51,6 +63,17 @@ internal class ConsoleDisplay
         Console.WriteLine("Please try again.");
         Console.WriteLine("Press anykey to continue...");
         Console.ReadKey();
+    }
+
+    internal void SessionMenu()
+    {
+        //TODO
+        Console.WriteLine($"{Bar}\t\tSESSION MENU\n{Bar}");
+        Console.WriteLine("\tX: Return to Main Menu");
+        Console.WriteLine("\tG: Get report");
+        Console.WriteLine("\tP: Filter by date");
+        Console.WriteLine("\tR: Filter by range");
+        Console.WriteLine("\n\tWhat would you like to do? ");
     }
 
     internal void Success(string prompt)
