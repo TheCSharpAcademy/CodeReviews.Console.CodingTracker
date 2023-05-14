@@ -126,8 +126,7 @@ void DeleteCodingSession()
             key = UserInput.GetInteger("Select a session: ");
         }
 
-        Console.Write($"Are you sure you wish to delete coding session ");
-        Console.Write($"{allSessions.First(x => x.SessionId == key).SessionId} Y/N: ");
+        Console.Write($"Are you sure you wish to delete coding session {key} Y/N: ");
         string yesNo = Console.ReadLine()!;
         if (yesNo.ToUpper() == "Y")
         {
