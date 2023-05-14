@@ -4,7 +4,7 @@ using ConsoleTableExt;
 namespace CodingTracker.CoreyJordan;
 internal class ConsoleDisplay
 {
-    internal string Bar { get; set; } = "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n";
+    internal string Bar { get; set; } = "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n";
 
 
     internal void DisplayMainMenu()
@@ -16,17 +16,32 @@ internal class ConsoleDisplay
         Console.WriteLine("\tE: End ongoing coding session");
         Console.WriteLine("\tL: Record live coding session");
         Console.WriteLine("\tD: Delete coding session");
+        Console.WriteLine("\tS: Set new coding goal (Overwrites existing)");
         Console.Write("\n\tWhat would you like to do? ");
     }
 
-    internal void DisplayReport(CodingReportModel report)
+    internal void DisplayReport(CodingReportModel report, CodingGoalModel goal)
     {
         Console.Clear();
 
         Console.WriteLine($"{Bar}\t\tCODING REPORT\n{Bar}");
         Console.WriteLine($"\tCoding Sessions: {report.ReportCount}");
-        Console.WriteLine($"\tTotal time coding: {report.Time}");
-        Console.WriteLine($"\tAverage time per session: {report.Average}");
+
+        Console.Write($"\tTotal time coding: {report.Time.Days} Days ");
+        Console.Write($"{report.Time.Hours} Hrs ");
+        Console.WriteLine($"{report.Time.Minutes} Min");
+
+        Console.Write($"\tAverage/session: {report.Average.Days} Days ");
+        Console.WriteLine($"{report.Average.Hours} Hrs {report.Average.Minutes} Min");
+
+        Console.WriteLine($"\n{Bar}\t\tCODING GOAL\n{Bar}");
+        Console.Write($"\t{goal.Name}: {goal.Goal.Days} Days ");
+        Console.WriteLine($"{goal.Goal.Hours} Hrs {goal.Goal.Minutes} Min");
+
+        Console.WriteLine($"\tPercenatge complete: {report.Time / goal.Goal:p0}");
+        TimeSpan remaining = goal.Goal - report.Time;
+        Console.WriteLine($"\tTime remaining: {remaining.Days} Days {remaining.Hours} Hrs {remaining.Minutes} Min");
+
         Console.WriteLine($"\n{Bar}");
         Console.WriteLine("\n\tPress any key to return...");
         Console.ReadKey();

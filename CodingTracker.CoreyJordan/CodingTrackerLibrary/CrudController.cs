@@ -30,6 +30,22 @@ public static class CrudController
         }
     }
 
+    public static void InitGoalTable()
+    {
+        using (var connecton = new SqliteConnection(ConnString(conn)))
+        {
+            connecton.Open();
+            var command = connecton.CreateCommand();
+
+            command.CommandText =
+                $@"CREATE TABLE IF NOT EXISTS CodingGoals
+                (Name TEXT,
+                Time TEXT)";
+
+            command.ExecuteNonQuery();
+        }
+    }
+
     public static void CreateSession(DateTime startDate)
     {
         using (var connection = new SqliteConnection(ConnString(conn)))
@@ -142,5 +158,44 @@ public static class CrudController
 
             command.ExecuteNonQuery();
         }
+    }
+
+    public static void CreateGoal(string name, int goal)
+    {
+        TimeSpan deadline = TimeSpan.FromDays(goal);
+        using (var connection = new SqliteConnection(ConnString(conn)))
+        {
+            connection.Open();
+            var delete = connection.CreateCommand();
+            delete.CommandText =
+                $"DELETE FROM CodingGoals";
+
+            var command = connection.CreateCommand();
+            command.CommandText =
+                @$"INSERT INTO CodingGoals (Name, Time)
+                VALUES ('{name}', '{deadline}')";
+
+            delete.ExecuteNonQuery();
+            command.ExecuteNonQuery();
+        }
+    }
+
+    public static CodingGoalModel GetGoal()
+    {
+        CodingGoalModel model = new();
+        using (var connection = new SqliteConnection(ConnString(conn)))
+        {
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText =
+                @$"SELECT * From CodingGoals";
+            SqliteDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                model.Name = reader.GetString(0);
+                model.Goal = TimeSpan.Parse(reader.GetString(1));
+            }
+        }
+        return model;
     }
 }

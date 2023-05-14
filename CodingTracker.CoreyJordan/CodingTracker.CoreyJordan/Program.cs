@@ -3,6 +3,7 @@ using CodingTrackerLibrary;
 using System.Diagnostics;
 
 CrudController.InitDatabase();
+CrudController.InitGoalTable();
 ConsoleDisplay display = new();
 
 bool exitApp = false;
@@ -37,11 +38,33 @@ bool ExecuteUserChoice(string userChoice)
         case "D":
             DeleteCodingSession();
             break;
+        case "S":
+            SetGoal();
+            break;
         default:
             display.InvalidInput(userChoice);
             break;
     }
     return exit;
+}
+
+void SetGoal()
+{
+    Console.Write("Enter a name for this goal: ");
+    string name = UserInput.GetString();
+
+    int goal = UserInput.GetInteger("Enter how many days you wish to spend on this goal: ");
+
+    try
+    {
+        CrudController.CreateGoal(name, goal);
+        display.Success("Goal created");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex);
+        display.ContinuePrompt();
+    }
 }
 
 void RecordLiveSession()
@@ -207,8 +230,7 @@ bool ExecuteSessionChoice(string userChoice, List<CodingSessionModel> sessions)
             exit = true;
             break;
         case "G":
-            CodingReportModel report = new(sessions);
-            display.DisplayReport(report);
+            GenerateReport(sessions);
             break;
         case "F":
             FilterByDate(sessions);
@@ -224,6 +246,23 @@ bool ExecuteSessionChoice(string userChoice, List<CodingSessionModel> sessions)
             break;
     }
     return exit;
+}
+
+void GenerateReport(List<CodingSessionModel> sessions)
+{
+    CodingReportModel report = new(sessions);
+    CodingGoalModel goal = new();
+    try
+    {
+        goal = CrudController.GetGoal();
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex);
+        display.ContinuePrompt();
+    }
+
+    display.DisplayReport(report, goal);
 }
 
 void FilterByRange(List<CodingSessionModel> sessions)
