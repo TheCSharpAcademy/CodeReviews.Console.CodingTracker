@@ -66,9 +66,18 @@ internal class ConsoleDisplay
         Console.ReadKey();
     }
 
+    internal void RangeMenu()
+    {
+        Console.WriteLine($"{Bar}\t\tFILTER BY\n{Bar}");
+        Console.WriteLine("\tD: Days");
+        Console.WriteLine("\tW: Weeks");
+        Console.WriteLine("\tM: Months");
+        Console.WriteLine("\tY: Years");
+        Console.WriteLine("\n\tWhat would you like to do? ");
+    }
+
     internal void SessionMenu()
     {
-        //TODO
         Console.WriteLine($"{Bar}\t\tSESSION MENU\n{Bar}");
         Console.WriteLine("\tX: Return to Main Menu");
         Console.WriteLine("\tG: Get report");
@@ -82,6 +91,12 @@ internal class ConsoleDisplay
     {
         Console.WriteLine($"{prompt} successfully");
         Console.Write("Press any key to continue...");
+        Console.ReadKey();
+    }
+
+    internal void ContinuePrompt()
+    {
+        Console.WriteLine("Press any key to continue...");
         Console.ReadKey();
     }
 }

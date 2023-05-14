@@ -10,3 +10,11 @@ public enum State
     Open,
     Closed
 }
+
+public enum Span
+{
+    Days,
+    Weeks,
+    Months,
+    Years
+}

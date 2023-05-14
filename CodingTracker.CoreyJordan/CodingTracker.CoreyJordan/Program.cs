@@ -60,8 +60,7 @@ void RecordLiveSession()
     liveSession.Stop();
 
     Console.WriteLine($"\nYour coding session lasted {liveSession.Elapsed}");
-    Console.WriteLine("Press any key to log session.");
-    Console.ReadKey();
+    display.ContinuePrompt();
 
     try
     {
@@ -71,8 +70,7 @@ void RecordLiveSession()
     catch (Exception ex)
     {
         Console.WriteLine(ex.Message);
-        Console.Write("Press any key...");
-        Console.ReadKey();
+        display.ContinuePrompt();
     }
 }
 
@@ -86,8 +84,7 @@ void GetOpenCodingSessions()
     catch (Exception ex)
     {
         Console.WriteLine(ex);
-        Console.Write("Press any key...");
-        Console.ReadKey();
+        display.ContinuePrompt();
     }
 }
 
@@ -123,8 +120,7 @@ void DeleteCodingSession()
     catch (Exception ex)
     {
         Console.WriteLine(ex.Message);
-        Console.Write("Press any key...");
-        Console.ReadKey();
+        display.ContinuePrompt();
     }
 }
 
@@ -157,8 +153,7 @@ void CloseCodingSession()
     catch (Exception ex)
     {
         Console.WriteLine(ex.Message);
-        Console.Write("Press any key...");
-        Console.ReadKey();
+        display.ContinuePrompt();
     }
 }
 
@@ -179,8 +174,7 @@ void CreateCodingSession()
     catch (Exception ex)
     {
         Console.WriteLine(ex.Message);
-        Console.Write("Press any key...");
-        Console.ReadKey();
+        display.ContinuePrompt();
     }
 }
 
@@ -200,8 +194,7 @@ void GetCodingSessions()
     catch (Exception ex)
     {
         Console.WriteLine(ex.Message);
-        Console.Write("Press any key...");
-        Console.ReadKey();
+        display.ContinuePrompt();
     }
 }
 
@@ -235,7 +228,41 @@ bool ExecuteSessionChoice(string userChoice, List<CodingSessionModel> sessions)
 
 void FilterByRange(List<CodingSessionModel> sessions)
 {
-    throw new NotImplementedException();
+    display.RangeMenu();
+    string userChoice = UserInput.GetString();
+    DateTime end = DateTime.Now;
+    DateTime start;
+    
+    switch (userChoice.ToUpper())
+    {
+        case "D":
+            int days = UserInput.GetInteger($"Enter number of {Span.Days}: ");
+            start = end - TimeSpan.FromDays(days);
+            display.DisplaySessions(FilterSessions(sessions, start, end), $"Last {days} {Span.Days}");
+            display.ContinuePrompt();
+            break;
+        case "W":
+            int weeks = UserInput.GetInteger($"Enter number of {Span.Weeks}: ");
+            start = end - TimeSpan.FromDays(weeks * 7);
+            display.DisplaySessions(FilterSessions(sessions, start, end), $"Last {weeks} {Span.Weeks}");
+            display.ContinuePrompt();
+            break;
+        case "M":
+            int months = UserInput.GetInteger($"Enter number of {Span.Months}: ");
+            start = end - TimeSpan.FromDays(months * 30);
+            display.DisplaySessions(FilterSessions(sessions, start, end), $"Last {months} {Span.Months}");
+            display.ContinuePrompt();
+            break;
+        case "Y":
+            int years = UserInput.GetInteger($"Enter number of {Span.Years}: ");
+            start = end - TimeSpan.FromDays(years * 365);
+            display.DisplaySessions(FilterSessions(sessions, start, end), $"Last {years} {Span.Years}");
+            display.ContinuePrompt();
+            break;
+        default:
+            display.InvalidInput(userChoice);
+            break;
+    }
 }
 
 void FilterByDate(List<CodingSessionModel> sessions)
@@ -243,16 +270,20 @@ void FilterByDate(List<CodingSessionModel> sessions)
     DateTime start = UserInput.GetDate(Session.Start);
     DateTime end = UserInput.GetDate(Session.Finish);
 
+    display.DisplaySessions(FilterSessions(sessions, start, end), $"Sessions started between {start} and {end}");
+    display.ContinuePrompt();
+}
+
+static List<CodingSessionModel> FilterSessions(List<CodingSessionModel> sessions, DateTime start, DateTime end)
+{
     List<CodingSessionModel> filteredSessions = new();
     foreach (CodingSessionModel session in sessions)
     {
-        if (session.StartTime >  start && session.StartTime < end)
+        if (session.StartTime > start && session.StartTime < end)
         {
             filteredSessions.Add(session);
         }
     }
 
-    display.DisplaySessions(filteredSessions, $"Sessions started between {start} and {end}");
-    Console.WriteLine("Press any key to return...");
-    Console.ReadKey();
+    return filteredSessions;
 }
