@@ -102,9 +102,6 @@ public class Menu
         Console.Clear();
         Console.WriteLine("Adding Session.\n");
 
-
-
-
         GetKeyReturnMenu();
     }
 
