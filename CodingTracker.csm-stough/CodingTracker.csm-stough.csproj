@@ -15,7 +15,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\ConsoleUtilities\ConsoleUtilities.csproj" />
+    <Reference Include="ConsoleUtilities">
+      <HintPath>ConsoleUtilities.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
