@@ -12,4 +12,4 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.File("app.log", rollingInterval: RollingInterval.Day)
     .CreateLogger();
 
-var _ = new Menu(new CodingController());
+var _ = new Menu(new CodingController(),new CodingSession());

@@ -8,12 +8,17 @@ public class Menu
     private readonly int[] _menuOptions = new int[] { 0, 1, 2, 3, 4 };
     private readonly string _menuInputString = "Please Select a menu option or 0 to exit?";
     private readonly CodingController ?_controller;
+    private readonly CodingSession _session;
 
-    public Menu(CodingController ?controller)
+    public Menu(CodingController ?controller, CodingSession ?session)
     {
         if (controller is not null)
         {
             _controller = controller;
+        }
+        if (session is not null)
+        {
+            _session = session;
         }
         MainLoop();
     }
