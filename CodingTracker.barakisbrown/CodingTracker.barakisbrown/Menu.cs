@@ -1,5 +1,6 @@
 ﻿namespace CodingTracker.barakisbrown;
 
+using Microsoft.VisualBasic.FileIO;
 using Serilog;
 using System;
 
@@ -15,9 +16,41 @@ public class Menu
         {
             _controller = controller;
         }
+        MainLoop();
     }
 
-    public void GetMenu()
+    private void MainLoop()
+    {
+        int option = -1;
+
+        while (option != 0)
+        {
+            Console.WriteLine("Welcome to Coding Session. This will be tracking your coding session.");
+            GetMenu();
+            option = GetMenuSelection();
+
+            switch (option)
+            {
+                case 0:
+                    break;
+                case 1:
+                    AddSession();
+                    break;
+                case 2:
+                    DeleteSession();
+                    break;
+                case 3:
+                    UpdateSession();
+                    break;
+                case 4:
+                    ShowAllSessions();
+                    break;
+            }
+        }
+        Console.WriteLine("Thank you for using Coding Tracker. Have a good day.");
+    }
+
+    private void GetMenu()
     {
         string menu = @"
 
@@ -36,7 +69,7 @@ public class Menu
         Console.WriteLine(menu);
     }
 
-    public int GetMenuSelection()
+    private int GetMenuSelection()
     {
         Console.WriteLine(_menuInputString);
         int option;
@@ -58,10 +91,45 @@ public class Menu
         }
     }
     
-    public void GetKeyReturnMenu()
+    private void GetKeyReturnMenu()
     {
         Console.ReadKey(true);
         Thread.Sleep(800);
         Console.Clear();
+    }
+
+    private void AddSession()
+    {
+        Console.Clear();
+        Console.WriteLine("Adding Session.\n");
+
+
+
+
+        GetKeyReturnMenu();
+    }
+
+    private void UpdateSession()
+    {
+        Console.Clear();
+        Console.WriteLine("Update a Session");
+
+        GetKeyReturnMenu();
+    }
+
+    private void DeleteSession()
+    {
+        Console.Clear();
+        Console.WriteLine("Delete a Session");
+
+        GetKeyReturnMenu();
+    }
+
+    private void ShowAllSessions()
+    {
+        Console.Clear();
+        Console.WriteLine("Show all Sessions");
+
+        GetKeyReturnMenu();
     }
 }
