@@ -96,36 +96,4 @@ public class Menu
         Thread.Sleep(800);
         Console.Clear();
     }
-
-    private void AddSession()
-    {
-        Console.Clear();
-        Console.WriteLine("Adding Session.\n");
-
-        GetKeyReturnMenu();
-    }
-
-    private void UpdateSession()
-    {
-        Console.Clear();
-        Console.WriteLine("Update a Session");
-
-        GetKeyReturnMenu();
-    }
-
-    private void DeleteSession()
-    {
-        Console.Clear();
-        Console.WriteLine("Delete a Session");
-
-        GetKeyReturnMenu();
-    }
-
-    private void ShowAllSessions()
-    {
-        Console.Clear();
-        Console.WriteLine("Show all Sessions");
-
-        GetKeyReturnMenu();
-    }
 }
