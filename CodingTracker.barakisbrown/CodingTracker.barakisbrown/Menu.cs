@@ -6,7 +6,7 @@ using System;
 public class Menu
 {
     private readonly int[] _menuOptions = new int[] { 0, 1, 2, 3, 4 };
-    private readonly string _menuInputString = "Please Select a menu option or 0 to exit?";
+    private readonly string _menuInputString = "\t    Please Select a menu option or 0 to exit?";
     private readonly CodingController ?_controller;
     private readonly CodingSession _session;
 
@@ -88,9 +88,8 @@ public class Menu
             }
             catch (FormatException _)
             {
-                Log.Error("F>GetMenuSelection() has fired an exception and was caught. {0}", _.Message);
-                Console.WriteLine($"Input needs to be betwen {_menuOptions}");
-                Console.WriteLine(_menuInputString);
+                Log.Error("F>GetMenuSelection() has thrown an exception and was caught. {0}", _.Message);
+                Log.Debug("F>GetMenuSelection() User has entered a non numeric key");
             }
         }
     }
@@ -105,7 +104,10 @@ public class Menu
     private void AddSession()
     {
         Console.Clear();
-        Console.WriteLine("Adding Session.\n");
+        Console.WriteLine("Add Coding Session.");
+
+        DTSeperated begin = Input.BeginSession();
+        
 
         GetKeyReturnMenu();
     }
