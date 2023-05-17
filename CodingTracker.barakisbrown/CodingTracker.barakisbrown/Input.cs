@@ -5,10 +5,10 @@ namespace CodingTracker.barakisbrown;
 
 public static class Input
 {
-    private readonly static string _validDateFormat = "mm-dd-yyyy";
+    private readonly static string _validDateFormat = "MM-dd-yyyy";
     private readonly static string _validTimeFormat = "hh:mm";
-    private readonly static string _dateInputString = $"Enter the date in the following format [{_validDateFormat}] or Enter to use today";
-    private readonly static string _timeInputString = $"Enter the time in the following format [{_validTimeFormat}] \nIE: 23:59 is 11:59pm\nEnter to use current time";
+    private readonly static string _dateInputString = $"Enter the date in the following format [{_validDateFormat}] or Enter for today :>";
+    private readonly static string _timeInputString = $"Enter the time in the following format [{_validTimeFormat}] or Enter for current time  :>";
     
     public static bool GetYesNo()
     {
@@ -19,9 +19,17 @@ public static class Input
             return false;
     }
 
+    public static void GetKeyReturnMenu()
+    {
+        Console.Write("Press any key to return to the main menu.");
+        Console.ReadKey(true);
+        Thread.Sleep(800);
+        Console.Clear();
+    }
+
     public static DateOnly GetDate()
     {
-        Console.WriteLine(_dateInputString);
+        Console.Write(_dateInputString);
         string? result = Console.ReadLine();
 
         while (true)
@@ -48,20 +56,23 @@ public static class Input
     {       
         while (true)
         {
-            Console.WriteLine(_timeInputString);
+            Console.Write(_timeInputString);
             string? result = Console.ReadLine();
+            int hourInt = 0, minuteInt = 0;
 
             if (result == string.Empty)
-                return TimeOnly.FromDateTime(DateTime.Now);
+            {
+                hourInt = TimeOnly.FromDateTime(DateTime.Now).Hour;
+                minuteInt = TimeOnly.FromDateTime(DateTime.Now).Minute;
+            }
             else if (!result.Contains(':'))
             {
                 Log.Debug("F> GetTime() -- User entered wrong information. Will be told to reenter.");
-                Console.WriteLine("Invalid Time Entered. It must be HH:MM");                
+                Console.WriteLine("Invalid Time Entered. It must be HH:MM");
             }
             else
             {
                 var parse = result?.Split(":");
-                int hourInt, minuteInt;
                 try
                 {
                     hourInt = int.Parse(parse[0]);
@@ -94,19 +105,24 @@ public static class Input
                     Console.WriteLine("Invalid Information. Please make sure it is numerical.");
                     continue;
                 }
-
-                return new TimeOnly(hourInt, minuteInt);
             }
+            // Confirm if this is the correct time entered.
+            TimeOnly retTime = new(hourInt, minuteInt);
+
+            Console.Write($"Did you enter {retTime}  (Y/N)?");
+            if (GetYesNo())
+                return retTime;
+            else
+                Console.WriteLine("\nOkay. Lets try it again.");
         }
     }
 
-    public static DTSeperated BeginSession()
+    public static DTSeperated GetSessionInfo()
     {
-        throw new NotImplementedException();
-    }
-
-    public static DTSeperated EndSession()
-    {
-        throw new NotImplementedException();
-    }
+        return new() 
+        {
+            Date = GetDate(),
+            Time = GetTime()
+        };       
+    }  
 }
