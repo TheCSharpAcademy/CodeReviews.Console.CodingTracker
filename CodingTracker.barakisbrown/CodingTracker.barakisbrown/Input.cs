@@ -21,7 +21,7 @@ public static class Input
             return false;
     }
 
-    public static char GetStartEndCancelUpdate()
+    public static char GetUpdateOptions()
     {
         ConsoleKeyInfo input = Console.ReadKey(true);
         char keyReturned = ' ';
