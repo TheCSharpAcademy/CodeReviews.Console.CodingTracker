@@ -152,4 +152,24 @@ public class CodingController
     {
         return false;
     }
+
+    public List<int>? GetValidId()
+    {
+        using var conn = new SqliteConnection(DataSource);
+        conn.Open();
+
+        var cmd = conn.CreateCommand();
+        cmd.CommandText = $"SELECT ID FROM {TableName}";
+        cmd.Connection = conn;
+
+        using SqliteDataReader reader = cmd.ExecuteReader();
+        if (reader.HasRows)
+        {
+            List<int> idReturned = new List<int>();
+            while (reader.Read())
+                idReturned.Add(reader.GetInt32(0));
+            return idReturned;
+        }
+        return (List<int>)Enumerable.Empty<int>();
+    }
 }
