@@ -52,6 +52,8 @@ public class CodingController
             throw;
         }
     }
+    
+    private static bool DBExist => File.Exists(CodingController.DBPATH + CodingController.DBNAME);
 
     private static string? DBPATH => ConfigurationManager.AppSettings.Get(DbPathKey);
 
@@ -83,5 +85,71 @@ public class CodingController
         }
     }
 
-    private static bool DBExist => File.Exists(CodingController.DBPATH + CodingController.DBNAME);
+    public bool Insert(CodingSession? _session)
+    {
+        using var conn = new SqliteConnection(DataSource);
+        conn.Open();
+
+        using var cmd = new SqliteCommand();
+        cmd.Connection = conn;
+        cmd.CommandText = $"INSERT INTO {TableName}(StartTime,EndTime,Duration) VALUES(@start,@end,@duration)";
+        cmd.Parameters.AddWithValue("@start", _session.StartTime);
+        cmd.Parameters.AddWithValue("@end", _session.EndTime);
+        cmd.Parameters.AddWithValue("@duration", _session.Duration);
+        cmd.Prepare();
+
+        return (ExecuteNonQuery(cmd) == 1);
+    }
+
+    public List<CodingSession> ShowAllCodingSession()
+    {
+        using var conn = new SqliteConnection(DataSource);
+        conn.Open();
+
+        string stm = $"SELECT * FROM {TableName}";
+
+        using var cmd = new SqliteCommand(stm, conn);
+        using SqliteDataReader rdr = cmd.ExecuteReader();
+
+        if (rdr.HasRows)
+        {
+            List<CodingSession> _sessions = new();
+            while (rdr.Read())
+            {
+                CodingSession _session = new()
+                {
+                    Id = rdr.GetInt32(0),
+                    StartTime = DateTime.Parse(rdr.GetString(1)),
+                    EndTime = DateTime.Parse(rdr.GetString(2)),
+                    Duration = rdr.GetTimeSpan(3)
+                };
+                _sessions.Add(_session);
+            }
+            return _sessions;
+        }
+        return (List<CodingSession>)Enumerable.Empty<CodingSession>();
+    }
+
+    public bool DeleteSession(int id)
+    {
+        using var conn = new SqliteConnection(DataSource);
+        conn.Open();
+
+        using var cmd = new SqliteCommand();
+        cmd.Connection = conn;
+        cmd.CommandText = $"DELETE FROM {TableName} WHERE ID = @ID";
+        cmd.Parameters.AddWithValue("@ID", id);
+        cmd.Prepare();
+        return ExecuteNonQuery(cmd) == 1;
+    }
+
+    public bool UpdateStartTime(CodingSession startTime)
+    {
+        return false;
+    }
+
+    public bool UpdateEndTime(CodingSession endTime)
+    {
+        return false;
+    }
 }
