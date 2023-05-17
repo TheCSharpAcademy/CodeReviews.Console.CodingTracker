@@ -120,7 +120,7 @@ public class Menu
         }
 
         // Show Output of both
-        Console.WriteLine();
+        Console.WriteLine("\n");
         Console.WriteLine($"Begin Session Info: {begin}");
         Console.WriteLine($"End Session Info:   {end}");
         TimeSpan span = CodingSession.CalculateDuration(begin.Time, end.Time);
@@ -137,8 +137,42 @@ public class Menu
     private void UpdateSession()
     {
         Console.Clear();
-        Console.WriteLine("Update a Session");
+        Console.WriteLine("Update a Session Start or End Time");
+        Console.WriteLine();
+        List<CodingSession> sessions = GetAll();
 
+        if (sessions.Count != 0)
+        {
+            TableEngine.DisplayAllRecords(sessions);
+            Console.WriteLine();
+            int idUpdated = Input.GetNumberFromList(_controller.GetValidId(), false);
+            if (idUpdated != -1)
+            {
+                CodingSession single = sessions.First(x => x.Id == idUpdated);
+                Console.WriteLine(single);
+                Console.Write("Update S)tart time / E)nd time, C)ancel update.");
+                char option = Input.GetUpdateOptions();
+                if (option == 'C')
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("Okay. Nothing will be updated");
+                }
+                else if (option == 'S')
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("Updating Start Date and Time");
+                    Console.WriteLine("Also duration has been updated.");
+                }
+                else if (option == 'E')
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("Updating Start End Date and Time");
+                    Console.WriteLine("Also duration has been updated.");
+                }
+            }               
+        }
+        else
+            Console.WriteLine("There are currently no coding session to update.");
         Input.GetKeyReturnMenu();
     }
 
@@ -149,9 +183,34 @@ public class Menu
         Console.WriteLine();
         List<CodingSession> sessions = GetAll();
 
-
-
-
+        if (sessions.Count == 0)
+        {
+            Console.WriteLine("There are currently no coding session to delete.");            
+        }
+        else
+        {
+            TableEngine.DisplayAllRecords(sessions);
+            Console.WriteLine();
+            int idDeleted = Input.GetNumberFromList(_controller.GetValidId(), true);
+            if (idDeleted != -1)
+            {
+                Console.WriteLine("\nDo you wish to delete this (Y/N)");
+                if (Input.GetYesNo())
+                {
+                    var success = _controller.DeleteSession(idDeleted);
+                    if (success)
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine("Session has been successfully deleted.");
+                    }
+                    else
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine("Session has not been deleted.");
+                    }
+                }
+            }
+        }
         Input.GetKeyReturnMenu();
     }
 
