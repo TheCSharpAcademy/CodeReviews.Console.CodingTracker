@@ -24,6 +24,9 @@ public class CodingSession
         EndTime = end.Date.ToDateTime(end.Time);
         Duration = CalculateDuration(begin.Time, end.Time);
     }
+
+    public DTSeperated SeperateBegin() { throw new NotImplementedException(); }
+    public DTSeperated SeperateEnd() { throw new NotImplementedException(); }
 }
 
 public struct DTSeperated
