@@ -105,20 +105,8 @@ public class Menu
         Console.WriteLine();
         Console.WriteLine("Session End");
         DTSeperated end = Input.GetSessionInfo();
-
-        // TEST IF BEGIN IS greater THAN END
-        var exitFlag = true;
-        while (exitFlag)
-        {
-            if ((begin.Time >= end.Time)&&(begin.Date == end.Date))
-            {
-                Console.WriteLine("\nThe beginning time can not be equal or greater than the end time.  Please re-enter the begin time.");
-                begin.Time = Input.GetTime();
-            }
-            else
-                exitFlag = false;
-        }
-
+        _session.ValidateDate(begin, end);
+        _session.ValidateTime(begin, end);      
         // Show Output of both
         Console.WriteLine("\n");
         Console.WriteLine($"Begin Session Info: {begin}");
@@ -159,9 +147,11 @@ public class Menu
                 }
                 else if (option == 'S')
                 {
+                    DTSeperated oldBegin = single.SeperateBegin();
+
                     Console.WriteLine();
-                    Console.WriteLine("Updating Start Date and Time");
-                    Console.WriteLine("Also duration has been updated.");
+                    DTSeperated begin = Input.GetSessionInfo();
+
                 }
                 else if (option == 'E')
                 {
