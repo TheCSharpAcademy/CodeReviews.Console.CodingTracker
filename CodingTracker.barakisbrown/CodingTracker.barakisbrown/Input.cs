@@ -9,7 +9,9 @@ public static class Input
     private readonly static string _validTimeFormat = "hh:mm";
     private readonly static string _dateInputString = $"Enter the date in the following format [{_validDateFormat}] or Enter for today :>";
     private readonly static string _timeInputString = $"Enter the time in the following format [{_validTimeFormat}] or Enter for current time  :>";
-    
+    private readonly static string _deleteInputString = "Enter ID of the Session you would like deleted or -1 to exit |> ";
+    private readonly static string _updateInputString = "Enter ID of the Session you would like updated or -1 to exit |> ";
+
     public static bool GetYesNo()
     {
         ConsoleKeyInfo input = Console.ReadKey(true);
@@ -17,6 +19,25 @@ public static class Input
             return true;
         else
             return false;
+    }
+
+    public static char GetStartEndCancelUpdate()
+    {
+        ConsoleKeyInfo input = Console.ReadKey(true);
+        char keyReturned = ' ';
+        switch(input.Key)
+        {
+            case ConsoleKey.S:
+                keyReturned = 'S';
+                break;
+            case ConsoleKey.E:
+                keyReturned = 'E';
+                break;
+            case ConsoleKey.C:
+                keyReturned = 'C';
+                break;
+        }
+        return keyReturned;
     }
 
     public static void GetKeyReturnMenu()
@@ -114,6 +135,32 @@ public static class Input
                 return retTime;
             else
                 Console.WriteLine("\nOkay. Lets try it again.");
+        }
+    }
+
+    public static int GetNumberFromList(List<int> validIds, bool deleted)
+    {
+        while (true)
+        {
+            string inputString;
+            if (deleted)
+                inputString = Input._deleteInputString;
+            else
+                inputString = Input._updateInputString;
+
+            Console.Write(inputString);
+            var input = Console.ReadLine();
+            int option;
+            while (string.IsNullOrEmpty(input) || !Int32.TryParse(input, out option))
+            {
+                Console.WriteLine("ID entered is not valid. Please try again or -1 to exit.");
+                Console.Write(inputString);
+                input = Console.ReadLine();
+            }
+            if (option == -1 || validIds.Contains(option))
+                return option;
+            else
+                Console.WriteLine("Value not in the list or -1 entered. Try Again.");
         }
     }
 
