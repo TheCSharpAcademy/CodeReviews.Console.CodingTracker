@@ -16,11 +16,13 @@ public class CodingSession
         return retString;
     }
 
-    public TimeSpan CalculateDuration(TimeOnly begin, TimeOnly end) => end - begin;
+    public static TimeSpan CalculateDuration(TimeOnly begin, TimeOnly end) => end - begin;
 
     public void CombineDTSeperated(DTSeperated begin, DTSeperated end)
     {
-        throw new NotImplementedException();
+        StartTime = begin.Date.ToDateTime(begin.Time);
+        EndTime = end.Date.ToDateTime(end.Time);
+        Duration = CalculateDuration(begin.Time, end.Time);
     }
 }
 
@@ -28,4 +30,9 @@ public struct DTSeperated
 {
     public DateOnly Date { get; set; }
     public TimeOnly Time { get; set; }
+
+    public override string ToString()
+    {
+        return $"{Date}\t{Time}";
+    }
 }
