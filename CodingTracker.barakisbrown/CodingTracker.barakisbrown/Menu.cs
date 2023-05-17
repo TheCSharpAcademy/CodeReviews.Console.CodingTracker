@@ -8,7 +8,7 @@ public class Menu
     private readonly int[] _menuOptions = new int[] { 0, 1, 2, 3, 4 };
     private readonly string _menuInputString = "\t    Please Select a menu option or 0 to exit?";
     private readonly CodingController ?_controller;
-    private readonly CodingSession _session;
+    private readonly CodingSession ?_session;
 
     public Menu(CodingController ?controller, CodingSession ?session)
     {
@@ -29,6 +29,7 @@ public class Menu
 
         while (option != 0)
         {
+            Console.Clear();
             Console.WriteLine("Welcome to Coding Session. This will be tracking your coding session.");
             GetMenu();
             option = GetMenuSelection();
@@ -94,22 +95,43 @@ public class Menu
         }
     }
     
-    private void GetKeyReturnMenu()
-    {
-        Console.ReadKey(true);
-        Thread.Sleep(800);
-        Console.Clear();
-    }
-
     private void AddSession()
     {
         Console.Clear();
-        Console.WriteLine("Add Coding Session.");
+        Console.WriteLine("Add a new Coding Session.\n");
+        Console.WriteLine("Please Note: Time should be in the 24hr format. So 23:00 is 11pm.");
+        Console.WriteLine("Session Begin");
+        DTSeperated begin = Input.GetSessionInfo();
+        Console.WriteLine();
+        Console.WriteLine("Session End");
+        DTSeperated end = Input.GetSessionInfo();
 
-        DTSeperated begin = Input.BeginSession();
-        
+        // TEST IF BEGIN IS greater THAN END
+        var exitFlag = true;
+        while (exitFlag)
+        {
+            if ((begin.Time >= end.Time)&&(begin.Date == end.Date))
+            {
+                Console.WriteLine("\nThe beginning time can not be equal or greater than the end time.  Please re-enter the begin time.");
+                begin.Time = Input.GetTime();
+            }
+            else
+                exitFlag = false;
+        }
 
-        GetKeyReturnMenu();
+        // Show Output of both
+        Console.WriteLine();
+        Console.WriteLine($"Begin Session Info: {begin}");
+        Console.WriteLine($"End Session Info:   {end}");
+        TimeSpan span = CodingSession.CalculateDuration(begin.Time, end.Time);
+        Console.WriteLine($"Duration is Days:{span.Days}\tHours:{span.Hours}\tMinutes:{span.Minutes}");
+        // Add this to the Database Backend
+        _session.CombineDTSeperated(begin, end);
+        string success = _controller.Insert(_session) ? "Sucess" : "Failure";
+        Console.WriteLine($"Session was added => {success}");
+
+
+        Input.GetKeyReturnMenu();
     }
 
     private void UpdateSession()
@@ -117,15 +139,20 @@ public class Menu
         Console.Clear();
         Console.WriteLine("Update a Session");
 
-        GetKeyReturnMenu();
+        Input.GetKeyReturnMenu();
     }
 
     private void DeleteSession()
     {
         Console.Clear();
-        Console.WriteLine("Delete a Session");
+        Console.WriteLine("Deleting a Code Session.");
+        Console.WriteLine();
+        List<CodingSession> sessions = GetAll();
 
-        GetKeyReturnMenu();
+
+
+
+        Input.GetKeyReturnMenu();
     }
 
     private void ShowAllSessions()
@@ -133,6 +160,15 @@ public class Menu
         Console.Clear();
         Console.WriteLine("Show all Sessions");
 
-        GetKeyReturnMenu();
+        List<CodingSession> sessions = GetAll();
+        if (sessions.Count == 0)
+            Console.WriteLine("Table is empty");
+        else
+            TableEngine.DisplayAllRecords(sessions);
+
+        Console.WriteLine();
+        Input.GetKeyReturnMenu();
     }
+
+    private List<CodingSession> GetAll() => _controller.ShowAllCodingSession();
 }
