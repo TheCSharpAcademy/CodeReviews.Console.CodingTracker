@@ -30,7 +30,7 @@ public class CodingSession
         return new()
         {
             Date = DateOnly.FromDateTime(StartTime),
-            Time = TimeOnly.FromDateTime(EndTime)
+            Time = TimeOnly.FromDateTime(StartTime)
         };
     }
     public DTSeperated SeperateEnd() 
