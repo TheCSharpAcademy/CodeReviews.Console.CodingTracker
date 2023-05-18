@@ -137,8 +137,10 @@ public class Menu
             if (idUpdated != -1)
             {
                 CodingSession single = sessions.First(x => x.Id == idUpdated);
+                DTSeperated oldStart = single.SeperateBegin();
+                DTSeperated oldEnd = single.SeperateEnd();
                 Console.WriteLine(single);
-                Console.Write("Update S)tart time / E)nd time, C)ancel update.");
+                Console.Write("Update S)tart time and date / E)nd time and date, C)ancel update.");
                 char option = Input.GetUpdateOptions();
                 if (option == 'C')
                 {
@@ -147,17 +149,17 @@ public class Menu
                 }
                 else if (option == 'S')
                 {
-                    DTSeperated oldBegin = single.SeperateBegin();
-
                     Console.WriteLine();
-                    DTSeperated begin = Input.GetSessionInfo();
-
+                    DateOnly newDate = Input.GetDate(oldStart.Date);
+                    TimeOnly newTime = Input.GetTime(oldStart.Time);
+                    UpdateStartDateAndTime(oldStart,new DTSeperated() { Date = newDate, Time = newTime }, oldEnd);                   
                 }
                 else if (option == 'E')
                 {
                     Console.WriteLine();
-                    Console.WriteLine("Updating Start End Date and Time");
-                    Console.WriteLine("Also duration has been updated.");
+                    Console.WriteLine("Updating End Date and Time.");
+
+                    
                 }
             }               
         }
@@ -220,4 +222,44 @@ public class Menu
     }
 
     private List<CodingSession> GetAll() => _controller.ShowAllCodingSession();
+
+    private bool UpdateStartDates(DateOnly oldStart, DateOnly updated)
+    {
+        if (oldStart == updated || (updated > oldStart))
+            return false;
+        else
+            return true;      
+    }
+
+    private bool UpdateEndDates(DateOnly oldEnd, DateOnly updated)
+    {
+        if (oldEnd == updated || (updated < oldEnd))
+            return false;
+        else
+            return true;
+    }
+
+    private void UpdateStartDateAndTime(DTSeperated oldStart,DTSeperated newStart, DTSeperated oldEnd)
+    {
+        if (oldStart.Time == newStart.Time && (oldStart.Date == newStart.Date))
+        {
+            Console.WriteLine("EQUAL -- No Change Done.");
+        }
+        else if (newStart.Time < oldStart.Time || (newStart.Time > oldStart.Time && newStart.Time < oldEnd.Time))
+        {
+            Console.WriteLine("\nStart Time has been changed to {0}", newStart.Time);
+            Console.WriteLine("Duration will be updated since there was a change of time.");
+            Console.WriteLine("New Duration is {0}", CodingSession.CalculateDuration(newStart.Time,oldEnd.Time));
+        }
+        else if (newStart.Time >= oldEnd.Time)
+        {
+            Console.WriteLine("\nError. Start Time can not equal or be greater than End Time.");
+            Console.WriteLine("Therefore No Updates will be made.");
+        }
+        if (UpdateStartDates(oldStart.Date, newStart.Date))
+        {
+            Console.WriteLine("Start Date has been changed to {0}", newStart.Date);
+            Console.WriteLine("New Duration is {0}", CodingSession.CalculateDuration(newStart.Time, oldEnd.Time));
+        }
+    }
 }
