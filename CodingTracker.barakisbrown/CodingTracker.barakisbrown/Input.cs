@@ -122,6 +122,7 @@ public static class Input
             {
                 Log.Debug("F> GetTime() -- User entered wrong information. Will be told to reenter.");
                 Console.WriteLine("Invalid Time Entered. It must be HH:MM");
+                continue;
             }
             else
             {
@@ -186,6 +187,7 @@ public static class Input
             {
                 Log.Debug("F> GetTime() -- User entered wrong information. Will be told to reenter.");
                 Console.WriteLine("Invalid Time Entered. It must be HH:MM");
+                continue;
             }
             else
             {
