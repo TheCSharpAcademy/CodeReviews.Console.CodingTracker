@@ -147,16 +147,50 @@ public class Menu
                     Console.WriteLine();
                     Console.WriteLine("Okay. Nothing will be updated");
                 }
-                else if (option == 'S')
+                else
                 {
-                    Console.WriteLine();
-                    Console.WriteLine("Updating Start Time");
-
-                }
-                else if (option == 'E')
-                {
-                    Console.WriteLine();
-                    Console.WriteLine("Updating End Time.");                    
+                    
+                    if (option == 'S')
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine("Original Time is {0}", oldStart.Time);
+                        TimeOnly updatedTime = Input.GetTime(oldStart.Time);
+                        if (updatedTime == oldStart.Time)
+                        {
+                            Console.WriteLine("\nNothing has changed therefore no updates are needed.");
+                        }
+                        else
+                        {
+                            if (updatedTime < oldStart.Time)
+                            {
+                                Console.Write($"\nChanging {oldStart.Time} to {updatedTime} (Y/N) |> ");
+                                if (Input.GetYesNo())
+                                {
+                                    Console.WriteLine("\nUpdating the backend for the new start time and new duration.");
+                                    Console.WriteLine($"new duraiton is {CodingSession.CalculateDuration(updatedTime, oldEnd.Time)}");
+                                }
+                                else
+                                    Console.WriteLine("\nNo changes were done.");
+                            }
+                            if (updatedTime > oldStart.Time && (oldEnd.Time > updatedTime))
+                            {
+                                Console.Write($"\nChanging {oldStart.Time} to {updatedTime} (Y/N) |> ");
+                                if (Input.GetYesNo())
+                                {
+                                    Console.WriteLine("\nUpdating the backend for the new start time and new duration.");
+                                    Console.WriteLine($"new duraiton is {CodingSession.CalculateDuration(updatedTime, oldEnd.Time)}");
+                                }
+                                else
+                                    Console.WriteLine("\nNo changes were done since the time entered can not be greater or equal to the end time.");
+                            }
+                        }
+                    }
+                    if (option == 'E')
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine($"Original Time is {oldEnd.Time}");
+                        TimeOnly updatedTime = Input.GetTime(oldEnd.Time);
+                    }
                 }
             }               
         }
