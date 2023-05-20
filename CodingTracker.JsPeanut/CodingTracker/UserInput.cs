@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,10 @@ namespace CodingTracker
         {
             bool exit = false;
             Console.WriteLine($"\nWelcome to JsPeanut's CodingTracker! You can start tracking your coding sessions. Here you've got a list of all the available commands in the application: \n\n C: Insert the dates in which you started and finished your session, to calculate it. \n S: Start tracking a coding session via stopwatch. \n R: See all your coding sessions.\n U: Update a coding session.\n D: Delete a coding session.\n E: Exit the application.");
+            if (CodingController.Goals.Count != 0)
+            {
+                Console.WriteLine($"Reminder: You are {CodingController.Goals.First().GoalValue - CodingController.DisplayGoal()} hours away from completing your last goal (15 hours of coding time)!");
+            }
             string userInput = Console.ReadLine();
             while (exit == false)
             {
@@ -29,7 +34,6 @@ namespace CodingTracker
                     case "R":
                         Console.Clear();
                         CodingController.GetAllRecords();
-                        UserInput.GetUserInput();
                         break;
                     case "U":
                         CodingController.Update();
@@ -41,6 +45,12 @@ namespace CodingTracker
                         Console.WriteLine("You have exited the app successfully.");
                         exit = true;
                         Environment.Exit(0);
+                        break;
+                    case "G":
+                        CodingController.SetGoal();
+                        break;
+                    case "T":
+                        CodingController.GetAllGoalRecords();
                         break;
                     default:
                         Console.WriteLine("That option does not exist.");
@@ -58,20 +68,16 @@ namespace CodingTracker
 
             string date = Console.ReadLine();
 
-            if (date == "M") 
+            if (date == "M")
             {
                 GetUserInput();
                 Console.Clear();
             }
 
-            if (!DateTime.TryParseExact(date, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
-            {
-                Console.WriteLine("Invalid format");
-                GetStartTimeInput();
-            }
+            Validation.ValidateDate(date, GetStartTimeInput, format);
 
             return date;
-            
+
         }
 
         public static string GetEndTimeInput()
@@ -88,15 +94,27 @@ namespace CodingTracker
                 Console.Clear();
             }
 
-            if (!DateTime.TryParseExact(date, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
-            {
-                Console.WriteLine("Invalid format");
-                GetEndTimeInput();
-
-            }
-
+            Validation.ValidateDate(date, GetEndTimeInput, format);
             return date;
 
+        }
+
+        public static string GetGoalMeasureInput()
+        {
+            Console.WriteLine("Please type if you want your input to be measured in 'years', 'months', 'days', 'hour' or 'minutes'.");
+
+            string goalTimePeriod = Console.ReadLine();
+
+            return goalTimePeriod;
+        }
+
+        public static string GetGoalInput()
+        {
+            Console.WriteLine("Please type your goal. It must be a number.");
+
+            string goalInput = Console.ReadLine();
+
+            return goalInput;
         }
 
         internal static int GetNumberInput(string message)
@@ -111,13 +129,7 @@ namespace CodingTracker
                 Console.Clear();
             }
 
-            while (!Int32.TryParse(numberInput, out _) || Convert.ToInt32(numberInput) < 0)
-            {
-                Console.WriteLine("\n\nInvalid number. Type M to return to the main menu or try again.\n\n");
-                numberInput = Console.ReadLine();
-                if (numberInput == "M") GetUserInput();
-            }
-
+            Validation.ValidateNumber(numberInput, GetUserInput);
             int finalInput = Convert.ToInt32(numberInput);
 
             return finalInput;
