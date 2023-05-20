@@ -14,13 +14,14 @@ public static class Input
     private readonly static string _updatedDateInput = $"Enter the date in the following format [{_validDateFormat}] or Enter for no changes:>";
     private readonly static string _updatedTimeInput = $"Enter the time in the following format [{_validTimeFormat}] or Enter for no changes  :>";
 
-    public static bool GetYesNo()
+    public static bool GetYesNo(string message)
     {
+        Console.Write(message);
         ConsoleKeyInfo input = Console.ReadKey(true);
         if (input.Key == ConsoleKey.Y)
             return true;
         else
-            return false;
+            return false;        
     }
 
     public static char GetUpdateOptions()
@@ -162,9 +163,8 @@ public static class Input
             }
             // Confirm if this is the correct time entered.
             TimeOnly retTime = new(hourInt, minuteInt);
-
-            Console.Write($"Did you enter {retTime}  (Y/N)?");
-            if (GetYesNo())
+            
+            if (GetYesNo($"Did you enter {retTime}  (Y/N)?"))
                 return retTime;
             else
                 Console.WriteLine("\nOkay. Lets try it again.");
@@ -226,10 +226,8 @@ public static class Input
                 }
             }
             // Confirm if this is the correct time entered.
-            TimeOnly retTime = new(hourInt, minuteInt);
-
-            Console.Write($"Did you enter {retTime}  (Y/N)?");
-            if (GetYesNo())
+            TimeOnly retTime = new(hourInt, minuteInt);            
+            if (GetYesNo($"Did you enter {retTime}  (Y/N)?"))
                 return retTime;
             else
                 Console.WriteLine("\nOkay. Lets try it again.");
