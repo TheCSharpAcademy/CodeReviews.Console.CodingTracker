@@ -136,10 +136,8 @@ public class Menu
             int idUpdated = Input.GetNumberFromList(_controller.GetValidId(), false);
             if (idUpdated != -1)
             {
-                CodingSession single = sessions.First(x => x.Id == idUpdated);
-                DTSeperated oldStart = single.SeperateBegin();
-                DTSeperated oldEnd = single.SeperateEnd();
-                Console.WriteLine(single);
+                Console.WriteLine("\n");
+                TableEngine.DisplayAllRecords(sessions.Where(x => x.Id == idUpdated).ToList());
                 Console.Write("Update S)tart time / E)nd time / C)ancel update.");
                 char option = Input.GetUpdateOptions();
                 if (option == 'C')
@@ -149,48 +147,10 @@ public class Menu
                 }
                 else
                 {
-                    
                     if (option == 'S')
-                    {
-                        Console.WriteLine();
-                        Console.WriteLine("Original Time is {0}", oldStart.Time);
-                        TimeOnly updatedTime = Input.GetTime(oldStart.Time);
-                        if (updatedTime == oldStart.Time)
-                        {
-                            Console.WriteLine("\nNothing has changed therefore no updates are needed.");
-                        }
-                        else
-                        {
-                            if (updatedTime < oldStart.Time)
-                            {
-                                Console.Write($"\nChanging {oldStart.Time} to {updatedTime} (Y/N) |> ");
-                                if (Input.GetYesNo())
-                                {
-                                    Console.WriteLine("\nUpdating the backend for the new start time and new duration.");
-                                    Console.WriteLine($"new duraiton is {CodingSession.CalculateDuration(updatedTime, oldEnd.Time)}");
-                                }
-                                else
-                                    Console.WriteLine("\nNo changes were done.");
-                            }
-                            if (updatedTime > oldStart.Time && (oldEnd.Time > updatedTime))
-                            {
-                                Console.Write($"\nChanging {oldStart.Time} to {updatedTime} (Y/N) |> ");
-                                if (Input.GetYesNo())
-                                {
-                                    Console.WriteLine("\nUpdating the backend for the new start time and new duration.");
-                                    Console.WriteLine($"new duraiton is {CodingSession.CalculateDuration(updatedTime, oldEnd.Time)}");
-                                }
-                                else
-                                    Console.WriteLine("\nNo changes were done since the time entered can not be greater or equal to the end time.");
-                            }
-                        }
-                    }
-                    if (option == 'E')
-                    {
-                        Console.WriteLine();
-                        Console.WriteLine($"Original Time is {oldEnd.Time}");
-                        TimeOnly updatedTime = Input.GetTime(oldEnd.Time);
-                    }
+                        UpdateStart(sessions.First(x => x.Id == idUpdated));                      
+                    else if (option == 'E')                   
+                        UpdateEnd(sessions.First(x => x.Id == idUpdated));
                 }
             }               
         }
@@ -217,23 +177,25 @@ public class Menu
             int idDeleted = Input.GetNumberFromList(_controller.GetValidId(), true);
             if (idDeleted != -1)
             {
-                Console.WriteLine("\nDo you wish to delete this (Y/N)");
-                if (Input.GetYesNo())
+                Console.WriteLine("\n");
+                TableEngine.DisplayAllRecords(sessions.Where(x => x.Id == idDeleted).ToList());
+                if (Input.GetYesNo("Do you wish to delete this (Y/N) |> "))
                 {
                     var success = _controller.DeleteSession(idDeleted);
                     if (success)
                     {
                         Console.WriteLine();
-                        Console.WriteLine("Session has been successfully deleted.");
+                        Console.WriteLine("\n\nSession has been successfully deleted.");
                     }
                     else
                     {
                         Console.WriteLine();
-                        Console.WriteLine("Session has not been deleted.");
+                        Console.WriteLine("\n\nSession has not been deleted.");
                     }
                 }
             }
         }
+        Console.WriteLine();
         Input.GetKeyReturnMenu();
     }
 
@@ -252,5 +214,9 @@ public class Menu
         Input.GetKeyReturnMenu();
     }
 
-    private List<CodingSession> GetAll() => _controller.ShowAllCodingSession();    
+    private List<CodingSession> GetAll() => _controller.ShowAllCodingSession();
+
+    private void UpdateStart(CodingSession _single) { throw new NotImplementedException(); }
+    private void UpdateEnd(CodingSession _single) { throw new NotImplementedException(); }
+
 }
