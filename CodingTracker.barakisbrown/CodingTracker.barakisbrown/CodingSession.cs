@@ -11,7 +11,7 @@ public class CodingSession
 
     public override string ToString()
     {
-        var retString = $"ID = {Id}\tStartTime = {StartTime}\tEndTime = {EndTime}\tDuration = {Duration}";
+        var retString = $"StartTime = {StartTime}\tEndTime = {EndTime} \t Duration = {Duration}";
         Log.Information("F> CodingSession: toString => {0}", retString);
         return retString;
     }
