@@ -16,10 +16,37 @@ namespace CodingTracker
         {
             bool exit = false;
             Console.WriteLine($"\nWelcome to JsPeanut's CodingTracker! You can start tracking your coding sessions. Here you've got a list of all the available commands in the application: \n\n C: Insert the dates in which you started and finished your session, to calculate it. \n S: Start tracking a coding session via stopwatch. \n R: See all your coding sessions.\n U: Update a coding session.\n D: Delete a coding session.\n E: Exit the application.");
-            if (CodingController.Goals.Count != 0)
+            CodingController.GetAllGoalRecords();
+            CodingController.LoadAllRecords();
+
+            TimeSpan progressRemaining = TimeSpan.Zero;
+            
+            using (var connection = new SqliteConnection(connectionString))
             {
-                Console.WriteLine($"Reminder: You are {CodingController.Goals.First().GoalValue - CodingController.DisplayGoal()} hours away from completing your last goal (15 hours of coding time)!");
+                connection.Open();
+
+                var tableCmd = connection.CreateCommand();
+
+                tableCmd.CommandText = "SELECT ProgressRemaining FROM goals";
+                SqliteDataReader reader = tableCmd.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        progressRemaining = TimeSpan.Parse(reader.GetString(0));
+                    }
+                }
+                if (CodingController.Goals.Count != 0)
+                {
+                    if (CodingController.Goals.FirstOrDefault().ProgressRemaining != TimeSpan.Zero || CodingController.Goals.FirstOrDefault().ProgressRemaining < TimeSpan.Zero)
+                    {
+                        Console.WriteLine($"Reminder: You are {progressRemaining} apart from completing your last goal! ({CodingController.Goals.FirstOrDefault().GoalValue})");
+                    }
+                }
             }
+
+            
             string userInput = Console.ReadLine();
             while (exit == false)
             {
@@ -33,7 +60,7 @@ namespace CodingTracker
                         break;
                     case "R":
                         Console.Clear();
-                        CodingController.GetAllRecords();
+                        CodingController.DisplayAllRecords();
                         break;
                     case "U":
                         CodingController.Update();
@@ -52,6 +79,9 @@ namespace CodingTracker
                     case "T":
                         CodingController.GetAllGoalRecords();
                         break;
+                    //case "check":
+                    //    CodingController.CheckGoal();
+                    //    break;
                     default:
                         Console.WriteLine("That option does not exist.");
                         GetUserInput();

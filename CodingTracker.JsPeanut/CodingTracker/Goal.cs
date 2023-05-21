@@ -14,5 +14,7 @@ namespace CodingTracker
         public TimeSpan GoalValue { get; set; }
 
         public DateTime AddedDate { get; set; }
+
+        public TimeSpan ProgressRemaining { get; set; }
     }
 }
