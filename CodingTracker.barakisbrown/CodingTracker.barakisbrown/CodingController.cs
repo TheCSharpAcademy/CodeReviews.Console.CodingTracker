@@ -97,7 +97,7 @@ public class CodingController
         cmd.Parameters.AddWithValue("@end", _session.EndTime);
         cmd.Parameters.AddWithValue("@duration", _session.Duration);
         cmd.Prepare();
-
+        Log.Information("INSERTING A NEW RECORD INTO TABLE.");
         return (ExecuteNonQuery(cmd) == 1);
     }
 
@@ -140,17 +140,44 @@ public class CodingController
         cmd.CommandText = $"DELETE FROM {TableName} WHERE ID = @ID";
         cmd.Parameters.AddWithValue("@ID", id);
         cmd.Prepare();
+        Log.Information("DELETING A RECORD FROM TABLE.");
         return ExecuteNonQuery(cmd) == 1;
     }
 
     public bool UpdateStartTime(CodingSession startTime)
     {
-        return false;
+        string cmd = $"UPDATE {TableName} SET StartTime = @START,Duration = @DURATION WHERE ID=@ID";
+
+        using var conn = new SqliteConnection(DataSource);
+        conn.Open();
+
+        using var sqlCmd = conn.CreateCommand();
+        sqlCmd.Connection = conn;
+        sqlCmd.CommandText = cmd;
+        sqlCmd.Parameters.AddWithValue("@START", startTime.StartTime);
+        sqlCmd.Parameters.AddWithValue("@DURATION", startTime.Duration);
+        sqlCmd.Parameters.AddWithValue("@ID", startTime.Id);
+        sqlCmd.Prepare();
+        Log.Information("UPDATING START TIME");
+        return ExecuteNonQuery(sqlCmd) == 1;
     }
 
     public bool UpdateEndTime(CodingSession endTime)
     {
-        return false;
+        string cmd = $"UPDATE {TableName} SET EndTime = @END,Duration = @DURATION WHERE ID=@ID";
+
+        using var conn = new SqliteConnection(DataSource);
+        conn.Open();
+
+        using var sqlCmd = conn.CreateCommand();
+        sqlCmd.Connection = conn;
+        sqlCmd.CommandText = cmd;
+        sqlCmd.Parameters.AddWithValue("@END", endTime.EndTime);
+        sqlCmd.Parameters.AddWithValue("@DURATION", endTime.Duration);
+        sqlCmd.Parameters.AddWithValue("@ID", endTime.Id);
+        sqlCmd.Prepare();
+        Log.Information("UPDATING END TIME");
+        return ExecuteNonQuery(sqlCmd) == 1;
     }
 
     public List<int>? GetValidId()
