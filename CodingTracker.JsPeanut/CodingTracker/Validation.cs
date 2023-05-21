@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 
 namespace CodingTracker
 {
@@ -30,15 +25,10 @@ namespace CodingTracker
 
         public static void ValidateDuration(string startTime, string endTime, string format, Func<string> GetStartTimeInput, Func<string> GetEndTimeInput)
         {
-            if (!((DateTime.ParseExact(endTime, format, CultureInfo.InvariantCulture, DateTimeStyles.None) < DateTime.ParseExact(startTime, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None))))
-            {
-                string durationMessage = CodingController.CalculateDuration(startTime, endTime);
-            }
-            else
+            if (DateTime.ParseExact(endTime, format, CultureInfo.InvariantCulture, DateTimeStyles.None) < DateTime.ParseExact(startTime, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None))
             {
                 Console.WriteLine("Invalid format. The time in which your session ended, was before your session even started.");
-                GetStartTimeInput();
-                GetEndTimeInput();
+                CodingController.Insert();
             }
         }
     }

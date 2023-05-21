@@ -66,8 +66,6 @@ namespace CodingTracker
 
                 var firstGoal = Goals.FirstOrDefault();
 
-                var tableCmd2 = connection.CreateCommand();
-
                 tableCmd.CommandText = "SELECT ProgressRemaining FROM goals";
                 SqliteDataReader reader = tableCmd.ExecuteReader();
 
@@ -82,14 +80,14 @@ namespace CodingTracker
 
                 if (DateTime.ParseExact(startTime, "dd/MM/yyyy HH:mm", CultureInfo.CurrentCulture) >= firstGoal.AddedDate)
                 {
-                    DateDifference dateDifference = new DateDifference(parsedStartTime, parsedEndTime);
+                    //DateDifference dateDifference = new DateDifference(parsedStartTime, parsedEndTime);
                     firstGoal.ProgressRemaining = progressRemaining;
                     firstGoal.ProgressRemaining -= DateDifference.Duration;
-                    var tableCmd3 = connection.CreateCommand();
+                    var tableCmd2 = connection.CreateCommand();
 
-                    tableCmd3.CommandText = $"UPDATE goals SET ProgressRemaining = '{firstGoal.ProgressRemaining}'";
+                    tableCmd2.CommandText = $"UPDATE goals SET ProgressRemaining = '{firstGoal.ProgressRemaining}'";
 
-                    tableCmd3.ExecuteNonQuery();
+                    tableCmd2.ExecuteNonQuery();
                 }
 
                 connection.Close();
@@ -108,12 +106,10 @@ namespace CodingTracker
             stopwatch.Start();
             while (true)
             {
-                DateTime DateTimeNow1 = DateTime.Now;
                 var stopwatchElapsed = stopwatch.Elapsed;
                 if (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Escape)
                 {
                     stopwatch.Stop();
-                    var DateTimeNow2 = DateTime.Now;
                     Console.WriteLine("Stopwatch stopped");
                     using (var connection = new SqliteConnection(connectionString))
                     {
@@ -121,12 +117,11 @@ namespace CodingTracker
 
                         var tableCmd = connection.CreateCommand();
 
-                        var parsed1 = DateTimeNow1.ToString("dd/MM/yyyy HH:mm");
-                        var parsed2 = DateTimeNow2.ToString("dd/MM/yyyy HH:mm");
+                        var formattedDateTimeNow = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
 
-                        var dur = DateTime.Now.Subtract(stopwatchElapsed).ToString("dd/MM/yyyy HH:mm");
+                        var duration = DateTime.Now.Subtract(stopwatchElapsed).ToString("dd/MM/yyyy HH:mm");
 
-                        tableCmd.CommandText = $"INSERT INTO coding_sessions(StartTime, EndTime, Duration) VALUES('{dur}', '{parsed2}', '{stopwatchElapsed}')";
+                        tableCmd.CommandText = $"INSERT INTO coding_sessions(StartTime, EndTime, Duration) VALUES('{duration}', '{formattedDateTimeNow}', '{stopwatchElapsed}')";
 
                         tableCmd.ExecuteNonQuery();
 
@@ -175,7 +170,6 @@ namespace CodingTracker
 
                 string newStartTime = UserInput.GetStartTimeInput();
                 string newEndTime = UserInput.GetEndTimeInput();
-                string newDurationMessage = CalculateDuration(newStartTime, newEndTime);
 
                 var tableCmd = connection.CreateCommand();
 
@@ -288,8 +282,6 @@ namespace CodingTracker
                     string formattedDateNow = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
 
                     DateTime dateTime;
-
-                    bool success = DateTime.TryParseExact(formattedDateNow, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTime);
 
                     tableCmd.CommandText = $"INSERT INTO goals(Goal, AddedDate, ProgressRemaining) VALUES('{goalTimeSpan}', '{formattedDateNow}', '{goalTimeSpan}')";
 

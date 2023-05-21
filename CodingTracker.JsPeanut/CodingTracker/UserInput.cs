@@ -1,11 +1,4 @@
 ﻿using Microsoft.Data.Sqlite;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 namespace CodingTracker
 {
     public class UserInput
@@ -54,6 +47,7 @@ namespace CodingTracker
                 switch (userInput)
                 {
                     case "C":
+                        Console.Clear();
                         CodingController.Insert();
                         break;
                     case "S":
@@ -80,9 +74,6 @@ namespace CodingTracker
                     case "T":
                         CodingController.GetAllGoalRecords();
                         break;
-                    //case "check":
-                    //    CodingController.CheckGoal();
-                    //    break;
                     default:
                         Console.WriteLine("That option does not exist.");
                         GetUserInput();
