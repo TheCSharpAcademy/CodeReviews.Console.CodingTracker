@@ -53,11 +53,11 @@ public class CodingController
         }
     }
     
-    private static bool DBExist => File.Exists(CodingController.DBPATH + CodingController.DBNAME);
+    private static bool DBExist => File.Exists(CodingController.Dbpath + CodingController.Dbname);
 
-    private static string? DBPATH => ConfigurationManager.AppSettings.Get(DbPathKey);
+    private static string? Dbpath => ConfigurationManager.AppSettings.Get(DbPathKey);
 
-    private static string? DBNAME => ConfigurationManager.AppSettings.Get(DbNameKey);
+    private static string? Dbname => ConfigurationManager.AppSettings.Get(DbNameKey);
 
     private static string? GetConnectionString()
     {
@@ -65,8 +65,8 @@ public class CodingController
 
         StringBuilder builder = new();
         builder.Append(settings);
-        builder.Append(DBPATH);
-        builder.Append(DBNAME);
+        builder.Append(Dbpath);
+        builder.Append(Dbname);
         return builder.ToString();
     }
 
