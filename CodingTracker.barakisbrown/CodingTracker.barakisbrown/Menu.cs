@@ -98,7 +98,7 @@ public class Menu
     private void AddSession()
     {
         Console.Clear();
-        Console.WriteLine("Add a new Coding Session.\n");
+        Console.WriteLine("ADD new Coding Session.\n");
         Console.WriteLine("Please Note: Time should be in the 24hr format. So 23:00 is 11pm.");
         Console.WriteLine("Session Begin");
         DTSeperated begin = Input.GetSessionInfo();
@@ -125,7 +125,7 @@ public class Menu
     private void UpdateSession()
     {
         Console.Clear();
-        Console.WriteLine("Update a Session Start or End Time");
+        Console.WriteLine("UPDATING a Session Start or End Time");
         Console.WriteLine();
         List<CodingSession> sessions = GetAll();
 
@@ -162,7 +162,7 @@ public class Menu
     private void DeleteSession()
     {
         Console.Clear();
-        Console.WriteLine("Deleting a Code Session.");
+        Console.WriteLine("DELETING A Code Session.");
         Console.WriteLine();
         List<CodingSession> sessions = GetAll();
 
@@ -202,7 +202,7 @@ public class Menu
     private void ShowAllSessions()
     {
         Console.Clear();
-        Console.WriteLine("Show all Sessions");
+        Console.WriteLine("SHOW ALL SESSIONS");
 
         List<CodingSession> sessions = GetAll();
         if (sessions.Count == 0)
@@ -216,7 +216,88 @@ public class Menu
 
     private List<CodingSession> GetAll() => _controller.ShowAllCodingSession();
 
-    private void UpdateStart(CodingSession _single) { throw new NotImplementedException(); }
-    private void UpdateEnd(CodingSession _single) { throw new NotImplementedException(); }
+    private void UpdateStart(CodingSession _single) 
+    {
+        DTSeperated oldStart = _single.SeperateBegin();
+        DTSeperated oldEnd = _single.SeperateEnd();
+
+        while (true)
+        {
+            Console.WriteLine();
+            Console.WriteLine($"Orignal TIme is {oldStart.Time}");
+            TimeOnly updated = Input.GetTime(oldStart.Time);
+            Console.WriteLine();
+
+            if (updated == oldStart.Time)
+            {
+                Console.Write("\nLooks like you didn't want to update anything.");
+                break;
+            }
+            if (Input.GetYesNo($"Did you want to change {oldStart.Time} to {updated} (Y/N) |> "))
+            {               
+                if (updated != oldStart.Time && updated < oldEnd.Time)
+                {
+                    Console.WriteLine("\n\nUpdating the backend for the new start time and new duration.");
+                    Console.WriteLine($"new duraiton is {CodingSession.CalculateDuration(updated, oldEnd.Time)}");
+                    oldStart.Time = updated;
+                    _single.CombineDTSeperated(oldStart, oldEnd);
+                    if (_controller.UpdateStartTime(_single))
+                        Console.WriteLine("Update was successful.");
+                    else
+                        Console.WriteLine("Update wasn't successful");
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine($"\nTime {updated} is an invalid time. Please try again.");
+                    Console.WriteLine();
+                    Thread.Sleep(200);
+                }
+            }            
+        }
+        Console.WriteLine();        
+    }
+    
+    private void UpdateEnd(CodingSession _single) 
+    {
+        DTSeperated oldStart = _single.SeperateBegin();
+        DTSeperated oldEnd = _single.SeperateEnd();
+
+        while(true)
+        {
+            Console.WriteLine();
+            Console.WriteLine($"Orignal TIme is {oldEnd.Time}");
+            TimeOnly updated = Input.GetTime(oldEnd.Time);
+            Console.WriteLine();
+
+            if(updated == oldEnd.Time)
+            {
+                Console.WriteLine("\nLooks like you didn't want to update anything.");
+                break;
+            }
+
+            if (Input.GetYesNo($"Did you want to change {oldEnd.Time} to {updated} (Y/N) |>"))
+            {
+                if (updated != oldEnd.Time && updated > oldStart.Time) 
+                {
+                    Console.WriteLine("\n\nUpdating the backend for the new start time and new duration.");
+                    Console.WriteLine($"new duraiton is {CodingSession.CalculateDuration(updated, oldEnd.Time)}");
+                    oldEnd.Time = updated;
+                    _single.CombineDTSeperated(oldStart, oldEnd);
+                    if (_controller.UpdateEndTime(_single))
+                        Console.WriteLine("Update was successful.");
+                    else
+                        Console.WriteLine("Update wasn't successful");
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine($"\nTime {updated} is an invalid time. Please try again.");
+                    Thread.Sleep(200);
+                }
+            }
+        }
+        Console.WriteLine();
+    }
 
 }
