@@ -1,15 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
-using System.Reflection.PortableExecutable;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace CodingTracker
 {
     public class CodingController
@@ -80,7 +71,7 @@ namespace CodingTracker
 
                 if (DateTime.ParseExact(startTime, "dd/MM/yyyy HH:mm", CultureInfo.CurrentCulture) >= firstGoal.AddedDate)
                 {
-                    //DateDifference dateDifference = new DateDifference(parsedStartTime, parsedEndTime);
+                    DateDifference dateDifference = new DateDifference(parsedStartTime, parsedEndTime);
                     firstGoal.ProgressRemaining = progressRemaining;
                     firstGoal.ProgressRemaining -= DateDifference.Duration;
                     var tableCmd2 = connection.CreateCommand();
@@ -241,22 +232,22 @@ namespace CodingTracker
             var goalValue = UserInput.GetGoalInput();
             switch (timeUnit)
             {
-                case "mins":
+                case "minutes":
                     ParseGoalIntoTimeSpan(TimeSpan.FromMinutes, goalValue, "hours", 1);
                     break;
-                case "h":
+                case "hours":
                     ParseGoalIntoTimeSpan(TimeSpan.FromHours, goalValue, "hours", 1);
                     break;
-                case "d":
+                case "days":
                     ParseGoalIntoTimeSpan(TimeSpan.FromDays, goalValue, "hours", 1);
                     break;
-                case "w":
+                case "weeks":
                     ParseGoalIntoTimeSpan(TimeSpan.FromDays, goalValue, "hours", 7);
                     break;
-                case "mo":
+                case "months":
                     ParseGoalIntoTimeSpan(TimeSpan.FromDays, goalValue, "hours", 30);
                     break;
-                case "y":
+                case "years":
                     ParseGoalIntoTimeSpan(TimeSpan.FromDays, goalValue, "hours", 365);
                     break;
             }
@@ -280,8 +271,6 @@ namespace CodingTracker
                     var tableCmd = connection.CreateCommand();
 
                     string formattedDateNow = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
-
-                    DateTime dateTime;
 
                     tableCmd.CommandText = $"INSERT INTO goals(Goal, AddedDate, ProgressRemaining) VALUES('{goalTimeSpan}', '{formattedDateNow}', '{goalTimeSpan}')";
 
@@ -367,8 +356,6 @@ namespace CodingTracker
                     codingSessionsCopy.Clear();
                 }
                 else if (displayOrLoad == "load")
-                {
-                }
 
                 connection.Close();
                 codingSessionsCopy.Clear();
