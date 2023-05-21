@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ConsoleTableExt;
-
+﻿using ConsoleTableExt;
 namespace CodingTracker
 {
     public class TableVisualizationEngine
@@ -34,7 +28,6 @@ namespace CodingTracker
 
         public static void DisplayInTableFormatGoals(List<Goal> list)
         {
-            //Header has no divider.
             ConsoleTableBuilder.From(list)
                 .WithCharMapDefinition(CharMapDefinition.FramePipDefinition)
                 .WithCharMapDefinition(
@@ -54,6 +47,5 @@ namespace CodingTracker
                     })
                 .ExportAndWriteLine();
         }
-
     }
 }

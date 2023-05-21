@@ -17,10 +17,11 @@ namespace CodingTracker
             bool exit = false;
             Console.WriteLine($"\nWelcome to JsPeanut's CodingTracker! You can start tracking your coding sessions. Here you've got a list of all the available commands in the application: \n\n C: Insert the dates in which you started and finished your session, to calculate it. \n S: Start tracking a coding session via stopwatch. \n R: See all your coding sessions.\n U: Update a coding session.\n D: Delete a coding session.\n E: Exit the application.");
             CodingController.GetAllGoalRecords();
-            CodingController.LoadAllRecords();
+            CodingController.GetAllRecords("load");
+            CodingController.CodingSessions.Clear();
 
             TimeSpan progressRemaining = TimeSpan.Zero;
-            
+
             using (var connection = new SqliteConnection(connectionString))
             {
                 connection.Open();
@@ -46,7 +47,7 @@ namespace CodingTracker
                 }
             }
 
-            
+
             string userInput = Console.ReadLine();
             while (exit == false)
             {
@@ -60,7 +61,7 @@ namespace CodingTracker
                         break;
                     case "R":
                         Console.Clear();
-                        CodingController.DisplayAllRecords();
+                        CodingController.GetAllRecords("display", "filter");
                         break;
                     case "U":
                         CodingController.Update();

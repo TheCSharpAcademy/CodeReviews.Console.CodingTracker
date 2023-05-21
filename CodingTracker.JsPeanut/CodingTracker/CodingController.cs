@@ -80,7 +80,7 @@ namespace CodingTracker
                     }
                 }
 
-                    if (DateTime.ParseExact(startTime, "dd/MM/yyyy HH:mm", CultureInfo.CurrentCulture) >= firstGoal.AddedDate)
+                if (DateTime.ParseExact(startTime, "dd/MM/yyyy HH:mm", CultureInfo.CurrentCulture) >= firstGoal.AddedDate)
                 {
                     DateDifference dateDifference = new DateDifference(parsedStartTime, parsedEndTime);
                     firstGoal.ProgressRemaining = progressRemaining;
@@ -104,7 +104,7 @@ namespace CodingTracker
             Console.WriteLine("Press any key to start the stopwatch");
             Console.ReadKey();
             Console.WriteLine("Stopwatch started");
-            
+
             stopwatch.Start();
             while (true)
             {
@@ -136,7 +136,7 @@ namespace CodingTracker
                 }
                 Console.SetCursorPosition(0, Console.CursorTop);
 
-                
+
                 Console.Write($"Elapsed time: {stopwatchElapsed}");
                 Thread.Sleep(100);
             }
@@ -144,19 +144,9 @@ namespace CodingTracker
             Console.ReadKey();
         }
 
-        public static void DisplayAllRecords()
-        {
-            Console.Clear();
-            var codingSessionsCopy = CodingSessions.ToList();
-            TableVisualizationEngine.DisplayInTableFormatCodingSessions(codingSessionsCopy);
-            codingSessionsCopy.Clear();
-            Filter();
-        }
-
-
         public static void Update()
         {
-            DisplayAllRecords();
+            GetAllRecords("display", "dont_filter");
             int recordId = UserInput.GetNumberInput("Type the ID of the record you want to update. Type M to return to the main menu.");
             foreach (var dcs in DeletedCodingSessions)
             {
@@ -207,7 +197,7 @@ namespace CodingTracker
             {
                 var FiltBy = CodingSessions.Where(cs => (cs.StartTime - CodingSessions.LastOrDefault().StartTime).Days <= amountOfDays).ToList();
                 TableVisualizationEngine.DisplayInTableFormatCodingSessions(FiltBy);
-                
+
             }
             while (true)
             {
@@ -288,7 +278,7 @@ namespace CodingTracker
                     timeUnitInPrintedMsg = "hour";
                 }
 
-                
+
                 using (var connection = new SqliteConnection(connectionString))
                 {
                     connection.Open();
@@ -324,7 +314,7 @@ namespace CodingTracker
 
         }
 
-        public static void LoadAllRecords()
+        public static void GetAllRecords(string displayOrLoad, string filterOrNot = "default value")
         {
             using (var connection = new SqliteConnection(connectionString))
             {
@@ -364,6 +354,30 @@ namespace CodingTracker
                         }
                     }
                 }
+                if (displayOrLoad == "display" && filterOrNot == "filter")
+                {
+                    TableVisualizationEngine.DisplayInTableFormatCodingSessions(codingSessionsCopy);
+                    codingSessionsCopy.Clear();
+                    if(CodingSessions.Count == 0)
+                    {
+                        Console.WriteLine("No rows found.");
+                        UserInput.GetUserInput();
+                    }
+                    else
+                    {
+                        Filter();
+                    }
+                    
+                }
+                else if (displayOrLoad == "display" && filterOrNot == "dont_filter")
+                {
+                    TableVisualizationEngine.DisplayInTableFormatCodingSessions(codingSessionsCopy);
+                    codingSessionsCopy.Clear();
+                }
+                else if (displayOrLoad == "load")
+                {
+                }
+
                 connection.Close();
                 codingSessionsCopy.Clear();
             }
@@ -403,7 +417,7 @@ namespace CodingTracker
         public static void Delete()
         {
             Console.Clear();
-            DisplayAllRecords();
+            GetAllRecords("display", "dont_filter");
             int recordId = UserInput.GetNumberInput("Type the ID of the record you want to delete. Type M to return to the main menu.");
             foreach (var dcs in DeletedCodingSessions)
             {
