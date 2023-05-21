@@ -39,10 +39,23 @@ namespace CodingTracker
 
         public static void Insert()
         {
-            Console.Clear();
             string startTime = UserInput.GetStartTimeInput();
+            DateTime parsedStartTime = DateTime.ParseExact(startTime, "dd/MM/yyyy HH:mm", CultureInfo.CurrentCulture);
+            if (CodingSessions.Any(cs => cs.StartTime == parsedStartTime) == true)
+            {
+                Console.WriteLine("The date and time in which your session started is the same at which other of your sessions started.");
+                Insert();
+            }
             string endTime = UserInput.GetEndTimeInput();
-            Validation.ValidateDuration(startTime, endTime, "dd/MM/yyyy HH:mm", UserInput.GetStartTimeInput, UserInput.GetEndTimeInput);
+            DateTime parsedEndTime = DateTime.ParseExact(endTime, "dd/MM/yyyy HH:mm", CultureInfo.CurrentCulture);
+            if (CodingSessions.Any(cs => cs.EndTime == parsedEndTime) == true)
+            {
+                Console.WriteLine("The date and time in which your session ended is the same at which other of your sessions ended..");
+                Insert();
+            }
+            Validation.ValidateDuration(startTime, endTime, "dd/MM/yyyy HH:mm");
+
+
             using (var connection = new SqliteConnection(connectionString))
             {
                 connection.Open();
@@ -52,13 +65,13 @@ namespace CodingTracker
                 tableCmd.CommandText = $"INSERT INTO coding_sessions(StartTime, EndTime, Duration) VALUES('{startTime}', '{endTime}', '{DateDifference.Duration}')";
                 tableCmd.ExecuteNonQuery();
 
-                DateTime parsedStartTime = DateTime.ParseExact(startTime, "dd/MM/yyyy HH:mm", CultureInfo.CurrentCulture);
-                DateTime parsedEndTime = DateTime.ParseExact(endTime, "dd/MM/yyyy HH:mm", CultureInfo.CurrentCulture);
-
                 var firstGoal = Goals.FirstOrDefault();
 
-                tableCmd.CommandText = "SELECT ProgressRemaining FROM goals";
-                SqliteDataReader reader = tableCmd.ExecuteReader();
+                var tableCmd2 = connection.CreateCommand();
+
+                tableCmd2.CommandText = "SELECT ProgressRemaining FROM goals";
+
+                SqliteDataReader reader = tableCmd2.ExecuteReader();
 
                 TimeSpan progressRemaining = TimeSpan.Zero;
                 if (reader.HasRows)
@@ -74,11 +87,11 @@ namespace CodingTracker
                     DateDifference dateDifference = new DateDifference(parsedStartTime, parsedEndTime);
                     firstGoal.ProgressRemaining = progressRemaining;
                     firstGoal.ProgressRemaining -= DateDifference.Duration;
-                    var tableCmd2 = connection.CreateCommand();
+                    var tableCmd3 = connection.CreateCommand();
 
-                    tableCmd2.CommandText = $"UPDATE goals SET ProgressRemaining = '{firstGoal.ProgressRemaining}'";
+                    tableCmd3.CommandText = $"UPDATE goals SET ProgressRemaining = '{firstGoal.ProgressRemaining}'";
 
-                    tableCmd2.ExecuteNonQuery();
+                    tableCmd3.ExecuteNonQuery();
                 }
 
                 connection.Close();

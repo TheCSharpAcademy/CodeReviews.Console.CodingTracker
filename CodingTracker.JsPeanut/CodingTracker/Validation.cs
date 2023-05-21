@@ -13,17 +13,15 @@ namespace CodingTracker
             }
         }
 
-        public static void ValidateNumber(string numberInput, Action GetUserInput)
+        public static void ValidateNumber(string numberInput, Func<int> retryFunction)
         {
             while (!Int32.TryParse(numberInput, out _) || Convert.ToInt32(numberInput) < 0)
             {
-                Console.WriteLine("\n\nInvalid number. Type M to return to the main menu or try again.\n\n");
-                numberInput = Console.ReadLine();
-                if (numberInput == "M") GetUserInput();
+                retryFunction();
             }
         }
 
-        public static void ValidateDuration(string startTime, string endTime, string format, Func<string> GetStartTimeInput, Func<string> GetEndTimeInput)
+        public static void ValidateDuration(string startTime, string endTime, string format)
         {
             if (DateTime.ParseExact(endTime, format, CultureInfo.InvariantCulture, DateTimeStyles.None) < DateTime.ParseExact(startTime, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None))
             {

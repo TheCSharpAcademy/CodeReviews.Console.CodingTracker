@@ -139,8 +139,10 @@ namespace CodingTracker
             return goalInput;
         }
 
-        internal static int GetNumberInput(string message)
+        public static int GetNumberInput(string message)
         {
+            string errorMessage = "\n\nInvalid number. Type M to return to the main menu or try again.\n\n";
+
             Console.WriteLine(message);
 
             string numberInput = Console.ReadLine();
@@ -151,7 +153,8 @@ namespace CodingTracker
                 Console.Clear();
             }
 
-            Validation.ValidateNumber(numberInput, GetUserInput);
+            Validation.ValidateNumber(numberInput, () => GetNumberInput(errorMessage));
+
             int finalInput = Convert.ToInt32(numberInput);
 
             return finalInput;
