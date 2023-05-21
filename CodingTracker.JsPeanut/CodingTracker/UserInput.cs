@@ -40,7 +40,6 @@ namespace CodingTracker
                 }
             }
 
-
             string userInput = Console.ReadLine();
             while (exit == false)
             {
@@ -99,7 +98,6 @@ namespace CodingTracker
             Validation.ValidateDate(date, GetStartTimeInput, format);
 
             return date;
-
         }
 
         public static string GetEndTimeInput()
@@ -118,7 +116,6 @@ namespace CodingTracker
 
             Validation.ValidateDate(date, GetEndTimeInput, format);
             return date;
-
         }
 
         public static string GetGoalMeasureInput()

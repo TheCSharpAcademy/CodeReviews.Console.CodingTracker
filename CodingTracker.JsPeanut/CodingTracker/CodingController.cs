@@ -34,7 +34,6 @@ namespace CodingTracker
                 connection.Close();
             }
             UserInput.GetUserInput();
-
         }
 
         public static void Insert()
@@ -54,7 +53,6 @@ namespace CodingTracker
                 Insert();
             }
             Validation.ValidateDuration(startTime, endTime, "dd/MM/yyyy HH:mm");
-
 
             using (var connection = new SqliteConnection(connectionString))
             {
@@ -93,7 +91,6 @@ namespace CodingTracker
 
                     tableCmd3.ExecuteNonQuery();
                 }
-
                 connection.Close();
             }
             UserInput.GetUserInput();
@@ -106,7 +103,6 @@ namespace CodingTracker
             Console.WriteLine("Press any key to start the stopwatch");
             Console.ReadKey();
             Console.WriteLine("Stopwatch started");
-
             stopwatch.Start();
             while (true)
             {
@@ -134,12 +130,9 @@ namespace CodingTracker
                     break;
                 }
                 Console.SetCursorPosition(0, Console.CursorTop);
-
-
                 Console.Write($"Elapsed time: {stopwatchElapsed}");
                 Thread.Sleep(100);
             }
-
             Console.ReadKey();
         }
 
@@ -154,7 +147,6 @@ namespace CodingTracker
                     recordId--;
                 }
             }
-
             using (var connection = new SqliteConnection(connectionString))
             {
                 connection.Open();
@@ -185,7 +177,6 @@ namespace CodingTracker
 
                 UserInput.GetUserInput();
             }
-
         }
 
         public static void Filter()
@@ -232,8 +223,6 @@ namespace CodingTracker
             }
         }
 
-
-
         public static void SetGoal()
         {
             if (Goals.Count == 1)
@@ -276,7 +265,6 @@ namespace CodingTracker
                     timeUnitInPrintedMsg = "hour";
                 }
 
-
                 using (var connection = new SqliteConnection(connectionString))
                 {
                     connection.Open();
@@ -303,9 +291,7 @@ namespace CodingTracker
                 Console.Clear();
                 UserInput.GetUserInput();
                 return goalTimeSpan;
-
             }
-
         }
 
         public static void GetAllRecords(string displayOrLoad, string filterOrNot = "default value")
@@ -445,7 +431,6 @@ namespace CodingTracker
 
                 connection.Close();
             }
-
             UserInput.GetUserInput();
         }
 
@@ -459,6 +444,5 @@ namespace CodingTracker
 
             return dateDifference.PrintCodingSessionTime();
         }
-
     }
 }

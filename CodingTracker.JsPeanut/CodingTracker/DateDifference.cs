@@ -23,6 +23,7 @@
         public string PrintCodingSessionTime()
         {
             string message;
+
             if (Duration.Days > 1)
             {
                 message = $"You have been coding for: {Duration.Days} days, {Duration.Hours} hours, {Duration.Minutes} minutes and {Duration.Seconds} seconds.";
@@ -34,6 +35,5 @@
 
             return message;
         }
-
     }
 }
