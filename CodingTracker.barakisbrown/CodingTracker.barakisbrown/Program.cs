@@ -12,6 +12,7 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.File("app.log", rollingInterval: RollingInterval.Day)
     .CreateLogger();
 
+// I have to do this for it pass the test
 #pragma warning disable S1481 // Unused local variables should be removed
 Menu menu = new Menu(new CodingController(), new CodingSession());
 #pragma warning restore S1481 // Unused local variables should be removed
