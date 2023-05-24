@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using CodingTracker.Furiax;
+using Microsoft.Data.Sqlite;
 using System.Configuration;
 
 var connectionString = ConfigurationManager.AppSettings.Get("connectionString");
@@ -15,3 +16,5 @@ using(var connection = new SqliteConnection(connectionString))
 	command.ExecuteNonQuery();
 	connection.Close();
 }
+
+UserInput.GetUserInput();
