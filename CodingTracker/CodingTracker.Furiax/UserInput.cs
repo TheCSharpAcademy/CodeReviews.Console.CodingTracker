@@ -17,7 +17,7 @@ namespace CodingTracker.Furiax
 						Crud.InsertRecord(connectionString); Console.ReadLine(); Console.Clear();
 						break;
 					case "2":
-						Crud.ShowTable(); Console.ReadLine(); Console.Clear();
+						Crud.ShowTable(connectionString); Console.ReadLine(); Console.Clear();
 						break;
 					case "3":
 						Crud.UpdateRecord(); Console.ReadLine(); Console.Clear();

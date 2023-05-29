@@ -1,5 +1,9 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using CodingTracker.Furiax.Model;
+using Microsoft.Data.Sqlite;
 using System.Configuration;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Globalization;
+using ConsoleTableExt;
 
 namespace CodingTracker.Furiax
 {
@@ -33,10 +37,34 @@ namespace CodingTracker.Furiax
 			Console.WriteLine("update");
 		}
 
-		internal static void ShowTable()
+		internal static void ShowTable(string connectionString)
 		{
 			Console.Clear();
-			Console.WriteLine("view data");
+			using (var connection = new SqliteConnection(connectionString))
+			{
+				connection.Open();
+				var command = connection.CreateCommand();
+				command.CommandText = "SELECT * from CodeTracker";
+
+				List<CodingSession> sessions = new List<CodingSession>();
+
+				SqliteDataReader reader = command.ExecuteReader();
+				if (reader.HasRows)
+				{
+					while (reader.Read())
+					{
+						sessions.Add(new CodingSession
+						{
+							Id = reader.GetInt32(0),
+							StartTime = DateTime.ParseExact(reader.GetString(1), "dd/MM/yy HH:mm", new CultureInfo("nl-BE")),
+							EndTime = DateTime.ParseExact(reader.GetString(2), "dd/MM/yy HH:mm", new CultureInfo("nl-BE"))
+						});
+					}
+				}
+				ConsoleTableBuilder
+					.From(sessions)
+					.ExportAndWriteLine();
+			}
 		}
 
 		internal static void InsertRecord(string connectionString)
@@ -45,9 +73,10 @@ namespace CodingTracker.Furiax
 			DateTime inputStartDate = UserInput.InputStartDate("Please enter the start time in the following format dd/mm/yy hh:mm");
 			string startDate =inputStartDate.ToString("dd/MM/yy HH:mm");
 			DateTime inputEndDate = UserInput.InputEndDate("Please enter the end time in the following format dd/mm/yy hh:mm", inputStartDate);
-			string endDate = inputStartDate.ToString("dd/MM/yy HH:mm");
+			string endDate = inputEndDate.ToString("dd/MM/yy HH:mm");
 			TimeSpan timeBetween = inputEndDate - inputStartDate;
-			string duration = timeBetween.ToString("h'u'mm'm'");
+
+			string duration = timeBetween.ToString(@"hh\:mm");
 
 			using (var connection = new SqliteConnection(connectionString))
 			{
