@@ -1,7 +1,5 @@
 ﻿using CodingTracker.Furiax.Model;
 using Microsoft.Data.Sqlite;
-using System.Configuration;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Globalization;
 using ConsoleTableExt;
 
@@ -25,17 +23,41 @@ namespace CodingTracker.Furiax
 				connection.Close();
 			}
 		}
-	internal static void DeleteRecord()
+	internal static void DeleteRecord(string connectionString)
 		{
 			Console.Clear();
-			Console.WriteLine("delete");
+			ShowTable(connectionString);
+			while (true)
+			{
+				
+				int recordToDelete = UserInput.GetId("What record do you want to delete: ");
+				using (var connection = new SqliteConnection(connectionString))
+				{
+					connection.Open();
+					bool doesIdExist = Validation.CheckIfRecordExists(recordToDelete, connectionString);
+					if (doesIdExist)
+					{
+						
+						var command = connection.CreateCommand();
+						command.CommandText = $"DELETE FROM CodeTracker WHERE id = '{recordToDelete}'";
+						command.ExecuteNonQuery();
+						Console.WriteLine($"The record with id {recordToDelete} has been deleted from the db");
+						break;
+					}
+					else
+					{
+						Console.WriteLine("A record with that id has not been found");
+					}
+					connection.Close();
+				}
+			}	
 		}
 
-		internal static void UpdateRecord()
+		internal static void UpdateRecord(string connectionString)
 		{
 			Console.Clear();
-			Console.WriteLine("update");
-		}
+            Console.WriteLine("update method still in progress");
+        }
 
 		internal static void ShowTable(string connectionString)
 		{

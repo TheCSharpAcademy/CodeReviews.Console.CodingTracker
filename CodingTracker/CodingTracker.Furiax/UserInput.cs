@@ -20,10 +20,10 @@ namespace CodingTracker.Furiax
 						Crud.ShowTable(connectionString); Console.ReadLine(); Console.Clear();
 						break;
 					case "3":
-						Crud.UpdateRecord(); Console.ReadLine(); Console.Clear();
+						Crud.UpdateRecord(connectionString); Console.ReadLine(); Console.Clear();
 						break;
 					case "4":
-						Crud.DeleteRecord(); Console.ReadLine(); Console.Clear();
+						Crud.DeleteRecord(connectionString); Console.ReadLine(); Console.Clear();
 						break;
 					/*case "5":
 						ShowStopwatch(); Console.Clear();
@@ -98,6 +98,24 @@ namespace CodingTracker.Furiax
 				{ Console.WriteLine("Invalid date or date in future"); }
 			}
 
+			return output;
+		}
+
+		internal static int GetId(string question)
+		{
+			int output = 0;
+			bool isValid = false;
+			while (isValid == false)
+			{
+				Console.Write(question);
+				string input = Console.ReadLine();
+				isValid = Validation.ValidateId(input);
+				if (isValid)
+					output = Convert.ToInt32(input);
+				else
+                    Console.WriteLine("input is not a number, try again");
+
+            }
 			return output;
 		}
 	}
