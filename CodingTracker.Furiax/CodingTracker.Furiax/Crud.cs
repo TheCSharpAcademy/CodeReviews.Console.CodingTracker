@@ -7,7 +7,6 @@ namespace CodingTracker.Furiax
 {
 	internal class Crud
 	{
-		
 		internal static void CreateTable(string connectionString)
 		{
 			using (var connection = new SqliteConnection(connectionString))
@@ -23,7 +22,7 @@ namespace CodingTracker.Furiax
 				connection.Close();
 			}
 		}
-	internal static void DeleteRecord(string connectionString)
+		internal static void DeleteRecord(string connectionString)
 		{
 			Console.Clear();
 			ShowTable(connectionString);
@@ -52,7 +51,6 @@ namespace CodingTracker.Furiax
 				}
 			}	
 		}
-
 		internal static void UpdateRecord(string connectionString)
 		{
 			Console.Clear();
@@ -84,7 +82,6 @@ namespace CodingTracker.Furiax
 			}
             Console.WriteLine("Record succesfully updated");
         }
-
 		internal static void ShowTable(string connectionString)
 		{
 			Console.Clear();
@@ -114,7 +111,6 @@ namespace CodingTracker.Furiax
 					.ExportAndWriteLine();
 			}
 		}
-
 		internal static void InsertRecord(string connectionString)
 		{
 			Console.Clear();

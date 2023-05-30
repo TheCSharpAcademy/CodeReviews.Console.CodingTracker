@@ -100,7 +100,7 @@ namespace CodingTracker.Furiax
 			return output;
 		}
 
-		internal static int GetId(string question)
+		public static int GetId(string question)
 		{
 			int output = 0;
 			bool isValid = false;
