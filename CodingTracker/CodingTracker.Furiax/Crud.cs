@@ -56,7 +56,33 @@ namespace CodingTracker.Furiax
 		internal static void UpdateRecord(string connectionString)
 		{
 			Console.Clear();
-            Console.WriteLine("update method still in progress");
+			ShowTable(connectionString);
+			while(true)
+			{
+				int recordToUpdate = UserInput.GetId("What record do you want to update: ");
+				using(var connection = new SqliteConnection( connectionString))
+				{
+					connection.Open();
+					bool doesIdExist = Validation.CheckIfRecordExists(recordToUpdate, connectionString);
+					if (doesIdExist)
+					{
+						DateTime askNewStartTime = UserInput.GetStartDate("Enter a new value for StartDate");
+						string newStartTime = askNewStartTime.ToString("dd/MM/yy HH:mm");
+						DateTime askNewEndTime = UserInput.GetEndDate("Enter a new value for EndDate", askNewStartTime);
+						string newEndTime = askNewEndTime.ToString("dd/MM/yy HH:mm");
+						var command = connection.CreateCommand();
+						command.CommandText = $"UPDATE CodeTracker SET StartTime = '{newStartTime}', EndTime = '{newEndTime}' WHERE Id = '{recordToUpdate}'";
+						command.ExecuteNonQuery();
+						break;
+					}
+					else 
+					{
+						Console.WriteLine("A record with that id has not been found");
+					}
+					connection.Close();
+				}
+			}
+            Console.WriteLine("Record succesfully updated");
         }
 
 		internal static void ShowTable(string connectionString)
@@ -92,9 +118,9 @@ namespace CodingTracker.Furiax
 		internal static void InsertRecord(string connectionString)
 		{
 			Console.Clear();
-			DateTime inputStartDate = UserInput.InputStartDate("Please enter the start time in the following format dd/mm/yy hh:mm");
+			DateTime inputStartDate = UserInput.GetStartDate("Please enter the start time in the following format dd/mm/yy hh:mm");
 			string startDate =inputStartDate.ToString("dd/MM/yy HH:mm");
-			DateTime inputEndDate = UserInput.InputEndDate("Please enter the end time in the following format dd/mm/yy hh:mm", inputStartDate);
+			DateTime inputEndDate = UserInput.GetEndDate("Please enter the end time in the following format dd/mm/yy hh:mm", inputStartDate);
 			string endDate = inputEndDate.ToString("dd/MM/yy HH:mm");
 			TimeSpan timeBetween = inputEndDate - inputStartDate;
 
@@ -108,6 +134,7 @@ namespace CodingTracker.Furiax
 				command.ExecuteNonQuery();
 				connection.Close();
 			}
-		}
+            Console.WriteLine("Times succesfully added to database");
+        }
 	}
 }

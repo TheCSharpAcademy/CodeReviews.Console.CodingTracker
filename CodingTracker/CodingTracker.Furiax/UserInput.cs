@@ -56,18 +56,18 @@ namespace CodingTracker.Furiax
             Console.WriteLine("---------------------------");
         }
 
-		public static DateTime InputStartDate(string question)
+		public static DateTime GetStartDate(string question)
 		{
 			DateTime output = DateTime.Now;		
 			bool isValid = false;
 			while (isValid == false)
 			{
-				Console.WriteLine(question);
+				Console.Write(question + " : ");
 				string input = Console.ReadLine();
 				isValid = Validation.ValidateDate(input);
 				if (isValid)
-				{ output = DateTime.Parse(input);
-                    Console.WriteLine("Valid input");
+				{ 
+					output = DateTime.Parse(input);
                 }
 				else
 				{ Console.WriteLine("Invalid date or date in future"); }
@@ -75,19 +75,18 @@ namespace CodingTracker.Furiax
 
 			return output;
 		}
-		public static DateTime InputEndDate(string question, DateTime startTime)
+		public static DateTime GetEndDate(string question, DateTime startTime)
 		{
 			DateTime output = DateTime.Now;
 			bool isValid = false;
 			while (isValid == false)
 			{
-				Console.WriteLine(question);
+				Console.Write(question + " : ");
 				string input = Console.ReadLine();
 				isValid = Validation.ValidateDate(input);
 				if (isValid)
 				{
 					output = DateTime.Parse(input);
-					Console.WriteLine("Valid input");
 					if (output < startTime)
 					{
 						Console.WriteLine("End time can't be before start time");
