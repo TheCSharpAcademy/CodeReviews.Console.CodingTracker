@@ -5,8 +5,6 @@ namespace CodingTracker.Furiax
 {
 	internal class Validation
 	{
-
-
 		internal static bool ValidateDate(string? input)
 		{
 			if (string.IsNullOrWhiteSpace(input)) return false;

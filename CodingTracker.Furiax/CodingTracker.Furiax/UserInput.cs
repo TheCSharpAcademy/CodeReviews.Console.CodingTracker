@@ -40,7 +40,6 @@ namespace CodingTracker.Furiax
 				}
 			}
 		}
-
 		public static void Menu()
 		{
             Console.WriteLine("CODE TRACKER");
@@ -55,7 +54,6 @@ namespace CodingTracker.Furiax
             Console.WriteLine("0. Close the application");
             Console.WriteLine("---------------------------");
         }
-
 		public static DateTime GetStartDate(string question)
 		{
 			DateTime output = DateTime.Now;		
@@ -99,7 +97,6 @@ namespace CodingTracker.Furiax
 
 			return output;
 		}
-
 		public static int GetId(string question)
 		{
 			int output = 0;
