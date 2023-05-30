@@ -68,8 +68,10 @@ namespace CodingTracker.Furiax
 						string newStartTime = askNewStartTime.ToString("dd/MM/yy HH:mm");
 						DateTime askNewEndTime = UserInput.GetEndDate("Enter a new value for EndDate", askNewStartTime);
 						string newEndTime = askNewEndTime.ToString("dd/MM/yy HH:mm");
+						TimeSpan timeBetween = CalculateDuration(askNewStartTime, askNewEndTime);
+						string duration = timeBetween.ToString(@"hh\:mm");
 						var command = connection.CreateCommand();
-						command.CommandText = $"UPDATE CodeTracker SET StartTime = '{newStartTime}', EndTime = '{newEndTime}' WHERE Id = '{recordToUpdate}'";
+						command.CommandText = $"UPDATE CodeTracker SET StartTime = '{newStartTime}', EndTime = '{newEndTime}', Duration = '{duration}' WHERE Id = '{recordToUpdate}'";
 						command.ExecuteNonQuery();
 						break;
 					}
@@ -102,7 +104,8 @@ namespace CodingTracker.Furiax
 						{
 							Id = reader.GetInt32(0),
 							StartTime = DateTime.ParseExact(reader.GetString(1), "dd/MM/yy HH:mm", new CultureInfo("nl-BE")),
-							EndTime = DateTime.ParseExact(reader.GetString(2), "dd/MM/yy HH:mm", new CultureInfo("nl-BE"))
+							EndTime = DateTime.ParseExact(reader.GetString(2), "dd/MM/yy HH:mm", new CultureInfo("nl-BE")),
+							Duration = TimeSpan.ParseExact(reader.GetString(3), @"hh\:mm", new CultureInfo("nl-BE"))
 						});
 					}
 				}
@@ -118,10 +121,8 @@ namespace CodingTracker.Furiax
 			string startDate =inputStartDate.ToString("dd/MM/yy HH:mm");
 			DateTime inputEndDate = UserInput.GetEndDate("Please enter the end time in the following format dd/mm/yy hh:mm", inputStartDate);
 			string endDate = inputEndDate.ToString("dd/MM/yy HH:mm");
-			TimeSpan timeBetween = inputEndDate - inputStartDate;
-
+			TimeSpan timeBetween = CalculateDuration(inputStartDate, inputEndDate);
 			string duration = timeBetween.ToString(@"hh\:mm");
-
 			using (var connection = new SqliteConnection(connectionString))
 			{
 				connection.Open();
@@ -132,5 +133,10 @@ namespace CodingTracker.Furiax
 			}
             Console.WriteLine("Times succesfully added to database");
         }
+		internal static TimeSpan CalculateDuration(DateTime startTime, DateTime endTime)
+		{
+			TimeSpan duration = endTime - startTime;
+			return duration;
+		}
 	}
 }
