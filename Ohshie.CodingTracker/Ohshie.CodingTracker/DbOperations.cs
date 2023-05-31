@@ -1,4 +1,5 @@
 using Microsoft.Data.Sqlite;
+using Microsoft.Extensions.Configuration;
 
 namespace Ohshie.CodingTracker;
 
@@ -10,9 +11,10 @@ public class DbOperations
         {
             CreateDb();
         }
+        DbConnection = GetConnectionStringFromSettings();
     }
 
-    private static readonly string DbConnection = @"Data Source=coding_tracker.db";
+    private string? DbConnection { get; }
     
     public void CreateDb()
     {
@@ -51,8 +53,6 @@ public class DbOperations
 
     public List<Session> FetchAllSessions()
     {
-        List<Session> sessionsList = new();
-        
         using (var connection = new SqliteConnection(DbConnection))
         {
             connection.Open();
@@ -62,22 +62,30 @@ public class DbOperations
 
             var reader = tableCommand.ExecuteReader();
             
-            int idCounter = 0;
-            while (reader.Read())
-            {
-                sessionsList.Add(new Session
-                {
-                    Id = ++idCounter,
-                    Date = reader.GetString(1),
-                    Length = reader.GetString(2),
-                    Note = reader.GetString(3)
-                });
-            }
+            var sessionsList = ReadFromDbToSessionsList(reader);
 
             return sessionsList;
         }
     }
-    
+
+    private List<Session> ReadFromDbToSessionsList(SqliteDataReader reader)
+    {
+        List<Session> sessionsList = new();
+        int idCounter = 0;
+        while (reader.Read())
+        {
+            sessionsList.Add(new Session
+            {
+                Id = ++idCounter,
+                Date = reader.GetString(1),
+                Length = reader.GetString(2),
+                Note = reader.GetString(3)
+            });
+        }
+
+        return sessionsList;
+    }
+
     // tbh no idea wtf this code returns 1 even when i delete db while app is running.
     // i though it would be pretty nice way to ensure that db exist. I'll leave it here for now.
     private int EnsureDbExist()
@@ -95,5 +103,16 @@ public class DbOperations
             
             return dbExist;
         }
+    }
+
+    private string? GetConnectionStringFromSettings()
+    {
+        var builder = new ConfigurationBuilder();
+            builder.SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
+        IConfiguration configuration = builder.Build();
+
+        return configuration.GetConnectionString("SQLite");
     }
 }

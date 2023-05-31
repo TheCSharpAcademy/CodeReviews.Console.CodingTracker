@@ -8,5 +8,5 @@ public class Session
     public string? Description { get; set; }
     public string? Date { get; set; }
     public string? Length { get; set; }
-    public string?  Note { get; set; }
+    public string? Note { get; set; }
 }
