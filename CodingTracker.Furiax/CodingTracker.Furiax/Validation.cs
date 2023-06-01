@@ -42,9 +42,6 @@ namespace CodingTracker.Furiax
 			{
 				return false;
             }
-			//if (Int32.Parse(input) <= 0)
-			//	return false;
-			//else return true;
 			return true;
 		}
 	}

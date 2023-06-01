@@ -65,7 +65,8 @@ namespace CodingTracker.Furiax
 				}
 				else
 					Console.WriteLine("Invalid input, please enter a positive int for total hours");
-			}  
+			}
+			Crud.GoalStatus(connectionString, goalTime);
         }
 
 		internal static void UseStopwatch(string connectionString)
