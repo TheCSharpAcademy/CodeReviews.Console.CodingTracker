@@ -2,7 +2,7 @@ using System.Diagnostics;
 
 namespace Ohshie.CodingTracker;
 
-public class CodingSession
+public class NewCodingSession
 {
     private readonly string _time = DateTime.Now.ToLocalTime().ToString("dd.MM.yyyy HH:mm");
     private readonly Stopwatch _stopwatch = new();

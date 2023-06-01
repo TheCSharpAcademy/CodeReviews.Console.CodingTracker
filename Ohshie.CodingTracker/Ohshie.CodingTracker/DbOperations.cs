@@ -27,6 +27,7 @@ public class DbOperations
                 $@"CREATE TABLE IF NOT EXISTS 'CodingSessions'
                     (Id INTEGER PRIMARY KEY AUTOINCREMENT,
                     Date TEXT,
+                    Description TEXT,
                     SessionLength INTEGER,
                     Note TEXT)";
 
@@ -43,8 +44,8 @@ public class DbOperations
             var tableCommand = connection.CreateCommand();
 
             tableCommand.CommandText = $@"INSERT INTO CodingSessions "+
-                                            "(Date, SessionLength, Note) "+
-                                            $"VALUES ('{session.Date}', '{session.Length}', '{session.Note}')";
+                                            "(Date, Description, SessionLength, Note) "+
+                                            $"VALUES ('{session.Date}', '{session.Description}', '{session.Length}', '{session.Note}')";
             tableCommand.ExecuteNonQuery();
             
             connection.Close();
@@ -68,6 +69,64 @@ public class DbOperations
         }
     }
 
+    public void RemoveSession(Session session)
+    {
+        using (var connection = new SqliteConnection(DbConnection))
+        {
+            connection.Open();
+            var tableCommand = connection.CreateCommand();
+
+            tableCommand.CommandText = "DELETE FROM 'CodingSessions' " +
+                                       $"WHERE Id = {session.Id}";
+
+            tableCommand.ExecuteNonQuery();
+        }
+    }
+
+    public void WipeTable()
+    {
+        using (var connection = new SqliteConnection(DbConnection))
+        {
+            connection.Open();
+            connection.Open();
+            var tableCommand = connection.CreateCommand();
+
+            tableCommand.CommandText = "DELETE FROM 'CodingSessions'";
+
+            tableCommand.ExecuteNonQuery();
+        }
+        
+    }
+
+    public Session FetchSession(int id)
+    {
+        using (var connection = new SqliteConnection(DbConnection))
+        {
+            connection.Open();
+            var tableCommand = connection.CreateCommand();
+            
+            tableCommand.CommandText = "SELECT * FROM 'CodingSessions'" +
+                                       $"Where Id = {id}";
+
+            var reader = tableCommand.ExecuteReader();
+
+            Session session = new();
+            while (reader.Read())
+            {
+                session = new Session
+                {
+                    Id = int.Parse(reader.GetString(0)),
+                    Date = reader.GetString(1),
+                    Description = reader.GetString(2),
+                    Length = reader.GetString(3),
+                    Note = reader.GetString(4)
+                };
+            }
+
+            return session;
+        }
+    }
+
     private List<Session> ReadFromDbToSessionsList(SqliteDataReader reader)
     {
         List<Session> sessionsList = new();
@@ -76,13 +135,13 @@ public class DbOperations
         {
             sessionsList.Add(new Session
             {
-                Id = ++idCounter,
+                Id = int.Parse(reader.GetString(0)),
                 Date = reader.GetString(1),
-                Length = reader.GetString(2),
-                Note = reader.GetString(3)
+                Description = reader.GetString(2),
+                Length = reader.GetString(3),
+                Note = reader.GetString(4)
             });
         }
-
         return sessionsList;
     }
 
