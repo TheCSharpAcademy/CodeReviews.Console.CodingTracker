@@ -38,13 +38,14 @@ namespace CodingTracker.Furiax
 
 		internal static bool ValidInteger(string? input)
 		{
-			while (string.IsNullOrWhiteSpace(input) || !Int32.TryParse(input, out _))
+			while (string.IsNullOrWhiteSpace(input) || !Int32.TryParse(input, out _) || Int32.Parse(input) <= 0)
 			{
 				return false;
             }
-			if (Int32.Parse(input) <= 0)
-				return false;
-			else return true;
+			//if (Int32.Parse(input) <= 0)
+			//	return false;
+			//else return true;
+			return true;
 		}
 	}
 }
