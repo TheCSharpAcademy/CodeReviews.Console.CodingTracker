@@ -138,5 +138,20 @@ namespace CodingTracker.Furiax
 			TimeSpan duration = endTime - startTime;
 			return duration;
 		}
+
+		internal static void InsertStopwatchRecord(string connectionString, DateTime startTime, DateTime stopTime, string start, string stop)
+		{
+			TimeSpan timeBetween = CalculateDuration(startTime, stopTime);
+			string duration = timeBetween.ToString(@"hh\:mm");
+			using (var connection = new SqliteConnection(connectionString))
+			{
+				connection.Open();
+				var command = connection.CreateCommand();
+				command.CommandText = $"INSERT INTO CodeTracker (StartTime, EndTime, Duration) VALUES ('{start}', '{stop}', '{duration}')";
+				command.ExecuteNonQuery();
+				connection.Close();
+			}
+            Console.WriteLine("Record added to database");
+        }
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using CodingTracker.Furiax;
+using System.Diagnostics;
 
 namespace CodingTracker.Furiax
 {
@@ -25,12 +26,12 @@ namespace CodingTracker.Furiax
 					case "4":
 						Crud.DeleteRecord(connectionString); Console.ReadLine(); Console.Clear();
 						break;
-					/*case "5":
-						ShowStopwatch(); Console.Clear();
+					case "5":
+						UseStopwatch(connectionString); Console.ReadLine(); Console.Clear();
 						break;
-					case "6":
-						SetGoal(); Console.Clear();
-						break;*/
+					//case "6":
+					//	SetGoal(); Console.Clear();
+					//	break;
 					case "0":
 						closeApp = true; Environment.Exit(0);
 						break;
@@ -40,6 +41,24 @@ namespace CodingTracker.Furiax
 				}
 			}
 		}
+
+		internal static void UseStopwatch(string connectionString)
+		{
+			Console.WriteLine("Press any key to start the stopwatch.");
+			Console.ReadKey();
+			Stopwatch stopwatch = new Stopwatch();
+			stopwatch.Start();
+			DateTime getStartTime = DateTime.Now;
+			string startTime = getStartTime.ToString("dd/MM/yy HH:mm");
+            Console.WriteLine("\nStopwatch has started, press any key to stop the time and add the timings to the database");
+			Console.ReadKey();
+            Console.WriteLine();
+            stopwatch.Stop();
+			DateTime getStopTime = DateTime.Now;
+			string stopTime = getStopTime.ToString("dd/MM/yy HH:mm");
+			Crud.InsertStopwatchRecord(connectionString, getStartTime, getStopTime, startTime, stopTime);
+        }
+
 		public static void Menu()
 		{
             Console.WriteLine("CODE TRACKER");
@@ -49,7 +68,7 @@ namespace CodingTracker.Furiax
             Console.WriteLine("2. Overview coding time");
             Console.WriteLine("3. Change times");
 			Console.WriteLine("4. Delete times");
-            //Console.WriteLine("5. Stopwatch");
+            Console.WriteLine("5. Stopwatch");
             //Console.WriteLine("6. Set goal");
             Console.WriteLine("0. Close the application");
             Console.WriteLine("---------------------------");
