@@ -29,18 +29,44 @@ namespace CodingTracker.Furiax
 					case "5":
 						UseStopwatch(connectionString); Console.ReadLine(); Console.Clear();
 						break;
-					//case "6":
-					//	SetGoal(); Console.Clear();
-					//	break;
+					case "6":
+						Crud.CreateReport(connectionString); Console.ReadLine(); Console.Clear();
+						break;
+					case "7":
+						SetGoals(connectionString); Console.ReadLine(); Console.Clear();
+						break;
 					case "0":
 						closeApp = true; Environment.Exit(0);
 						break;
-					default: Console.WriteLine("Inval input, make choice by entering the corresponding number");
-							 menuChoice = Console.ReadLine();
+					default: Console.WriteLine("Invalid choice, press enter to return");
+							 Console.ReadLine();
+							 Console.Clear();
 						break;
 				}
 			}
 		}
+
+		internal static void SetGoals(string connectionString)
+		{
+			Console.Clear();
+			TimeSpan goalTime = new TimeSpan();
+			while (true)
+			{
+				bool validNumber = true;
+				Console.WriteLine("How many hours would you like to code this week ?");
+				string input = Console.ReadLine();
+				validNumber = Validation.ValidInteger(input);
+				
+				if (validNumber)
+				{
+					int totalHours = Int32.Parse(input);
+					goalTime = TimeSpan.FromHours(totalHours);
+					break;
+				}
+				else
+					Console.WriteLine("Invalid input, please enter a positive int for total hours");
+			}  
+        }
 
 		internal static void UseStopwatch(string connectionString)
 		{
@@ -69,7 +95,8 @@ namespace CodingTracker.Furiax
             Console.WriteLine("3. Change times");
 			Console.WriteLine("4. Delete times");
             Console.WriteLine("5. Stopwatch");
-            //Console.WriteLine("6. Set goal");
+            Console.WriteLine("6. Total/average report");
+			Console.WriteLine("7. Set goals");
             Console.WriteLine("0. Close the application");
             Console.WriteLine("---------------------------");
         }

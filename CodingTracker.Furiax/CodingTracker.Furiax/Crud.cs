@@ -2,6 +2,7 @@
 using Microsoft.Data.Sqlite;
 using System.Globalization;
 using ConsoleTableExt;
+using System.Data;
 
 namespace CodingTracker.Furiax
 {
@@ -109,9 +110,15 @@ namespace CodingTracker.Furiax
 						});
 					}
 				}
+				else
+				{
+					Console.WriteLine("Database is empty");
+				}
 				ConsoleTableBuilder
 					.From(sessions)
-					.ExportAndWriteLine();
+					.WithTitle("Code Tracker")
+					.ExportAndWriteLine();	
+				connection.Close();
 			}
 		}
 		internal static void InsertRecord(string connectionString)
@@ -143,15 +150,62 @@ namespace CodingTracker.Furiax
 		{
 			TimeSpan timeBetween = CalculateDuration(startTime, stopTime);
 			string duration = timeBetween.ToString(@"hh\:mm");
+			if (timeBetween.Minutes <= 0)
+			{
+                Console.WriteLine("Session was less then a minute and therefore not stored");
+            }
+			else
+			{
+				using (var connection = new SqliteConnection(connectionString))
+				{
+					connection.Open();
+					var command = connection.CreateCommand();
+					command.CommandText = $"INSERT INTO CodeTracker (StartTime, EndTime, Duration) VALUES ('{start}', '{stop}', '{duration}')";
+					command.ExecuteNonQuery();
+					connection.Close();
+				}
+				Console.WriteLine("Record added to database");
+			}
+        }
+		internal static void CreateReport(string connectionString)
+		{
+			Console.Clear();
+			int count = 0;
+			
 			using (var connection = new SqliteConnection(connectionString))
 			{
+				
 				connection.Open();
 				var command = connection.CreateCommand();
-				command.CommandText = $"INSERT INTO CodeTracker (StartTime, EndTime, Duration) VALUES ('{start}', '{stop}', '{duration}')";
-				command.ExecuteNonQuery();
-				connection.Close();
+				command.CommandText = "Select * from CodeTracker";
+				List<CodingSession> sessions = new List<CodingSession>();
+
+				SqliteDataReader reader = command.ExecuteReader();
+				if (reader.HasRows)
+				{
+					while (reader.Read())
+					{
+						sessions.Add(new CodingSession
+						{
+							Id = reader.GetInt32(0),
+							StartTime = DateTime.ParseExact(reader.GetString(1), "dd/MM/yy HH:mm", new CultureInfo("nl-BE")),
+							EndTime = DateTime.ParseExact(reader.GetString(2), "dd/MM/yy HH:mm", new CultureInfo("nl-BE")),
+							Duration = TimeSpan.ParseExact(reader.GetString(3), @"hh\:mm", new CultureInfo("nl-BE"))
+						});
+					}
+				}
+				TimeSpan totalTime = TimeSpan.Zero;
+				foreach (var session in sessions)
+				{
+					totalTime = totalTime + session.Duration;
+					count++;
+				}
+				TimeSpan averageTime = totalTime/count;
+
+				Console.WriteLine($"You spend a total of {totalTime.ToString()} time on coding, divided over {count} sessions.");
+                Console.WriteLine($"On average you spend {averageTime} per session.");
+                connection.Close();
 			}
-            Console.WriteLine("Record added to database");
-        }
+		}
 	}
 }

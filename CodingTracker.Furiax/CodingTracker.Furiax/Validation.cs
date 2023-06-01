@@ -35,6 +35,17 @@ namespace CodingTracker.Furiax
 				connection.Close();
 			}
 		}
+
+		internal static bool ValidInteger(string? input)
+		{
+			while (string.IsNullOrWhiteSpace(input) || !Int32.TryParse(input, out _))
+			{
+				return false;
+            }
+			if (Int32.Parse(input) <= 0)
+				return false;
+			else return true;
+		}
 	}
 }
 	
