@@ -1,5 +1,7 @@
 ﻿using CodingTracker.Furiax;
+using CodingTracker.Furiax.Model;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace CodingTracker.Furiax
 {
@@ -18,7 +20,7 @@ namespace CodingTracker.Furiax
 						Crud.InsertRecord(connectionString); Console.ReadLine(); Console.Clear();
 						break;
 					case "2":
-						Crud.ShowTable(connectionString); Console.ReadLine(); Console.Clear();
+						Crud.OverviewTable(connectionString); Console.ReadLine(); Console.Clear();
 						break;
 					case "3":
 						Crud.UpdateRecord(connectionString); Console.ReadLine(); Console.Clear();
@@ -35,6 +37,9 @@ namespace CodingTracker.Furiax
 					case "7":
 						SetGoals(connectionString); Console.ReadLine(); Console.Clear();
 						break;
+					case "8":
+						FilterRecords(connectionString); Console.ReadLine(); Console.Clear();
+						break;
 					case "0":
 						closeApp = true; Environment.Exit(0);
 						break;
@@ -45,6 +50,67 @@ namespace CodingTracker.Furiax
 				}
 			}
 		}
+
+		private static void FilterRecords(string connectionString)
+		{
+			DateTime startDate;
+			DateTime endDate;
+			string orderBy ="";
+			Console.Clear();
+			while (true)
+			{
+				Console.Write("Enter the start date (dd/mm/yy) for the desired period: ");
+				string inputStartDate = Console.ReadLine();
+				if (Validation.ValidateDateOnDDMMYY(inputStartDate))
+				{
+					startDate = DateTime.Parse(inputStartDate);
+					break;
+				}
+				else
+                    Console.WriteLine("Incorrect date input, try again:");
+            }
+			while (true)
+			{
+				Console.Write("Enter the end date (dd/mm/yy) for the desired period: ");
+				string inputEndDate = Console.ReadLine();
+				if (Validation.ValidateDateOnDDMMYY(inputEndDate))
+				{
+					endDate = DateTime.Parse(inputEndDate);
+					if (endDate > startDate)
+						break;
+					else
+                        Console.WriteLine("End date can't be an older date then start date");
+                }
+				else
+				{
+					Console.WriteLine("Incorrect date input, try again: ");
+				}
+			}
+			bool badInput = true;
+			while (badInput)
+			{
+				Console.WriteLine("Do you want the records shown in (A)scending or (D)escending order ?");
+				string orderSelection = Console.ReadLine();
+				switch (orderSelection)
+				{
+					case "A":
+						orderBy = "ORDER BY StartTime";
+						badInput = false;
+						break;
+					case "D":
+						orderBy = "ORDER BY StartTime DESC";
+						badInput= false;
+						break;
+					default:
+						Console.WriteLine("Please enter A or D only");
+						break;
+				} 
+			}
+			string command = $"SELECT * FROM CodeTracker WHERE StartTime >= '{startDate}' AND StartTime <= '{endDate}' {orderBy} ";
+			//string command = $"SELECT * FROM CodeTracker WHERE StartTime >= '{startDate.ToString("d/MM/yy HH:mm")}' AND EndTime <= '{endDate.ToString("d/MM/yy HH:mm")}' {orderBy} ";
+			List<CodingSession> sessions = Crud.BuildList(connectionString, command);
+			Crud.PrintTable(connectionString, sessions);
+        }
 
 		internal static void SetGoals(string connectionString)
 		{
@@ -98,6 +164,7 @@ namespace CodingTracker.Furiax
             Console.WriteLine("5. Stopwatch");
             Console.WriteLine("6. Total/average report");
 			Console.WriteLine("7. Set goals");
+			Console.WriteLine("8. Filter Records By Period");
             Console.WriteLine("0. Close the application");
             Console.WriteLine("---------------------------");
         }

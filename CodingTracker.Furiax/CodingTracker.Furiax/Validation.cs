@@ -44,6 +44,15 @@ namespace CodingTracker.Furiax
             }
 			return true;
 		}
+		internal static bool ValidateDateOnDDMMYY(string? input)
+		{
+			if (string.IsNullOrWhiteSpace(input)) return false;
+			if (!DateTime.TryParseExact(input, "dd/MM/yy", new CultureInfo("nl-BE"), DateTimeStyles.None, out _))
+				return false;
+			if (DateTime.Parse(input) > DateTime.Now)
+				return false;
+			return true;
+		}
 	}
 }
 	

@@ -3,6 +3,7 @@ using Microsoft.Data.Sqlite;
 using System.Globalization;
 using ConsoleTableExt;
 using System.Data;
+using Microsoft.Win32;
 
 namespace CodingTracker.Furiax
 {
@@ -26,7 +27,7 @@ namespace CodingTracker.Furiax
 		internal static void DeleteRecord(string connectionString)
 		{
 			Console.Clear();
-			ShowTable(connectionString);
+			OverviewTable(connectionString);
 			while (true)
 			{
 				
@@ -55,7 +56,7 @@ namespace CodingTracker.Furiax
 		internal static void UpdateRecord(string connectionString)
 		{
 			Console.Clear();
-			ShowTable(connectionString);
+			OverviewTable(connectionString);
 			while(true)
 			{
 				int recordToUpdate = UserInput.GetId("What record do you want to update: ");
@@ -85,41 +86,13 @@ namespace CodingTracker.Furiax
 			}
             Console.WriteLine("Record succesfully updated");
         }
-		internal static void ShowTable(string connectionString)
+		internal static void OverviewTable(string connectionString)
 		{
 			Console.Clear();
-			using (var connection = new SqliteConnection(connectionString))
-			{
-				connection.Open();
-				var command = connection.CreateCommand();
-				command.CommandText = "SELECT * from CodeTracker";
-
-				List<CodingSession> sessions = new List<CodingSession>();
-
-				SqliteDataReader reader = command.ExecuteReader();
-				if (reader.HasRows)
-				{
-					while (reader.Read())
-					{
-						sessions.Add(new CodingSession
-						{
-							Id = reader.GetInt32(0),
-							StartTime = DateTime.ParseExact(reader.GetString(1), "dd/MM/yy HH:mm", new CultureInfo("nl-BE")),
-							EndTime = DateTime.ParseExact(reader.GetString(2), "dd/MM/yy HH:mm", new CultureInfo("nl-BE")),
-							Duration = TimeSpan.ParseExact(reader.GetString(3), @"hh\:mm", new CultureInfo("nl-BE"))
-						});
-					}
-				}
-				else
-				{
-					Console.WriteLine("Database is empty");
-				}
-				ConsoleTableBuilder
-					.From(sessions)
-					.WithTitle("Code Tracker")
-					.ExportAndWriteLine();	
-				connection.Close();
-			}
+			string sqlCommand = "SELECT * FROM CodeTracker";
+			List<CodingSession> sessions = new List<CodingSession>();
+			sessions = BuildList(connectionString, sqlCommand);
+			PrintTable(connectionString, sessions);
 		}
 		internal static void InsertRecord(string connectionString)
 		{
@@ -170,41 +143,20 @@ namespace CodingTracker.Furiax
 		internal static void CreateReport(string connectionString)
 		{
 			Console.Clear();
+			string sqlCommand = "SELECT * FROM CodeTracker";
+			List<CodingSession> sessions = new List<CodingSession>();
+			sessions = BuildList(connectionString, sqlCommand);
 			int count = 0;
-			
-			using (var connection = new SqliteConnection(connectionString))
+			TimeSpan totalTime = TimeSpan.Zero;
+			foreach (var session in sessions)
 			{
-				
-				connection.Open();
-				var command = connection.CreateCommand();
-				command.CommandText = "SELECT * FROM CodeTracker";
-				List<CodingSession> sessions = new List<CodingSession>();
-				SqliteDataReader reader = command.ExecuteReader();
-				if (reader.HasRows)
-				{
-					while (reader.Read())
-					{
-						sessions.Add(new CodingSession
-						{
-							Id = reader.GetInt32(0),
-							StartTime = DateTime.ParseExact(reader.GetString(1), "dd/MM/yy HH:mm", new CultureInfo("nl-BE")),
-							EndTime = DateTime.ParseExact(reader.GetString(2), "dd/MM/yy HH:mm", new CultureInfo("nl-BE")),
-							Duration = TimeSpan.ParseExact(reader.GetString(3), @"hh\:mm", new CultureInfo("nl-BE"))
-						});
-					}
-				}
-				TimeSpan totalTime = TimeSpan.Zero;
-				foreach (var session in sessions)
-				{
 					totalTime = totalTime + session.Duration;
 					count++;
-				}
-				TimeSpan averageTime = totalTime/count;
+			}
+			TimeSpan averageTime = totalTime/count;
 
 				Console.WriteLine($"You spend a total of {totalTime.ToString()} time on coding, divided over {count} sessions.");
                 Console.WriteLine($"On average you spend {averageTime} per session.");
-                connection.Close();
-			}
 		}
 
 		internal static void GoalStatus(string connectionString, TimeSpan goalTime)
@@ -242,6 +194,44 @@ namespace CodingTracker.Furiax
 				}
 				connection.Close();
             }
+		}
+		internal static List<CodingSession> BuildList(string connectionString, string sqlcommand)
+		{
+			List<CodingSession> sessions = new List<CodingSession>();
+			using (var connection = new SqliteConnection(connectionString))
+			{
+				connection.Open();
+				var command = connection.CreateCommand();
+				command.CommandText = sqlcommand;
+
+				SqliteDataReader reader = command.ExecuteReader();
+				if (reader.HasRows)
+				{
+					while (reader.Read())
+					{
+						sessions.Add(new CodingSession
+						{
+							Id = reader.GetInt32(0),
+							StartTime = DateTime.ParseExact(reader.GetString(1), "dd/MM/yy HH:mm", new CultureInfo("nl-BE")),
+							EndTime = DateTime.ParseExact(reader.GetString(2), "dd/MM/yy HH:mm", new CultureInfo("nl-BE")),
+							Duration = TimeSpan.ParseExact(reader.GetString(3), @"hh\:mm", new CultureInfo("nl-BE"))
+						});
+					}
+				}
+				else
+				{
+					Console.WriteLine("Database is empty");
+				}
+				connection.Close();
+			}
+			return sessions;
+		}
+		internal static void PrintTable(string connectionString, List<CodingSession> sessions) 
+		{
+			ConsoleTableBuilder
+				.From(sessions)
+				.WithTitle("Code Tracker")
+				.ExportAndWriteLine();
 		}
 	}
 }
