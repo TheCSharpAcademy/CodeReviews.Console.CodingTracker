@@ -1,67 +1,64 @@
 namespace Ohshie.CodingTracker.Menus;
 
-internal class HistoryMenu
+internal class HistoryMenu : MenuBase
 {
     private readonly SessionsDisplay _display = new();
     private readonly SessionEditor _sessionEditor = new();
-
-    internal void Initialize()
+    
+    protected override bool Menu()
     {
         Console.Clear();
-        bool chosenExit = false;
-        while (!chosenExit)
+
+        if (!_display.ShowSessions(5))
         {
-            if(!_display.ShowSessions(5)) return;
-            
-            Console.WriteLine("Choose menu item by pressing corresponding #:\n");
-            Console.WriteLine("1. Show/edit all previous coding sessions\n" +
-                              "2. Wipe previous data\n" +
-                              "3. Go back");
-            
-            var keyPressed = Console.ReadKey(true).Key;
-            
-            switch (keyPressed)
-            {
-                case ConsoleKey.D1:
-                {
-                    ChooseSessionMenu chooseSessionMenu = new();
-                    chooseSessionMenu.Initialize();
-                    break;
-                }
-                case ConsoleKey.D2:
-                {
-                    if (ConfirmDeletion()) _sessionEditor.WipeData();
-                    break;
-                }
-                case ConsoleKey.D3:
-                {
-                    chosenExit = true;
-                    break;
-                }
-                default:
-                {
-                    Console.Clear();
-                    Console.WriteLine("Looks like you pressed something that you shouldn't. Let's try again.\n");
-                    continue;
-                }
-            }  
+            Errors.DoesNotExist("Consider recording session first");
+            return true;
         }
+        
+        var userChoise = MenuBuilder();
+
+        switch (userChoise)
+        {
+            case "Show/Edit previous sessions":
+            {
+                ChooseSessionMenu chooseSessionMenu = new();
+                chooseSessionMenu.Initialize();
+                break;
+            }
+            case "Wipe all previous data":
+            {
+                if (ConfirmDeletion()) _sessionEditor.WipeData();
+                break;
+            }
+            case "Go back":
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    protected override string MenuBuilder()
+    {
+        return AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("Choose menu item:")
+                .PageSize(3)
+                .AddChoices(new[]
+                {
+                    "Show/Edit previous sessions", 
+                    "Wipe all previous data", 
+                    "Go back"
+                }));
     }
 
     private bool ConfirmDeletion()
     {
-        bool userConfirmed = false;
-        while (!userConfirmed)
-        {
-            Console.Clear();
-            Console.WriteLine("Type yes to confirm wiping of all previous sessions\n");
-            Console.WriteLine("Type no or just press enter to go back");
-
-            string? userInput = Console.ReadLine();
-            
-            if (Verify.GoBack(userInput))  return false;
-            if (Verify.Confirm(userInput))  userConfirmed = true;
-        }
+        AnsiConsole.Clear();
+        AnsiConsole.Write(new Markup("You are about to wipe [bold]ALL[/] previous data.\n"));
+        
+        if (!AnsiConsole.Confirm("Confirm?")) return false;
 
         return true;
     }

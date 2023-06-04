@@ -7,13 +7,9 @@ public class SessionsDisplay
     private readonly DbOperations _dbOperations = new();
     public bool ShowSessions()
     {
-        List<Session> allSessions = _dbOperations.FetchAllSessions();
-        if (allSessions == null)
-        {
-            Console.WriteLine("You have no sessions tracked, go create some.");
-            return false;
-        }
-        
+        List<Session> allSessions = _dbOperations.FetchAllSessions().OrderByDescending(s => s.Id).ToList();
+        if (!allSessions.Any()) return false;
+
         ConsoleTableBuilder.From(allSessions).ExportAndWriteLine();
         return true;
     }
@@ -21,12 +17,8 @@ public class SessionsDisplay
     public bool ShowSessions(int amount)
     {
         List<Session> allSessions = _dbOperations.FetchAllSessions();
-        if (allSessions == null)
-        {
-            Console.WriteLine("You have no sessions tracked, go create some.");
-            return false;
-        }
-        
+        if (!allSessions.Any()) return false;
+
         List<Session> packedSessions = allSessions
             .OrderByDescending(s => s.Id)
             .Take(amount)
@@ -39,12 +31,8 @@ public class SessionsDisplay
     public bool ShowSession(int id)
     {
         Session session = _dbOperations.FetchSession(id);
-        if (session == null)
-        {
-            Console.WriteLine("Session does not exist");
-            return false;
-        }
-
+        if (session.Id == 0)  return false;
+        
         Console.WriteLine($"{session.Description}\n" +
                           $"Session was conducted on: {session.Date}\n" +
                           $"Lasted for: {session.Length}");

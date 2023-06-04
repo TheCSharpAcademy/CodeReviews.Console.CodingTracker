@@ -14,7 +14,7 @@ public class DbOperations
         DbConnection = GetConnectionStringFromSettings();
     }
 
-    private string? DbConnection { get; }
+    internal string? DbConnection { get; }
     
     public void CreateDb()
     {

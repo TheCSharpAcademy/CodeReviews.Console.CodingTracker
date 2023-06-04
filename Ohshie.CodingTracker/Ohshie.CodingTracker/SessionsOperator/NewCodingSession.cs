@@ -12,11 +12,8 @@ public class NewCodingSession
         string sessionDescription = AddDescriptionToSession();
         
         Session newSession = TrackSession(sessionDescription);
-
-        Console.WriteLine("You ended your session.\n" +
-                          $"Session lasted for {newSession.Length}. Nice!\n");
-
-        newSession.Note = AddNoteToSession();
+        
+        newSession.Note = AddNoteToSession(newSession);
 
         DbOperations dbOperations = new();
         dbOperations.NewSessionEntry(newSession);
@@ -24,53 +21,63 @@ public class NewCodingSession
 
     private string AddDescriptionToSession()
     {
-        Console.Clear();
-        Console.WriteLine("Enter some info about this session\n" +
-                          "Or just press enter to skip this step");
-        string? userDescription = Console.ReadLine();
-        if (!string.IsNullOrEmpty(userDescription))
-        {
-            return userDescription;
-        }
-
-        return string.Empty;
+        AnsiConsole.Clear();
+        AnsiConsole.Write(new Rule("Great! You are ready to start new session"));
+        string description = AnsiConsole.Ask<string>("Do you plan anything special about this session?\n" +
+                                                     "type it here: ");
+        return description;
     }
 
-    private string AddNoteToSession()
+    private string AddNoteToSession(Session session)
     {
-        Console.WriteLine("Any notes about this one? Type them below:");
-
-        string? notes = Console.ReadLine();
-
-        if (!string.IsNullOrEmpty(notes))
-        {
-            Console.Clear();
-            return notes;
-        }
+        AnsiConsole.Write(new Rule("Session ended"));
+        AnsiConsole.Write(new Markup($"Session lasted for [bold]{session.Length}[/]. [bold]Nice![/]\n"));
         
-        Console.Clear();
-        return string.Empty;
+        string note = AnsiConsole.Ask<string>("Any notes about this one?\n Type them here:");
+        return note;
     }
 
     private Session TrackSession(string sessionDescription)
     {
-        Console.Clear();
-        _stopwatch.Start();
+        AnsiConsole.Clear();
+        AnsiConsole.Write(new Rule("Session in progress"));
         
-        Console.WriteLine($"New session started at {_time}\n" +
-                          $"------------------------------------\n" +
-                          $"Press enter when you done with coding for now.");
         Session newSession = new()
         {
             Description = sessionDescription,
             Date = _time
         };
-        Console.ReadLine();
+        
+        _stopwatch.Start();
+        ConsoleProgress();
         _stopwatch.Stop();
 
         newSession.Length = _stopwatch.Elapsed.ToString(@"hh\:mm\:ss");
         
-        Console.Clear();
         return newSession;
+    }
+
+    private void ConsoleProgress()
+    {
+        AnsiConsole.Progress()
+            .AutoRefresh(true)
+            .Columns(new ProgressColumn[]
+            {
+                new TaskDescriptionColumn(),
+                new ElapsedTimeColumn(),
+                new SpinnerColumn()
+            }).Start(ctx =>
+            {
+                AnsiConsole.WriteLine($"Session in progress. You started at {_time}.");
+                var task = ctx.AddTask(description: "You've been coding for:");
+                AnsiConsole.WriteLine("Press enter when finished.");
+
+                while (!task.IsFinished)
+                {
+                    if (string.IsNullOrEmpty(Console.ReadLine())) task.StopTask();
+
+                    task.Increment(1);
+                }
+            });
     }
 }

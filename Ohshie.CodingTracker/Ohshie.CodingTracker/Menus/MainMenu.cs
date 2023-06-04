@@ -4,46 +4,55 @@ public class MainMenu
 {
     public void Initialize()
     {
-        Console.WriteLine("--------Hey! Time to put your head down and code.--------\n");
-        
         bool chosenExit = false;
         while (!chosenExit)
         {
-            Console.WriteLine("Choose menu item by pressing corresponding #:\n");
-                  
-            Console.WriteLine("1. New coding tracker\n" +
-                              "2. Show previous coding sessions\n" +
-                              "3. Exit");
-                  
-            var keyPressed =Console.ReadKey(true).Key;
-            
-            switch (keyPressed)
-            {
-                case ConsoleKey.D1:
-                {
-                    NewCodingSession session = new NewCodingSession();
-                    session.NewSession();
-                    break;
-                }
-                case ConsoleKey.D2:
-                {
-                    HistoryMenu historyMenu = new();
-                    historyMenu.Initialize();
-                    break;
-                }
-                case ConsoleKey.D3:
-                {
-                    chosenExit = true;
-                    break;
-                }
-                default:
-                {
-                    Console.Clear();
-                    Console.WriteLine("Looks like you pressed something that you shouldn't. Let's try again.\n");
-                    continue;
-                }
-            }  
+            chosenExit = Menu();
         }
         Environment.Exit(0);
+    }
+
+    private bool Menu()
+    {
+        Console.Clear();
+        AnsiConsole.Write(new Rule("Hey! Time to put your head down and [bold]code.[/]"));
+        
+        var userChoise = MenuBuilder();
+
+        switch (userChoise)
+        {
+            case "New Coding Tracker":
+            {
+                NewCodingSession session = new NewCodingSession();
+                session.NewSession();
+                break;
+            }
+            case "Show Previous Coding Sessions":
+            {
+                HistoryMenu historyMenu = new();
+                historyMenu.Initialize();
+                break;
+            }
+            case "Exit":
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private string MenuBuilder()
+    {
+        return AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("Choose menu item:")
+                .PageSize(3)
+                .AddChoices(new[]
+                {
+                    "New Coding Tracker", 
+                    "Show Previous Coding Sessions", 
+                    "Exit"
+                }));
     }
 }
