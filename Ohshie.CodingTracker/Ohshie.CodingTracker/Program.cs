@@ -1,13 +1,7 @@
-﻿using Ohshie.CodingTracker.Menus;
+﻿using Ohshie.CodingTracker.DbOperations;
 
-class Program
-{ 
-    public static void Main(string[] args)
-    {
-        DbOperations dbOperations = new();
-        dbOperations.CreateDb();
+DbOperations dbOperations = new();
+dbOperations.CreateDb();
         
-        MainMenu menus = new();
-        menus.Initialize();
-    }
-}
+MainMenu menus = new();
+menus.Initialize();

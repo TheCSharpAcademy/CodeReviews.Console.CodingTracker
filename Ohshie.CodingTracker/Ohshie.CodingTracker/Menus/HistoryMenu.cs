@@ -1,3 +1,5 @@
+using Ohshie.CodingTracker.SessionsOperator;
+
 namespace Ohshie.CodingTracker.Menus;
 
 internal class HistoryMenu : MenuBase
@@ -21,7 +23,7 @@ internal class HistoryMenu : MenuBase
         {
             case "Show/Edit previous sessions":
             {
-                ChooseSessionMenu chooseSessionMenu = new();
+                ChooseSessionDialog chooseSessionMenu = new();
                 chooseSessionMenu.Initialize();
                 break;
             }

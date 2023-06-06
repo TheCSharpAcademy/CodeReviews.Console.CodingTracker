@@ -1,10 +1,10 @@
 using ConsoleTableExt;
 
-namespace Ohshie.CodingTracker;
+namespace Ohshie.CodingTracker.SessionsOperator;
 
 public class SessionsDisplay
 {
-    private readonly DbOperations _dbOperations = new();
+    private readonly DbOperations.DbOperations _dbOperations = new();
     public bool ShowSessions()
     {
         List<Session> allSessions = _dbOperations.FetchAllSessions().OrderByDescending(s => s.Id).ToList();

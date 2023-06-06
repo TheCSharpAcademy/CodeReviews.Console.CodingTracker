@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace Ohshie.CodingTracker;
+namespace Ohshie.CodingTracker.SessionsOperator;
 
 public class NewCodingSession
 {
@@ -15,7 +15,7 @@ public class NewCodingSession
         
         newSession.Note = AddNoteToSession(newSession);
 
-        DbOperations dbOperations = new();
+        DbOperations.DbOperations dbOperations = new();
         dbOperations.NewSessionEntry(newSession);
     }
 
@@ -52,7 +52,7 @@ public class NewCodingSession
         ConsoleProgress();
         _stopwatch.Stop();
 
-        newSession.Length = _stopwatch.Elapsed.ToString(@"hh\:mm\:ss");
+        newSession.Length = _stopwatch.Elapsed.ToString(@"HH\:mm\:ss");
         
         return newSession;
     }

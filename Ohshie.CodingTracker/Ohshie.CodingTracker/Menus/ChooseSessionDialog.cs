@@ -1,6 +1,8 @@
+using Ohshie.CodingTracker.SessionsOperator;
+
 namespace Ohshie.CodingTracker.Menus;
 
-internal class ChooseSessionMenu
+internal class ChooseSessionDialog
 {
     private SessionsDisplay _display = new();
 
@@ -21,9 +23,8 @@ internal class ChooseSessionMenu
 
             var userInput = Console.ReadLine();
             if (Verify.GoBack(userInput)) return;
-
-            bool correctInput = int.TryParse(userInput, out int id);
-            if (!correctInput) continue;
+            
+            if (!int.TryParse(userInput, out int id)) continue;
 
             EditSessionMenu sessionMenu = new(id);
             sessionMenu.Initialize();

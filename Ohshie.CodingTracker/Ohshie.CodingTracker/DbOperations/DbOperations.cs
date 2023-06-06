@@ -1,7 +1,7 @@
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Configuration;
 
-namespace Ohshie.CodingTracker;
+namespace Ohshie.CodingTracker.DbOperations;
 
 public class DbOperations
 {
@@ -44,8 +44,8 @@ public class DbOperations
             var tableCommand = connection.CreateCommand();
 
             tableCommand.CommandText = $@"INSERT INTO CodingSessions "+
-                                            "(Date, Description, SessionLength, Note) "+
-                                            $"VALUES ('{session.Date}', '{session.Description}', '{session.Length}', '{session.Note}')";
+                                       "(Date, Description, SessionLength, Note) "+
+                                       $"VALUES ('{session.Date}', '{session.Description}', '{session.Length}', '{session.Note}')";
             tableCommand.ExecuteNonQuery();
             
             connection.Close();
@@ -167,8 +167,8 @@ public class DbOperations
     private string? GetConnectionStringFromSettings()
     {
         var builder = new ConfigurationBuilder();
-            builder.SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+        builder.SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
         IConfiguration configuration = builder.Build();
 

@@ -1,3 +1,5 @@
+using Ohshie.CodingTracker.SessionsOperator;
+
 namespace Ohshie.CodingTracker.Menus;
 
 public class EditSessionMenu : MenuBase
@@ -33,10 +35,12 @@ public class EditSessionMenu : MenuBase
             }
             case "Edit session Date":
             {
+                EditDate();
                 break;
             }
             case "Edit session Length":
             {
+                EditLength();
                 break;
             }
             case "Edit session Note":
@@ -77,7 +81,7 @@ public class EditSessionMenu : MenuBase
     
     private void EditName()
     {
-        var userInput = AskUserForNewData();
+        var userInput = AskUserForNewData("name");
         if (Verify.GoBack(userInput)) return;
 
         _sessionEditor.EditSessionName(userInput!, Id);
@@ -85,17 +89,25 @@ public class EditSessionMenu : MenuBase
     
     private void EditDate()
     {
+        var userInput = AskUserForNewData("date", "Date entered cannot be in the future should look like this: dd.mm.yyyy hh:mm. 24 hour format.\n");
+        if (Verify.GoBack(userInput)) return;
+        if (!Verify.DateFormat(userInput)) return;
         
+        _sessionEditor.EditSessionDate(userInput!,Id);
     }
 
     private void EditLength()
     {
+        var userInput = AskUserForNewData("length", "Length format should look like this HH:mm:ss. 24 hour format.\n");
+        if (Verify.GoBack(userInput)) return;
+        if (!Verify.LengthFormat(userInput)) return;
         
+        _sessionEditor.EditSessionLength(userInput!,Id);
     }
 
     private void EditNote()
     {
-        var userInput = AskUserForNewData();
+        var userInput = AskUserForNewData("note");
         if (Verify.GoBack(userInput)) return;
         
         _sessionEditor.EditSessionNote(userInput!,Id);
@@ -112,10 +124,11 @@ public class EditSessionMenu : MenuBase
         _sessionEditor.RemoveSession(Id);
     }
     
-    private string? AskUserForNewData()
+    private string? AskUserForNewData(string fieldToChange, string annotation = "")
     {
         Console.Clear();
-        Console.Write("Please type new name for chosen session: \n" +
+        Console.Write($"Please type new {fieldToChange} for chosen session: \n" +
+                      $"{annotation}",
                       "leave this field empty or type back to go back.\n");
         string? userInput = Console.ReadLine();
         return userInput;
