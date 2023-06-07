@@ -130,7 +130,6 @@ public class DbOperations
     private List<Session> ReadFromDbToSessionsList(SqliteDataReader reader)
     {
         List<Session> sessionsList = new();
-        int idCounter = 0;
         while (reader.Read())
         {
             sessionsList.Add(new Session
