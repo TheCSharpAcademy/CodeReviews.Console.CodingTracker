@@ -35,8 +35,6 @@ public class InputController
             Console.WriteLine("Invalid time format. Try again (hh:mm) this is in 24hrs format: ");
         }
 
-        var duration = time - TimeOnly.Parse(startTime);
-       
         if(Convert.ToDateTime(time.ToString("hh\\:mm")) <= Convert.ToDateTime(startTime))
         {
             Console.WriteLine("End time must be greater than start time. Try again (hh:mm) this is in 24hrs format: ");

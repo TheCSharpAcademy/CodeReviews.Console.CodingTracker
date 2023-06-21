@@ -1,5 +1,4 @@
 ﻿using CodingTracker.kmakai.Models;
-using System.Configuration;
 using System.Data.SQLite;
 
 namespace CodingTracker.kmakai.Data;
@@ -7,8 +6,8 @@ namespace CodingTracker.kmakai.Data;
 
 public class DbContext
 {
-    public string? ConnectionString = null;
-    public string? DbPath = null;
+    public string? ConnectionString;
+    public string? DbPath;
 
     public DbContext()
     {
