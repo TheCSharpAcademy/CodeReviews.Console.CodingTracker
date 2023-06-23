@@ -100,8 +100,14 @@ public class EditSessionMenu : MenuBase
     {
         var userInput = AskUserForNewData("length", "Length format should look like this HH:mm:ss. 24 hour format.\n");
         if (Verify.GoBack(userInput)) return;
-        if (!Verify.LengthFormat(userInput)) return;
-        
+        if (!Verify.LengthFormat(userInput))
+        {
+            AnsiConsole.WriteLine("Length you've entered is incorrect or is in incorrect format. \n" +
+                                  "Press enter to go back.");
+            Console.ReadLine();
+            return;
+        }
+
         _sessionEditor.EditSessionLength(userInput!,Id);
     }
 

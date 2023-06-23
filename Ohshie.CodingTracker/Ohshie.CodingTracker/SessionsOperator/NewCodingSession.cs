@@ -52,7 +52,7 @@ public class NewCodingSession
         ConsoleProgress();
         _stopwatch.Stop();
 
-        newSession.Length = _stopwatch.Elapsed.ToString(@"HH\:mm\:ss");
+        newSession.Length = _stopwatch.Elapsed.ToString(@"hh\:mm\:ss");
         
         return newSession;
     }
