@@ -93,14 +93,6 @@ namespace CodingTracker.Furiax
 			}
             Console.WriteLine("Record succesfully updated");
         }
-		internal static void OverviewTable(string connectionString)
-		{
-			Console.Clear();
-			string sqlCommand = "SELECT * FROM CodeTracker";
-			List<CodingSession> sessions = new List<CodingSession>();
-			sessions = BuildList(connectionString, sqlCommand);
-			PrintTable(connectionString, sessions);
-		}
 		internal static void InsertRecord(string connectionString)
 		{
 			Console.Clear();
@@ -245,16 +237,26 @@ namespace CodingTracker.Furiax
 			}
 			return sessions;
 		}
-		internal static void PrintTable(string connectionString, List<CodingSession> sessions) 
+		internal static void OverviewTable(string connectionString)
+		{
+			Console.Clear();
+			string sqlCommand = "SELECT * FROM CodeTracker";
+			List<CodingSession> sessions = new List<CodingSession>();
+			sessions = BuildList(connectionString, sqlCommand);
+			PrintTable(connectionString, sessions);
+		}
+		internal static void PrintTable(string connectionString, List<CodingSession> sessions)
 		{
 			ConsoleTableBuilder
 				.From(sessions)
-				.WithTitle ("Coding Tracker")
+				.WithTitle("Coding Tracker")
 				.WithColumn("Id", "Start", "End", "Time")
-				.WithFormatter(1, f =>$"{f:dd/MM/yy HH:MM}")
+				.WithFormatter(1, f => $"{f:dd/MM/yy HH:MM}")
 				.WithFormatter(2, f => $"{f:dd/MM/yy HH:MM}")
 				.WithFormatter(3, f => $@"{f:hh\:mm}")
 				.ExportAndWriteLine();
 		}
+
+		
 	}
 }
