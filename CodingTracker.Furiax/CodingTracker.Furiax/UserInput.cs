@@ -1,7 +1,5 @@
-﻿using CodingTracker.Furiax;
-using CodingTracker.Furiax.Model;
+﻿using CodingTracker.Furiax.Model;
 using System.Diagnostics;
-using System.Globalization;
 
 namespace CodingTracker.Furiax
 {
@@ -90,7 +88,7 @@ namespace CodingTracker.Furiax
 			while (badInput)
 			{
 				Console.WriteLine("Do you want the records shown in (A)scending or (D)escending order ?");
-				string orderSelection = Console.ReadLine();
+				string orderSelection = Console.ReadLine().ToUpper();
 				switch (orderSelection)
 				{
 					case "A":
@@ -106,8 +104,8 @@ namespace CodingTracker.Furiax
 						break;
 				} 
 			}
-			string command = $"SELECT * FROM CodeTracker WHERE StartTime >= '{startDate}' AND StartTime <= '{endDate}' {orderBy} ";
-			//string command = $"SELECT * FROM CodeTracker WHERE StartTime >= '{startDate.ToString("d/MM/yy HH:mm")}' AND EndTime <= '{endDate.ToString("d/MM/yy HH:mm")}' {orderBy} ";
+			
+			string command = $"SELECT * FROM CodeTracker WHERE StartTime >= '{startDate.ToString("dd/MM/yy HH:mm")}' AND EndTime <= '{endDate.ToString("dd/MM/yy HH:mm")}' {orderBy} ";
 			List<CodingSession> sessions = Crud.BuildList(connectionString, command);
 			Crud.PrintTable(connectionString, sessions);
         }

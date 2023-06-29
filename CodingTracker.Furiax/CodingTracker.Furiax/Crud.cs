@@ -2,8 +2,6 @@
 using Microsoft.Data.Sqlite;
 using System.Globalization;
 using ConsoleTableExt;
-using System.Data;
-using Microsoft.Win32;
 
 namespace CodingTracker.Furiax
 {
@@ -67,15 +65,24 @@ namespace CodingTracker.Furiax
 					if (doesIdExist)
 					{
 						DateTime askNewStartTime = UserInput.GetStartDate("Enter a new value for StartDate");
-						string newStartTime = askNewStartTime.ToString("dd/MM/yy HH:mm");
 						DateTime askNewEndTime = UserInput.GetEndDate("Enter a new value for EndDate", askNewStartTime);
-						string newEndTime = askNewEndTime.ToString("dd/MM/yy HH:mm");
 						TimeSpan timeBetween = CalculateDuration(askNewStartTime, askNewEndTime);
-						string duration = timeBetween.ToString(@"hh\:mm");
-						var command = connection.CreateCommand();
-						command.CommandText = $"UPDATE CodeTracker SET StartTime = '{newStartTime}', EndTime = '{newEndTime}', Duration = '{duration}' WHERE Id = '{recordToUpdate}'";
-						command.ExecuteNonQuery();
-						break;
+						if (timeBetween.TotalDays < 1)
+						{
+							string newStartTime = askNewStartTime.ToString("dd/MM/yy HH:mm");
+							string newEndTime = askNewEndTime.ToString("dd/MM/yy HH:mm");
+							string duration = timeBetween.ToString(@"hh\:mm");
+							var command = connection.CreateCommand();
+							command.CommandText = $"UPDATE CodeTracker SET StartTime = '{newStartTime}', EndTime = '{newEndTime}', Duration = '{duration}' WHERE Id = '{recordToUpdate}'";
+							command.ExecuteNonQuery();
+							break;
+						}
+						else
+						{
+							Console.ForegroundColor = ConsoleColor.Red;
+							Console.WriteLine("Duration can't be more than 24 hours, the record was not updated. Try again");
+							Console.ForegroundColor = ConsoleColor.White;
+						}
 					}
 					else 
 					{
@@ -98,27 +105,35 @@ namespace CodingTracker.Furiax
 		{
 			Console.Clear();
 			DateTime inputStartDate = UserInput.GetStartDate("Please enter the start time in the following format dd/mm/yy hh:mm");
-			string startDate =inputStartDate.ToString("dd/MM/yy HH:mm");
 			DateTime inputEndDate = UserInput.GetEndDate("Please enter the end time in the following format dd/mm/yy hh:mm", inputStartDate);
-			string endDate = inputEndDate.ToString("dd/MM/yy HH:mm");
 			TimeSpan timeBetween = CalculateDuration(inputStartDate, inputEndDate);
-			string duration = timeBetween.ToString(@"hh\:mm");
-			using (var connection = new SqliteConnection(connectionString))
+			if (timeBetween.TotalDays < 1)
 			{
-				connection.Open();
-				var command = connection.CreateCommand();
-				command.CommandText = $"INSERT INTO CodeTracker (StartTime, EndTime, Duration) VALUES ('{startDate}','{endDate}', '{duration}')";
-				command.ExecuteNonQuery();
-				connection.Close();
+				string startDate = inputStartDate.ToString("dd/MM/yy HH:mm");
+				string endDate = inputEndDate.ToString("dd/MM/yy HH:mm");
+				string duration = timeBetween.ToString(@"hh\:mm");
+				using (var connection = new SqliteConnection(connectionString))
+				{
+					connection.Open();
+					var command = connection.CreateCommand();
+					command.CommandText = $"INSERT INTO CodeTracker (StartTime, EndTime, Duration) VALUES ('{startDate}','{endDate}', '{duration}')";
+					command.ExecuteNonQuery();
+					connection.Close();
+				}
+				Console.WriteLine("Times succesfully added to database");
 			}
-            Console.WriteLine("Times succesfully added to database");
+			else
+			{
+				Console.ForegroundColor = ConsoleColor.Red;
+				Console.WriteLine("Duration can't be more than 24 hours, no record was made. Try again");
+				Console.ForegroundColor = ConsoleColor.White;
+			}
         }
 		internal static TimeSpan CalculateDuration(DateTime startTime, DateTime endTime)
 		{
 			TimeSpan duration = endTime - startTime;
 			return duration;
 		}
-
 		internal static void InsertStopwatchRecord(string connectionString, DateTime startTime, DateTime stopTime, string start, string stop)
 		{
 			TimeSpan timeBetween = CalculateDuration(startTime, stopTime);
@@ -146,33 +161,32 @@ namespace CodingTracker.Furiax
 			string sqlCommand = "SELECT * FROM CodeTracker";
 			List<CodingSession> sessions = new List<CodingSession>();
 			sessions = BuildList(connectionString, sqlCommand);
-			int count = 0;
+			
 			TimeSpan totalTime = TimeSpan.Zero;
 			foreach (var session in sessions)
 			{
 					totalTime = totalTime + session.Duration;
-					count++;
 			}
-			TimeSpan averageTime = totalTime/count;
+			TimeSpan averageTime = TimeSpan.FromTicks(totalTime.Ticks/sessions.Count);
 
-				Console.WriteLine($"You spend a total of {totalTime.ToString()} time on coding, divided over {count} sessions.");
-                Console.WriteLine($"On average you spend {averageTime} per session.");
+				Console.WriteLine($"You spend a total of {totalTime:%d} days, {totalTime:%h} hours and {totalTime:%m} minutes on coding, divided over {sessions.Count} sessions.");
+                Console.WriteLine($"On average you spend {averageTime:%h} hours, {averageTime:%m} minutes per session.");
 		}
-
 		internal static void GoalStatus(string connectionString, TimeSpan goalTime)
 		{
 			Console.Clear();
-			using( var connection = new SqliteConnection(connectionString))
-			{ 
-				var monday = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek+(int)DayOfWeek.Monday);
-                connection.Open();
+			using (var connection = new SqliteConnection(connectionString))
+			{
+				var monday = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Monday);
+				connection.Open();
 				var command = connection.CreateCommand();
-				command.CommandText = $"SELECT * FROM CodeTracker WHERE 'StartTime' >= '{monday}'";
+				command.CommandText = $"SELECT * FROM CodeTracker WHERE StartTime >= '{monday}'";
 				List<CodingSession> sessions = new List<CodingSession>();
 				SqliteDataReader reader = command.ExecuteReader();
 				while (reader.Read())
 				{
-					sessions.Add(new CodingSession {
+					sessions.Add(new CodingSession
+					{
 						Id = reader.GetInt32(0),
 						StartTime = DateTime.ParseExact(reader.GetString(1), "dd/MM/yy HH:mm", new CultureInfo("nl-BE")),
 						EndTime = DateTime.ParseExact(reader.GetString(2), "dd/MM/yy HH:mm", new CultureInfo("nl-BE")),
@@ -182,18 +196,22 @@ namespace CodingTracker.Furiax
 				TimeSpan totalTimeCodedThisWeek = TimeSpan.Zero;
 				foreach (var session in sessions)
 				{
-					totalTimeCodedThisWeek =+ session.Duration;
+					totalTimeCodedThisWeek += session.Duration;
 				}
-				int daysLeft = 7 - (int)DateTime.Today.DayOfWeek +1;
+				int daysLeft = 7 - (int)DateTime.Today.DayOfWeek + 1;
 				if (goalTime <= totalTimeCodedThisWeek)
-					Console.WriteLine($"Goal achieved, you coded {totalTimeCodedThisWeek.TotalHours} hours this week, while the goal was {goalTime.TotalHours} hours");
+				{
+					Console.WriteLine($"Goal achieved, you coded {totalTimeCodedThisWeek:%h} hours this week, while the goal was {goalTime.TotalHours} hours");
+				}
 				else
 				{
-					Console.WriteLine($"Progress: {totalTimeCodedThisWeek.TotalHours}/{goalTime.TotalHours} hours \nCode for another {goalTime.TotalHours - totalTimeCodedThisWeek.TotalHours} hours to reach the weekly goal");
-					Console.WriteLine($"To achieve the goal you need to code atleast {(goalTime.TotalHours - totalTimeCodedThisWeek.TotalHours) / daysLeft} hours each day");
+					Console.WriteLine($"Progress: {totalTimeCodedThisWeek:%h}/{goalTime:%h} hours");
+					double remainingHours = goalTime.Hours - totalTimeCodedThisWeek.Hours;
+					Console.WriteLine($"Code for another {remainingHours} hours to reach the weekly goal");
+					Console.WriteLine($"To achieve the goal, you need to code at least {remainingHours/daysLeft} hours per day for the rest of the week");
 				}
 				connection.Close();
-            }
+			}
 		}
 		internal static List<CodingSession> BuildList(string connectionString, string sqlcommand)
 		{
@@ -207,6 +225,7 @@ namespace CodingTracker.Furiax
 				SqliteDataReader reader = command.ExecuteReader();
 				if (reader.HasRows)
 				{
+					sessions.Clear();
 					while (reader.Read())
 					{
 						sessions.Add(new CodingSession
@@ -230,7 +249,11 @@ namespace CodingTracker.Furiax
 		{
 			ConsoleTableBuilder
 				.From(sessions)
-				.WithTitle("Code Tracker")
+				.WithTitle ("Coding Tracker")
+				.WithColumn("Id", "Start", "End", "Time")
+				.WithFormatter(1, f =>$"{f:dd/MM/yy HH:MM}")
+				.WithFormatter(2, f => $"{f:dd/MM/yy HH:MM}")
+				.WithFormatter(3, f => $@"{f:hh\:mm}")
 				.ExportAndWriteLine();
 		}
 	}
