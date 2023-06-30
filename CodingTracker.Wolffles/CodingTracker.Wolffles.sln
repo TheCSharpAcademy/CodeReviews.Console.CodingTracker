@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CondingTracker.Wolffles", "CondingTracker.Wolffles.csproj", "{D13F6D48-D1C0-43CC-89A8-4B2BEE4EE83B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodingTracker.Wolffles", "CodingTracker.Wolffles.csproj", "{DC49389F-8CB7-46E5-A144-8FE0007B60F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D13F6D48-D1C0-43CC-89A8-4B2BEE4EE83B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D13F6D48-D1C0-43CC-89A8-4B2BEE4EE83B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D13F6D48-D1C0-43CC-89A8-4B2BEE4EE83B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D13F6D48-D1C0-43CC-89A8-4B2BEE4EE83B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC49389F-8CB7-46E5-A144-8FE0007B60F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC49389F-8CB7-46E5-A144-8FE0007B60F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC49389F-8CB7-46E5-A144-8FE0007B60F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC49389F-8CB7-46E5-A144-8FE0007B60F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {29CF77E7-F5EA-418B-BEA4-72596A949272}
+		SolutionGuid = {73518B6B-4EE1-4694-B1F0-67894AF187D7}
 	EndGlobalSection
 EndGlobal
