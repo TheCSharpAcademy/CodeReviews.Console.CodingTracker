@@ -242,10 +242,11 @@ namespace CodingTracker.Furiax
 			Console.Clear();
 			string sqlCommand = "SELECT * FROM CodeTracker";
 			List<CodingSession> sessions = new List<CodingSession>();
+			sessions.Clear();
 			sessions = BuildList(connectionString, sqlCommand);
-			PrintTable(connectionString, sessions);
+			PrintTable(sessions);
 		}
-		internal static void PrintTable(string connectionString, List<CodingSession> sessions)
+		internal static void PrintTable(List<CodingSession> sessions)
 		{
 			ConsoleTableBuilder
 				.From(sessions)
