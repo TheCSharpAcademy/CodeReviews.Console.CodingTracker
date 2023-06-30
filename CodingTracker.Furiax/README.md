@@ -31,5 +31,7 @@ Extra's:
 My findings:
 
 This excercise builds further on the previous one, the habittracker, but add some new things like putting the connnection to the database in an App.config file. 
+
 It was interesting to learn how to work with a thirdparty NuGenPackage, we had to find out how it worked by reading the documentation provided on the GitHubpage.
+
 Working with DateTime and TimeSpan values was also very interesting and took some research. The difficult part was in the fact that a Sqlite db doesn't have a DateTime field so the DateTime values needed to be converted to a text format.
