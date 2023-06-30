@@ -1,5 +1,4 @@
-﻿using CodingTracker.Furiax.Model;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace CodingTracker.Furiax
 {

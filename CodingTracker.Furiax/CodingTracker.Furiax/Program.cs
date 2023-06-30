@@ -1,5 +1,4 @@
 ﻿using CodingTracker.Furiax;
-using System.Configuration;
 
 var connectionString = ConfigurationManager.AppSettings.Get("connectionString");
 
