@@ -12,7 +12,6 @@ internal class CodingSession : ISession
 	private DateTime StartDate { get; set; }
 	private DateTime EndDate { get; set; }
 	private string Duration { get; set; }
-	private string SessionTable = "CodingSessions";
 
 	CodingSession(int id, DateTime startDate, DateTime endDate, string duration)
 	{

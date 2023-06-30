@@ -1,7 +1,7 @@
 ﻿using Microsoft.Data.Sqlite;
 using System.Configuration;
 
-namespace CondingTracker.Wolffles;
+namespace CodingTracker.Wolffles;
 	internal class Program
 	{
 		static void Main()
@@ -10,5 +10,8 @@ namespace CondingTracker.Wolffles;
 			string tableName = "CodingHours";
 
 			SQLiteIO sqliteDatabase = new SQLiteIO(connectionString, tableName);
+			
+			
+			
 		}
 	}
