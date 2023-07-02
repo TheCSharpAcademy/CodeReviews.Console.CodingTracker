@@ -1,5 +1,7 @@
+# CodeReviews.Console.CodingTracker
+=======
 # Code Tracker
-### Author: Corey Jordan - May 14, 2023
+### Author: Matthew Brown - May 20, 2023
 Code Tracker is a simple console application that allows you to track the amount of time you spend coding. It records the start and end times of your coding sessions, and calculates the total time coded.
 
 ## Requirements
