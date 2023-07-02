@@ -64,8 +64,8 @@ namespace CodingTracker.Furiax
 					bool doesIdExist = Validation.CheckIfRecordExists(recordToUpdate, connectionString);
 					if (doesIdExist)
 					{
-						DateTime askNewStartTime = UserInput.GetStartDate("Enter a new value for StartDate");
-						DateTime askNewEndTime = UserInput.GetEndDate("Enter a new value for EndDate", askNewStartTime);
+						DateTime askNewStartTime = UserInput.GetStartDate("Enter a new value for StartDate (format dd/mm/yy hh:mm)");
+						DateTime askNewEndTime = UserInput.GetEndDate("Enter a new value for EndDate (format dd/mm/yy hh:mm)", askNewStartTime);
 						TimeSpan timeBetween = CalculateDuration(askNewStartTime, askNewEndTime);
 						if (timeBetween.TotalDays < 1)
 						{
