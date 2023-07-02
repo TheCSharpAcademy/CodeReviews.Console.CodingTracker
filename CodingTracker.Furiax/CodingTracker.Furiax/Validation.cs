@@ -32,7 +32,6 @@ namespace CodingTracker.Furiax
 					return true;
 				else
 					return false;
-				connection.Close();
 			}
 		}
 
