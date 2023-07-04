@@ -183,36 +183,47 @@ namespace CodingTracker.Furiax
 				var monday = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Monday);
 				connection.Open();
 				var command = connection.CreateCommand();
-				command.CommandText = $"SELECT * FROM CodeTracker WHERE StartTime >= @monday";
-				command.Parameters.Add(new SqliteParameter("@monday", monday));
+				command.CommandText = $"SELECT * FROM CodeTracker";
 				List<CodingSession> sessions = new List<CodingSession>();
-				SqliteDataReader reader = command.ExecuteReader();
-				while (reader.Read())
-				{
-					sessions.Add(new CodingSession
-					{
-						Id = reader.GetInt32(0),
-						StartTime = DateTime.ParseExact(reader.GetString(1), "dd/MM/yy HH:mm", new CultureInfo("nl-BE")),
-						EndTime = DateTime.ParseExact(reader.GetString(2), "dd/MM/yy HH:mm", new CultureInfo("nl-BE")),
-						Duration = TimeSpan.ParseExact(reader.GetString(3), @"hh\:mm", new CultureInfo("nl-BE"))
-					});
-				}
-				TimeSpan totalTimeCodedThisWeek = TimeSpan.Zero;
+				sessions = BuildList(connectionString, command.CommandText);
+				List<CodingSession> sessionsThisWeek = new List<CodingSession>();
 				foreach (var session in sessions)
 				{
-					totalTimeCodedThisWeek += session.Duration;
+					if (session.StartTime >= monday)
+						sessionsThisWeek.Add(session);
+				}
+				TimeSpan totalTimeCodedThisWeek = TimeSpan.Zero;
+				foreach (var sessionThisWeek in sessionsThisWeek)
+				{
+					totalTimeCodedThisWeek += sessionThisWeek.Duration;
 				}
 				int daysLeft = 7 - (int)DateTime.Today.DayOfWeek + 1;
+				int goal = (goalTime.Days * 24) + goalTime.Hours;
+				int totalTimeCoded = (totalTimeCodedThisWeek.Days * 24) + totalTimeCodedThisWeek.Hours;
 				if (goalTime <= totalTimeCodedThisWeek)
 				{
-					Console.WriteLine($"Goal achieved, you coded {totalTimeCodedThisWeek:%h} hours this week, while the goal was {goalTime.TotalHours} hours");
+					Console.WriteLine($"Goal achieved, you coded {totalTimeCoded} hours this week, while the goal was {goal} hours");
 				}
 				else
 				{
-					Console.WriteLine($"Progress: {totalTimeCodedThisWeek:%h}/{goalTime:%h} hours");
-					double remainingHours = goalTime.Hours - totalTimeCodedThisWeek.Hours;
+					Console.WriteLine($"Progress: {totalTimeCoded} out of {goal} hours");
+					int remainingHours = goal - totalTimeCoded;
 					Console.WriteLine($"Code for another {remainingHours} hours to reach the weekly goal");
-					Console.WriteLine($"To achieve the goal, you need to code at least {remainingHours/daysLeft} hours per day for the rest of the week");
+					int hoursPerDayLeft = remainingHours / daysLeft;
+					if (hoursPerDayLeft == 0)
+					{
+						int minutesPerDayLeft = (remainingHours*60)/daysLeft;
+						Console.WriteLine($"To achieve the goal, you need to code at least {minutesPerDayLeft} minutes per day for the remainder of the week (today included)");
+					}
+					else if ( hoursPerDayLeft < 24) 
+					{
+						Console.WriteLine($"To achieve the goal, you need to code at least {hoursPerDayLeft} hours per day for the remainder of the week (today included)");
+					}
+					else
+					{
+                        Console.WriteLine("It will be impossible to achieve the goal, there's not enough time left this week");
+                    }
+					
 				}
 				connection.Close();
 			}
