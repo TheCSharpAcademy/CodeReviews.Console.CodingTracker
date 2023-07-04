@@ -38,7 +38,8 @@ namespace CodingTracker.Furiax
 					{
 						
 						var command = connection.CreateCommand();
-						command.CommandText = $"DELETE FROM CodeTracker WHERE id = '{recordToDelete}'";
+						command.CommandText = "DELETE FROM CodeTracker WHERE id = (@recordToDelete)";
+						command.Parameters.Add(new SqliteParameter("@recordToDelete", recordToDelete));
 						command.ExecuteNonQuery();
 						Console.WriteLine($"The record with id {recordToDelete} has been deleted from the db");
 						break;
@@ -73,7 +74,11 @@ namespace CodingTracker.Furiax
 							string newEndTime = askNewEndTime.ToString("dd/MM/yy HH:mm");
 							string duration = timeBetween.ToString(@"hh\:mm");
 							var command = connection.CreateCommand();
-							command.CommandText = $"UPDATE CodeTracker SET StartTime = '{newStartTime}', EndTime = '{newEndTime}', Duration = '{duration}' WHERE Id = '{recordToUpdate}'";
+							command.CommandText = "UPDATE CodeTracker SET StartTime = @newStartTime, EndTime = @newEndTime, Duration = @duration WHERE Id = @recordToUpdate";
+							command.Parameters.Add(new SqliteParameter("@newStartTime", newStartTime));
+							command.Parameters.Add(new SqliteParameter("@newEndTime", newEndTime));
+							command.Parameters.Add(new SqliteParameter("@duration", duration));
+							command.Parameters.Add(new SqliteParameter("@recordToUpdate", recordToUpdate));
 							command.ExecuteNonQuery();
 							break;
 						}
@@ -108,7 +113,10 @@ namespace CodingTracker.Furiax
 				{
 					connection.Open();
 					var command = connection.CreateCommand();
-					command.CommandText = $"INSERT INTO CodeTracker (StartTime, EndTime, Duration) VALUES ('{startDate}','{endDate}', '{duration}')";
+					command.CommandText = "INSERT INTO CodeTracker (StartTime, EndTime, Duration) VALUES (@startDate,@endDate, @duration)";
+					command.Parameters.Add(new SqliteParameter("@startDate", startDate));
+					command.Parameters.Add(new SqliteParameter("@endDate", endDate));
+					command.Parameters.Add(new SqliteParameter("@duration", duration));
 					command.ExecuteNonQuery();
 					connection.Close();
 				}
@@ -140,7 +148,10 @@ namespace CodingTracker.Furiax
 				{
 					connection.Open();
 					var command = connection.CreateCommand();
-					command.CommandText = $"INSERT INTO CodeTracker (StartTime, EndTime, Duration) VALUES ('{start}', '{stop}', '{duration}')";
+					command.CommandText = "INSERT INTO CodeTracker (StartTime, EndTime, Duration) VALUES (@start, @stop, @duration)";
+					command.Parameters.Add(new SqliteParameter("@start", start));
+					command.Parameters.Add(new SqliteParameter("@stop",stop));
+					command.Parameters.Add(new SqliteParameter("@duration", duration));
 					command.ExecuteNonQuery();
 					connection.Close();
 				}
@@ -172,7 +183,8 @@ namespace CodingTracker.Furiax
 				var monday = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Monday);
 				connection.Open();
 				var command = connection.CreateCommand();
-				command.CommandText = $"SELECT * FROM CodeTracker WHERE StartTime >= '{monday}'";
+				command.CommandText = $"SELECT * FROM CodeTracker WHERE StartTime >= @monday";
+				command.Parameters.Add(new SqliteParameter("@monday", monday));
 				List<CodingSession> sessions = new List<CodingSession>();
 				SqliteDataReader reader = command.ExecuteReader();
 				while (reader.Read())
@@ -252,8 +264,8 @@ namespace CodingTracker.Furiax
 				.From(sessions)
 				.WithTitle("Coding Tracker")
 				.WithColumn("Id", "Start", "End", "Time")
-				.WithFormatter(1, f => $"{f:dd/MM/yy HH:MM}")
-				.WithFormatter(2, f => $"{f:dd/MM/yy HH:MM}")
+				.WithFormatter(1, f => $"{f:dd/MM/yy HH:mm}")
+				.WithFormatter(2, f => $"{f:dd/MM/yy HH:mm}")
 				.WithFormatter(3, f => $@"{f:hh\:mm}")
 				.ExportAndWriteLine();
 		}
