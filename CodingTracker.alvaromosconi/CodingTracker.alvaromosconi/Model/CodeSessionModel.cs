@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace CodingTracker.alvaromosconi.Model;
 
-internal class CodeSessionModel
+public class CodeSessionModel
 {
-    internal int Id { get; set; }
-    internal DateTime StartDateTime { get; set; }
-    internal DateTime EndDateTime { get; set; }
-    internal TimeSpan Duration
+    public int Id { get; set; }
+    public DateTime StartDateTime { get; set; }
+    public DateTime EndDateTime { get; set; }
+    public TimeSpan Duration
     {
         get
         {

@@ -22,9 +22,9 @@ internal class SQLiteDB
         }
     }
 
-    public HashSet<CodeSessionModel> GetData(string query)
+    public List<CodeSessionModel> GetData(string query)
     {
-        var output = new HashSet<CodeSessionModel>();
+        var output = new List<CodeSessionModel>();
 
         using (var connection = new SqliteConnection(DBConstants.CONNECTION_STRING))
         {

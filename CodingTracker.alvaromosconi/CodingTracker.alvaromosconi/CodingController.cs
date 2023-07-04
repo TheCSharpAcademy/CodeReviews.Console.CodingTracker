@@ -11,6 +11,13 @@ namespace CodingTracker.alvaromosconi
     internal class CodingController
     {
         private CodeSessionLocalStorage cs = new CodeSessionLocalStorage();
+        private CodeSessionLocalStorage sessionStorage;
+
+        public CodingController(CodeSessionLocalStorage sessionStorage)
+        {
+            this.sessionStorage = sessionStorage;
+        }
+
         internal void SaveSession(DateTime start, DateTime end)
         {
             CodeSessionModel session = new CodeSessionModel
@@ -21,5 +28,21 @@ namespace CodingTracker.alvaromosconi
 
             cs.SaveSession(session);
         }
+
+        internal HashSet<CodeSessionModel> GetAllSessions()
+        {
+            return cs.GetAllSesions();
+        }
+
+        internal HashSet<CodeSessionModel> GetSessionsInRange(DateTime start, DateTime end)
+        {
+            return cs.GetAllSessionsBetween(start, end);
+        }
+
+        internal void DeleteSession(CodeSessionModel session)
+        {
+            cs.DeleteSession(session);
+        }
     }
+
 }

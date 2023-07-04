@@ -49,19 +49,20 @@ internal class CodeSessionLocalStorage
 
     public HashSet<CodeSessionModel> GetAllSessionsBetween(DateTime start, DateTime end)
     {
-        var sessionsInRange = codeSessions
+        var sessionsInRange = 
+            codeSessions
                   .Where(session => session.StartDateTime >= start && session.EndDateTime <= end)
                   .OrderBy(session => session.EndDateTime)
-                  .ToList();
+                  .ToHashSet();
 
         if (sessionsInRange.Count == 0)
         {
-            var query = $@"
-                        SELECT * FROM {DBConstants.TABLE_NAME}
-                        WHERE {DBConstants.START_DATE}
-                        BETWEEN {start} and {end}
-                        ORDER BY {DBConstants.END_DATE}
-                       ";
+            string query = $@"
+                                SELECT * FROM {DBConstants.TABLE_NAME}
+                                WHERE {DBConstants.START_DATE}
+                                BETWEEN {start} and {end}
+                                ORDER BY {DBConstants.END_DATE}
+                            ";
 
             sessionsInRange = Database.GetData(query);
             codeSessions.UnionWith(sessionsInRange);

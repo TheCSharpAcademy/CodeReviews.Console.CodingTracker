@@ -1,4 +1,5 @@
-﻿using ConsoleTableExt;
+﻿using CodingTracker.alvaromosconi.Model;
+using ConsoleTableExt;
 
 namespace CodingTracker.alvaromosconi.ConsoleUI;
 
@@ -44,13 +45,15 @@ internal class ConsoleView
             var selection = UserInput.SelectMenuOption(OPTIONS);
             keepRunning = selection switch
             {
-                "1" => StartNewSession(),
-                "2" => ViewAllSessions(),
-                "3" => ViewSelectedSessions(),
-                "4" => DeleteSelectedSession(),
-                "0" => false,
+                '1' => StartNewSession(),
+                '2' => ViewAllSessions(),
+                '3' => ViewSelectedSessions(),
+                '4' => DeleteSelectedSession(),
+                '0' => false,
                 _ => true
             };
+
+            Console.Clear();
         }
     }
     private bool DeleteSelectedSession()
@@ -65,16 +68,34 @@ internal class ConsoleView
 
     private bool ViewAllSessions()
     {
-        throw new NotImplementedException();
+        List<CodeSessionModel> sessions = controller.GetAllSessions().ToList<CodeSessionModel>();
+        sessions.Sort();
+
+        Console.Clear();
+        if (sessions.Count > 0)
+        {
+            ConsoleTableBuilder
+                .From(sessions)
+                .WithFormat(ConsoleTableBuilderFormat.Default)
+                .WithTitle("Sessions", ConsoleColor.Black, ConsoleColor.White)
+                .ExportAndWriteLine();
+        }
+        else
+            Console.WriteLine("\nNo sessions found.");
+
+        Console.ReadKey();
+        return true;
     }
 
     private bool StartNewSession()
     {
+        Console.Clear();
         Console.WriteLine("Press S whenever you are ready!");
-        string input = Console.ReadLine().Trim().ToLower();
+        char input = Console.ReadKey().KeyChar;
+        Console.Clear();
 
-        if (input == "s")
-        {
+        if (input == 's' || input == 'S')
+        { 
             DateTime startTime = DateTime.Now;
             Console.WriteLine("_______________________________________________");
             Console.WriteLine("Session has started! May the Force be with you.");
@@ -83,7 +104,7 @@ internal class ConsoleView
             Console.ReadKey();
             EndSession(startTime);
         }
-
+        Console.Clear();
         return true;
     }
 
