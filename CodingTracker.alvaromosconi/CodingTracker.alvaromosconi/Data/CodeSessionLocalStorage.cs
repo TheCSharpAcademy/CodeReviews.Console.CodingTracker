@@ -9,6 +9,15 @@ internal class CodeSessionLocalStorage
     public CodeSessionLocalStorage()
     {
         Database.OnCreate();
+        LoadSessionsFromDatabase();
+    }
+
+    private void LoadSessionsFromDatabase()
+    {
+        var query = $@"SELECT * FROM {DBConstants.TABLE_NAME}";
+
+        var sessionsFromDb = Database.GetData(query);
+        codeSessions = sessionsFromDb;
     }
 
     public void SaveSession(CodeSessionModel model)
@@ -38,15 +47,26 @@ internal class CodeSessionLocalStorage
         return codeSessions;
     }
 
-    public List<CodeSessionModel> GetAllSessionsBetween(DateTime start, DateTime end)
+    public HashSet<CodeSessionModel> GetAllSessionsBetween(DateTime start, DateTime end)
     {
-        var query = $@"
+        var sessionsInRange = codeSessions
+                  .Where(session => session.StartDateTime >= start && session.EndDateTime <= end)
+                  .OrderBy(session => session.EndDateTime)
+                  .ToList();
+
+        if (sessionsInRange.Count == 0)
+        {
+            var query = $@"
                         SELECT * FROM {DBConstants.TABLE_NAME}
                         WHERE {DBConstants.START_DATE}
                         BETWEEN {start} and {end}
                         ORDER BY {DBConstants.END_DATE}
                        ";
 
-        return Database.GetData(query);
+            sessionsInRange = Database.GetData(query);
+            codeSessions.UnionWith(sessionsInRange);
+        }
+
+        return codeSessions;
     }
 }

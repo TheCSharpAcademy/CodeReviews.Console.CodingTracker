@@ -4,7 +4,15 @@ namespace CodingTracker.alvaromosconi.ConsoleUI;
 
 internal class ConsoleView
 {
+
     private const string OPTIONS = "0123456";
+    private CodingController controller;
+
+    public ConsoleView(CodingController controller)
+    {
+        this.controller = controller;
+    }
+
     internal void WelcomeMessage()
     {
         Console.WriteLine("======================================");
@@ -62,7 +70,27 @@ internal class ConsoleView
 
     private bool StartNewSession()
     {
-        throw new NotImplementedException();
+        Console.WriteLine("Press S whenever you are ready!");
+        string input = Console.ReadLine().Trim().ToLower();
+
+        if (input == "s")
+        {
+            DateTime startTime = DateTime.Now;
+            Console.WriteLine("_______________________________________________");
+            Console.WriteLine("Session has started! May the Force be with you.");
+            Console.WriteLine("         Press ANY KEY to finish.              ");
+            Console.WriteLine( "______________________________________________");
+            Console.ReadKey();
+            EndSession(startTime);
+        }
+
+        return true;
+    }
+
+    private void EndSession(DateTime start)
+    {
+        DateTime end = DateTime.Now;
+        controller.SaveSession(start, end);
     }
 }
 
