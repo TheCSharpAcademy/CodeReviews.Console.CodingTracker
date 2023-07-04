@@ -1,16 +1,11 @@
 ﻿using CodingTracker.alvaromosconi.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CodingTracker.alvaromosconi.Data;
 
-internal class CodeSessionLocalStorage 
+internal class CodeSessionLocalStorage
 {
     private SQLiteDB Database = new SQLiteDB();
-    private List<CodeSessionModel> codeSessions = new List<CodeSessionModel>();
+    private HashSet<CodeSessionModel> codeSessions = new HashSet<CodeSessionModel>();
     public CodeSessionLocalStorage()
     {
         Database.OnCreate();
@@ -24,6 +19,7 @@ internal class CodeSessionLocalStorage
                     ";
 
         Database.ExecuteQuery(query);
+        codeSessions.Add(model);
     }
 
     public void DeleteSession(CodeSessionModel model)
@@ -34,6 +30,23 @@ internal class CodeSessionLocalStorage
                     ";
 
         Database.ExecuteQuery(query);
+        codeSessions.Remove(model);
     }
 
+    public HashSet<CodeSessionModel> GetAllSesions()
+    {
+        return codeSessions;
+    }
+
+    public List<CodeSessionModel> GetAllSessionsBetween(DateTime start, DateTime end)
+    {
+        var query = $@"
+                        SELECT * FROM {DBConstants.TABLE_NAME}
+                        WHERE {DBConstants.START_DATE}
+                        BETWEEN {start} and {end}
+                        ORDER BY {DBConstants.END_DATE}
+                       ";
+
+        return Database.GetData(query);
+    }
 }
