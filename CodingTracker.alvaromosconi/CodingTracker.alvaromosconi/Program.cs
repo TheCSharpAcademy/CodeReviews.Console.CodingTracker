@@ -1,3 +1,4 @@
-﻿using CodingTracker.alvaromosconi.Data;
+﻿using CodingTracker.alvaromosconi.ConsoleUI;
 
-var s = new CodeSessionLocalStorage();
+var menu = new ConsoleView();
+menu.Menu();
