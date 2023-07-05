@@ -1,21 +1,15 @@
 ﻿using CodingTracker.alvaromosconi.Data;
 using CodingTracker.alvaromosconi.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CodingTracker.alvaromosconi
+namespace CodingTracker.alvaromosconi.Controller
 {
     internal class CodingController
     {
-        private CodeSessionLocalStorage cs = new CodeSessionLocalStorage();
-        private CodeSessionLocalStorage sessionStorage;
+        private CodeSessionLocalStorage localStorage = new CodeSessionLocalStorage();
 
         public CodingController(CodeSessionLocalStorage sessionStorage)
         {
-            this.sessionStorage = sessionStorage;
+            this.localStorage = sessionStorage;
         }
 
         internal void SaveSession(DateTime start, DateTime end)
@@ -26,23 +20,24 @@ namespace CodingTracker.alvaromosconi
                 EndDateTime = end
             };
 
-            cs.SaveSession(session);
+            localStorage.SaveSession(session);
         }
 
         internal List<CodeSessionModel> GetAllSessions()
         {
-            return cs.GetAllSesions();
+            return localStorage.GetAllSesions();
         }
 
         internal List<CodeSessionModel> GetSessionsInRange(DateTime start, DateTime end)
         {
-            return cs.GetAllSessionsBetween(start, end);
+            return localStorage.GetAllSessionsBetween(start, end);
         }
 
-        internal void DeleteSession(CodeSessionModel session)
+        internal void DeleteSession(int id)
         {
-            cs.DeleteSession(session);
+            localStorage.DeleteSession(id);
         }
+
     }
 
 }
