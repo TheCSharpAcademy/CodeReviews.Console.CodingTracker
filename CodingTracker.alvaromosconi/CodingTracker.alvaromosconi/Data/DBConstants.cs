@@ -1,9 +1,4 @@
-﻿using System;
-using System.Configuration;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Configuration;
 
 namespace CodingTracker.alvaromosconi.Data;
 
@@ -16,8 +11,10 @@ internal static class DBConstants
     public const string END_DATE = "end_date";
 
     public const string CREATE_SESSIONS_TABLE =
-        $@"CREATE TABLE IF NOT EXISTS {TABLE_NAME} 
-           ({ID_COLUMN} integer PRIMARY KEY AUTOINCREMENT,
-            {START_DATE} TEXT,
-            {END_DATE} TEXT)";
+        $@"
+            CREATE TABLE IF NOT EXISTS {TABLE_NAME} 
+            ({ID_COLUMN} integer PRIMARY KEY AUTOINCREMENT,
+             {START_DATE} TEXT,
+             {END_DATE} TEXT)
+        ";
 }

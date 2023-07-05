@@ -31,15 +31,15 @@ internal class CodeSessionLocalStorage
         codeSessions.Add(model);
     }
 
-    public void DeleteSession(CodeSessionModel model)
+    public void DeleteSession(int id)
     {
         var query = $@"
                         DELETE FROM {DBConstants.TABLE_NAME} 
-                        WHERE ({DBConstants.ID_COLUMN} = {model.Id})
+                        WHERE ({DBConstants.ID_COLUMN} = {id})
                     ";
 
         Database.ExecuteQuery(query);
-        codeSessions.Remove(model);
+        codeSessions.RemoveAll(session => session.Id == id);
     }
 
     public List<CodeSessionModel> GetAllSesions()
@@ -68,5 +68,28 @@ internal class CodeSessionLocalStorage
         }
 
         return sessionsInRange;
+    }
+
+    public bool GetSessionWithId(int id)
+    {
+        CodeSessionModel session = codeSessions.Find(x => x.Id == id);
+        bool exists = false;
+
+        if (session == null)
+        {
+            string query = $@"
+                            SELECT * {DBConstants.TABLE_NAME} 
+                            WHERE ({DBConstants.ID_COLUMN} = {id})
+                           ";
+
+            List<CodeSessionModel> sessionsFromDb = Database.GetData(query);
+            exists = sessionsFromDb.Count > 0;
+            
+            if (exists)
+                codeSessions.Union(sessionsFromDb);
+
+        }
+
+        return exists;
     }
 }

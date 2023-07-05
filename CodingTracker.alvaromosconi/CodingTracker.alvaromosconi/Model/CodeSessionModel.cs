@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CodingTracker.alvaromosconi.Model;
+﻿namespace CodingTracker.alvaromosconi.Model;
 
 public class CodeSessionModel
 {
     public int Id { get; set; }
     public DateTime StartDateTime { get; set; }
     public DateTime EndDateTime { get; set; }
-    public TimeSpan Duration
+    public String Duration
     {
         get
         {
@@ -19,8 +13,9 @@ public class CodeSessionModel
         }
     }
 
-    private TimeSpan CalculateDuration()
+    private string CalculateDuration()
     {
-        return EndDateTime - StartDateTime;
+        TimeSpan duration = EndDateTime - StartDateTime;
+        return duration.ToString(@"hh\:mm\:ss");
     }
 }

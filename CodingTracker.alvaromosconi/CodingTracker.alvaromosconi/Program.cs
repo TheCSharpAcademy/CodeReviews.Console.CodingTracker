@@ -1,5 +1,5 @@
-﻿using CodingTracker.alvaromosconi;
-using CodingTracker.alvaromosconi.ConsoleUI;
+﻿using CodingTracker.alvaromosconi.ConsoleUI;
+using CodingTracker.alvaromosconi.Controller;
 using CodingTracker.alvaromosconi.Data;
 
 var sessionStorage = new CodeSessionLocalStorage();
