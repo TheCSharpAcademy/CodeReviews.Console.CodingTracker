@@ -1,29 +1,62 @@
-# CodeReviews.Console.CodingTracker
-=======
-# Code Tracker
-### Author: Matthew Brown - May 20, 2023
-Code Tracker is a simple console application that allows you to track the amount of time you spend coding. It records the start and end times of your coding sessions, and calculates the total time coded.
+# Console Habit Tracker
 
-## Requirements
+A console-based CRUD application to track coding hours.
+Developed using C# and SQLite.
 
-- Must use ConsoleTableExt Library
-- Must use seperate classes for seperation of concerns
-- Must specify date format to user and validate
-- Must create configuration file to connect to database
-- Must conatin CodingSession class
-- User cannot input session duration. Must be calculated
-- User should be able to input start and end times
-- Cannot use anonymous objects, must use a list of CodingSession
+# Given Requirements:
+- [x] Upon application start, it should create a SQLite database if one doesn't already exist.
+- [x] The application should create a table in the database to store coding sessions.
+- [x] Users should be able to insert, delete, update, and view their coding sessions.
+- [x] All possible errors should be handled to prevent application crashes.
+- [x] The application should only terminate when the user enters 0.
+- [x] Raw SQL should be used for interacting with the database;
 
-## Challenges
-- Add the ability to track a live session.
-- Let users filters their records
-- Create a report
-- Let the user set goals
+# Features
 
-## Thoughts
+* SQLite database connection
 
-1. I sometimes wonder if I've over done the modularization. Other times I wonder if I could have created a few more classes. Finding the right balance is challenging.
-2. One thing sorely missing from my app is escapes at several points. Once the user commits to certain choices, they have to follow through. 
-3. Another possible improvement would be to utilize multiple goals by adding specificity to coding sessions, allowing different sessions to count against specific goals.
-4. I don't like that my app displays the DateTime.MinValue to represent a Null db entry in an open session. Given more time, I might explore ways to format to hide/reveal data in a way that makes more sense.
+	- The program establishes a connection to a SQLite database for storing and retrieving information.
+	- If no database exists or the required table is missing, they will be created at program startup.
+
+* Console-based UI with navigation using key presses
+ 
+ 	 ![image](https://github.com/alvaromosconi/CodeReviews.Console.HabitTracker/assets/77434507/c0dbeda7-30bf-42cd-a86f-f04beef9f6e3)
+
+* CRUD database functions
+
+	- Users can create, read, update, and delete habit entries from the main menu. Dates must be entered in the format dd-mm-yy.
+	- Input validation ensures that time and dates are in the correct and realistic format.
+
+* Basic reports of records grouped by habit name
+
+	 ![image](https://github.com/alvaromosconi/CodeReviews.Console.CodingTracker/assets/77434507/467f9020-900d-4c89-b580-49e3d9a8ad7b)
+
+* New session
+
+   ![image](https://github.com/alvaromosconi/CodeReviews.Console.CodingTracker/assets/77434507/7d06e0f1-3e63-451d-b2dd-1ecd6202a828)
+
+* View all past sessions
+  
+   ![image](https://github.com/alvaromosconi/CodeReviews.Console.CodingTracker/assets/77434507/3165ccda-1421-4ddb-8224-8c2f3814f144)
+
+* View sessions in a certain range
+
+   ![image](https://github.com/alvaromosconi/CodeReviews.Console.CodingTracker/assets/77434507/bdbeb0f3-b70b-4adc-81c9-023952e0f3f9)
+
+   ![image](https://github.com/alvaromosconi/CodeReviews.Console.CodingTracker/assets/77434507/0bdf8a72-4ead-4747-9533-26b1ae8c4802)
+
+* Delete a session by id
+
+   ![image](https://github.com/alvaromosconi/CodeReviews.Console.CodingTracker/assets/77434507/b9f78c82-695e-4044-a2fa-96e3c5059ce1)
+
+  
+# Challenges
+	
+- Handling users input and manage program flow effectively.
+- Working with DateTime type and a external library.
+- Separation of concerns
+
+# Resources Used
+- The CSharpAcademy guide.
+- Various StackOverflow articles for C# syntax and resolving SQLite doubts.
+- Microsoft Documentation
