@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
 using CodingTracker.Wolffles;
 using Microsoft.Data.Sqlite;
 
@@ -19,7 +20,6 @@ internal class SQLiteIO
 	{
 		connectionString = inputConnectionString;
 		tableName = inputTableName; 
-				
 		ExecuteCommand(@$"CREATE TABLE IF NOT EXISTS {tableName} (Id INTEGER PRIMARY KEY AUTOINCREMENT,Start_Date TEXT,End_Date TEXT,Duration INTEGER)");
 	}
 
@@ -31,11 +31,11 @@ internal class SQLiteIO
 
 			SqliteCommand sqlCommand = connection.CreateCommand();
 			sqlCommand.CommandText = commandString;
-			bool result = sqlCommand.ExecuteReader().HasRows;
+			sqlCommand.ExecuteReader();
 
 			connection.Close();
-				
-			return result;
+
+			return true;
 		}
 	}
 	private bool CheckIfExists(string inputID)
@@ -46,11 +46,8 @@ internal class SQLiteIO
 	}
 	public bool Insert(string inputID, string inputStartDate, string inputEndDate, string inputDuration)
 	{
-		if(CheckIfExists(inputID))
-		{
-			return false;
-		}
-		ExecuteCommand(@$"INSERT INTO {tableName} (Id,Start_Date,EndDate,Duration) VALUES ('{inputID}','{inputStartDate}','{inputEndDate}','{inputDuration}')");
+
+		ExecuteCommand(@$"INSERT INTO {tableName} (Start_Date,End_Date,Duration) VALUES ('{inputStartDate}','{inputEndDate}','{inputDuration}')");
 
 		return true;
 	}
@@ -64,16 +61,33 @@ internal class SQLiteIO
 
 		return true;
 	}
-	public bool Update(string inputID)
+	
+	public bool Update(string inputID, string inputDate)
 	{
-		if (!CheckIfExists(inputID))
+		if(!CheckIfExists(inputID))
 		{
 			return false;
 		}
+		ExecuteCommand($@"UPDATE {tableName} SET Start_Date = {inputDate} WHERE Id = {inputID}");
 
-		ExecuteCommand(@$"UPDATE {tableName} SET {inputStartDate} = '{value}' WHERE Date = '{time}'");
 		return true;
 	}
+    public void Read()
+    {
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            connection.Open();
+            SqliteCommand tableCommand = connection.CreateCommand();
+            tableCommand.CommandText = @$"SELECT * FROM {tableName} ORDER BY Start_Date";
+            SqliteDataReader dataReader = tableCommand.ExecuteReader();
 
-
+            while (dataReader.Read())
+            {
+                string date = dataReader.GetString(1);
+                string tracked_value = dataReader.GetString(2);
+                Console.WriteLine($"{date,0} | {tracked_value,0}");
+            }
+            connection.Close();
+        }
+    }
 }
