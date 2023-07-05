@@ -5,7 +5,7 @@ namespace CodingTracker.alvaromosconi.Data;
 internal class CodeSessionLocalStorage
 {
     private SQLiteDB Database = new SQLiteDB();
-    private HashSet<CodeSessionModel> codeSessions = new HashSet<CodeSessionModel>();
+    private List<CodeSessionModel> codeSessions = new List<CodeSessionModel>();
     public CodeSessionLocalStorage()
     {
         Database.OnCreate();
@@ -42,32 +42,31 @@ internal class CodeSessionLocalStorage
         codeSessions.Remove(model);
     }
 
-    public HashSet<CodeSessionModel> GetAllSesions()
+    public List<CodeSessionModel> GetAllSesions()
     {
         return codeSessions;
     }
 
-    public HashSet<CodeSessionModel> GetAllSessionsBetween(DateTime start, DateTime end)
+    public List<CodeSessionModel> GetAllSessionsBetween(DateTime start, DateTime end)
     {
         var sessionsInRange = 
             codeSessions
                   .Where(session => session.StartDateTime >= start && session.EndDateTime <= end)
                   .OrderBy(session => session.EndDateTime)
-                  .ToHashSet();
+                  .ToList();
 
         if (sessionsInRange.Count == 0)
         {
             string query = $@"
                                 SELECT * FROM {DBConstants.TABLE_NAME}
-                                WHERE {DBConstants.START_DATE}
-                                BETWEEN {start} and {end}
+                                WHERE {DBConstants.START_DATE} >= '{start}' AND 
+                                      {DBConstants.END_DATE} <= '{end}'
                                 ORDER BY {DBConstants.END_DATE}
                             ";
 
             sessionsInRange = Database.GetData(query);
-            codeSessions.UnionWith(sessionsInRange);
         }
 
-        return codeSessions;
+        return sessionsInRange;
     }
 }

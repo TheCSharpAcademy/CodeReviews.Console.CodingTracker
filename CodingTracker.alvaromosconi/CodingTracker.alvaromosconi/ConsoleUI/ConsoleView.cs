@@ -16,10 +16,11 @@ internal class ConsoleView
 
     internal void WelcomeMessage()
     {
-        Console.WriteLine("======================================");
-        Console.WriteLine("Coding Tracker Application");
-        Console.WriteLine("Developed by: Alvaro Mosconi");
-        Console.WriteLine("======================================");
+        Console.WriteLine("==================================================");
+        Console.WriteLine("             Coding Tracker Application           ");
+        Console.WriteLine("             Developed by: Alvaro Mosconi         ");
+        Console.WriteLine("==================================================");
+        Console.WriteLine();
     }
     internal void DisplayMainMenuOptions()
     {
@@ -58,18 +59,37 @@ internal class ConsoleView
     }
     private bool DeleteSelectedSession()
     {
-        throw new NotImplementedException();
+        ViewSelectedSessions();
+        Console.WriteLine("Type the id of the session that you want to be deteled.");
+        string input = UserInput.GetIdFromUser();
     }
 
     private bool ViewSelectedSessions()
     {
-        throw new NotImplementedException();
+        (DateTime from, DateTime till) = UserInput.GetDateRangeFromUser();
+        List<CodeSessionModel> sessions = controller.GetSessionsInRange(from, till);
+        Console.Clear();
+        if (sessions.Count > 0)
+        {
+            ConsoleTableBuilder
+            .From(sessions)
+            .WithFormat(ConsoleTableBuilderFormat.Alternative)
+            .WithTitle($"Sessions in range: {from.ToString()} to {till.ToString()}")
+            .ExportAndWriteLine();
+        }
+        else
+        {
+            Console.WriteLine("\nNo sessions found in selected range.");
+        }
+        
+        Console.ReadKey();
+        
+        return true;
     }
 
     private bool ViewAllSessions()
     {
-        List<CodeSessionModel> sessions = controller.GetAllSessions().ToList<CodeSessionModel>();
-        sessions.Sort();
+        List<CodeSessionModel> sessions = controller.GetAllSessions();
 
         Console.Clear();
         if (sessions.Count > 0)
@@ -99,7 +119,7 @@ internal class ConsoleView
             DateTime startTime = DateTime.Now;
             Console.WriteLine("_______________________________________________");
             Console.WriteLine("Session has started! May the Force be with you.");
-            Console.WriteLine("         Press ANY KEY to finish.              ");
+            Console.WriteLine("          Press ANY KEY to finish.             ");
             Console.WriteLine( "______________________________________________");
             Console.ReadKey();
             EndSession(startTime);

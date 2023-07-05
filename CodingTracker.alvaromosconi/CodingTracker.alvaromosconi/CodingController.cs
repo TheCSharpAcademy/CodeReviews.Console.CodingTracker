@@ -29,12 +29,12 @@ namespace CodingTracker.alvaromosconi
             cs.SaveSession(session);
         }
 
-        internal HashSet<CodeSessionModel> GetAllSessions()
+        internal List<CodeSessionModel> GetAllSessions()
         {
             return cs.GetAllSesions();
         }
 
-        internal HashSet<CodeSessionModel> GetSessionsInRange(DateTime start, DateTime end)
+        internal List<CodeSessionModel> GetSessionsInRange(DateTime start, DateTime end)
         {
             return cs.GetAllSessionsBetween(start, end);
         }
