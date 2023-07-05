@@ -1,10 +1,8 @@
-﻿using System.Configuration;
-
-namespace CodingTracker.alvaromosconi.Data;
+﻿namespace CodingTracker.alvaromosconi.Data;
 
 internal static class DBConstants
 {
-    public static readonly string CONNECTION_STRING = ConfigurationManager.ConnectionStrings["Default"].ConnectionString;
+    public static readonly string CONNECTION_STRING = System.Configuration.ConfigurationManager.ConnectionStrings["Default"].ConnectionString;
     public const string TABLE_NAME = "sessions";
     public const string ID_COLUMN = "id";
     public const string START_DATE = "start_date";
