@@ -80,17 +80,21 @@ namespace CodingTracker
                     }
                 }
 
-                if (DateTime.ParseExact(startTime, "dd/MM/yyyy HH:mm", CultureInfo.CurrentCulture) >= firstGoal.AddedDate)
+                if (firstGoal != null)
                 {
-                    DateDifference dateDifference = new DateDifference(parsedStartTime, parsedEndTime);
-                    firstGoal.ProgressRemaining = progressRemaining;
-                    firstGoal.ProgressRemaining -= DateDifference.Duration;
-                    var tableCmd3 = connection.CreateCommand();
+                    if (DateTime.ParseExact(startTime, "dd/MM/yyyy HH:mm", CultureInfo.CurrentCulture) >= firstGoal.AddedDate)
+                    {
+                        DateDifference dateDifference = new DateDifference(parsedStartTime, parsedEndTime);
+                        firstGoal.ProgressRemaining = progressRemaining;
+                        firstGoal.ProgressRemaining -= DateDifference.Duration;
+                        var tableCmd3 = connection.CreateCommand();
 
-                    tableCmd3.CommandText = $"UPDATE goals SET ProgressRemaining = '{firstGoal.ProgressRemaining}'";
+                        tableCmd3.CommandText = $"UPDATE goals SET ProgressRemaining = '{firstGoal.ProgressRemaining}'";
 
-                    tableCmd3.ExecuteNonQuery();
+                        tableCmd3.ExecuteNonQuery();
+                    }
                 }
+                
                 connection.Close();
             }
             UserInput.GetUserInput();
