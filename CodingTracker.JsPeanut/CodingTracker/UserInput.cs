@@ -8,7 +8,7 @@ namespace CodingTracker
         public static void GetUserInput()
         {
             bool exit = false;
-            Console.WriteLine($"\nWelcome to JsPeanut's CodingTracker! You can start tracking your coding sessions. Here you've got a list of all the available commands in the application: \n\n C: Insert the dates in which you started and finished your session, to calculate it. \n S: Start tracking a coding session via stopwatch. \n R: See all your coding sessions.\n U: Update a coding session.\n D: Delete a coding session.\n E: Exit the application.");
+            Console.WriteLine($"\nWelcome to JsPeanut's CodingTracker! You can start tracking your coding sessions. Here you've got a list of all the available commands in the application: \n\n C: Insert the dates in which you started and finished your session, to calculate it. \n S: Start tracking a coding session via stopwatch. \n R: See all your coding sessions.\n U: Update a coding session.\n D: Delete a coding session.\n E: Exit the application.\n G: Set a new goal.\n T: See your goals.");
             CodingController.GetAllGoalRecords();
             CodingController.GetAllRecords("load");
             CodingController.CodingSessions.Clear();
@@ -120,7 +120,7 @@ namespace CodingTracker
 
         public static string GetGoalMeasureInput()
         {
-            Console.WriteLine("Please type if you want your input to be measured in 'years', 'months', 'days', 'hour' or 'minutes'.");
+            Console.WriteLine("Please type if you want your input to be measured in 'years', 'months', 'days', 'hours' or 'minutes'.");
 
             string goalTimePeriod = Console.ReadLine();
 

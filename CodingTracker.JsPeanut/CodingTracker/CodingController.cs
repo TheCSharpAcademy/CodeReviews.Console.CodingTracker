@@ -256,6 +256,10 @@ namespace CodingTracker
                 case "years":
                     ParseGoalIntoTimeSpan(TimeSpan.FromDays, goalValue, "hours", 365);
                     break;
+                default:
+                    Console.WriteLine("Invalid.");
+                    SetGoal();
+                    break;
             }
             TimeSpan ParseGoalIntoTimeSpan(Func<double, TimeSpan> FromTimeUnit, string goal, string timeUnitInPrintedMsg, int number)
             {
