@@ -8,12 +8,12 @@ namespace CodingTracker.Wolffles;
 
 internal class CodingSession : ISession
 {
-	private int Id { get; set; }
-	private DateTime StartDate { get; set; }
-	private DateTime EndDate { get; set; }
-	private string Duration { get; set; }
+	public int Id { get; set; }
+	public DateTime StartDate { get; set; }
+	public DateTime EndDate { get; set; }
+	public TimeSpan Duration { get; set; }
 
-	CodingSession(int id, DateTime startDate, DateTime endDate, string duration)
+	public CodingSession(int id, DateTime startDate, DateTime endDate, TimeSpan duration)
 	{
 		Id = id;
 		StartDate = startDate;
