@@ -60,7 +60,7 @@ namespace CodingTracker
 
                 var tableCmd = connection.CreateCommand();
 
-                tableCmd.CommandText = $"INSERT INTO coding_sessions(StartTime, EndTime, Duration) VALUES('{startTime}', '{endTime}', '{DateDifference.Duration}')";
+                tableCmd.CommandText = $"INSERT INTO coding_sessions(StartTime, EndTime, Duration) VALUES('{startTime}', '{endTime}', '{parsedEndTime - parsedStartTime}')";
                 tableCmd.ExecuteNonQuery();
 
                 var firstGoal = Goals.FirstOrDefault();
@@ -106,7 +106,8 @@ namespace CodingTracker
 
             Console.WriteLine("Press any key to start the stopwatch");
             Console.ReadKey();
-            Console.WriteLine("Stopwatch started");
+            Console.Clear();
+            Console.WriteLine("Stopwatch started. Press ESC (Escape key) to stop the stopwatch.\n");
             stopwatch.Start();
             while (true)
             {
@@ -114,7 +115,8 @@ namespace CodingTracker
                 if (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Escape)
                 {
                     stopwatch.Stop();
-                    Console.WriteLine("Stopwatch stopped");
+                    Console.WriteLine("\n\nStopwatch stopped");
+                    UserInput.GetUserInput();
                     using (var connection = new SqliteConnection(connectionString))
                     {
                         connection.Open();
@@ -128,6 +130,11 @@ namespace CodingTracker
                         tableCmd.CommandText = $"INSERT INTO coding_sessions(StartTime, EndTime, Duration) VALUES('{duration}', '{formattedDateTimeNow}', '{stopwatchElapsed}')";
 
                         tableCmd.ExecuteNonQuery();
+
+                        if (Goals.First() != null)
+                        {
+                            Goals.First().ProgressRemaining -= stopwatchElapsed;
+                        }
 
                         connection.Close();
                     }
