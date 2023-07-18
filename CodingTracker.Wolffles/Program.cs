@@ -14,8 +14,6 @@ namespace CodingTracker.Wolffles;
 
 			SQLiteIO sqliteDatabase = new SQLiteIO(connectionString, tableName);
 
-			//sqliteDatabase.Insert(currentSession);
-
 			Menu menu = new Menu(sqliteDatabase);
 			menu.MainMenu();
 		}

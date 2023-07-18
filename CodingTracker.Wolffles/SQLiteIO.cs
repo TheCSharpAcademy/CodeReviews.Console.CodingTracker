@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using CodingTracker.Wolffles;
 using Microsoft.Data.Sqlite;
@@ -21,18 +18,18 @@ namespace CodingTracker.Wolffles;
 //Read - Tested
 public class SQLiteIO
 {
-	public string connectionString { get; set; }
-	public string tableName { get; set; }
+	public string ConnectionString { get; set; }
+	public string TableName { get; set; }
 
 	public SQLiteIO(string inputConnectionString, string inputTableName)
 	{
-		connectionString = inputConnectionString;
-		tableName = inputTableName;
-		ExecuteCommand(@$"CREATE TABLE IF NOT EXISTS {tableName} (Id INTEGER PRIMARY KEY AUTOINCREMENT,Start_Date TEXT,End_Date TEXT,Duration INTEGER)");
+		ConnectionString = inputConnectionString;
+		TableName = inputTableName;
+		ExecuteCommand(@$"CREATE TABLE IF NOT EXISTS {TableName} (Id INTEGER PRIMARY KEY AUTOINCREMENT,Start_Date TEXT,End_Date TEXT,Duration INTEGER)");
 	}
 	private void ExecuteCommand(string commandString)
 	{
-		using (var connection = new SqliteConnection(connectionString))
+		using (var connection = new SqliteConnection(ConnectionString))
 		{
 			connection.Open();
 
@@ -47,7 +44,7 @@ public class SQLiteIO
 	{
 		if (!CheckIfFound(session.StartDate.ToString()))
 		{
-			ExecuteCommand(@$"INSERT INTO {tableName} (Start_Date,End_Date,Duration) VALUES ('{session.StartDate}','{session.EndDate}','{session.Duration}')");
+			ExecuteCommand(@$"INSERT INTO {TableName} (Start_Date,End_Date,Duration) VALUES ('{session.StartDate}','{session.EndDate}','{session.Duration}')");
 			Console.WriteLine("Insert - Entry Succesfuly");
 
 			return;
@@ -64,7 +61,7 @@ public class SQLiteIO
 			Console.WriteLine("No entry with this value found.");
 			return;
 		}
-		ExecuteCommand(@$"DELETE FROM {tableName} WHERE Start_Date = '{inputDate}'");
+		ExecuteCommand(@$"DELETE FROM {TableName} WHERE Start_Date = '{inputDate}'");
 	}
 	public void Update(string inputDate, string replacementDate)
 	{
@@ -73,7 +70,7 @@ public class SQLiteIO
             Console.WriteLine("No entry with this value found.");
 			return;
         }
-        ExecuteCommand($@"UPDATE {tableName} SET Start_Date = '{replacementDate}' WHERE Start_Date = '{inputDate}'");
+        ExecuteCommand($@"UPDATE {TableName} SET Start_Date = '{replacementDate}' WHERE Start_Date = '{inputDate}'");
         
 		DateTime endDate = GetEndTime(inputDate);
 		DateTime startDate;
@@ -81,16 +78,16 @@ public class SQLiteIO
 
         DateTime.TryParseExact(inputDate, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate);
         TimeSpan newDuration = startDate - endDate;
-        ExecuteCommand($@"UPDATE {tableName} SET Duration = '{newDuration}' WHERE Start_Date = '{inputDate}'");
+        ExecuteCommand($@"UPDATE {TableName} SET Duration = '{newDuration}' WHERE Start_Date = '{inputDate}'");
 
     }
 	public List<ISession> Read()
     {
-        using (var connection = new SqliteConnection(connectionString))
+        using (var connection = new SqliteConnection(ConnectionString))
         {
             connection.Open();
             SqliteCommand tableCommand = connection.CreateCommand();
-            tableCommand.CommandText = @$"SELECT * FROM {tableName} ORDER BY Start_Date";
+            tableCommand.CommandText = @$"SELECT * FROM {TableName} ORDER BY Start_Date";
             SqliteDataReader dataReader = tableCommand.ExecuteReader();
 
 			List<ISession> list = new List<ISession>();	
@@ -100,7 +97,6 @@ public class SQLiteIO
 				int id = Int32.Parse(dataReader.GetString(0));
 				DateTime startDate = DateTime.Parse(dataReader.GetString(1));
 				DateTime endDate = DateTime.Parse(dataReader.GetString(2));
-				TimeSpan duration = TimeSpan.Parse(dataReader.GetString(3));
 
 				ISession currentReadSession = new CodingSession(id, startDate, endDate);
 
@@ -113,12 +109,12 @@ public class SQLiteIO
     }
 	private bool CheckIfFound(string checkDate)
 	{
-        using (var connection = new SqliteConnection(connectionString))
+        using (var connection = new SqliteConnection(ConnectionString))
         {
             connection.Open();
             SqliteCommand tableCommand = connection.CreateCommand();
 			Console.WriteLine(checkDate);
-            tableCommand.CommandText = @$"SELECT * FROM {tableName} WHERE Start_Date = '{checkDate}'";
+            tableCommand.CommandText = @$"SELECT * FROM {TableName} WHERE Start_Date = '{checkDate}'";
             SqliteDataReader dataReader = tableCommand.ExecuteReader();
 
 			if(dataReader.Read())
@@ -130,11 +126,11 @@ public class SQLiteIO
     }
 	private DateTime GetEndTime( string startDate)
 	{
-        using (var connection = new SqliteConnection(connectionString))
+        using (var connection = new SqliteConnection(ConnectionString))
         {
             connection.Open();
             SqliteCommand tableCommand = connection.CreateCommand();
-            tableCommand.CommandText = @$"SELECT * FROM {tableName} WHERE Start_Date = '{startDate}'";
+            tableCommand.CommandText = @$"SELECT * FROM {TableName} WHERE Start_Date = '{startDate}'";
             SqliteDataReader dataReader = tableCommand.ExecuteReader();
 
             List<ISession> list = new List<ISession>();
