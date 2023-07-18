@@ -7,7 +7,7 @@ Model
 
 
 View
--Menu Display
+-Menu Display 
 -Display All Entries - ConsoleTableExt
 -Display New Entry Info
 -Display Delete Entry Info
