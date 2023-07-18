@@ -76,10 +76,20 @@ public class Menu
 
     private void StartSession()
     {
+        Timer timer = new Timer();
+        ISession session = timer.TimedSession();
+
+        sqlDatabase.Insert(session);
+
+
+
         Console.Clear();
+        list = sqlDatabase.Read();
+        display.DisplayTable(list);
 
         Console.WriteLine("Press any key to continue");
         Console.ReadKey();
+        this.MainMenu();
 
     }
     private void UpdateRecord()
