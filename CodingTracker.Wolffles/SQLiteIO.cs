@@ -90,21 +90,22 @@ public class SQLiteIO
             tableCommand.CommandText = @$"SELECT * FROM {TableName} ORDER BY Start_Date";
             SqliteDataReader dataReader = tableCommand.ExecuteReader();
 
-			List<ISession> list = new List<ISession>();	
-	
-            while (dataReader.Read())
-            {
-				int id = Int32.Parse(dataReader.GetString(0));
-				DateTime startDate = DateTime.Parse(dataReader.GetString(1));
-				DateTime endDate = DateTime.Parse(dataReader.GetString(2));
+			List<ISession> list = new List<ISession>();
+			
+				while (dataReader.Read())
+				{
+					int id = Int32.Parse(dataReader.GetString(0));
+					DateTime startDate = DateTime.Parse(dataReader.GetString(1));
+					DateTime endDate = DateTime.Parse(dataReader.GetString(2));
 
-				ISession currentReadSession = new CodingSession(id, startDate, endDate);
+					ISession currentReadSession = new CodingSession(id, startDate, endDate);
 
-				list.Add(currentReadSession);
-            }
-            connection.Close();
+					list.Add(currentReadSession);
+				}
+				connection.Close();
 
-            return list;
+				return list;
+			
         }
     }
 	private bool CheckIfFound(string checkDate)
