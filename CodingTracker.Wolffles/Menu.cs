@@ -98,16 +98,27 @@ public class Menu
 
         list = sqlDatabase.Read();
         display.DisplayTable(list);
-        Console.WriteLine(@"Select a record to UPDATE by typing the record DATE to select, then the DATE to replace with.
+        Console.WriteLine(@"Select a record to UPDATE by typing the record ID to select.)
 ------------------------------------------------------------------------");
+        int selectID = InputValidation.GetUserInputAsInt();
+        string selectedDate = sqlDatabase.GetStartDateFromID(selectID).ToString();
+        Console.WriteLine(@$"Selected entry ID: {selectID}
+Enter new Start Date: ");
+        
+        string newStartDate = InputValidation.GetUserInputAsDate();
+        sqlDatabase.UpdateStartDate(selectedDate, newStartDate);
+        Console.WriteLine("Enter new End Date: ");
+        string newEndDate = InputValidation.GetUserInputAsDate();
+        sqlDatabase.UpdateEndDate(newStartDate, newEndDate);
 
-        sqlDatabase.Update(InputValidation.GetUserInputAsDate(), InputValidation.GetUserInputAsDate());
-
-        Console.WriteLine("Record Updated. Press any key to continue.");
-
-        this.MainMenu();
+        Console.WriteLine(@$"Record Updated:
+ID: {selectID} Start Date: {newStartDate} End Date: {newEndDate}
+Press any key to continue.");
 
         Console.ReadKey();
+        this.MainMenu();
+
+
 
     }
     private void DeleteRecord()
@@ -118,9 +129,20 @@ public class Menu
         Console.WriteLine(@"Select a record to delete by typing it's DATE.
 ------------------------------------------------------------------------");
 
+        string selectedDate = sqlDatabase.GetStartDateFromID(InputValidation.GetUserInputAsInt()).ToString();
+        if(sqlDatabase.Delete(selectedDate)) 
+        {
+            Console.WriteLine("Entry deleted succesfully. Press any key to continue");
+            Console.ReadKey();
+            this.MainMenu();
 
-        sqlDatabase.Delete(InputValidation.GetUserInputAsDate());
+        }
+
+        Console.WriteLine("Entry deletion failed. Press any key to continue");
+        Console.ReadKey();
         this.MainMenu();
+
+
     }
 
 }

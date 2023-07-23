@@ -12,7 +12,7 @@ namespace CodingTracker.Wolffles;
 			string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
 			string tableName = "CodingHours";
 
-			SQLiteIO sqliteDatabase = new SQLiteIO(connectionString, tableName);
+			SQLiteIO sqliteDatabase	 = new SQLiteIO(connectionString, tableName);
 
 			Menu menu = new Menu(sqliteDatabase);
 			menu.MainMenu();

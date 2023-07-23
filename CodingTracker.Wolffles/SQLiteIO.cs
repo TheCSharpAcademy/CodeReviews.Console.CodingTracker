@@ -54,24 +54,27 @@ public class SQLiteIO
 
 		return;
 	}
-	public void Delete(string inputDate)
+	public bool Delete(string inputDate)
 	{
 		if(!CheckIfFound(inputDate))
 		{
 			Console.WriteLine("No entry with this value found.");
-			return;
+			return false;
 		}
 		ExecuteCommand(@$"DELETE FROM {TableName} WHERE Start_Date = '{inputDate}'");
+		return true;
 	}
-	public void Update(string inputDate, string replacementDate)
+	public bool UpdateStartDate(string inputDate, string replacementDate)
 	{
         if (!CheckIfFound(inputDate))
-        {
+        {	
             Console.WriteLine("No entry with this value found.");
-			return;
+			return false;
         }
+
         ExecuteCommand($@"UPDATE {TableName} SET Start_Date = '{replacementDate}' WHERE Start_Date = '{inputDate}'");
-        
+;
+		
 		DateTime endDate = GetEndTime(inputDate);
 		DateTime startDate;
 		string format = "M/d/yyyy h:mm:ss tt";
@@ -79,9 +82,29 @@ public class SQLiteIO
         DateTime.TryParseExact(inputDate, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate);
         TimeSpan newDuration = startDate - endDate;
         ExecuteCommand($@"UPDATE {TableName} SET Duration = '{newDuration}' WHERE Start_Date = '{inputDate}'");
-
+		return true;
     }
-	public List<ISession> Read()
+    public bool UpdateEndDate(string inputDate, string replacementDate)
+    {
+        if (!CheckIfFound(inputDate))
+        {
+            Console.WriteLine("No entry with this value found.");
+            return false;
+        }
+
+        ExecuteCommand($@"UPDATE {TableName} SET End_Date = '{replacementDate}' WHERE Start_Date = '{inputDate}'");
+        ;
+
+        DateTime endDate = GetEndTime(inputDate);
+        DateTime startDate;
+        string format = "M/d/yyyy h:mm:ss tt";
+
+        DateTime.TryParseExact(inputDate, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate);
+        TimeSpan newDuration = endDate - startDate;
+        ExecuteCommand($@"UPDATE {TableName} SET Duration = '{newDuration}' WHERE Start_Date = '{inputDate}'");
+        return true;
+    }
+    public List<ISession> Read()
     {
         using (var connection = new SqliteConnection(ConnectionString))
         {
@@ -114,7 +137,6 @@ public class SQLiteIO
         {
             connection.Open();
             SqliteCommand tableCommand = connection.CreateCommand();
-			Console.WriteLine(checkDate);
             tableCommand.CommandText = @$"SELECT * FROM {TableName} WHERE Start_Date = '{checkDate}'";
             SqliteDataReader dataReader = tableCommand.ExecuteReader();
 
@@ -141,11 +163,32 @@ public class SQLiteIO
 			while (dataReader.Read())
 			{
 				endDate = DateTime.Parse(dataReader.GetString(2));
-				Console.WriteLine(endDate.ToString());
 			}
 			connection.Close();
 
             return endDate;
+        }
+    }
+	public DateTime GetStartDateFromID(int ID)
+	{
+        using (var connection = new SqliteConnection(ConnectionString))
+        {
+            connection.Open();
+            SqliteCommand tableCommand = connection.CreateCommand();
+            tableCommand.CommandText = @$"SELECT * FROM {TableName} WHERE Id = '{ID}'";
+            SqliteDataReader dataReader = tableCommand.ExecuteReader();
+
+            List<ISession> list = new List<ISession>();
+
+            DateTime startDate = new DateTime();
+
+            while (dataReader.Read())
+            {
+                startDate = DateTime.Parse(dataReader.GetString(1));
+            }
+            connection.Close();
+
+            return startDate;
         }
     }
 
