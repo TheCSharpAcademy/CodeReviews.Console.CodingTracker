@@ -10,11 +10,11 @@ internal class DatabaseLogic
 
     private readonly string connectionString = ConfigurationManager.AppSettings.Get("connectionString");
     
-    public string tableName { get; set; }
+    public string TableName { get; set; }
 
     public DatabaseLogic()
     {
-        tableName = "CodingTracker";
+        TableName = "CodingTracker";
         CreateTable();
     }
    
@@ -24,7 +24,7 @@ internal class DatabaseLogic
         {
             connection.Open();
             var tableCmd = connection.CreateCommand();
-            tableCmd.CommandText = $@"CREATE TABLE IF NOT EXISTS {tableName}
+            tableCmd.CommandText = $@"CREATE TABLE IF NOT EXISTS {TableName}
                                     (Id INTEGER PRIMARY KEY AUTOINCREMENT,
                                     StartingDate TEXT,
                                     EndingDate TEXT,
@@ -41,7 +41,7 @@ internal class DatabaseLogic
         using(SqliteConnection connection = new SqliteConnection(connectionString))
         {
             connection.Open();
-            string query = $"INSERT INTO {tableName} (StartingDate, EndingDate, TotalSessionTime, Goals, TimeToCompleteGoal) VALUES (@startDate, @endDate, @totalTime, @goal, @timeToGoal);";
+            string query = $"INSERT INTO {TableName} (StartingDate, EndingDate, TotalSessionTime, Goals, TimeToCompleteGoal) VALUES (@startDate, @endDate, @totalTime, @goal, @timeToGoal);";
             var command = connection.CreateCommand();
             command.CommandText = query;
             command.Parameters.AddWithValue("@startDate", startDate);
@@ -59,18 +59,18 @@ internal class DatabaseLogic
         using(SqliteConnection connection = new SqliteConnection(connectionString))
         {
             connection.Open ();
-            string query = $@"UPDATE {tableName}
+            string query = $@"UPDATE {TableName}
                             SET StartingDate = @startDate, EndingDate = @endDate, TotalSessionTime = @totalTime, Goals = @goal, TimeToCompleteGoal = @timeToGoal
                             Where id = @id;";
             var command = connection.CreateCommand();
             command.CommandText = query;
             command.Parameters.AddWithValue("@id", id);
             command.Parameters.AddWithValue("@startDate", startDate);
-            command.Parameters.AddWithValue("@endDate", endDate);;
+            command.Parameters.AddWithValue("@endDate", endDate);
             command.Parameters.AddWithValue("@totalTime", totalTime);
             command.Parameters.AddWithValue("@goal", goal);
             command.Parameters.AddWithValue("@timeToGoal", timeToGoal);
-            int countRows = command.ExecuteNonQuery();
+            command.ExecuteNonQuery();
 
             connection.Close();
         }
@@ -81,14 +81,11 @@ internal class DatabaseLogic
         using (SqliteConnection connection = new SqliteConnection(connectionString))
         {
             connection.Open();
-            string query = $"DELETE FROM {tableName} WHERE id = @id";
+            string query = $"DELETE FROM {TableName} WHERE id = @id";
             var command = connection.CreateCommand();  
             command.CommandText = query;
             command.Parameters.AddWithValue("@id", id);
             int countRows = command.ExecuteNonQuery();
-
-            // CheckIfRecordExists(countRows);
-
             connection.Close();
         }
     }
@@ -100,10 +97,10 @@ internal class DatabaseLogic
         using(SqliteConnection connection = new SqliteConnection(connectionString))
         {
             connection.Open();
-            string query = $"SELECT * FROM {tableName} ORDER BY TotalSessionTime {order}";
+            string query = $"SELECT * FROM {TableName} ORDER BY TotalSessionTime {order}";
             var command = connection.CreateCommand();
             command.CommandText = query;
-            Console.WriteLine($"Table selected: {tableName}");
+            Console.WriteLine($"Table selected: {TableName}");
             using( var reader = command.ExecuteReader() ) 
             {
                 while( reader.Read() ) 
@@ -135,17 +132,16 @@ internal class DatabaseLogic
         using (SqliteConnection connection = new SqliteConnection(connectionString))
         {
             connection.Open();
-            string query = $"SELECT DISTINCT Goals, TimeToCompleteGoal FROM {tableName}";
+            string query = $"SELECT DISTINCT Goals, TimeToCompleteGoal FROM {TableName}";
             var command = connection.CreateCommand();
             command.CommandText = query;
-            Console.WriteLine($"Table selected: {tableName}");
+            Console.WriteLine($"Table selected: {TableName}");
             using (var reader = command.ExecuteReader())
             {
                 while (reader.Read())
                 {
                     string goal = reader.GetString(0);
                     int timeToGoal = reader.GetInt32(1);
-;
                     goals.Add(new Goals(goal, timeToGoal));
                 }
             }

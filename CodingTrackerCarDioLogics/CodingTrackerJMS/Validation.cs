@@ -4,7 +4,7 @@ namespace CodingTrackerJMS;
 
 public class Validation
 {
-    int idInteger = 0;
+    int idInteger;
     string id;
 
     public int GetValidID()

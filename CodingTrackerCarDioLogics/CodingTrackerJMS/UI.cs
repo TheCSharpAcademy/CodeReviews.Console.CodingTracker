@@ -36,7 +36,7 @@ Current goal selected: {goalSelected}
             switch (userInput)
             {
                 case "s":
-                    uiLogic.onGoingSession(goalSelected, timeToGoal);
+                    uiLogic.OnGoingSession(goalSelected, timeToGoal);
                     break;
                 case "a":
                     uiLogic.GetRecordInput(userInput, goalSelected, timeToGoal);

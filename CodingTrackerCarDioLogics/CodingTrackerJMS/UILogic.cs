@@ -15,7 +15,7 @@ public class UILogic
     DateTime startDateT;
     DateTime endDateT;
 
-    public void onGoingSession(string goalSelected, int timeToGoal)
+    public void OnGoingSession(string goalSelected, int timeToGoal)
     {
         TimeSpan elapsedTime = TimeSpan.Zero;
         bool sessionActive = true;
@@ -24,7 +24,7 @@ public class UILogic
         // The while loop will keep running and counting time on the console until the user presses e.
         while (!sessionActive == false)
         {
-            elapsedTime = chronometer(startDateT);
+            elapsedTime = Chronometer(startDateT);
             Console.Clear();
             Console.WriteLine(@"Session currently in progress...
                                 Press e to end current coding session!");
@@ -51,7 +51,7 @@ public class UILogic
         databaseLogic.InsertRecord(startDate, endDate, totalTime, goalSelected, timeToGoal);
     }
 
-    public TimeSpan chronometer(DateTime startTimeT)
+    public TimeSpan Chronometer(DateTime startTimeT)
     {
         TimeSpan elapsedTime = DateTime.Now - startTimeT;
         Thread.Sleep(1000);
@@ -299,7 +299,6 @@ The average time per session is {averageTimePerSession} minutes! In a total of {
 
     public void CreateGoal(out string goalSelected, out int timeToGoal)
     {
-        List<Goals> goals = databaseLogic.GetGoalsRecords();
         Console.WriteLine("Write the name of the new goal:");
         goalSelected = Console.ReadLine();
         Console.WriteLine("Write the number of minutes in order to achieve the goal:");
