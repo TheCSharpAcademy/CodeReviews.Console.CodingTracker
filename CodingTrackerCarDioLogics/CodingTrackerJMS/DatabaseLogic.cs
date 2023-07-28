@@ -85,7 +85,7 @@ internal class DatabaseLogic
             var command = connection.CreateCommand();  
             command.CommandText = query;
             command.Parameters.AddWithValue("@id", id);
-            int countRows = command.ExecuteNonQuery();
+            command.ExecuteNonQuery();
             connection.Close();
         }
     }

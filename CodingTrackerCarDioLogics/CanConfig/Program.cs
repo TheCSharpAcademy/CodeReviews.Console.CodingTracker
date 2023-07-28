@@ -1,3 +1,2 @@
-﻿using System.Configuration;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 
