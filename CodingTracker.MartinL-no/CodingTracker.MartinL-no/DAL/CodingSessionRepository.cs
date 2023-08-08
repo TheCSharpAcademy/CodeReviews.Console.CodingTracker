@@ -65,4 +65,30 @@ internal class CodingSessionRepository
             }
         }
     }
+
+    internal bool InsertCodingSession(CodingSession codingSession)
+    {
+        using (var connection = new SqliteConnection($"{ConnString}{DbName}"))
+        {
+            connection.Open();
+
+            var command = connection.CreateCommand();
+            command.CommandText = """
+                INSERT INTO CodingSession (StartTime, EndTime)
+                VALUES ($startTime, $endTime)
+                """;
+
+            command.Parameters.AddWithValue("$startTime", ToSqLiteDateFormat(codingSession.StartTime));
+            command.Parameters.AddWithValue("$endTime", ToSqLiteDateFormat(codingSession.EndTime));
+
+            var success = command.ExecuteNonQuery() != 0;
+
+            return success;
+        }
+    }
+
+    private string ToSqLiteDateFormat(DateTime dateTime)
+    {
+        return dateTime.ToString("yyyy-MM-dd HH:mm:ss.fff");
+    }
 }
