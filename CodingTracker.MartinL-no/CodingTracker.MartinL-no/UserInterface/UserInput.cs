@@ -18,18 +18,21 @@ internal class UserInput
             ShowMainMenuOptions();
             var op = Ask("Your choice: ");
 
-            switch (op.ToLower())
+            switch (op.ToUpper())
             {
-                case "a":
+                case "S":
+                    StartCodingSession();
+                    break;
+                case "A":
                     AddCodingSession();
                     break;
-                case "u":
+                case "U":
                     UpdateCodingSession();
                     break;
-                case "d":
+                case "D":
                     DeleteCodingSession();
                     break;
-                case "v":
+                case "V":
                     RecordsReports();
                     break;
                 case "0":
@@ -48,15 +51,42 @@ internal class UserInput
 
         Console.WriteLine("""
             Select an option:
-            a - Add coding session
-            u - Update coding session
-            d - Delete coding session
-            v - View records/reports
-            0 - Exit program
+                S - Start coding session
+                A - Add coding session
+                U - Update coding session
+                D - Delete coding session
+                V - View records/reports
+                0 - Exit program
 
             """);
-
+        
         Console.WriteLine("---------------------------------");
+    }
+
+    private void StartCodingSession()
+    {
+        var startTime = _controller.StartSession();
+        var currentTime = startTime;
+
+        while (!(Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Escape))
+        {
+            currentTime = currentTime.AddSeconds(1);
+
+            ShowHeader("Recording Coding Session");
+            Console.WriteLine($"Start time: {startTime.ToString("HH:mm:ss").PadLeft(12)}\n");
+            Console.Write($"Current time: ");
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"{currentTime.ToString("HH:mm:ss").PadLeft(10)}\n");
+            Console.ResetColor();
+
+            Console.WriteLine("Press ESC to end session");
+            Thread.Sleep(1000);
+        }
+
+        _controller.InsertCodingSession(startTime.ToString(), currentTime.ToString());
+
+        ShowMessage("Coding session added!");
     }
 
     private void AddCodingSession()
@@ -130,9 +160,9 @@ internal class UserInput
 
             var op = Ask("Your choice: ");
 
-            switch (op.ToLower())
+            switch (op.ToUpper())
             {
-                case "a":
+                case "A":
                     ShowAllSessions();
                     return;
             }
@@ -145,7 +175,7 @@ internal class UserInput
 
         Console.WriteLine("""
             Select an option:
-            a - View all sessions
+                A - View all sessions
 
             """);
 

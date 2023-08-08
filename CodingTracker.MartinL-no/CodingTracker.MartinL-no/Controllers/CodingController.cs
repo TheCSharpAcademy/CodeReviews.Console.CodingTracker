@@ -12,6 +12,11 @@ internal class CodingController
         _sessionRepository = sessionRepository;
     }
 
+    public DateTime StartSession()
+    {
+        return DateTime.Now;
+    }
+
     public List<CodingSession> GetCodingSessions()
     {
         return _sessionRepository.GetCodingSessions();
