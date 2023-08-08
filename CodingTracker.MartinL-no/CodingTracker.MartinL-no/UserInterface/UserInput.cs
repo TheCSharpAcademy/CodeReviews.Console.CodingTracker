@@ -30,6 +30,7 @@ internal class UserInput
                     DeleteCodingSession();
                     break;
                 case "v":
+                    RecordsReports();
                     break;
                 case "0":
                     ShowMessage("Program ended");
@@ -50,7 +51,7 @@ internal class UserInput
             a - Add coding session
             u - Update coding session
             d - Delete coding session
-            v - View records
+            v - View records/reports
             0 - Exit program
 
             """);
@@ -119,6 +120,36 @@ internal class UserInput
 
             else ShowMessage("Incorrect Id please try again");
         }
+    }
+
+    private void RecordsReports()
+    {
+        while (true)
+        {
+            ShowRecordsReportsMenu();
+
+            var op = Ask("Your choice: ");
+
+            switch (op.ToLower())
+            {
+                case "a":
+                    ShowAllSessions();
+                    return;
+            }
+        }
+    }
+
+    private void ShowRecordsReportsMenu()
+    {
+        ShowHeader("View records/reports");
+
+        Console.WriteLine("""
+            Select an option:
+            a - View all sessions
+
+            """);
+
+        Console.WriteLine("---------------------------------");
     }
 
     private void ShowAllSessions()
