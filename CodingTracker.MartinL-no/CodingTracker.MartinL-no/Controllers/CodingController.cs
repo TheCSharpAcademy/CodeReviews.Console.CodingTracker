@@ -34,6 +34,9 @@ internal class CodingController
 
     public bool UpdateCodingSession(int id, string startTimeString, string endTimeString)
     {
+        var isValidId = GetCodingSessions().Exists(cs => cs.Id == id);
+        if (!isValidId) return false;
+
         var startTime = DateTime.Parse(startTimeString);
         var endTime = DateTime.Parse(endTimeString);
 

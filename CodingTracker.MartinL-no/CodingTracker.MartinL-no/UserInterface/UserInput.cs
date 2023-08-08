@@ -20,11 +20,11 @@ internal class UserInput
 
             switch (op.ToLower())
             {
-                case "h":
-                    break;
                 case "a":
+                    AddCodingTime();
                     break;
                 case "u":
+                    UpdateCodingTime();
                     break;
                 case "d":
                     break;
@@ -45,7 +45,6 @@ internal class UserInput
         ShowHeader("Welcome to the Coding Tracker app!");
 
         Console.WriteLine("""
-
             Select an option:
             a - Add coding time
             u - Update coding time
@@ -58,11 +57,58 @@ internal class UserInput
         Console.WriteLine("---------------------------------");
     }
 
+    private void AddCodingTime()
+    {
+        while (true)
+        {
+            ShowHeader("Add coding time");
+
+            var startTime = Ask("When did you start coding (input must be in format - 2023-01-30 21:34)");
+            var endTime = Ask("When did you end coding (input must be in format - 2023-01-30 21:34)");
+
+            var isAdded = _controller.InsertCodingSession(startTime, endTime);
+
+            if (isAdded)
+            {
+                ShowMessage("Coding time added!");
+                break;
+            }
+
+            else ShowMessage("Invalid entry, please try again");
+        }
+    }
+
+    private void UpdateCodingTime()
+    {
+        ShowHeader("Update coding time");
+        ShowAllSessions();
+
+        while (true)
+        {
+            var id = Ask("Enter the id of the sessions you would like to update: ");
+            var startTime = Ask("Enter the new start time (input must be in format - 2023-01-30 21:34): ");
+            var endTime = Ask("Enter the new start time (input must be in format - 2023-01-30 21:34): ");
+            var intId = 0;
+
+            if (Int32.TryParse(id, out intId) && _controller.UpdateCodingSession(intId, startTime, endTime))
+            {
+                ShowMessage("Session updated!");
+                break;
+            }
+
+            else ShowMessage("Invalid input please try again");
+        }
+    }
+
+    private void ShowAllSessions()
+    {
+    }
+
     private static void ShowHeader(string title)
     {
         Console.Clear();
         Console.WriteLine(title);
-        Console.WriteLine("---------------------------------");
+        Console.WriteLine("---------------------------------\n");
     }
 
     private void ShowMessage(string message)
