@@ -9,5 +9,10 @@ var connString = ConfigurationManager.AppSettings.Get("ConnString");
 var repo = new CodingSessionRepository(connString, dbPath);
 var startTime = DateTime.Now;
 var endTime = DateTime.Now.AddDays(1);
-var success = repo.InsertCodingSession(new CodingSession(startTime, endTime));
+
+var codingSession = new CodingSession(3, startTime, endTime);
+
+//var success = repo.InsertCodingSession(codingSession);
+var success = repo.DeleteCodingSession(codingSession);
+
 Console.WriteLine(success);

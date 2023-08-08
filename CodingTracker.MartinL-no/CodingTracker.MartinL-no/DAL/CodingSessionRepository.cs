@@ -81,9 +81,25 @@ internal class CodingSessionRepository
             command.Parameters.AddWithValue("$startTime", ToSqLiteDateFormat(codingSession.StartTime));
             command.Parameters.AddWithValue("$endTime", ToSqLiteDateFormat(codingSession.EndTime));
 
-            var success = command.ExecuteNonQuery() != 0;
+            return command.ExecuteNonQuery() != 0;
+        }
+    }
 
-            return success;
+    internal bool DeleteCodingSession(CodingSession codingSession)
+    {
+        using (var connection = new SqliteConnection($"{ConnString}{DbName}"))
+        {
+            connection.Open();
+
+            var command = connection.CreateCommand();
+            command.CommandText = """
+                DELETE FROM CodingSession
+                WHERE Id = $id;
+                """;
+
+            command.Parameters.AddWithValue("id", codingSession.Id);
+
+            return command.ExecuteNonQuery() != 0;
         }
     }
 
