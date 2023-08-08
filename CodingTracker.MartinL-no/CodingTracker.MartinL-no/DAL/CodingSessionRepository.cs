@@ -4,12 +4,12 @@ using CodingTracker.MartinL_no.Models;
 
 namespace CodingTracker.MartinL_no.DAL;
 
-internal class CodingSessionRepository
+internal class CodingSessionRepository : ICodingSessionRepository
 {
     private readonly string ConnString;
     private readonly string DbName;
 
-    internal CodingSessionRepository(string connString, string dbName)
+    public CodingSessionRepository(string connString, string dbName)
     {
         ConnString = connString;
         DbName = dbName;
@@ -34,7 +34,7 @@ internal class CodingSessionRepository
         }
     }
 
-    internal List<CodingSession> GetCodingSessions()
+    public List<CodingSession> GetCodingSessions()
     {
         using (var connection = new SqliteConnection($"{ConnString}{DbName}"))
         {
@@ -66,7 +66,7 @@ internal class CodingSessionRepository
         }
     }
 
-    internal bool InsertCodingSession(CodingSession codingSession)
+    public bool InsertCodingSession(CodingSession codingSession)
     {
         using (var connection = new SqliteConnection($"{ConnString}{DbName}"))
         {
@@ -85,7 +85,7 @@ internal class CodingSessionRepository
         }
     }
 
-    internal bool DeleteCodingSession(CodingSession codingSession)
+    public bool DeleteCodingSession(int id)
     {
         using (var connection = new SqliteConnection($"{ConnString}{DbName}"))
         {
@@ -97,13 +97,13 @@ internal class CodingSessionRepository
                 WHERE Id = $id;
                 """;
 
-            command.Parameters.AddWithValue("id", codingSession.Id);
+            command.Parameters.AddWithValue("id", id);
 
             return command.ExecuteNonQuery() != 0;
         }
     }
 
-    internal bool UpdateCodingSession(CodingSession codingSession)
+    public bool UpdateCodingSession(CodingSession codingSession)
     {
         using (var connection = new SqliteConnection($"{ConnString}{DbName}"))
         {
