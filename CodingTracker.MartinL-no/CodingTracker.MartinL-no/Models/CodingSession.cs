@@ -2,18 +2,18 @@
 
 internal class CodingSession
 {
-    internal int Id { get; set; }
-    internal DateTime StartTime { get; set; }
-    internal DateTime EndTime { get; set; }
-    internal TimeSpan Duration => EndTime - StartTime;
+    public int Id { get; set; }
+    public DateTime StartTime { get; set; }
+    public DateTime EndTime { get; set; }
+    public TimeSpan Duration => EndTime - StartTime;
 
-    internal CodingSession(DateTime startTime, DateTime endTime)
+    public CodingSession(DateTime startTime, DateTime endTime)
 	{
         StartTime = startTime;
         EndTime = endTime;
     }
 
-    internal CodingSession(int id, DateTime startTime, DateTime endTime) : this(startTime, endTime)
+    public CodingSession(int id, DateTime startTime, DateTime endTime) : this(startTime, endTime)
     {
         Id = id;
     }
