@@ -85,7 +85,7 @@ internal class CodingSessionRepository : ICodingSessionRepository
         }
     }
 
-    public bool DeleteCodingSession(CodingSession codingSession)
+    public bool DeleteCodingSession(int id)
     {
         using (var connection = new SqliteConnection($"{ConnString}{DbName}"))
         {
@@ -97,7 +97,7 @@ internal class CodingSessionRepository : ICodingSessionRepository
                 WHERE Id = $id;
                 """;
 
-            command.Parameters.AddWithValue("id", codingSession.Id);
+            command.Parameters.AddWithValue("id", id);
 
             return command.ExecuteNonQuery() != 0;
         }

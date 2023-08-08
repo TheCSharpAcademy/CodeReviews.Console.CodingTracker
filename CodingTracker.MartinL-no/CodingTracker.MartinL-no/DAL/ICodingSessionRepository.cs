@@ -8,7 +8,7 @@ internal interface ICodingSessionRepository
 
     public bool InsertCodingSession(CodingSession codingSession);
 
-    public bool DeleteCodingSession(CodingSession codingSession);
+    public bool DeleteCodingSession(int id);
 
     public bool UpdateCodingSession(CodingSession codingSession);
 }

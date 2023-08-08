@@ -26,4 +26,9 @@ internal class CodingController
 
         return _sessionRepository.InsertCodingSession(codingSession);
     }
+
+    public bool DeleteCodingSession(int id)
+    {
+        return _sessionRepository.DeleteCodingSession(id);
+    }
 }
