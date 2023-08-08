@@ -31,4 +31,14 @@ internal class CodingController
     {
         return _sessionRepository.DeleteCodingSession(id);
     }
+
+    public bool UpdateCodingSession(int id, string startTimeString, string endTimeString)
+    {
+        var startTime = DateTime.Parse(startTimeString);
+        var endTime = DateTime.Parse(endTimeString);
+
+        var codingSession = new CodingSession(id, startTime, endTime);
+
+        return _sessionRepository.UpdateCodingSession(codingSession);
+    }
 }
