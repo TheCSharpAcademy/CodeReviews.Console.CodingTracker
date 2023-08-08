@@ -103,6 +103,29 @@ internal class CodingSessionRepository
         }
     }
 
+    internal bool UpdateCodingSession(CodingSession codingSession)
+    {
+        using (var connection = new SqliteConnection($"{ConnString}{DbName}"))
+        {
+            connection.Open();
+
+            var command = connection.CreateCommand();
+            command.CommandText = """
+                UPDATE CodingSession
+                SET StartTime = $startTime,
+                    EndTime = $endTime
+                WHERE
+                    Id = $id;
+                """;
+
+            command.Parameters.AddWithValue("id", codingSession.Id);
+            command.Parameters.AddWithValue("$startTime", ToSqLiteDateFormat(codingSession.StartTime));
+            command.Parameters.AddWithValue("$endTime", ToSqLiteDateFormat(codingSession.EndTime));
+
+            return command.ExecuteNonQuery() != 0;
+        }
+    }
+
     private string ToSqLiteDateFormat(DateTime dateTime)
     {
         return dateTime.ToString("yyyy-MM-dd HH:mm:ss.fff");
