@@ -50,8 +50,6 @@ internal class CodingSessionRepository : ICodingSessionRepository
             {
                 var codingSessions = new List<CodingSession>();
 
-                if (!reader.HasRows) return codingSessions;
-
                 while (reader.Read())
                 {
                     var id = reader.GetInt32(0);
@@ -63,6 +61,34 @@ internal class CodingSessionRepository : ICodingSessionRepository
 
                 return codingSessions;
             }
+        }
+    }
+
+    public CodingSession GetCodingSession(int id)
+    {
+        using (var connection = new SqliteConnection($"{ConnString}{DbName}"))
+        {
+            connection.Open();
+
+            var command = connection.CreateCommand();
+            command.CommandText = """
+                SELECT C.Id, C.StartTime, C.EndTime
+                FROM CodingSession AS C
+                WHERE C.Id = $id;
+                """;
+
+            command.Parameters.AddWithValue("$id", id);
+
+            using (var reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    var startTime = DateTime.Parse(reader.GetString(1));
+                    var endTime = DateTime.Parse(reader.GetString(2));
+                    return new CodingSession(id, startTime, endTime);
+                }
+            }
+            return null;
         }
     }
 
@@ -97,7 +123,7 @@ internal class CodingSessionRepository : ICodingSessionRepository
                 WHERE Id = $id;
                 """;
 
-            command.Parameters.AddWithValue("id", id);
+            command.Parameters.AddWithValue("$id", id);
 
             return command.ExecuteNonQuery() != 0;
         }
@@ -118,7 +144,7 @@ internal class CodingSessionRepository : ICodingSessionRepository
                     Id = $id;
                 """;
 
-            command.Parameters.AddWithValue("id", codingSession.Id);
+            command.Parameters.AddWithValue("$id", codingSession.Id);
             command.Parameters.AddWithValue("$startTime", ToSqLiteDateFormat(codingSession.StartTime));
             command.Parameters.AddWithValue("$endTime", ToSqLiteDateFormat(codingSession.EndTime));
 

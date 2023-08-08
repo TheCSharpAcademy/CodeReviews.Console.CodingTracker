@@ -12,16 +12,20 @@ internal class CodingController
         _sessionRepository = sessionRepository;
     }
 
-    public List<CodingSession>GetCodingSessions()
+    public List<CodingSession> GetCodingSessions()
     {
         return _sessionRepository.GetCodingSessions();
+    }
+
+    public CodingSession GetCodingSession(int id)
+    {
+        return _sessionRepository.GetCodingSession(id);
     }
 
     public bool InsertCodingSession(string startTimeString, string endTimeString)
     {
         var startTime = DateTime.Parse(startTimeString);
         var endTime = DateTime.Parse(endTimeString);
-
         var codingSession = new CodingSession(startTime, endTime);
 
         return _sessionRepository.InsertCodingSession(codingSession);
@@ -34,13 +38,11 @@ internal class CodingController
 
     public bool UpdateCodingSession(int id, string startTimeString, string endTimeString)
     {
-        var isValidId = GetCodingSessions().Exists(cs => cs.Id == id);
-        if (!isValidId) return false;
+        var codingSession = GetCodingSession(id);
+        if (codingSession == null) return false;
 
-        var startTime = DateTime.Parse(startTimeString);
-        var endTime = DateTime.Parse(endTimeString);
-
-        var codingSession = new CodingSession(id, startTime, endTime);
+        codingSession.StartTime = DateTime.Parse(startTimeString);
+        codingSession.EndTime = DateTime.Parse(endTimeString);
 
         return _sessionRepository.UpdateCodingSession(codingSession);
     }

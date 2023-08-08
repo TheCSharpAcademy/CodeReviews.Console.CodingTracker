@@ -21,12 +21,13 @@ internal class UserInput
             switch (op.ToLower())
             {
                 case "a":
-                    AddCodingTime();
+                    AddCodingSession();
                     break;
                 case "u":
-                    UpdateCodingTime();
+                    UpdateCodingSession();
                     break;
                 case "d":
+                    DeleteCodingSession();
                     break;
                 case "v":
                     break;
@@ -57,7 +58,7 @@ internal class UserInput
         Console.WriteLine("---------------------------------");
     }
 
-    private void AddCodingTime()
+    private void AddCodingSession()
     {
         while (true)
         {
@@ -78,13 +79,13 @@ internal class UserInput
         }
     }
 
-    private void UpdateCodingTime()
+    private void UpdateCodingSession()
     {
-        ShowHeader("Update coding time");
-        ShowAllSessions();
-
         while (true)
         {
+            ShowHeader("Update coding session");
+            ShowAllSessions();
+
             var id = Ask("Enter the id of the session you would like to update: ");
             var startTime = Ask("Enter the new start time (input must be in format - 2023-01-30 21:34): ");
             var endTime = Ask("Enter the new start time (input must be in format - 2023-01-30 21:34): ");
@@ -97,6 +98,26 @@ internal class UserInput
             }
 
             else ShowMessage("Invalid input please try again");
+        }
+    }
+
+    private void DeleteCodingSession()
+    {
+        while (true)
+        {
+            ShowHeader("Delete coding session");
+            ShowAllSessions();
+
+            var id = Ask("Enter the Id of the session you would like to delete: ");
+            var intId = 0;
+
+            if (Int32.TryParse(id, out intId) && _controller.DeleteCodingSession(intId))
+            {
+                ShowMessage("Session deleted!");
+                break;
+            }
+
+            else ShowMessage("Incorrect Id please try again");
         }
     }
 

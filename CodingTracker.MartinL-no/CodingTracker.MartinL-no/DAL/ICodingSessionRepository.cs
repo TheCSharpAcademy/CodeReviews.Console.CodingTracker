@@ -6,6 +6,8 @@ internal interface ICodingSessionRepository
 {
     public List<CodingSession> GetCodingSessions();
 
+    public CodingSession GetCodingSession(int id);
+
     public bool InsertCodingSession(CodingSession codingSession);
 
     public bool DeleteCodingSession(int id);
