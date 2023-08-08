@@ -46,9 +46,9 @@ internal class UserInput
 
         Console.WriteLine("""
             Select an option:
-            a - Add coding time
-            u - Update coding time
-            d - Delete coding time
+            a - Add coding session
+            u - Update coding session
+            d - Delete coding session
             v - View records
             0 - Exit program
 
@@ -61,7 +61,7 @@ internal class UserInput
     {
         while (true)
         {
-            ShowHeader("Add coding time");
+            ShowHeader("Add coding session");
 
             var startTime = Ask("When did you start coding (input must be in format - 2023-01-30 21:34)");
             var endTime = Ask("When did you end coding (input must be in format - 2023-01-30 21:34)");
@@ -70,7 +70,7 @@ internal class UserInput
 
             if (isAdded)
             {
-                ShowMessage("Coding time added!");
+                ShowMessage("Coding session added!");
                 break;
             }
 
@@ -85,7 +85,7 @@ internal class UserInput
 
         while (true)
         {
-            var id = Ask("Enter the id of the sessions you would like to update: ");
+            var id = Ask("Enter the id of the session you would like to update: ");
             var startTime = Ask("Enter the new start time (input must be in format - 2023-01-30 21:34): ");
             var endTime = Ask("Enter the new start time (input must be in format - 2023-01-30 21:34): ");
             var intId = 0;
