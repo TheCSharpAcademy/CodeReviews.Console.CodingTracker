@@ -6,19 +6,19 @@ namespace CodingTracker.MartinL_no.DAL;
 
 internal class CodingSessionRepository : ICodingSessionRepository
 {
-    private readonly string ConnString;
-    private readonly string DbName;
+    private readonly string _connString;
+    private readonly string _dbPath;
 
-    public CodingSessionRepository(string connString, string dbName)
+    public CodingSessionRepository(string connString, string dbPath)
     {
-        ConnString = connString;
-        DbName = dbName;
+        _connString = connString;
+        _dbPath = dbPath;
         CreateTable();
     }
 
     private void CreateTable()
     {
-        using (var connection = new SqliteConnection($"{ConnString}{DbName}"))
+        using (var connection = new SqliteConnection($"{_connString}{_dbPath}"))
         {
             connection.Open();
 
@@ -36,7 +36,7 @@ internal class CodingSessionRepository : ICodingSessionRepository
 
     public List<CodingSession> GetCodingSessions()
     {
-        using (var connection = new SqliteConnection($"{ConnString}{DbName}"))
+        using (var connection = new SqliteConnection($"{_connString}{_dbPath}"))
         {
             connection.Open();
 
@@ -66,7 +66,7 @@ internal class CodingSessionRepository : ICodingSessionRepository
 
     public CodingSession GetCodingSession(int id)
     {
-        using (var connection = new SqliteConnection($"{ConnString}{DbName}"))
+        using (var connection = new SqliteConnection($"{_connString}{_dbPath}"))
         {
             connection.Open();
 
@@ -94,7 +94,7 @@ internal class CodingSessionRepository : ICodingSessionRepository
 
     public List<CodingSession> GetCodingSessionFromDate(DateTime fromDate)
     {
-        using (var connection = new SqliteConnection($"{ConnString}{DbName}"))
+        using (var connection = new SqliteConnection($"{_connString}{_dbPath}"))
         {
             connection.Open();
 
@@ -126,7 +126,7 @@ internal class CodingSessionRepository : ICodingSessionRepository
 
     public bool InsertCodingSession(CodingSession codingSession)
     {
-        using (var connection = new SqliteConnection($"{ConnString}{DbName}"))
+        using (var connection = new SqliteConnection($"{_connString}{_dbPath}"))
         {
             connection.Open();
 
@@ -145,7 +145,7 @@ internal class CodingSessionRepository : ICodingSessionRepository
 
     public bool DeleteCodingSession(int id)
     {
-        using (var connection = new SqliteConnection($"{ConnString}{DbName}"))
+        using (var connection = new SqliteConnection($"{_connString}{_dbPath}"))
         {
             connection.Open();
 
@@ -163,7 +163,7 @@ internal class CodingSessionRepository : ICodingSessionRepository
 
     public bool UpdateCodingSession(CodingSession codingSession)
     {
-        using (var connection = new SqliteConnection($"{ConnString}{DbName}"))
+        using (var connection = new SqliteConnection($"{_connString}{_dbPath}"))
         {
             connection.Open();
 

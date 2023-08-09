@@ -7,11 +7,10 @@ using CodingTracker.MartinL_no.UserInterface;
 var dbPath = ConfigurationManager.AppSettings.Get("DbPath");
 var connString = ConfigurationManager.AppSettings.Get("ConnString");
 
-var repo = new CodingSessionRepository(connString, dbPath);
-var controller = new CodingController(repo);
+var sessionRepo = new CodingSessionRepository(connString, dbPath);
+var goalsRepo = new CodingGoalRepository(connString, dbPath);
+
+var controller = new CodingController(sessionRepo, goalsRepo);
 var userInterface = new UserInput(controller);
 
 userInterface.Execute();
-
-//var s = controller.GetCodingSessionsByYears(3);
-//Console.WriteLine();

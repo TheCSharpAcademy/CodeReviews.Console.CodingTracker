@@ -33,6 +33,9 @@ internal class UserInput
                 case "D":
                     DeleteCodingSession();
                     break;
+                case "G":
+                    AddCodingGoal();
+                    break;
                 case "V":
                     RecordsReports();
                     break;
@@ -56,6 +59,7 @@ internal class UserInput
                 A - Add coding session
                 U - Update coding session
                 D - Delete coding session
+                G - Add coding goal
                 V - View records/reports
                 0 - Exit program
 
@@ -153,6 +157,28 @@ internal class UserInput
         }
     }
 
+    private void AddCodingGoal()
+    {
+        while (true)
+        {
+            ShowHeader("Add coding goal");
+            ShowAllSessions();
+
+            var stringHours = Ask("How many hours of coding would you like to complete: ");
+            var endTime = Ask("When is the deadline (input must be in format - 2023-01-30 21:34)");
+
+            var hours = 0;
+
+            if (Int32.TryParse(stringHours, out hours) && _controller.InsertCodingGoal(endTime, hours))
+            {
+                ShowMessage("Coding goal added!");
+                break;
+            }
+
+            else ShowMessage("Invalid entry please try again");
+        }
+    }
+
     private void RecordsReports()
     {
         while (true)
@@ -166,6 +192,9 @@ internal class UserInput
                 case "A":
                     ShowAllSessions();
                     return;
+                case "G":
+                    ShowCodingGoals();
+                    break;
                 case "D":
                     PreviousDaysMenu();
                     break;
@@ -174,6 +203,17 @@ internal class UserInput
                     break;
                 case "Y":
                     PreviousYearsMenu();
+                    break;
+                case "SD":
+                    ShowStatisticsByDay();
+                    break;
+                case "SM":
+                    //ShowStatisticsByMonth();
+                    break;
+                case "SY":
+                    //ShowStatisticsByYear();
+                default:
+                    ShowMessage("Invalid option, please try again");
                     break;
             }
         }
@@ -185,10 +225,14 @@ internal class UserInput
 
         Console.WriteLine("""
             Select an option:
-                A - View all sessions
-                D - View by previous amount of days
-                M - View by previous amount of months
-                Y - View by previous amount of years
+                A  - All sessions
+                G  - Coding goals
+                D  - View by previous amount of days
+                M  - View by previous amount of months
+                Y  - View by previous amount of years
+                SD - Statistics by day
+                SM - Statistics by month
+                SY - Statistics by year   
             
             """);
 
@@ -197,6 +241,16 @@ internal class UserInput
 
     private void ShowAllSessions()
     {
+        // Visualization engine to be added
+    }
+
+    private void ShowCodingGoals()
+    {
+        ShowHeader("Coding goals");
+
+        var goals = _controller.GetCodingGoals();
+
+        // Visualization engine to be added
     }
 
     private void PreviousDaysMenu()
@@ -270,6 +324,13 @@ internal class UserInput
             }
             else ShowMessage("Invalid entry, please try again");
         }
+    }
+
+    private void ShowStatisticsByDay()
+    {
+        var statistics = _controller.GetStatisicsByDay();
+
+        Console.WriteLine();
     }
 
     private void ShowSessions(List<CodingSession> sessions)
