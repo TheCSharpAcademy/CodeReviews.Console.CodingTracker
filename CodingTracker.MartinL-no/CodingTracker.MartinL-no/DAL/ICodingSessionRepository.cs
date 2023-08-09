@@ -8,6 +8,8 @@ internal interface ICodingSessionRepository
 
     public CodingSession GetCodingSession(int id);
 
+    public List<CodingSession> GetCodingSessionFromDate(DateTime fromDate);
+
     public bool InsertCodingSession(CodingSession codingSession);
 
     public bool DeleteCodingSession(int id);

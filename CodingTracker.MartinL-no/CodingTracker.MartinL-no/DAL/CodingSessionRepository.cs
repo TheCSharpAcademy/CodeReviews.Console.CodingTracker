@@ -92,6 +92,38 @@ internal class CodingSessionRepository : ICodingSessionRepository
         }
     }
 
+    public List<CodingSession> GetCodingSessionFromDate(DateTime fromDate)
+    {
+        using (var connection = new SqliteConnection($"{ConnString}{DbName}"))
+        {
+            connection.Open();
+
+            var command = connection.CreateCommand();
+            command.CommandText = """
+                SELECT C.Id, C.StartTime, C.EndTime
+                FROM CodingSession AS C
+                WHERE C.StartTime > $startTime;
+                """;
+
+            command.Parameters.AddWithValue("$startTime", ToSqLiteDateFormat(fromDate));
+
+            using (var reader = command.ExecuteReader())
+            {
+                var codingSessions = new List<CodingSession>();
+
+                while (reader.Read())
+                {
+                    var id = reader.GetInt32(0);
+                    var startTime = DateTime.Parse(reader.GetString(1));
+                    var endTime = DateTime.Parse(reader.GetString(2));
+
+                    codingSessions.Add(new CodingSession(id, startTime, endTime));
+                }
+                return codingSessions;
+            }
+        }
+    }
+
     public bool InsertCodingSession(CodingSession codingSession)
     {
         using (var connection = new SqliteConnection($"{ConnString}{DbName}"))

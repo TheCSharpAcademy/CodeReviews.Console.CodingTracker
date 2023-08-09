@@ -27,6 +27,19 @@ internal class CodingController
         return _sessionRepository.GetCodingSession(id);
     }
 
+    private List<CodingSession> GetCodingSessionsFromDate(DateTime fromDateTime)
+    {
+        return _sessionRepository.GetCodingSessionFromDate(fromDateTime);
+    }
+
+    public List<CodingSession> GetCodingSessionsByDays(int days)
+    {
+        var period = new TimeSpan(days, 0, 0, 0);
+        var fromDateTime = DateTime.Now.Subtract(period);
+
+        return GetCodingSessionsFromDate(fromDateTime);
+    }
+
     public bool InsertCodingSession(string startTimeString, string endTimeString)
     {
         var startTime = DateTime.Parse(startTimeString);

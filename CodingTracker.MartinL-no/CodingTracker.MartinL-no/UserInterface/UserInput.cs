@@ -1,4 +1,5 @@
 ﻿using CodingTracker.MartinL_no.Controllers;
+using CodingTracker.MartinL_no.Models;
 
 namespace CodingTracker.MartinL_no.UserInterface;
 
@@ -165,6 +166,9 @@ internal class UserInput
                 case "A":
                     ShowAllSessions();
                     return;
+                case "D":
+                    PreviousDaysMenu();
+                    break;
             }
         }
     }
@@ -176,6 +180,7 @@ internal class UserInput
         Console.WriteLine("""
             Select an option:
                 A - View all sessions
+                D - View by selected previous days
 
             """);
 
@@ -184,6 +189,30 @@ internal class UserInput
 
     private void ShowAllSessions()
     {
+    }
+
+    private void PreviousDaysMenu()
+    {
+        while (true)
+        {
+            ShowHeader("View records/reports");
+            var daysString = Ask("How many previous days would you like to see reports for: ");
+
+            var days = 0;
+
+            if (Int32.TryParse(daysString, out days))
+            {
+                var sessions = _controller.GetCodingSessionsByDays(days);
+                ShowSessions(sessions);
+                break;
+            }
+            else ShowMessage("Invalid entry, please try again");
+        }
+    }
+
+    private void ShowSessions(List<CodingSession> sessions)
+    {
+        throw new NotImplementedException();
     }
 
     private static void ShowHeader(string title)
