@@ -6,19 +6,19 @@ namespace CodingTracker.MartinL_no.DAL;
 
 internal class CodingSessionRepository : ICodingSessionRepository
 {
-    private readonly string ConnString;
-    private readonly string DbName;
+    private readonly string _connString;
+    private readonly string _dbPath;
 
-    public CodingSessionRepository(string connString, string dbName)
+    public CodingSessionRepository(string connString, string dbPath)
     {
-        ConnString = connString;
-        DbName = dbName;
+        _connString = connString;
+        _dbPath = dbPath;
         CreateTable();
     }
 
     private void CreateTable()
     {
-        using (var connection = new SqliteConnection($"{ConnString}{DbName}"))
+        using (var connection = new SqliteConnection($"{_connString}{_dbPath}"))
         {
             connection.Open();
 
@@ -36,7 +36,7 @@ internal class CodingSessionRepository : ICodingSessionRepository
 
     public List<CodingSession> GetCodingSessions()
     {
-        using (var connection = new SqliteConnection($"{ConnString}{DbName}"))
+        using (var connection = new SqliteConnection($"{_connString}{_dbPath}"))
         {
             connection.Open();
 
@@ -49,8 +49,6 @@ internal class CodingSessionRepository : ICodingSessionRepository
             using (var reader = command.ExecuteReader())
             {
                 var codingSessions = new List<CodingSession>();
-
-                if (!reader.HasRows) return codingSessions;
 
                 while (reader.Read())
                 {
@@ -66,9 +64,69 @@ internal class CodingSessionRepository : ICodingSessionRepository
         }
     }
 
+    public CodingSession GetCodingSession(int id)
+    {
+        using (var connection = new SqliteConnection($"{_connString}{_dbPath}"))
+        {
+            connection.Open();
+
+            var command = connection.CreateCommand();
+            command.CommandText = """
+                SELECT C.Id, C.StartTime, C.EndTime
+                FROM CodingSession AS C
+                WHERE C.Id = $id;
+                """;
+
+            command.Parameters.AddWithValue("$id", id);
+
+            using (var reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    var startTime = DateTime.Parse(reader.GetString(1));
+                    var endTime = DateTime.Parse(reader.GetString(2));
+                    return new CodingSession(id, startTime, endTime);
+                }
+            }
+            return null;
+        }
+    }
+
+    public List<CodingSession> GetCodingSessionFromDate(DateTime fromDate)
+    {
+        using (var connection = new SqliteConnection($"{_connString}{_dbPath}"))
+        {
+            connection.Open();
+
+            var command = connection.CreateCommand();
+            command.CommandText = """
+                SELECT C.Id, C.StartTime, C.EndTime
+                FROM CodingSession AS C
+                WHERE C.StartTime > $startTime;
+                """;
+
+            command.Parameters.AddWithValue("$startTime", ToSqLiteDateFormat(fromDate));
+
+            using (var reader = command.ExecuteReader())
+            {
+                var codingSessions = new List<CodingSession>();
+
+                while (reader.Read())
+                {
+                    var id = reader.GetInt32(0);
+                    var startTime = DateTime.Parse(reader.GetString(1));
+                    var endTime = DateTime.Parse(reader.GetString(2));
+
+                    codingSessions.Add(new CodingSession(id, startTime, endTime));
+                }
+                return codingSessions;
+            }
+        }
+    }
+
     public bool InsertCodingSession(CodingSession codingSession)
     {
-        using (var connection = new SqliteConnection($"{ConnString}{DbName}"))
+        using (var connection = new SqliteConnection($"{_connString}{_dbPath}"))
         {
             connection.Open();
 
@@ -87,7 +145,7 @@ internal class CodingSessionRepository : ICodingSessionRepository
 
     public bool DeleteCodingSession(int id)
     {
-        using (var connection = new SqliteConnection($"{ConnString}{DbName}"))
+        using (var connection = new SqliteConnection($"{_connString}{_dbPath}"))
         {
             connection.Open();
 
@@ -97,7 +155,7 @@ internal class CodingSessionRepository : ICodingSessionRepository
                 WHERE Id = $id;
                 """;
 
-            command.Parameters.AddWithValue("id", id);
+            command.Parameters.AddWithValue("$id", id);
 
             return command.ExecuteNonQuery() != 0;
         }
@@ -105,7 +163,7 @@ internal class CodingSessionRepository : ICodingSessionRepository
 
     public bool UpdateCodingSession(CodingSession codingSession)
     {
-        using (var connection = new SqliteConnection($"{ConnString}{DbName}"))
+        using (var connection = new SqliteConnection($"{_connString}{_dbPath}"))
         {
             connection.Open();
 
@@ -118,7 +176,7 @@ internal class CodingSessionRepository : ICodingSessionRepository
                     Id = $id;
                 """;
 
-            command.Parameters.AddWithValue("id", codingSession.Id);
+            command.Parameters.AddWithValue("$id", codingSession.Id);
             command.Parameters.AddWithValue("$startTime", ToSqLiteDateFormat(codingSession.StartTime));
             command.Parameters.AddWithValue("$endTime", ToSqLiteDateFormat(codingSession.EndTime));
 
