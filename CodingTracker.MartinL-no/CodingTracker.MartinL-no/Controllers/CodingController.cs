@@ -47,6 +47,13 @@ internal class CodingController
         return GetCodingSessionsFromDate(fromDateTime);
     }
 
+    public List<CodingSession> GetCodingSessionsByYears(int years)
+    {
+        var fromDateTime = DateTime.Now.AddYears(years * -1);
+
+        return GetCodingSessionsFromDate(fromDateTime);
+    }
+
     public bool InsertCodingSession(string startTimeString, string endTimeString)
     {
         var startTime = DateTime.Parse(startTimeString);

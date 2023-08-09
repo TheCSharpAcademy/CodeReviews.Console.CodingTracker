@@ -172,6 +172,9 @@ internal class UserInput
                 case "M":
                     PreviousMonthsMenu();
                     break;
+                case "Y":
+                    PreviousYearsMenu();
+                    break;
             }
         }
     }
@@ -185,6 +188,8 @@ internal class UserInput
                 A - View all sessions
                 D - View by previous amount of days
                 M - View by previous amount of months
+                Y - View by previous amount of years
+            
             """);
 
         Console.WriteLine("---------------------------------");
@@ -199,16 +204,22 @@ internal class UserInput
         while (true)
         {
             ShowHeader("View records/reports");
-            var daysString = Ask("How many previous days would you like to see reports for: ");
 
+            var daysString = Ask("How many previous days would you like to see reports for: ");
+            var order = Ask("View starting from newest date (y/n)? ");
             var days = 0;
 
             if (Int32.TryParse(daysString, out days))
             {
                 var sessions = _controller.GetCodingSessionsByDays(days);
+
+                if (order == "y") sessions = sessions.OrderByDescending(s => s.StartTime).ToList();
+                else sessions = sessions.OrderBy(s => s.StartTime).ToList();
+
                 ShowSessions(sessions);
                 break;
             }
+
             else ShowMessage("Invalid entry, please try again");
         }
     }
@@ -219,12 +230,41 @@ internal class UserInput
         {
             ShowHeader("View records/reports");
             var monthsString = Ask("How many previous months would you like to see reports for: ");
+            var order = Ask("View starting from newest date (y/n)? ");
 
             var months = 0;
 
             if (Int32.TryParse(monthsString, out months))
             {
-                var sessions = _controller.GetCodingSessionsByMonths(months);
+                var sessions = _controller.GetCodingSessionsByYears(months);
+
+                if (order == "y") sessions = sessions.OrderByDescending(s => s.StartTime).ToList();
+                else sessions = sessions.OrderBy(s => s.StartTime).ToList();
+
+                ShowSessions(sessions);
+                break;
+            }
+            else ShowMessage("Invalid entry, please try again");
+        }
+    }
+
+    private void PreviousYearsMenu()
+    {
+        while (true)
+        {
+            ShowHeader("View records/reports");
+            var yearsString = Ask("How many previous years would you like to see reports for: ");
+            var order = Ask("View starting from newest date (y/n)? ");
+
+            var years = 0;
+
+            if (Int32.TryParse(yearsString, out years))
+            {
+                var sessions = _controller.GetCodingSessionsByYears(years);
+
+                if (order == "y") sessions = sessions.OrderByDescending(s => s.StartTime).ToList();
+                else sessions = sessions.OrderBy(s => s.StartTime).ToList();
+
                 ShowSessions(sessions);
                 break;
             }

@@ -12,3 +12,6 @@ var controller = new CodingController(repo);
 var userInterface = new UserInput(controller);
 
 userInterface.Execute();
+
+//var s = controller.GetCodingSessionsByYears(3);
+//Console.WriteLine();
