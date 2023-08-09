@@ -169,6 +169,9 @@ internal class UserInput
                 case "D":
                     PreviousDaysMenu();
                     break;
+                case "M":
+                    PreviousMonthsMenu();
+                    break;
             }
         }
     }
@@ -180,8 +183,8 @@ internal class UserInput
         Console.WriteLine("""
             Select an option:
                 A - View all sessions
-                D - View by selected previous days
-
+                D - View by previous amount of days
+                M - View by previous amount of months
             """);
 
         Console.WriteLine("---------------------------------");
@@ -203,6 +206,25 @@ internal class UserInput
             if (Int32.TryParse(daysString, out days))
             {
                 var sessions = _controller.GetCodingSessionsByDays(days);
+                ShowSessions(sessions);
+                break;
+            }
+            else ShowMessage("Invalid entry, please try again");
+        }
+    }
+
+    private void PreviousMonthsMenu()
+    {
+        while (true)
+        {
+            ShowHeader("View records/reports");
+            var monthsString = Ask("How many previous months would you like to see reports for: ");
+
+            var months = 0;
+
+            if (Int32.TryParse(monthsString, out months))
+            {
+                var sessions = _controller.GetCodingSessionsByMonths(months);
                 ShowSessions(sessions);
                 break;
             }

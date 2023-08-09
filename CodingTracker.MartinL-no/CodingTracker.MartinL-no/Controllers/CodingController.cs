@@ -40,6 +40,13 @@ internal class CodingController
         return GetCodingSessionsFromDate(fromDateTime);
     }
 
+    public List<CodingSession> GetCodingSessionsByMonths(int months)
+    {
+        var fromDateTime = DateTime.Now.AddMonths(months * -1);
+
+        return GetCodingSessionsFromDate(fromDateTime);
+    }
+
     public bool InsertCodingSession(string startTimeString, string endTimeString)
     {
         var startTime = DateTime.Parse(startTimeString);
