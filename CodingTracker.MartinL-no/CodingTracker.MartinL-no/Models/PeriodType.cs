@@ -1,6 +1,6 @@
 ﻿namespace CodingTracker.MartinL_no.Models;
 
-internal enum Period
+internal enum PeriodType
 {
     Day,
     Week,
