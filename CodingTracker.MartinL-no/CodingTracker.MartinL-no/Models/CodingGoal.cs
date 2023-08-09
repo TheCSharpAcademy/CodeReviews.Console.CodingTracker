@@ -1,4 +1,4 @@
-﻿namespace CodingTracker.MartinL_no.DAL;
+﻿namespace CodingTracker.MartinL_no.Models;
 
 internal class CodingGoal
 {

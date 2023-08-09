@@ -81,14 +81,14 @@ internal class CodingController
         return _sessionRepository.UpdateCodingSession(codingSession);
     }
 
-    public List<PeriodStatistic> GetStatisicsByDay()
+    public List<CodingStatistic> GetStatisicsByDay()
     {
         var sessionsGroupedByDay = GetCodingSessions().GroupBy(s => s.StartTime.Date);
 
-        return CalculateStatistics(Period.Day, sessionsGroupedByDay);
+        return CalculateStatistics(PeriodType.Day, sessionsGroupedByDay);
     }
 
-    public List<PeriodStatistic> GetStatisicsByWeek()
+    public List<CodingStatistic> GetStatisicsByWeek()
     {
         var sessionsGroupedByWeek = GetCodingSessions()
             .GroupBy(s =>
@@ -97,28 +97,35 @@ internal class CodingController
                 return System.Globalization.ISOWeek.ToDateTime(s.StartTime.Year, weekNumber, DayOfWeek.Monday);
             });
 
-        return CalculateStatistics(Period.Week, sessionsGroupedByWeek);
+        return CalculateStatistics(PeriodType.Week, sessionsGroupedByWeek);
     }
 
-    public List<PeriodStatistic> GetStatisicsByMonth()
+    public List<CodingStatistic> GetStatisicsByMonth()
     {
         var sessionsGroupedByMonth = GetCodingSessions().GroupBy(s => new DateTime(s.StartTime.Year, s.StartTime.Month, 1));
 
-        return CalculateStatistics(Period.Month, sessionsGroupedByMonth);
+        return CalculateStatistics(PeriodType.Month, sessionsGroupedByMonth);
     }
 
-    private List<PeriodStatistic> CalculateStatistics(Period periodEnum, IEnumerable<IGrouping<DateTime,CodingSession>> periods)
+    public List<CodingStatistic> GetStatisicsByYear()
     {
-        var statistics = new List<PeriodStatistic>();
+        var sessionsGroupedByYear = GetCodingSessions().GroupBy(s => new DateTime(s.StartTime.Year, 1, 1));
+
+        return CalculateStatistics(PeriodType.Year, sessionsGroupedByYear);
+    }
+
+    private List<CodingStatistic> CalculateStatistics(PeriodType periodEnum, IEnumerable<IGrouping<DateTime,CodingSession>> periods)
+    {
+        var statistics = new List<CodingStatistic>();
 
         foreach (var period in periods)
         {
-            var date = new DateOnly(period.Key.Year, period.Key.Month, period.Key.Day);
+            var date = new DateTime(period.Key.Year, period.Key.Month, period.Key.Day);
             var sessionDurations = period.Select(session => session.EndTime - session.StartTime);
             var total = new TimeSpan(sessionDurations.Sum(timeSpan => timeSpan.Ticks));
             var average = new TimeSpan(Convert.ToInt64(sessionDurations.Average(t => t.Ticks)));
 
-            statistics.Add(new PeriodStatistic(periodEnum, date, total, average));
+            statistics.Add(new CodingStatistic(periodEnum, date, total, average));
         }
 
         return statistics;

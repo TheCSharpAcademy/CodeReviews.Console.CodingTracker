@@ -14,7 +14,7 @@ internal class CodingSessionRepository : ICodingSessionRepository
         _connString = connString;
         _dbPath = dbPath;
         CreateTable();
-    }
+    }   
 
     private void CreateTable()
     {

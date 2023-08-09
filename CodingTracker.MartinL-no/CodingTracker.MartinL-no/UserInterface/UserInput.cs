@@ -191,7 +191,7 @@ internal class UserInput
             {
                 case "A":
                     ShowAllSessions();
-                    return;
+                    break;
                 case "G":
                     ShowCodingGoals();
                     break;
@@ -207,11 +207,17 @@ internal class UserInput
                 case "SD":
                     ShowStatisticsByDay();
                     break;
+                case "SW":
+                    ShowStatisticsByWeek();
+                    break;
                 case "SM":
-                    //ShowStatisticsByMonth();
+                    ShowStatisticsByMonth();
                     break;
                 case "SY":
-                    //ShowStatisticsByYear();
+                    ShowStatisticsByYear();
+                    break;
+                case "0":
+                    return;
                 default:
                     ShowMessage("Invalid option, please try again");
                     break;
@@ -231,8 +237,10 @@ internal class UserInput
                 M  - View by previous amount of months
                 Y  - View by previous amount of years
                 SD - Statistics by day
+                SW - Statistics bt week
                 SM - Statistics by month
-                SY - Statistics by year   
+                SY - Statistics by year
+                0  - Return to main menu
             
             """);
 
@@ -241,16 +249,32 @@ internal class UserInput
 
     private void ShowAllSessions()
     {
-        // Visualization engine to be added
+        var sessions = _controller.GetCodingSessions().OrderByDescending(s => s.StartTime).ToList();
+        ShowSessionTablePage("All sessions", sessions);
+    }
+
+    private static void ShowSessionTablePage(string pageTitle, List<CodingSession> sessions)
+    {
+        ShowHeader(pageTitle);
+
+        TableVisualizationEngine.ShowTable(sessions);
+
+        Console.WriteLine("\n---------------------------------");
+        Console.Write("Press any key to return to the menu ");
+        Console.ReadKey();
     }
 
     private void ShowCodingGoals()
     {
+        var goals = _controller.GetCodingGoals().OrderBy(g => g.StartTime).ToList();
+
         ShowHeader("Coding goals");
 
-        var goals = _controller.GetCodingGoals();
+        TableVisualizationEngine.ShowTable(goals);
 
-        // Visualization engine to be added
+        Console.WriteLine("\n---------------------------------");
+        Console.Write("Press any key to return to the menu ");
+        Console.ReadKey();
     }
 
     private void PreviousDaysMenu()
@@ -259,7 +283,7 @@ internal class UserInput
         {
             ShowHeader("View records/reports");
 
-            var daysString = Ask("How many previous days would you like to see reports for: ");
+            var daysString = Ask("How many days back would you like to see reports for: ");
             var order = Ask("View starting from newest date (y/n)? ");
             var days = 0;
 
@@ -270,7 +294,9 @@ internal class UserInput
                 if (order == "y") sessions = sessions.OrderByDescending(s => s.StartTime).ToList();
                 else sessions = sessions.OrderBy(s => s.StartTime).ToList();
 
-                ShowSessions(sessions);
+                var title = $"Sessions in the past {(days > 1 ? days.ToString() + " days" : "day")}";
+                ShowSessionTablePage(title, sessions);
+
                 break;
             }
 
@@ -295,7 +321,9 @@ internal class UserInput
                 if (order == "y") sessions = sessions.OrderByDescending(s => s.StartTime).ToList();
                 else sessions = sessions.OrderBy(s => s.StartTime).ToList();
 
-                ShowSessions(sessions);
+                var title = $"Sessions in the past {(months > 1 ? months.ToString() + " months" : "month")}";
+                ShowSessionTablePage(title, sessions);
+
                 break;
             }
             else ShowMessage("Invalid entry, please try again");
@@ -319,7 +347,9 @@ internal class UserInput
                 if (order == "y") sessions = sessions.OrderByDescending(s => s.StartTime).ToList();
                 else sessions = sessions.OrderBy(s => s.StartTime).ToList();
 
-                ShowSessions(sessions);
+                var title = $"Sessions in the past {(years > 1 ? years.ToString() + " years" : "year")}";
+                ShowSessionTablePage(title, sessions);
+
                 break;
             }
             else ShowMessage("Invalid entry, please try again");
@@ -328,14 +358,37 @@ internal class UserInput
 
     private void ShowStatisticsByDay()
     {
-        var statistics = _controller.GetStatisicsByDay();
-
-        Console.WriteLine();
+        var statistics = _controller.GetStatisicsByDay().OrderBy(s => s.StartDate).ToList();
+        ShowStatisticsTablePage("Statistics by Day", statistics);
     }
 
-    private void ShowSessions(List<CodingSession> sessions)
+    private void ShowStatisticsByWeek()
     {
-        throw new NotImplementedException();
+        var statistics = _controller.GetStatisicsByWeek().OrderBy(s => s.StartDate).ToList();
+        ShowStatisticsTablePage("Statistics by Week", statistics);
+    }
+
+    private void ShowStatisticsByMonth()
+    {
+        var statistics = _controller.GetStatisicsByMonth().OrderBy(s => s.StartDate).ToList();
+        ShowStatisticsTablePage("Statistics by Month", statistics);
+    }
+
+    private void ShowStatisticsByYear()
+    {
+        var statistics = _controller.GetStatisicsByYear().OrderBy(s => s.StartDate).ToList();
+        ShowStatisticsTablePage("Statistics by Year", statistics);
+    }
+
+    private static void ShowStatisticsTablePage(string title, List<CodingStatistic> statistics)
+    {
+        ShowHeader(title);
+
+        TableVisualizationEngine.ShowTable(statistics);
+
+        Console.WriteLine("\n---------------------------------");
+        Console.Write("Press any key to return to the menu ");
+        Console.ReadKey();
     }
 
     private static void ShowHeader(string title)
