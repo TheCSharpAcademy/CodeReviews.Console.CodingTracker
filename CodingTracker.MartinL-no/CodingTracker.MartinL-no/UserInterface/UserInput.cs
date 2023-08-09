@@ -241,7 +241,15 @@ internal class UserInput
 
     private void ShowAllSessions()
     {
-        // Visualization engine to be added
+        var sessions = _controller.GetCodingSessions();
+
+        ShowHeader("All sessions");
+
+        TableVisualizationEngine.ShowTable(sessions);
+
+        Console.WriteLine("\n---------------------------------");
+        Console.Write("Press any key to return to the menu ");
+        Console.ReadKey();
     }
 
     private void ShowCodingGoals()
