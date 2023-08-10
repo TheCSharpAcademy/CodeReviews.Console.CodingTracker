@@ -1,17 +1,18 @@
-﻿using CodingTracker.MartinL_no.Models;
+﻿using System.Configuration;
 using Microsoft.Data.Sqlite;
+using CodingTracker.MartinL_no.Models;
 
 namespace CodingTracker.MartinL_no.DAL;
 
 internal class CodingGoalRepository : ICodingGoalRepository
 {
-    private readonly string _connString;
-    private readonly string _dbPath;
+    private readonly string? _connString;
+    private readonly string? _dbPath;
 
-    public CodingGoalRepository(string connString, string dbPath)
+    public CodingGoalRepository()
     {
-        _connString = connString;
-        _dbPath = dbPath;
+        _connString = ConfigurationManager.AppSettings.Get("ConnString");
+        _dbPath = ConfigurationManager.AppSettings.Get("DbPath");
         CreateTable();
     }
 

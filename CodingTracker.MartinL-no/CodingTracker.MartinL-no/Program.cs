@@ -1,13 +1,9 @@
-﻿using System.Configuration;
-using CodingTracker.MartinL_no.DAL;
+﻿using CodingTracker.MartinL_no.DAL;
 using CodingTracker.MartinL_no.Controllers;
 using CodingTracker.MartinL_no.UserInterface;
 
-var dbPath = ConfigurationManager.AppSettings.Get("DbPath");
-var connString = ConfigurationManager.AppSettings.Get("ConnString");
-
-var sessionRepo = new CodingSessionRepository(connString, dbPath);
-var goalsRepo = new CodingGoalRepository(connString, dbPath);
+var sessionRepo = new CodingSessionRepository();
+var goalsRepo = new CodingGoalRepository();
 
 var controller = new CodingController(sessionRepo, goalsRepo);
 var dateValidator = new DateValidator("yyyy-MM-dd HH:mm");

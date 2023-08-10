@@ -1,18 +1,18 @@
-﻿using Microsoft.Data.Sqlite;
-
+﻿using System.Configuration;
+using Microsoft.Data.Sqlite;
 using CodingTracker.MartinL_no.Models;
 
 namespace CodingTracker.MartinL_no.DAL;
 
 internal class CodingSessionRepository : ICodingSessionRepository
 {
-    private readonly string _connString;
-    private readonly string _dbPath;
+    private readonly string? _connString;
+    private readonly string? _dbPath;
 
-    public CodingSessionRepository(string connString, string dbPath)
+    public CodingSessionRepository()
     {
-        _connString = connString;
-        _dbPath = dbPath;
+        _connString = ConfigurationManager.AppSettings.Get("ConnString");
+        _dbPath = ConfigurationManager.AppSettings.Get("DbPath");
         CreateTable();
     }   
 
