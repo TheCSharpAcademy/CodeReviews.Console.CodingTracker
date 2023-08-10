@@ -1,5 +1,4 @@
-﻿using System.Configuration;
-using Microsoft.Data.Sqlite;
+﻿using Microsoft.Data.Sqlite;
 using CodingTracker.MartinL_no.Models;
 
 namespace CodingTracker.MartinL_no.DAL;
@@ -11,8 +10,8 @@ internal class CodingGoalRepository : ICodingGoalRepository
 
     public CodingGoalRepository()
     {
-        _connString = ConfigurationManager.AppSettings.Get("ConnString");
-        _dbPath = ConfigurationManager.AppSettings.Get("DbPath");
+        _connString = System.Configuration.ConfigurationManager.AppSettings.Get("ConnString");
+        _dbPath = System.Configuration.ConfigurationManager.AppSettings.Get("DbPath");
         CreateTable();
     }
 
