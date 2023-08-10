@@ -30,6 +30,7 @@ internal class CodingSessionRepository : ICodingSessionRepository
                     EndTime TEXT NOT NULL
                 );
                 """;
+
             command.ExecuteNonQuery();
         }
     }
@@ -42,8 +43,8 @@ internal class CodingSessionRepository : ICodingSessionRepository
 
             var command = connection.CreateCommand();
             command.CommandText = """
-                SELECT C.Id, C.StartTime, C.EndTime
-                FROM CodingSession AS C;
+                SELECT Id, StartTime, EndTime
+                FROM CodingSession;
                 """;
 
             using (var reader = command.ExecuteReader())
@@ -72,9 +73,9 @@ internal class CodingSessionRepository : ICodingSessionRepository
 
             var command = connection.CreateCommand();
             command.CommandText = """
-                SELECT C.Id, C.StartTime, C.EndTime
-                FROM CodingSession AS C
-                WHERE C.Id = $id;
+                SELECT Id, StartTime, EndTime
+                FROM CodingSession
+                WHERE Id = $id;
                 """;
 
             command.Parameters.AddWithValue("$id", id);
@@ -100,9 +101,9 @@ internal class CodingSessionRepository : ICodingSessionRepository
 
             var command = connection.CreateCommand();
             command.CommandText = """
-                SELECT C.Id, C.StartTime, C.EndTime
-                FROM CodingSession AS C
-                WHERE C.StartTime > $startTime;
+                SELECT Id, StartTime, EndTime
+                FROM CodingSession
+                WHERE StartTime > $startTime;
                 """;
 
             command.Parameters.AddWithValue("$startTime", ToSqLiteDateFormat(fromDate));

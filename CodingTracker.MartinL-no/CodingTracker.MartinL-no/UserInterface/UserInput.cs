@@ -6,10 +6,12 @@ namespace CodingTracker.MartinL_no.UserInterface;
 internal class UserInput
 {
     private readonly CodingController _controller;
+    private readonly DateValidator DateValidator;
 
-    public UserInput(CodingController controller)
+    public UserInput(CodingController controller, DateValidator dateValidator)
 	{
         _controller = controller;
+        DateValidator = dateValidator;
     }
 
     public void Execute()
@@ -62,10 +64,9 @@ internal class UserInput
                 G - Add coding goal
                 V - View records/reports
                 0 - Exit program
-
             """);
-        
-        Console.WriteLine("---------------------------------");
+
+        ShowLine();
     }
 
     private void StartCodingSession()
@@ -78,13 +79,15 @@ internal class UserInput
             currentTime = currentTime.AddSeconds(1);
 
             ShowHeader("Recording Coding Session");
+
             Console.WriteLine($"Start time: {startTime.ToString("HH:mm:ss").PadLeft(12)}\n");
             Console.Write($"Current time: ");
 
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"{currentTime.ToString("HH:mm:ss").PadLeft(10)}\n");
+            Console.WriteLine($"{currentTime.ToString("HH:mm:ss").PadLeft(10)}");
             Console.ResetColor();
 
+            ShowLine();
             Console.WriteLine("Press ESC to end session");
             Thread.Sleep(1000);
         }
@@ -100,18 +103,24 @@ internal class UserInput
         {
             ShowHeader("Add coding session");
 
-            var startTime = Ask("When did you start coding (input must be in format - 2023-01-30 21:34)");
-            var endTime = Ask("When did you end coding (input must be in format - 2023-01-30 21:34)");
+            var startTime = Ask($"When did you start coding (input must be in format - {DateValidator.Format}): ");
+            var endTime = Ask($"When did you end coding (input must be in format - {DateValidator.Format}): ");
+
+            if (!DateValidator.AreValidDates(startTime, endTime))
+            {
+                ShowMessage("Dates are invalid please try again");
+                continue;
+            }
 
             var isAdded = _controller.InsertCodingSession(startTime, endTime);
 
             if (isAdded)
             {
-                ShowMessage("Coding session added!");
+                ShowMessage("Session added!");
                 break;
             }
 
-            else ShowMessage("Invalid entry, please try again");
+            else ShowMessage("Invalid adding session, please try again");
         }
     }
 
@@ -120,14 +129,24 @@ internal class UserInput
         while (true)
         {
             ShowHeader("Update coding session");
-            ShowAllSessions();
+
+            var sessions = _controller.GetCodingSessions().OrderByDescending(s => s.StartTime).ToList();
+            TableVisualizationEngine.ShowTable(sessions);
+
+            ShowLine();
 
             var id = Ask("Enter the id of the session you would like to update: ");
-            var startTime = Ask("Enter the new start time (input must be in format - 2023-01-30 21:34): ");
-            var endTime = Ask("Enter the new start time (input must be in format - 2023-01-30 21:34): ");
+
+            var startTime = Ask($"Enter the new start time (input must be in format - {DateValidator.Format}): ");
+            var endTime = Ask($"Enter the new end time (input must be in format - {DateValidator.Format}): ");
             var intId = 0;
 
-            if (Int32.TryParse(id, out intId) && _controller.UpdateCodingSession(intId, startTime, endTime))
+            if (!DateValidator.AreValidDates(startTime, endTime))
+            {
+                ShowMessage("Dates/ date format are invalid please try again");
+                continue;
+            }
+            else if (Int32.TryParse(id, out intId) && _controller.UpdateCodingSession(intId, startTime, endTime))
             {
                 ShowMessage("Session updated!");
                 break;
@@ -165,11 +184,11 @@ internal class UserInput
             ShowAllSessions();
 
             var stringHours = Ask("How many hours of coding would you like to complete: ");
-            var endTime = Ask("When is the deadline (input must be in format - 2023-01-30 21:34)");
+            var endTime = Ask($"When is the deadline (input must be in format - {DateValidator.Format})");
 
             var hours = 0;
 
-            if (Int32.TryParse(stringHours, out hours) && _controller.InsertCodingGoal(endTime, hours))
+            if (Int32.TryParse(stringHours, out hours) && DateValidator.IsCorrectFormat(endTime, out _) && _controller.InsertCodingGoal(endTime, hours))
             {
                 ShowMessage("Coding goal added!");
                 break;
@@ -241,10 +260,9 @@ internal class UserInput
                 SM - Statistics by month
                 SY - Statistics by year
                 0  - Return to main menu
-            
             """);
 
-        Console.WriteLine("---------------------------------");
+        ShowLine();
     }
 
     private void ShowAllSessions()
@@ -253,15 +271,13 @@ internal class UserInput
         ShowSessionTablePage("All sessions", sessions);
     }
 
-    private static void ShowSessionTablePage(string pageTitle, List<CodingSession> sessions)
+    private void ShowSessionTablePage(string pageTitle, List<CodingSession> sessions)
     {
         ShowHeader(pageTitle);
 
         TableVisualizationEngine.ShowTable(sessions);
 
-        Console.WriteLine("\n---------------------------------");
-        Console.Write("Press any key to return to the menu ");
-        Console.ReadKey();
+        ShowFooter();
     }
 
     private void ShowCodingGoals()
@@ -272,9 +288,7 @@ internal class UserInput
 
         TableVisualizationEngine.ShowTable(goals);
 
-        Console.WriteLine("\n---------------------------------");
-        Console.Write("Press any key to return to the menu ");
-        Console.ReadKey();
+        ShowFooter();
     }
 
     private void PreviousDaysMenu()
@@ -326,6 +340,7 @@ internal class UserInput
 
                 break;
             }
+
             else ShowMessage("Invalid entry, please try again");
         }
     }
@@ -352,6 +367,7 @@ internal class UserInput
 
                 break;
             }
+
             else ShowMessage("Invalid entry, please try again");
         }
     }
@@ -380,22 +396,32 @@ internal class UserInput
         ShowStatisticsTablePage("Statistics by Year", statistics);
     }
 
-    private static void ShowStatisticsTablePage(string title, List<CodingStatistic> statistics)
+    private void ShowStatisticsTablePage(string title, List<CodingStatistic> statistics)
     {
         ShowHeader(title);
 
         TableVisualizationEngine.ShowTable(statistics);
 
-        Console.WriteLine("\n---------------------------------");
-        Console.Write("Press any key to return to the menu ");
-        Console.ReadKey();
+        ShowFooter();
     }
 
-    private static void ShowHeader(string title)
+    private void ShowHeader(string title)
     {
         Console.Clear();
         Console.WriteLine(title);
         Console.WriteLine("---------------------------------\n");
+    }
+
+    private void ShowFooter()
+    {
+        ShowLine();
+        Console.Write("Press any key to return to the menu ");
+        Console.ReadKey();
+    }
+
+    private void ShowLine()
+    {
+        Console.WriteLine("\n---------------------------------");
     }
 
     private void ShowMessage(string message)
