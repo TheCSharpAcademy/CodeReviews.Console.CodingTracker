@@ -1,5 +1,4 @@
 ﻿using System.Configuration;
-
 using CodingTracker.MartinL_no.DAL;
 using CodingTracker.MartinL_no.Controllers;
 using CodingTracker.MartinL_no.UserInterface;
