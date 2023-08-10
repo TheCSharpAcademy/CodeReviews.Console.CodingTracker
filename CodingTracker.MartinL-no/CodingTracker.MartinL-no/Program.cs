@@ -11,6 +11,8 @@ var sessionRepo = new CodingSessionRepository(connString, dbPath);
 var goalsRepo = new CodingGoalRepository(connString, dbPath);
 
 var controller = new CodingController(sessionRepo, goalsRepo);
-var userInterface = new UserInput(controller);
+var dateValidator = new DateValidator("yyyy-MM-dd HH:mm");
+
+var userInterface = new UserInput(controller, dateValidator);
 
 userInterface.Execute();

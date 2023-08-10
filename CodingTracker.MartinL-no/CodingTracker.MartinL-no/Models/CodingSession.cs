@@ -2,9 +2,9 @@
 
 internal class CodingSession
 {
-    public int Id { get; set; }
-    public DateTime StartTime { get; set; }
-    public DateTime EndTime { get; set; }
+    public readonly int Id;
+    public DateTime StartTime;
+    public DateTime EndTime;
     public TimeSpan Duration => EndTime - StartTime;
 
     public CodingSession(DateTime startTime, DateTime endTime)

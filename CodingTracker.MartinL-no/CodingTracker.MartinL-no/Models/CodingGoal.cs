@@ -2,10 +2,10 @@
 
 internal class CodingGoal
 {
-    public int Id { get; set; }
-    public DateTime StartTime { get; set; }
-    public DateTime EndTime { get; set; }
-    public int Hours { get; set; }
+    public readonly int Id;
+    public readonly DateTime StartTime;
+    public readonly DateTime EndTime;
+    public readonly int Hours;
 
     // Properties not saved/retreived from database
     public TimeSpan TimeCompleted { get; set; }

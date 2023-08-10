@@ -1,6 +1,4 @@
-﻿using CodingTracker.MartinL_no.Models;
-
-namespace CodingTracker.MartinL_no.DAL;
+﻿namespace CodingTracker.MartinL_no.Models;
 
 internal interface ICodingSessionRepository
 {

@@ -1,14 +1,13 @@
-﻿using CodingTracker.MartinL_no.DAL;
-using CodingTracker.MartinL_no.Models;
+﻿using CodingTracker.MartinL_no.Models;
 
 namespace CodingTracker.MartinL_no.Controllers;
 
 internal class CodingController
 {
     private readonly ICodingSessionRepository _sessionRepository;
-    private readonly CodingGoalRepository _goalsRepository;
+    private readonly ICodingGoalRepository _goalsRepository;
 
-    public CodingController(ICodingSessionRepository sessionRepository, CodingGoalRepository goalsRepository)
+    public CodingController(ICodingSessionRepository sessionRepository, ICodingGoalRepository goalsRepository)
 	{
         _sessionRepository = sessionRepository;
         _goalsRepository = goalsRepository;
@@ -114,7 +113,7 @@ internal class CodingController
         return CalculateStatistics(PeriodType.Year, sessionsGroupedByYear);
     }
 
-    private List<CodingStatistic> CalculateStatistics(PeriodType periodEnum, IEnumerable<IGrouping<DateTime,CodingSession>> periods)
+    private List<CodingStatistic> CalculateStatistics(PeriodType periodType, IEnumerable<IGrouping<DateTime,CodingSession>> periods)
     {
         var statistics = new List<CodingStatistic>();
 
@@ -125,7 +124,7 @@ internal class CodingController
             var total = new TimeSpan(sessionDurations.Sum(timeSpan => timeSpan.Ticks));
             var average = new TimeSpan(Convert.ToInt64(sessionDurations.Average(t => t.Ticks)));
 
-            statistics.Add(new CodingStatistic(periodEnum, date, total, average));
+            statistics.Add(new CodingStatistic(periodType, date, total, average));
         }
 
         return statistics;
@@ -139,7 +138,7 @@ internal class CodingController
         foreach (var goal in goals)
         {
             goal.TimeCompleted = CalculateTimeCompleted(goal, sessions);
-            goal.HoursPerDayToComplete = CalculateHoursPerDayToComplete(goal, sessions, goal.TimeCompleted);
+            goal.HoursPerDayToComplete = CalculateHoursPerDayToComplete(goal);
         }
 
         return goals;
@@ -154,7 +153,7 @@ internal class CodingController
         return timeCompleted;
     }
 
-    private TimeSpan CalculateHoursPerDayToComplete(CodingGoal goal, List<CodingSession> sessions, TimeSpan timeCompleted)
+    private TimeSpan CalculateHoursPerDayToComplete(CodingGoal goal)
     {
         var goalHours = new TimeSpan(goal.Hours,0,0);
         var goalTimeRemaining = goalHours - goal.TimeCompleted;
