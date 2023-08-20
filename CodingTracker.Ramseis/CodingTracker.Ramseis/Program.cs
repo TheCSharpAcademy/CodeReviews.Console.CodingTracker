@@ -1,14 +1,9 @@
-﻿using System;
-using System.Configuration;
+﻿using System.Configuration;
 using System.Collections.Specialized;
 using Microsoft.Data.Sqlite;
-using System.Xml;
-using System.ComponentModel.Design;
-using System.Runtime.CompilerServices;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using ConsoleTableExt;
-using System.Timers;
 
 namespace CodingTracker.Ramseis
 {
