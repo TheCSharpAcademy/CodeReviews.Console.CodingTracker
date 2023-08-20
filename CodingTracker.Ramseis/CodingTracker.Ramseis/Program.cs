@@ -662,7 +662,6 @@ namespace CodingTracker.Ramseis
                         {
                             Console.Clear();
                             CodingSession session = new();
-                            bool subMenuFlag = true;
                             Console.Write(
                                 "\n╔════════════════════════════════════════════════════╛\n" +
                                 "║ New Records: Stopwatch                            ┌┐\n" +
