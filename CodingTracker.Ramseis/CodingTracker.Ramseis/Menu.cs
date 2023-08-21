@@ -17,7 +17,7 @@
         public string HDivider { get; set; } = "─";
         public List<string> Options { get; set; } = new List<string> { "Default Option 1!", "Default Option 2!"};
         public List<string> Titles { get; set; } = new List<string>{"Default title!", "Subtitle!"};
-        public int InputRow { get; set; };
+        public int InputRow { get; set; }
         public int MinWidth { get; set; } = 50;
 
         public void DrawMenu()
