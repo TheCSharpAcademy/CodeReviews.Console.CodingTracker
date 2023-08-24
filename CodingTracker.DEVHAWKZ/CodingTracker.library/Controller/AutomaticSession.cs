@@ -19,7 +19,7 @@ internal static class AutomaticSession
             DateTime start = DateTime.Now;
 
             Console.WriteLine("Coding session has started.\nType 'stop' to terminate coding session.");
-            string terminate = Validations.TerminateAutomaticSession(Console.ReadLine());
+            Validations.TerminateAutomaticSession(Console.ReadLine());
 
             stopwatch.Stop();
             
