@@ -138,8 +138,8 @@ internal static class QueriesCrud
         {
             using (var connection = new SqliteConnection(connectionString))
             {
-                string startTime = Helpers.GetDateTime("start"); ;
-                string endTime = Helpers.GetDateTime("end", startTime, "endTime"); ;
+                string startTime = Helpers.GetDateTime("start"); 
+                string endTime = Helpers.GetDateTime("end", startTime, "endTime"); 
                 double duration = Helpers.Duration(startTime, endTime);
 
                 connection.Open();

@@ -88,6 +88,11 @@ internal static class TableVisualizationEngine
 
         ConsoleTableBuilder.From(menuTable)
             .WithTitle(title, ConsoleColor.Black, ConsoleColor.DarkGreen, TextAligntment.Center)
+            .WithTextAlignment(new Dictionary<int, TextAligntment>
+            {
+                {0, TextAligntment.Center },
+                {1, TextAligntment.Center }    
+            })
             .WithMinLength(new Dictionary<int, int>
             {
                 {1, 75 },
