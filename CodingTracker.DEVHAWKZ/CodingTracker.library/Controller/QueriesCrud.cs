@@ -1,14 +1,13 @@
 ﻿using CodingTracker.library.Model;
 using CodingTracker.library.View;
 using Microsoft.Data.Sqlite;
-using System.Configuration;
 using System.Globalization;
 
 namespace CodingTracker.library.Controller;
 
 internal static class QueriesCrud 
 {
-    private static string connectionString = ConfigurationManager.AppSettings.Get("connectionString");
+    private static string connectionString = Queries.ConnectionString;
 
     internal static void CreateTableQuery()
     {

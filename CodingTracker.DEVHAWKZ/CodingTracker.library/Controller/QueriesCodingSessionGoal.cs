@@ -1,17 +1,14 @@
-﻿using System.Configuration;
-using Microsoft.Data.Sqlite;
+﻿using Microsoft.Data.Sqlite;
 
 namespace CodingTracker.library.Controller;
 
 internal static class QueriesCodingSessionGoal
 {
-    private static string connectionString = ConfigurationManager.AppSettings.Get("connectionString");
-
     internal static double TotalLastWeekCodingHoursQuery(string startDate, string endDate)
     {
         double totalHours = 0;
 
-        using (SqliteConnection connection = new SqliteConnection(connectionString))
+        using (SqliteConnection connection = new SqliteConnection(Queries.ConnectionString))
         {
             connection.Open();
 

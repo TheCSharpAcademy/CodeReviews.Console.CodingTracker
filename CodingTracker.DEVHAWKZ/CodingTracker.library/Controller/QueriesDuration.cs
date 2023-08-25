@@ -1,14 +1,11 @@
 ﻿using CodingTracker.library.View;
 using Microsoft.Data.Sqlite;
-using System.Configuration;
-
 
 namespace CodingTracker.library.Controller;
 
 internal static class QueriesDuration
 {
-    private static string connectionString = ConfigurationManager.AppSettings.Get("connectionString"); 
-
+    private static string connectionString = Queries.ConnectionString;
     internal static void MaxDurationQuery()
     {
         using(var connection = new SqliteConnection(connectionString))

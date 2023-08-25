@@ -1,12 +1,11 @@
 ﻿using CodingTracker.library.View;
 using Microsoft.Data.Sqlite;
-using System.Configuration;
 
 namespace CodingTracker.library.Controller;
 
 internal class QueriesPeriod
 {
-    private static string connectionString = ConfigurationManager.AppSettings.Get("connectionString");
+    private static string connectionString = Queries.ConnectionString;
 
     internal static void CodingSessionPerYearQuery(string year)
     {
