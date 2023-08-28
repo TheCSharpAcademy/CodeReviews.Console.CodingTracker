@@ -144,7 +144,7 @@ internal static class QueriesCrud
                 connection.Open();
                 var tableCommand = connection.CreateCommand();
 
-                tableCommand.CommandText = $"UPDATE sessions SET StartTime = '{startTime}', EndTime = '{endTime}', Duration = '{duration}'";
+                tableCommand.CommandText = $"UPDATE sessions SET StartTime = '{startTime}', EndTime = '{endTime}', Duration = '{duration}' WHERE Id = {recordId}";
 
                 tableCommand.ExecuteNonQuery();
                 connection.Close();

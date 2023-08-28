@@ -4,7 +4,7 @@ namespace CodingTracker.library.Controller;
 
 internal static class Reports
 {
-   internal enum MonthsName
+    internal enum MonthsName
     {
         January = 1,
         February,
@@ -42,8 +42,8 @@ internal static class Reports
             }
         }
 
-        
-        
+
+
     }
 
     internal static void MinDuration()
@@ -52,7 +52,7 @@ internal static class Reports
 
         int rowCount = QueriesCrud.ViewAllSessionsQuery("query");
 
-        if (rowCount > 0) 
+        if (rowCount > 0)
         {
             bool getBack = Helpers.GetBackToReportMenu("shortest", "to view shortest coding session");
 
@@ -74,7 +74,7 @@ internal static class Reports
 
         int rowCount = QueriesCrud.ViewAllSessionsQuery("query");
 
-        if(rowCount > 0)
+        if (rowCount > 0)
         {
             bool getBack = Helpers.GetBackToReportMenu("average", "to view average coding session time");
 
@@ -95,7 +95,7 @@ internal static class Reports
 
         int rowCount = QueriesCrud.ViewAllSessionsQuery("query");
 
-        if(rowCount > 0) 
+        if (rowCount > 0)
         {
             bool getBack = Helpers.GetBackToReportMenu("year", "to view total coding session designated year");
 
@@ -117,7 +117,7 @@ internal static class Reports
 
         int rowCount = QueriesCrud.ViewAllSessionsQuery("query");
 
-        if( rowCount > 0)
+        if (rowCount > 0)
         {
             bool getBack = Helpers.GetBackToReportMenu("month", "to view total coding session designated month");
 
@@ -142,7 +142,7 @@ internal static class Reports
 
         int rowCount = QueriesCrud.ViewAllSessionsQuery("query");
 
-        if(rowCount > 0)
+        if (rowCount > 0)
         {
             bool getBack = Helpers.GetBackToReportMenu("day", "to view total coding session designated day");
 
@@ -161,7 +161,7 @@ internal static class Reports
 
             }
         }
-       
+
     }
 
     internal static void CodingSessionPerWeek()
@@ -170,7 +170,7 @@ internal static class Reports
 
         int rowCount = QueriesCrud.ViewAllSessionsQuery("query");
 
-        if(rowCount > 0) 
+        if (rowCount > 0)
         {
             bool getBack = Helpers.GetBackToReportMenu("week", "to view total coding session for designated week");
 
@@ -191,4 +191,3 @@ internal static class Reports
     }
 
 }
-
