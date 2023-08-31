@@ -5,11 +5,11 @@ namespace CodingTracker.w0lvesvvv
 {
     public static class DataBaseManager
     {
-        private static readonly string connectionString = ConfigurationManager.AppSettings["connectionString"] ?? "";
+        private static readonly string ConnectionString = ConfigurationManager.AppSettings["connectionString"] ?? "";
 
-        public static void createDatabase()
+        public static void CreateDatabase()
         {
-            using (var connection = new SqliteConnection(connectionString))
+            using (var connection = new SqliteConnection(ConnectionString))
             {
                 connection.Open();
                 var query = connection.CreateCommand();
@@ -26,25 +26,25 @@ namespace CodingTracker.w0lvesvvv
             }
         }
 
-        public static void insertCodingTime(CodingSession codingSession)
+        public static void InsertCodingTime(CodingSession codingSession)
         {
-            using (var connection = new SqliteConnection(connectionString))
+            using (var connection = new SqliteConnection(ConnectionString))
             {
                 connection.Open();
 
                 var query = connection.CreateCommand();
                 query.CommandText = $@" INSERT INTO coding_session (coding_session_start_date_time_nv, coding_session_end_date_time_nv, coding_session_duration_i)
-                                        SELECT '{codingSession.coding_session_start_date_time_nv}', '{codingSession.coding_session_end_date_time_nv}', {codingSession.getDuration()};";
+                                        SELECT '{codingSession.Coding_session_start_date_time_nv}', '{codingSession.Coding_session_end_date_time_nv}', {codingSession.GetDuration()};";
 
-                int rows = query.ExecuteNonQuery();
+                query.ExecuteNonQuery();
 
                 connection.Close();
             }
         }
 
-        public static List<CodingSession> getCodingRecords()
+        public static List<CodingSession> GetCodingRecords()
         {
-            using (var connection = new SqliteConnection(connectionString))
+            using (var connection = new SqliteConnection(ConnectionString))
             {
                 connection.Open();
 
@@ -61,9 +61,9 @@ namespace CodingTracker.w0lvesvvv
                     {
                         CodingSession record = new CodingSession
                         {
-                            coding_session_id_i = result.GetInt32(0),
-                            coding_session_start_date_time_nv = result.GetString(1),
-                            coding_session_end_date_time_nv = result.GetString(2)
+                            Coding_session_id_i = result.GetInt32(0),
+                            Coding_session_start_date_time_nv = result.GetString(1),
+                            Coding_session_end_date_time_nv = result.GetString(2)
                         };
 
                         codingRecords.Add(record);

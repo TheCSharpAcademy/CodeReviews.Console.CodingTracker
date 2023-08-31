@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 
 namespace CodingTracker.w0lvesvvv
 {
     public static class Validation
     {
-        public readonly static string dateTimeFormat = "dd/MM/yyyy HH:mm";
+        public readonly static string DateTimeFormat = "dd/MM/yyyy HH:mm";
 
-        public static bool validateNumber(string number, out int parsedNumber)
+        public static bool ValidateNumber(string number, out int parsedNumber)
         {
             if (int.TryParse(number, out parsedNumber))
             {
@@ -24,9 +19,9 @@ namespace CodingTracker.w0lvesvvv
             return false;
         }
 
-        public static bool validateDateTimeString(string date) {
+        public static bool ValidateDateTimeString(string date) {
 
-            if (DateTime.TryParseExact(date, dateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
+            if (DateTime.TryParseExact(date, DateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
             {
                 return true;
             }
@@ -37,9 +32,9 @@ namespace CodingTracker.w0lvesvvv
             return false;
         }
     
-        public static bool validateCorrectDateTimes(CodingSession codingSession)
+        public static bool ValidateCorrectDateTimes(CodingSession codingSession)
         {
-            if (codingSession.getDuration() > 0) return true;
+            if (codingSession.GetDuration() > 0) return true;
 
             Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.Red;

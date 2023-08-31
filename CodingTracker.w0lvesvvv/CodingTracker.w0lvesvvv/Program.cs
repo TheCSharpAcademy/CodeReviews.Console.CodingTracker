@@ -1,11 +1,11 @@
 ﻿using CodingTracker.w0lvesvvv;
 
-DataBaseManager.createDatabase();
+DataBaseManager.CreateDatabase();
 
 CodingController controller = new();
 
 
 do
 {
-    controller.displayMenu();
+    controller.DisplayMenu();
 } while (true);

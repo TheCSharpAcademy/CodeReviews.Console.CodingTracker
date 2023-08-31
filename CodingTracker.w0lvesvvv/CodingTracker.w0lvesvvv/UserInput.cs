@@ -1,25 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CodingTracker.w0lvesvvv
+﻿namespace CodingTracker.w0lvesvvv
 {
     public static class UserInput
     {
-        public static int? readNumber()
+        public static int? ReadNumber()
         {
             string inputNumber = Console.ReadLine() ?? string.Empty;
-            if (!Validation.validateNumber(inputNumber, out int parsedNumber)) return null;
+            if (!Validation.ValidateNumber(inputNumber, out int parsedNumber)) return null;
 
             return parsedNumber;
         }
 
-        public static string readDateTimeString() { 
+        public static string ReadDateTimeString() { 
             string inputDateTime = Console.ReadLine() ?? string.Empty;
 
-            if (!Validation.validateDateTimeString(inputDateTime)) return string.Empty;
+            if (!Validation.ValidateDateTimeString(inputDateTime)) return string.Empty;
 
             return inputDateTime;
         }

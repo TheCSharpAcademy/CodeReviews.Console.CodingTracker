@@ -4,7 +4,7 @@ namespace CodingTracker.w0lvesvvv
 {
     public class CodingController
     {
-        public void displayMenu()
+        public void DisplayMenu()
         {
             #region Menu
             Console.WriteLine();
@@ -17,7 +17,7 @@ namespace CodingTracker.w0lvesvvv
 
             Console.Write("Option selected: ");
             Console.ForegroundColor = ConsoleColor.White;
-            int? option = UserInput.readNumber();
+            int? option = UserInput.ReadNumber();
             #endregion
 
             if (option == null) { return; }
@@ -28,15 +28,15 @@ namespace CodingTracker.w0lvesvvv
                     Environment.Exit(0);
                     break;
                 case 1:
-                    trackCodingTime();
+                    TrackCodingTime();
                     break;
                 case 2:
-                    viewCodingRecords();
+                    ViewCodingRecords();
                     break;
             }
         }
 
-        private void trackCodingTime()
+        private void TrackCodingTime()
         {
             CodingSession codingSession = new();
 
@@ -45,26 +45,26 @@ namespace CodingTracker.w0lvesvvv
             Console.WriteLine("(Time format MUST BE: dd/MM/yyyy hh:mm)");
             Console.Write("Introduce start coding time: ");
             Console.ForegroundColor = ConsoleColor.White;
-            codingSession.coding_session_start_date_time_nv = UserInput.readDateTimeString();
+            codingSession.Coding_session_start_date_time_nv = UserInput.ReadDateTimeString();
 
-            if (string.IsNullOrEmpty(codingSession.coding_session_start_date_time_nv)) return;
+            if (string.IsNullOrEmpty(codingSession.Coding_session_start_date_time_nv)) return;
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("Introduce end coding time: ");
             Console.ForegroundColor = ConsoleColor.White;
-            codingSession.coding_session_end_date_time_nv = UserInput.readDateTimeString();
+            codingSession.Coding_session_end_date_time_nv = UserInput.ReadDateTimeString();
 
-            if (string.IsNullOrEmpty(codingSession.coding_session_end_date_time_nv)) return;
+            if (string.IsNullOrEmpty(codingSession.Coding_session_end_date_time_nv)) return;
 
-            codingSession.calculateDuration();
+            codingSession.CalculateDuration();
 
-            if (!Validation.validateCorrectDateTimes(codingSession)) return;
+            if (!Validation.ValidateCorrectDateTimes(codingSession)) return;
 
-            DataBaseManager.insertCodingTime(codingSession);
+            DataBaseManager.InsertCodingTime(codingSession);
         }
 
-        private void viewCodingRecords()
+        private void ViewCodingRecords()
         {
-            List<CodingSession> codingRecords = DataBaseManager.getCodingRecords();
+            List<CodingSession> codingRecords = DataBaseManager.GetCodingRecords();
 
             if (!codingRecords.Any()) {
                 Console.WriteLine();
