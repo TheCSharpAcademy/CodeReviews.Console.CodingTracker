@@ -76,6 +76,42 @@ namespace CodingTracker.w0lvesvvv
                 return codingRecords;
             }
         }
+
+        public static void UpdateCodingTime(CodingSession codingSession)
+        {
+            using (var connection = new SqliteConnection(ConnectionString))
+            {
+                connection.Open();
+
+                var query = connection.CreateCommand();
+                query.CommandText = $@" UPDATE coding_session SET 
+                                            coding_session_start_date_time_nv = '{codingSession.Coding_session_start_date_time_nv}'
+                                          , coding_session_end_date_time_nv = '{codingSession.Coding_session_end_date_time_nv}'
+                                          , coding_session_duration_i = {codingSession.GetDuration()}
+                                        WHERE coding_session_id_i = {codingSession.Coding_session_id_i};";
+
+                query.ExecuteNonQuery();
+
+                connection.Close();
+            }
+        }
+
+        public static void DeleteCodingTime(int id)
+        {
+            using (var connection = new SqliteConnection(ConnectionString))
+            {
+                connection.Open();
+
+                var query = connection.CreateCommand();
+                query.CommandText = $@" DELETE FROM coding_session WHERE coding_session_id_i = {id};";
+
+                query.ExecuteNonQuery();
+
+                connection.Close();
+            }
+        }
+        
+
     }
 }
 

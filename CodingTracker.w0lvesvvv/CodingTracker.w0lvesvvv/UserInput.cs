@@ -17,5 +17,35 @@
 
             return inputDateTime;
         }
+
+        public static int? RequestCodingId()
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("ID: ");
+            Console.ForegroundColor = ConsoleColor.White;
+            return ReadNumber();
+        }
+
+        public static CodingSession? RequestCodingDates(CodingSession codingSession)
+        {
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("(Time format MUST BE: dd/MM/yyyy hh:mm)");
+            Console.Write("Introduce start coding time: ");
+            Console.ForegroundColor = ConsoleColor.White;
+            codingSession.Coding_session_start_date_time_nv = UserInput.ReadDateTimeString();
+
+            if (string.IsNullOrEmpty(codingSession.Coding_session_start_date_time_nv)) return null;
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("Introduce end coding time: ");
+            Console.ForegroundColor = ConsoleColor.White;
+            codingSession.Coding_session_end_date_time_nv = UserInput.ReadDateTimeString();
+
+            if (string.IsNullOrEmpty(codingSession.Coding_session_end_date_time_nv)) return null;
+
+            codingSession.CalculateDuration();
+
+            return codingSession;
+        }
     }
 }
