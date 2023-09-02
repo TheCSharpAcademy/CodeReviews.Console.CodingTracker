@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
-using System.Linq;
-
 
 namespace DataAccessLibrary
 {
@@ -80,11 +78,6 @@ namespace DataAccessLibrary
             }
             else
             {
-                sql = $"select Id, StartTime, EndTime from CodingSession where Id = {recordId};";
-                var links = db.LoadData<CodingSessionModel, dynamic>(sql,
-                    new { Id = recordId },
-                    _connectionString);
-
                 sql = $"delete from CodingSession where Id = {recordId}";
                 db.SaveData(sql, new { Id = recordId }, _connectionString);
             }
