@@ -52,7 +52,7 @@ namespace CodingTracker
                     {
                         case 1:
                             Console.Clear();
-                            ShowRecordSimple();
+                            ShowAllRecords();
                             break;
                         case 2:
                             Console.Clear();
@@ -64,6 +64,7 @@ namespace CodingTracker
                             break;
                         case 4:
                             Console.Clear();
+                            UpdateEntry();
                             break;
                         case 5:
                             Console.Clear();
@@ -80,7 +81,7 @@ namespace CodingTracker
                 catch (Exception ex)
                 {
                     Console.Clear();
-                    Console.WriteLine(ex + "Please enter numbers only\n");
+                    Console.WriteLine("Please enter numbers only\n");
                 }
             }
         }

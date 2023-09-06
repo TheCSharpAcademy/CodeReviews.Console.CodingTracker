@@ -14,7 +14,7 @@ namespace CodingTracker
         {
             Tracker tr = new Tracker();
             tr.MainMenu();
-            //finished at showing records, implement showing records as a table
+
         }
     }
 }

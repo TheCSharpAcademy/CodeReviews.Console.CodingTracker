@@ -57,6 +57,44 @@ namespace CodingTracker
         {
             Console.Clear();
             Console.WriteLine($"\nDeleting entry.\n");
+            ShowTable();
+            Console.WriteLine("Please enter ID of entry to delete or any other number to exit: ");
+            int userSelection = InputNumber();
+
+            if (userSelection > 0)
+            {
+                string currentQuery = $"DELETE FROM coding_tracker WHERE Id = '{userSelection}'";
+                CommandNonQuery(currentQuery);
+                Console.Write("Press any key.");
+                Console.ReadLine();
+                Console.Clear();
+            }
+        }
+
+        public void UpdateEntry()
+        {
+            Console.Clear();
+            Console.WriteLine($"\nUpdating entry.\n");
+            ShowTable();
+            Console.WriteLine("Please choose ID of entry to update or any other number to exit: ");
+            int userSelection = InputNumber();
+
+            if (userSelection > 0 && CheckIfExists(userSelection))
+            {
+                String date = InputDate();
+                string[] times = InputCorrectStartAndEndTime();
+
+                string query = $"UPDATE coding_tracker SET Date = '{date}', StartTime = '{times[0]}', EndTime = '{times[1]}' WHERE Id = '{userSelection}'";
+
+                CommandNonQuery(query);
+                Console.Write(" Press any key.");
+                Console.ReadLine();
+                Console.Clear();
+            }
+            else
+            {
+                Console.Clear();
+            }
         }
 
         public List<CodingSession> AllRecords()
@@ -95,14 +133,30 @@ namespace CodingTracker
             return tableData;
         }
 
-        public void ShowRecordSimple()
+        public bool CheckIfExists(int number)
         {
-            foreach (var record in AllRecords())
+            bool exists = false;
+
+            string command = $"SELECT count(*) FROM coding_tracker WHERE Id = '{number}'";
+
+            using (var connection = new SqliteConnection(connectionString))
             {
-                Console.WriteLine($"{record.Id}, {record.StartTime}, {record.EndTime}, {record.Duration}");
+                connection.Open();
+                var cmd = connection.CreateCommand();
+
+                cmd.CommandText = command;
+
+                int count = Convert.ToInt32(cmd.ExecuteScalar());
+
+                if (count > 0)
+                {
+                    exists = true;
+                }
+
+                connection.Close();
             }
-            Console.WriteLine("Press any key to continue");
-            Console.ReadLine();
+
+            return exists;
         }
     }
 }

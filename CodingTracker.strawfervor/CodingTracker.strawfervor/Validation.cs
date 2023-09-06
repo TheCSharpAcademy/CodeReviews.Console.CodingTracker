@@ -143,5 +143,26 @@ namespace CodingTracker
 
             return minutes;
         }
+
+        public int InputNumber()
+        {
+            int number = 0;
+            bool wrongNumber = true;
+
+            while (wrongNumber)
+            {
+                try
+                {
+                    number = int.Parse(Console.ReadLine()!);
+                    wrongNumber = false;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Please input numbers only.");
+                }
+            }
+
+            return number;
+        }
     }
 }
