@@ -7,7 +7,7 @@ class CodingSession
     public DateTime EndTime { get; set; }
     public TimeSpan Duration { get; }
    
-    public CodingSession(long id, DateTime start, DateTime end, double duration)
+    public CodingSession(long id, DateTime start, DateTime end, TimeSpan duration)
     {
         Id = id;
         StartTime = start;
