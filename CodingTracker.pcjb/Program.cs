@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace CodingTracker;
+﻿namespace CodingTracker;
 
 class Program
 {
@@ -9,7 +7,11 @@ class Program
         var database = new Database(Configuration.DatabaseFilename);
         database.CreateDatabaseIfNotPresent();
         
-        Console.WriteLine("Coding Tracker");
-        Console.WriteLine($"DatabaseFilename: {Configuration.DatabaseFilename}");
+        var mainMenuController = new MainMenuController();
+        var codingSessionController = new CodingSessionController(database);
+        codingSessionController.SetMainMenuController(mainMenuController);
+        mainMenuController.SetCodingSessionController(codingSessionController);
+        
+        mainMenuController.ShowMainMenu();
     }
 }
