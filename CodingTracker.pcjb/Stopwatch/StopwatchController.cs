@@ -34,7 +34,11 @@ class StopwatchController
     {
         var session = stopwatch.Stop();
         var view = new StopwatchView(this, stopwatch);
-        if (database.CreateCodingSession(session))
+        if (session == null)
+        {
+            view.SetMessage("ERROR - Failed get session from stopwatch.");
+        }
+        else if (database.CreateCodingSession(session))
         {
             view.SetMessage("OK - Session successfully saved.");
         }
