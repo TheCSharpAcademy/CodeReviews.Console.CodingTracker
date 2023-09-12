@@ -3,7 +3,7 @@ namespace CodingTracker;
 class Stopwatch
 {
     private DateTime? start;
-    private bool isRunning = false;
+    private bool isRunning;
 
     public void Start()
     {
