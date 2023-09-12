@@ -1,6 +1,6 @@
 namespace CodingTracker;
 
-class CodingSessionCreateView
+class CodingSessionCreateView : BaseView
 {
     private readonly CodingSessionController controller;
     public CodingSessionCreateView(CodingSessionController controller)
@@ -8,13 +8,13 @@ class CodingSessionCreateView
         this.controller = controller;
     }
 
-    public void Show()
+    public override void Body()
     {
-        Console.Clear();
         Console.WriteLine("New Coding Session");
-        Console.WriteLine($"Session Start Date & Time [{Configuration.DateTimeFormat}]: ");
+        Console.WriteLine($"Date & Time Format: {Configuration.DateTimeFormat}");
+        Console.Write($"Start: ");
         var start = Console.ReadLine();
-        Console.WriteLine($"Session End Date & Time [{Configuration.DateTimeFormat}]: ");
+        Console.Write($"End  : ");
         var end = Console.ReadLine();
         controller.Create(start, end);
     }

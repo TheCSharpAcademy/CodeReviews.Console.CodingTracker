@@ -1,6 +1,6 @@
 namespace CodingTracker;
 
-class MainMenuView
+class MainMenuView : BaseView
 {
     private MainMenuController controller;
 
@@ -9,9 +9,8 @@ class MainMenuView
         this.controller = controller;
     }
 
-    public void Show()
+    public override void Body()
     {
-        Console.Clear();
         Console.WriteLine("1 - New Coding Session");
         Console.WriteLine("2 - List Coding Sessions");
         Console.WriteLine("0 - Exit");

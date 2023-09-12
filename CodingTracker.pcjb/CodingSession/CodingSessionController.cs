@@ -19,44 +19,72 @@ class CodingSessionController
 
     public void ShowCreateScreen()
     {
+        ShowCreateScreen(null);
+    }
+
+    public void ShowCreateScreen(string? message)
+    {
         var view = new CodingSessionCreateView(this);
+        view.SetMessage(message);
         view.Show();
     }
 
     public void Create(string? start, string? end)
     {
-        DateTime.TryParseExact(start, Configuration.DateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedStart);
-        DateTime.TryParseExact(end, Configuration.DateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedEnd);
+        if (!DateTime.TryParseExact(start, Configuration.DateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedStart))
+        {
+            ShowCreateScreen("ERROR - Invalid format entered for Start.");
+        }
+
+        if (!DateTime.TryParseExact(end, Configuration.DateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedEnd))
+        {
+            ShowCreateScreen("ERROR - Invalid format entered for End.");
+        }
+        else if (end.CompareTo(start) <= 0)
+        {
+            ShowCreateScreen("ERROR - End must be after Start.");
+        }
+
         var session = new CodingSession(parsedStart, parsedEnd);
         if (database.CreateCodingSession(session))
         {
-            // TODO: Succes-Message
-            BackToMainMenu();
+            BackToMainMenu("OK - Session successfully saved.");
         }
         else
         {
-            // TODO: Error-Message
-            BackToMainMenu();
+            BackToMainMenu("ERROR - Failed to save new session.");
         }
     }
 
     public void ShowList()
     {
+        ShowList(null);
+    }
+
+    public void ShowList(string? message)
+    {
         List<CodingSession> sessions = database.ReadAllCodingSessions();
         var view = new CodingSessionListView(this, sessions);
+        view.SetMessage(message);
         view.Show();
     }
 
     public void ShowEditDelete(long codingSessionId)
     {
+        ShowEditDelete(codingSessionId, null);
+    }
+
+    public void ShowEditDelete(long codingSessionId, string? message)
+    {
         var session = database.ReadCodingSession(codingSessionId);
         if (session == null)
         {
-            ShowList();
+            ShowList($"ERROR - Session #{codingSessionId} not found.");
         }
         else
         {
             var view = new CodingSessionView(this, session);
+            view.SetMessage(message);
             view.Show();
         }
     }
@@ -67,24 +95,56 @@ class CodingSessionController
         view.Show();
     }
 
-    public void Update(CodingSession session)
+    public void Update(long sessionId, string? start, string? end)
     {
-        database.UpdateCodingSession(session);
-        ShowEditDelete(session.Id);
+        if (!DateTime.TryParseExact(start, Configuration.DateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedStart))
+        {
+            ShowCreateScreen("ERROR - Invalid format entered for Start.");
+        }
+
+        if (!DateTime.TryParseExact(end, Configuration.DateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedEnd))
+        {
+            ShowCreateScreen("ERROR - Invalid format entered for End.");
+        }
+        else if (end.CompareTo(start) <= 0)
+        {
+            ShowCreateScreen("ERROR - End must be after Start.");
+        }
+
+        var session = new CodingSession(sessionId, parsedStart, parsedEnd);
+        if (database.UpdateCodingSession(session))
+        {
+            ShowEditDelete(session.Id, "OK - Session successfully saved.");
+        }
+        else
+        {
+            ShowEditDelete(session.Id, "ERROR - Failed to save new session.");
+        }
     }
 
     public void Delete(CodingSession session)
     {
-        database.DeleteCodingSession(session.Id);
-        ShowList();
+        if (database.DeleteCodingSession(session.Id))
+        {
+            ShowList($"OK - Session #{session.Id} deleted.");
+        }
+        else
+        {
+            ShowList($"ERROR- Failed to delete session #{session.Id}.");
+        }
     }
 
     public void BackToMainMenu()
+    {
+        BackToMainMenu(null);
+    }
+
+    public void BackToMainMenu(string? message)
     {
         if (mainMenuController == null)
         {
             throw new InvalidOperationException("Required MainMenuController missing.");
         }
-        mainMenuController.ShowMainMenu();
+        mainMenuController.ShowMainMenu(message);
     }
 }

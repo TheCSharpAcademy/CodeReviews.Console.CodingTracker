@@ -2,7 +2,7 @@ namespace CodingTracker;
 
 using ConsoleTableExt;
 
-class CodingSessionListView
+class CodingSessionListView : BaseView
 {
     private readonly CodingSessionController controller;
     private readonly List<CodingSession> sessions;
@@ -13,9 +13,8 @@ class CodingSessionListView
         this.sessions = sessions;
     }
 
-    public void Show()
+    public override void Body()
     {
-        Console.Clear();
         Console.WriteLine("All Coding Sessions");
 
         if (sessions != null && sessions.Count > 0)
@@ -27,7 +26,8 @@ class CodingSessionListView
             Console.WriteLine("No coding sessions found.");
         }
 
-        Console.WriteLine("Enter ID and press enter to edit/delete a session or press enter alone to return to main menu.");
+        Console.WriteLine("Enter ID and press enter to edit/delete a session.");
+        Console.WriteLine("Press enter alone to return to main menu.");
         var rawInput = Console.ReadLine();
         if (String.IsNullOrEmpty(rawInput)) {
             controller.BackToMainMenu();

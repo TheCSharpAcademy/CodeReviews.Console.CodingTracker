@@ -17,6 +17,12 @@ class MainMenuController
 
     public void ShowMainMenu()
     {
+        ShowMainMenu(null);
+    }
+
+    public void ShowMainMenu(string? message)
+    {
+        view.SetMessage(message);
         view.Show();
     }
 

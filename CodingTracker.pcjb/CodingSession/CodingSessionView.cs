@@ -2,7 +2,7 @@ namespace CodingTracker;
 
 using ConsoleTableExt;
 
-class CodingSessionView
+class CodingSessionView : BaseView
 {
     private readonly CodingSessionController controller;
     private readonly CodingSession session;
@@ -13,12 +13,12 @@ class CodingSessionView
         this.session = session;
     }
 
-    public void Show()
+    public override void Body()
     {
-        Console.Clear();
         Console.WriteLine("Edit/Delete Coding Session");
         ConsoleTableBuilder.From(new List<CodingSession>{session}).ExportAndWriteLine();
-        Console.WriteLine("Enter 'e' to edit or 'd' to delete this session and press enter or press enter alone to cancel.");
+        Console.WriteLine("Enter 'e' to edit or 'd' to delete this session and press enter.");
+        Console.WriteLine("Press enter alone to return to list.");
         
         switch (Console.ReadLine())
         {
