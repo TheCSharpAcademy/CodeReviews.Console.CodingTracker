@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.Data.Sqlite;
 
 namespace CodingTracker;
@@ -72,7 +73,7 @@ class Database
         return session;
     }
 
-    public List<CodingSession> ReadAllCodingSessions()
+    public List<CodingSession> ReadAllCodingSessions(SortOrder sortOrder, FilterPeriod filterPeriod)
     {
         List<CodingSession> sessions = new();
         try
@@ -83,9 +84,41 @@ class Database
             command.CommandText =
             @"
             SELECT id, start, end, duration 
-            FROM coding_sessions
-            ORDER BY start ASC
+            FROM coding_sessions 
             ";
+
+            DateTime? minStart = null;
+            if (filterPeriod != FilterPeriod.None)
+            {
+                command.CommandText += " WHERE start >= $min_start";
+            }
+            switch (filterPeriod)
+            {
+                case FilterPeriod.LastSevenDays:
+                    minStart = DateTime.Now.AddDays(-7);
+                    break;
+                case FilterPeriod.LastFourWeeks:
+                    minStart = CultureInfo.InvariantCulture.Calendar.AddWeeks(DateTime.Now, -4);
+                    break;
+                case FilterPeriod.LastTwelveMonths:
+                    minStart = DateTime.Now.AddMonths(-12);
+                    break;
+            }
+
+            if (sortOrder == SortOrder.Ascending)
+            {
+                command.CommandText += " ORDER BY start ASC";
+            }
+            else
+            {
+                command.CommandText += " ORDER BY start DESC";
+            }
+
+            if (filterPeriod != FilterPeriod.None && minStart != null)
+            {
+                command.Parameters.AddWithValue("$min_start", minStart);
+            }
+
             using var reader = command.ExecuteReader();
             while (reader.Read())
             {

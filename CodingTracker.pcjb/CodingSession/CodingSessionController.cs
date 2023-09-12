@@ -6,6 +6,8 @@ class CodingSessionController
 {
     private Database database;
     private MainMenuController? mainMenuController;
+    private SortOrder sortOrder = SortOrder.Ascending;
+    private FilterPeriod filterPeriod = FilterPeriod.None;
 
     public CodingSessionController(Database database)
     {
@@ -63,10 +65,20 @@ class CodingSessionController
 
     public void ShowList(string? message)
     {
-        List<CodingSession> sessions = database.ReadAllCodingSessions();
+        List<CodingSession> sessions = database.ReadAllCodingSessions(sortOrder, filterPeriod);
         var view = new CodingSessionListView(this, sessions);
         view.SetMessage(message);
         view.Show();
+    }
+
+    public void SetSortOrder(SortOrder sortOrder)
+    {
+        this.sortOrder = sortOrder;
+    }
+
+    public void SetFilterPeriod(FilterPeriod filterPeriod)
+    {
+        this.filterPeriod = filterPeriod;
     }
 
     public void ShowEditDelete(long codingSessionId)
