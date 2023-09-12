@@ -25,8 +25,8 @@ class CodingSessionController
 
     public void Create(string? start, string? end)
     {
-        DateTime.TryParseExact(start, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedStart);
-        DateTime.TryParseExact(end, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedEnd);
+        DateTime.TryParseExact(start, Configuration.DateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedStart);
+        DateTime.TryParseExact(end, Configuration.DateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedEnd);
         var session = new CodingSession(parsedStart, parsedEnd);
         if (database.CreateCodingSession(session))
         {

@@ -11,4 +11,12 @@ internal static class Configuration
             return ConfigurationManager.AppSettings.Get("DatabaseFilename");
         }
     }
+
+    internal static string? DateTimeFormat
+    {
+        get
+        {
+            return ConfigurationManager.AppSettings.Get("DateTimeFormat");
+        }
+    }
 }

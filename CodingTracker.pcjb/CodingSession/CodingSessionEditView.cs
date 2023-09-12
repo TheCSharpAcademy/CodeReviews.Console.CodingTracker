@@ -20,13 +20,13 @@ class CodingSessionEditView
         Console.WriteLine("Edit Coding Session");
         ConsoleTableBuilder.From(new List<CodingSession>{session}).ExportAndWriteLine();
         
-        Console.WriteLine("New Session Start Date & Time [yyyy-MM-dd HH:mm]: ");
+        Console.WriteLine($"New Session Start Date & Time [{Configuration.DateTimeFormat}]: ");
         var start = Console.ReadLine();
-        Console.WriteLine("New Session End Date & Time [yyyy-MM-dd HH:mm]: ");
+        Console.WriteLine($"New Session End Date & Time [{Configuration.DateTimeFormat}]: ");
         var end = Console.ReadLine();
 
-        DateTime.TryParseExact(start, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedStart);
-        DateTime.TryParseExact(end, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedEnd);
+        DateTime.TryParseExact(start, Configuration.DateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedStart);
+        DateTime.TryParseExact(end, Configuration.DateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedEnd);
         controller.Update(new CodingSession(session.Id, parsedStart, parsedEnd));
     }
 }

@@ -12,9 +12,9 @@ class CodingSessionCreateView
     {
         Console.Clear();
         Console.WriteLine("New Coding Session");
-        Console.WriteLine("Session Start Date & Time [yyyy-MM-dd HH:mm]: ");
+        Console.WriteLine($"Session Start Date & Time [{Configuration.DateTimeFormat}]: ");
         var start = Console.ReadLine();
-        Console.WriteLine("Session End Date & Time [yyyy-MM-dd HH:mm]: ");
+        Console.WriteLine($"Session End Date & Time [{Configuration.DateTimeFormat}]: ");
         var end = Console.ReadLine();
         controller.Create(start, end);
     }
