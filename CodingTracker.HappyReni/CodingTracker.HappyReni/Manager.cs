@@ -6,16 +6,16 @@ namespace CodeTracker
     public class Manager
     {
         private SELECTOR Selector { get; set; }
-        private SQLite SQL { get; set; }
+        private Sqlite Sql { get; set; }
         private List<CodingSession> SessionData { get; set; } = new();
         private Filter Filter { get; set; }
         private UI UI { get; set; }
         private int Goal { get; set; }
         public Manager()
         {
-            SQL = new();
+            Sql = new();
             UI = new UI();
-            SessionData = SQL.GetSQLData();
+            SessionData = Sql.GetSqlData();
             Filter = new(SessionData);
             Selector = UI.MainMenu();
             while (true)
@@ -60,9 +60,9 @@ namespace CodeTracker
         private void Drop()
         {
             ViewAllRecords();
-            SQL.DropTable();
+            Sql.DropTable();
             SessionData.Clear();
-            SQL.CreateTable();
+            Sql.CreateTable();
         }
         private void Insert()
         {
@@ -88,7 +88,7 @@ namespace CodeTracker
 
                     var code = new CodingSession(start, end);
                     SessionData.Add(code);
-                    SQL.Insert(code);
+                    Sql.Insert(code);
                 }
 
                 ViewAllRecords();
@@ -119,7 +119,7 @@ namespace CodeTracker
                         var end = start + elapsed;
                         var code = new CodingSession(start, end);
                         SessionData.Add(code);
-                        SQL.Insert(code);
+                        Sql.Insert(code);
                         break;
                     }
                 }
@@ -135,7 +135,7 @@ namespace CodeTracker
             try
             {
                 var input = UI.GetInput("Select the ID of log to delete.").val;
-                SQL.Delete(input);
+                Sql.Delete(input);
                 for (int i = 0; i < SessionData.Count; i++)
                 {
                     if ((int)SessionData[i].Id == input)
@@ -168,7 +168,7 @@ namespace CodeTracker
                         var code = new CodingSession(start, end);
                         code.Id = id;
                         SessionData[i] = code;
-                        SQL.Update(code);
+                        Sql.Update(code);
                         break;
                     }
                 }

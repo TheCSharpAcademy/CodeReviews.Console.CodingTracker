@@ -8,7 +8,7 @@ namespace CodeTracker
     {
         private List<CodingSession> SessionData { get; set; }
         private FILTER_SELECTOR Selector { get; set; }
-        private int? order {  get; set; }
+        private int? Order {  get; set; }
         private int StartYear { get; set; }
         private int EndYear { get; set; }
         private string? StartWeek { get; set; }
@@ -21,7 +21,7 @@ namespace CodeTracker
         }
         public void SetParameters(List<object> param)
         {
-            order = (int?)param[3];
+            Order = (int?)param[3];
             if ((FILTER_SELECTOR)param[0] == FILTER_SELECTOR.YEAR)
             {
                 StartYear = (int)param[1];
@@ -56,18 +56,18 @@ namespace CodeTracker
             }
 
             IOrderedEnumerable<List<object>> sortedList;
-            if (order == 0)
+            if (Order == 0)
             {
                 sortedList =
                     from session in sessionList
-                    orderby session[0] ascending
+                    Orderby session[0] ascending
                     select session;
             }
             else
             {
                 sortedList =
                     from session in sessionList
-                    orderby session[0] descending
+                    Orderby session[0] descending
                     select session;
             }
             foreach (var session in sortedList)
@@ -138,18 +138,18 @@ namespace CodeTracker
             sessionList = CheckFilterdWeek(sessionList);
             IOrderedEnumerable<List<object>> sortedList;
 
-            if (order == 0)
+            if (Order == 0)
             {
                 sortedList =
                     from session in sessionList
-                    orderby session[0] ascending
+                    Orderby session[0] ascending
                     select session;
             }
             else
             {
                 sortedList =
                     from session in sessionList
-                    orderby session[0] descending
+                    Orderby session[0] descending
                     select session;
             }
             var ret = new List<List<object>>();
@@ -251,18 +251,18 @@ namespace CodeTracker
 
             IOrderedEnumerable<List<object>> sortedList;
 
-            if (order == 0)
+            if (Order == 0)
             {
                 sortedList =
                     from session in sessionList
-                    orderby session[0] ascending
+                    Orderby session[0] ascending
                     select session;
             }
             else
             {
                 sortedList =
                     from session in sessionList
-                    orderby session[0] descending
+                    Orderby session[0] descending
                     select session;
             }
             var ret = new List<List<object>>();

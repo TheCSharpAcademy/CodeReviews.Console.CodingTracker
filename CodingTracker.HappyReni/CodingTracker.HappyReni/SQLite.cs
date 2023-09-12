@@ -1,7 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
 using System.Configuration;
-using System.Collections.Specialized;
-using System.Collections.Generic;
 
 namespace CodeTracker
 {
@@ -135,7 +133,7 @@ namespace CodeTracker
                 }
             }
         }
-        public List<CodingSession> GetSQLData()
+        public List<CodingSession> GetSqlData()
         {
             var conn = GetConnection();
             conn.Open();
