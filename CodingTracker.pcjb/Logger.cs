@@ -2,7 +2,7 @@ namespace CodingTracker;
 
 class Logger
 {
-    static string logFileName = "CodingTracker.log";
+    static readonly string logFileName = "CodingTracker.log";
 
     public static void Error(Exception ex)
     {

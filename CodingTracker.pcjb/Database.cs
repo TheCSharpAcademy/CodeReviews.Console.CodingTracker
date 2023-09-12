@@ -1,7 +1,7 @@
+namespace CodingTracker;
+
 using System.Globalization;
 using Microsoft.Data.Sqlite;
-
-namespace CodingTracker;
 
 class Database
 {

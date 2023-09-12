@@ -1,6 +1,6 @@
-using ConsoleTableExt;
-
 namespace CodingTracker;
+
+using ConsoleTableExt;
 
 class ReportView : BaseView
 {

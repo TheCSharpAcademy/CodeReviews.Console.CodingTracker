@@ -4,7 +4,7 @@ using System.Globalization;
 
 class CodingSessionController
 {
-    private Database database;
+    private readonly Database database;
     private MainMenuController? mainMenuController;
     private SortOrder sortOrder = SortOrder.Ascending;
     private FilterPeriod filterPeriod = FilterPeriod.None;

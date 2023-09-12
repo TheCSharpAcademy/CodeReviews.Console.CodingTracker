@@ -3,6 +3,7 @@ namespace CodingTracker;
 class CodingSessionCreateView : BaseView
 {
     private readonly CodingSessionController controller;
+    
     public CodingSessionCreateView(CodingSessionController controller)
     {
         this.controller = controller;

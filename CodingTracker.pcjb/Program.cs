@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace CodingTracker;
+﻿namespace CodingTracker;
 
 class Program
 {

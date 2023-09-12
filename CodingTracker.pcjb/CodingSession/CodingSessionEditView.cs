@@ -1,6 +1,5 @@
 namespace CodingTracker;
 
-using System.Globalization;
 using ConsoleTableExt;
 
 class CodingSessionEditView : BaseView
