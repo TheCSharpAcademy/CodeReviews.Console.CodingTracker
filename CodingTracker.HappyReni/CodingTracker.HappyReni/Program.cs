@@ -1,0 +1,3 @@
+﻿using CodeTracker;
+
+new Manager();
