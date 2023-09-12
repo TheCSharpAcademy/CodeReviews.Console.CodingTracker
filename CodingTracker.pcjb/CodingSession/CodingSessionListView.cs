@@ -1,5 +1,7 @@
 namespace CodingTracker;
 
+using ConsoleTableExt;
+
 class CodingSessionListView
 {
     private readonly CodingSessionController controller;
@@ -17,12 +19,7 @@ class CodingSessionListView
 
         if (sessions != null && sessions.Count > 0)
         {
-            var format = "{0,5} {1,-20} {2,-20} {3,15}";
-            Console.WriteLine(String.Format(format, "ID", "Start", "End", "Duration"));
-            foreach (CodingSession session in sessions)
-            {
-                Console.WriteLine(String.Format(format, session.Id, session.StartTime, session.EndTime, session.Duration));
-            }
+            ConsoleTableBuilder.From(sessions).ExportAndWriteLine();
         }
         else
         {
