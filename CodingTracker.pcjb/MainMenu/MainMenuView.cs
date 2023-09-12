@@ -13,6 +13,7 @@ class MainMenuView : BaseView
     {
         Console.WriteLine("1 - New Coding Session");
         Console.WriteLine("2 - List Coding Sessions");
+        Console.WriteLine("3 - Stopwatch");
         Console.WriteLine("0 - Exit");
         Console.WriteLine("Enter one of the numbers above to select a menu option.");
 
@@ -23,6 +24,9 @@ class MainMenuView : BaseView
                 break;
             case "2":
                 controller.ListCodingSessions();
+                break;
+            case "3":
+                controller.Stopwatch();
                 break;
             case "0":
                 controller.Exit();

@@ -3,10 +3,16 @@ namespace CodingTracker;
 class MainMenuController
 {
     private CodingSessionController? codingSessionController;
+    private StopwatchController? stopwatchController;
 
     public void SetCodingSessionController(CodingSessionController controller)
     {
         codingSessionController = controller;
+    }
+
+    public void SetStopwatchController(StopwatchController controller)
+    {
+        stopwatchController = controller;
     }
 
     public void ShowMainMenu()
@@ -26,7 +32,7 @@ class MainMenuController
         if (codingSessionController == null)
         {
             throw new InvalidOperationException("Required CodingSessionController missing.");
-        } 
+        }
         codingSessionController.ShowCreateScreen();
     }
 
@@ -36,8 +42,17 @@ class MainMenuController
         if (codingSessionController == null)
         {
             throw new InvalidOperationException("Required CodingSessionController missing.");
-        } 
+        }
         codingSessionController.ShowList();
+    }
+
+    public void Stopwatch()
+    {
+        if (stopwatchController == null)
+        {
+            throw new InvalidOperationException("Required StopwatchController missing.");
+        }
+        stopwatchController.Show();
     }
 
     public void Exit()
