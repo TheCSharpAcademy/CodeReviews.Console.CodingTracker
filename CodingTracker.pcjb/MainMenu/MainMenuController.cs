@@ -4,6 +4,7 @@ class MainMenuController
 {
     private CodingSessionController? codingSessionController;
     private StopwatchController? stopwatchController;
+    private ReportController? reportController;
 
     public void SetCodingSessionController(CodingSessionController controller)
     {
@@ -13,6 +14,11 @@ class MainMenuController
     public void SetStopwatchController(StopwatchController controller)
     {
         stopwatchController = controller;
+    }
+
+    public void SetReportController(ReportController controller) 
+    {
+        reportController = controller;
     }
 
     public void ShowMainMenu()
@@ -53,6 +59,15 @@ class MainMenuController
             throw new InvalidOperationException("Required StopwatchController missing.");
         }
         stopwatchController.Show();
+    }
+
+    public void ReportTotalsAndAverage()
+    {
+        if (reportController == null)
+        {
+            throw new InvalidOperationException("Required StopwatchController missing.");
+        }
+        reportController.TotalAndAverage(ReportPeriod.Year);
     }
 
     public void Exit()

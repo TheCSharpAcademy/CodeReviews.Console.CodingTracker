@@ -184,6 +184,44 @@ class Database
         }
     }
 
+    public List<ReportResultTotalAndAverage> GetTotalAndAverage(ReportPeriod reportPeriod)
+    {
+        string periodPattern = reportPeriod switch {
+            ReportPeriod.Week => "%Y-%W",
+            ReportPeriod.Month => "%Y-%m",
+            _ => "%Y"
+        };
+
+        List<ReportResultTotalAndAverage> results = new();
+        try
+        {
+            using var connection = new SqliteConnection(GetConnectionString());
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText =
+            $@"
+            SELECT strftime('{periodPattern}', start) AS period, 
+            SUM(duration) AS total, 
+            ROUND(AVG(duration),0) AS average 
+            FROM coding_sessions 
+            GROUP BY period;
+            ";
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                var period = reader.GetString(0);
+                var total = TimeSpan.FromSeconds(reader.GetInt32(1));
+                var average = TimeSpan.FromSeconds(reader.GetInt32(2));
+                results.Add(new ReportResultTotalAndAverage(period, total, average));
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.Error(ex);
+        }
+        return results;
+    }
+
     public bool CreateDatabaseIfNotPresent()
     {
         try

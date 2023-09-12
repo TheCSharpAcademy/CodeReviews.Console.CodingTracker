@@ -19,6 +19,10 @@ class Program
         stopwatchController.SetMainMenuController(mainMenuController);
         mainMenuController.SetStopwatchController(stopwatchController);
 
+        var reportController = new ReportController(database);
+        reportController.SetMainMenuController(mainMenuController);
+        mainMenuController.SetReportController(reportController);
+
         mainMenuController.ShowMainMenu();
     }
 }
