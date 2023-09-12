@@ -2,13 +2,7 @@ namespace CodingTracker;
 
 class MainMenuController
 {
-    private readonly MainMenuView view;
     private CodingSessionController? codingSessionController;
-
-    public MainMenuController()
-    {
-        view = new MainMenuView(this);
-    }
 
     public void SetCodingSessionController(CodingSessionController controller)
     {
@@ -22,6 +16,7 @@ class MainMenuController
 
     public void ShowMainMenu(string? message)
     {
+        var view = new MainMenuView(this);
         view.SetMessage(message);
         view.Show();
     }
@@ -47,6 +42,7 @@ class MainMenuController
 
     public void Exit()
     {
-        // nothing to do
+        var view = new ExitView();
+        view.Show();
     }
 }
