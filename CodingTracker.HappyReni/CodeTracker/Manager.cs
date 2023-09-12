@@ -6,7 +6,7 @@ namespace CodeTracker
     public class Manager
     {
         private SELECTOR Selector { get; set; }
-        private Sqlite Sql { get; set; }
+        private SQLite Sql { get; set; }
         private List<CodingSession> SessionData { get; set; } = new();
         private Filter Filter { get; set; }
         private UI UI { get; set; }

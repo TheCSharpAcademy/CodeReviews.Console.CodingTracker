@@ -1,6 +1,4 @@
-﻿using ConsoleTableExt;
-using System;
-using System.Globalization;
+﻿using System.Globalization;
 
 namespace CodeTracker
 {
@@ -60,14 +58,14 @@ namespace CodeTracker
             {
                 sortedList =
                     from session in sessionList
-                    Orderby session[0] ascending
+                    orderby session[0] ascending
                     select session;
             }
             else
             {
                 sortedList =
                     from session in sessionList
-                    Orderby session[0] descending
+                    orderby session[0] descending
                     select session;
             }
             foreach (var session in sortedList)
@@ -142,14 +140,14 @@ namespace CodeTracker
             {
                 sortedList =
                     from session in sessionList
-                    Orderby session[0] ascending
+                    orderby session[0] ascending
                     select session;
             }
             else
             {
                 sortedList =
                     from session in sessionList
-                    Orderby session[0] descending
+                    orderby session[0] descending
                     select session;
             }
             var ret = new List<List<object>>();
@@ -255,14 +253,14 @@ namespace CodeTracker
             {
                 sortedList =
                     from session in sessionList
-                    Orderby session[0] ascending
+                    orderby session[0] ascending
                     select session;
             }
             else
             {
                 sortedList =
                     from session in sessionList
-                    Orderby session[0] descending
+                    orderby session[0] descending
                     select session;
             }
             var ret = new List<List<object>>();
