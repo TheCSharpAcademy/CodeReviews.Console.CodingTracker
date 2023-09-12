@@ -6,6 +6,7 @@ class CodingSessionController
 {
     private Database database;
     private MainMenuController? mainMenuController;
+
     public CodingSessionController(Database database)
     {
         this.database = database;
@@ -37,8 +38,6 @@ class CodingSessionController
             // TODO: Error-Message
             BackToMainMenu();
         }
-
-
     }
 
     public void ShowList()
@@ -46,6 +45,38 @@ class CodingSessionController
         List<CodingSession> sessions = database.ReadAllCodingSessions();
         var view = new CodingSessionListView(this, sessions);
         view.Show();
+    }
+
+    public void ShowEditDelete(long codingSessionId)
+    {
+        var session = database.ReadCodingSession(codingSessionId);
+        if (session == null)
+        {
+            ShowList();
+        }
+        else
+        {
+            var view = new CodingSessionView(this, session);
+            view.Show();
+        }
+    }
+
+    public void Edit(CodingSession session)
+    {
+        var view = new CodingSessionEditView(this, session);
+        view.Show();
+    }
+
+    public void Update(CodingSession session)
+    {
+        database.UpdateCodingSession(session);
+        ShowEditDelete(session.Id);
+    }
+
+    public void Delete(CodingSession session)
+    {
+        database.DeleteCodingSession(session.Id);
+        ShowList();
     }
 
     public void BackToMainMenu()
@@ -56,5 +87,4 @@ class CodingSessionController
         }
         mainMenuController.ShowMainMenu();
     }
-
 }
