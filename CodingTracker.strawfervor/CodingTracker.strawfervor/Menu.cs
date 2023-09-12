@@ -66,9 +66,6 @@ namespace CodingTracker
                             Console.Clear();
                             UpdateEntry();
                             break;
-                        case 5:
-                            Console.Clear();
-                            break;
                         case 0:
                             Environment.Exit(0);
                             break;

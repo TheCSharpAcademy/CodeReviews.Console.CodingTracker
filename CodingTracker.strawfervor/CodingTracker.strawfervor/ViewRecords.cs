@@ -11,7 +11,7 @@ namespace CodingTracker
         {
             foreach (var record in AllRecords())
             {
-                Console.WriteLine($"{record.Id}, {record.StartTime}, {record.EndTime}, {record.Duration}");
+                Console.WriteLine($"{record.Id}, {record.Date}, {record.StartTime}, {record.EndTime}, {record.Duration}");
             }
             Console.WriteLine("Press any key to continue");
             Console.ReadLine();
@@ -20,11 +20,11 @@ namespace CodingTracker
         public void ShowTable()
         {
             var recordsList = new List<List<object>>();
-            recordsList.Add(new List<object>() { "ID", "Start time", "End time", "Duration" }); //header line add
+            recordsList.Add(new List<object>() { "ID", "Date", "Start time", "End time", "Duration (minutes)" }); //header line add
 
             foreach (var record in AllRecords())
             {
-                recordsList.Add(new List<object>() { record.Id, record.StartTime, record.EndTime, record.Duration});
+                recordsList.Add(new List<object>() { record.Id, record.Date, record.StartTime, record.EndTime, record.Duration});
             }
 
             ConsoleTableBuilder
