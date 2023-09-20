@@ -144,7 +144,6 @@ namespace CodingTracker.Mo3ses.UserMenu
             Stopwatch stopWatch = new Stopwatch();
             CodingSession codingSession = new();
             System.Console.WriteLine("Press Enter to Start the timer.");
-            var input = Console.ReadLine().ToUpper();
             stopWatch.Start();
             codingSession.StartTime = DateTime.Now;
             do{
