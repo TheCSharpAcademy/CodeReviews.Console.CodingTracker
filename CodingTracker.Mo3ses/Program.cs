@@ -1,30 +1,18 @@
-﻿using CodingTracker.Mo3ses.Data;
+﻿using CodingTracker.Mo3ses.Controller;
+using CodingTracker.Mo3ses.Data;
+using CodingTracker.Mo3ses.Interface;
 using CodingTracker.Mo3ses.Models;
+using CodingTracker.Mo3ses.UserMenu;
 
 internal class Program
 {
     private static void Main(string[] args)
     {
-        Console.WriteLine("Hello, World!");
-        CodingSession codingSession = new();
-
-        string test = "2023-09-28 23:50:55";
-        codingSession.StartTime = DateTime.Now;
-        codingSession.EndTime = DateTime.Parse(test);
-
         DbConnect dbConnect = new();
+        CodingSessionController sessionController = new CodingSessionController(dbConnect);
+        UserInput user = new UserInput(sessionController);
 
-        dbConnect.Create(codingSession);
+        user.Execute();
 
-        dbConnect.GetAll();
-
-        test = "2023-10-28 13:50:55";
-        codingSession.Id = 3;
-        codingSession.StartTime = DateTime.Now;
-        codingSession.EndTime = DateTime.Parse(test);
-        dbConnect.Update(codingSession);
-      
-       dbConnect.Delete(3);
-       dbConnect.GetAll();
     }
 }

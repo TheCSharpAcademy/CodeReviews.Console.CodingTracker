@@ -1,17 +1,12 @@
-using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Data;
 using System.Data.SQLite;
-using System.Linq;
 using ConsoleTableExt;
-using System.Threading.Tasks;
 using CodingTracker.Mo3ses.Models;
-using System.Globalization;
+using CodingTracker.Mo3ses.Interface;
 
 namespace CodingTracker.Mo3ses.Data
 {
-    public class DbConnect
+    public class DbConnect : ICodingSessionRepository
     {
         string? connectionString;
 
@@ -41,7 +36,8 @@ namespace CodingTracker.Mo3ses.Data
         }
 
         public void Create(CodingSession session){
-            session.Duration = Math.Round((session.EndTime - session.StartTime).TotalDays).ToString();
+            TimeSpan duration = (session.EndTime - session.StartTime);
+            session.Duration = duration.ToString();
 
             using (var conn = new SQLiteConnection(connectionString)){
                 conn.Open();
@@ -58,7 +54,8 @@ namespace CodingTracker.Mo3ses.Data
         }
 
         public void Update(CodingSession session){
-            session.Duration = Math.Round((session.EndTime - session.StartTime).TotalDays).ToString();
+            TimeSpan duration = (session.EndTime - session.StartTime);
+            session.Duration = duration.ToString();
 
             using (var conn = new SQLiteConnection(connectionString)){
                 conn.Open();
@@ -77,13 +74,13 @@ namespace CodingTracker.Mo3ses.Data
             }
         }
 
-        public void Delete(int id){
+        public void Delete(CodingSession session){
             using (var conn = new SQLiteConnection(connectionString)){
                 conn.Open();
                 var cmd = conn.CreateCommand();
                
                 cmd.CommandText = "DELETE FROM CODINGTRACKER WHERE ID = @Id";
-                cmd.Parameters.AddWithValue("@Id", id);
+                cmd.Parameters.AddWithValue("@Id", session.Id);
                 cmd.ExecuteNonQuery();
 
                 conn.Close();
@@ -131,12 +128,14 @@ namespace CodingTracker.Mo3ses.Data
                 {
                     while (reader.Read())
                     {
+                        var durationSpan = TimeSpan.Parse(reader["DURATION"].ToString());
                         CodingSession session = new CodingSession
                         {
+                            
                             Id = Convert.ToInt32(reader["Id"]),
                             StartTime = Convert.ToDateTime(reader["StartTime"]),
                             EndTime = Convert.ToDateTime(reader["EndTime"]),
-                            Duration = reader["DURATION"].ToString()
+                            Duration = String.Format("{0} days, {1} hours, {2} minutes, {3} seconds",durationSpan.Days, durationSpan.Hours, durationSpan.Minutes, durationSpan.Seconds)
                         };
 
                         result.Add(session);
@@ -162,7 +161,7 @@ namespace CodingTracker.Mo3ses.Data
                    .WithTitle("LIST", ConsoleColor.Green, ConsoleColor.DarkGray, TextAligntment.Left)
                    .WithFormatter(1, (text) =>
                    {
-                       return text.ToString().ToUpper().Replace(" ", "-") + " �";
+                       return text.ToString().ToUpper().Replace(" ", "-");
                    })
                    .ExportAndWriteLine(TableAligntment.Left);
                 }
