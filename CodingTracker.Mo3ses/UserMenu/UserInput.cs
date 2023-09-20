@@ -36,6 +36,9 @@ namespace CodingTracker.Mo3ses.UserMenu
                     case "5":
                         ReportMenu();
                         break;
+                    case "6":
+                        GetSessionsDay();
+                        break;
                     case "0":
                         Environment.Exit(0);
                         break;
@@ -162,7 +165,27 @@ namespace CodingTracker.Mo3ses.UserMenu
             System.Console.WriteLine("Press Any Key...");
             Console.ReadKey();
         }
-
+        public void GetSessionsDay(){
+            System.Console.WriteLine("Do you want to see the sessions from how many days ago?");
+            int input = Int32.Parse(Console.ReadLine());
+            _sessionController.GetSessionsDay(input);
+            System.Console.WriteLine("Press Any Key...");
+            Console.ReadKey();
+        }
+        public void GetSessionsMonth(){
+            System.Console.WriteLine("Do you want to see the sessions from how many months ago?");
+            int input = Int32.Parse(Console.ReadLine());
+            _sessionController.GetSessionsMonth(input);
+            System.Console.WriteLine("Press Any Key...");
+            Console.ReadKey();
+        }
+        public void GetSessionsYear(){
+            System.Console.WriteLine("Do you want to see the sessions from how many years ago?");
+            int input = Int32.Parse(Console.ReadLine());
+            _sessionController.GetSessionsYear(input);
+            System.Console.WriteLine("Press Any Key...");
+            Console.ReadKey();
+        }
         public void AllSessions(){
             _sessionController.GetAll();
         }

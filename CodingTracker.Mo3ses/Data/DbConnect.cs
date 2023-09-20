@@ -177,6 +177,63 @@ namespace CodingTracker.Mo3ses.Data
             return result;
         }
 
+        public List<CodingSession> GetSessionsPeriods(DateTime dateTime){
+            
+            List<CodingSession> result = new List<CodingSession>();
+
+            using(var conn = new SQLiteConnection(connectionString)){
+                conn.Open();
+
+                var cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT * FROM CODINGTRACKER WHERE STARTTIME < @dateTime";
+                cmd.Parameters.AddWithValue("@dateTime", dateTime);
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var durationSpan = TimeSpan.Parse(reader["DURATION"].ToString());
+                        CodingSession session = new CodingSession
+                        {
+                            
+                            Id = Convert.ToInt32(reader["Id"]),
+                            StartTime = Convert.ToDateTime(reader["StartTime"]),
+                            EndTime = Convert.ToDateTime(reader["EndTime"]),
+                            Duration = String.Format("{0} days, {1} hours, {2} minutes, {3} seconds",durationSpan.Days, durationSpan.Hours, durationSpan.Minutes, durationSpan.Seconds)
+                        };
+
+                        result.Add(session);
+                    }
+                }
+
+                conn.Close();
+
+                if (result.Count > 0)
+                {
+                    ConsoleTableBuilder.From(result)
+                   //.WithFormat(ConsoleTableBuilderFormat.MarkDown)
+                   .WithTextAlignment(new Dictionary<int, TextAligntment> {
+                    { 0, TextAligntment.Left },
+                    { 1, TextAligntment.Left },
+                    { 3, TextAligntment.Left },
+                    { 100, TextAligntment.Left }
+                   })
+                   .WithMinLength(new Dictionary<int, int> {
+                    { 1, 30 }
+                   })
+                   .WithCharMapDefinition(CharMapDefinition.FramePipDefinition)
+                   .WithTitle("LIST", ConsoleColor.Green, ConsoleColor.DarkGray, TextAligntment.Left)
+                   .WithFormatter(1, (text) =>
+                   {
+                       return text.ToString().ToUpper().Replace(" ", "-");
+                   })
+                   .ExportAndWriteLine(TableAligntment.Left);
+                }
+                
+            }
+
+            return result;
+        }
+
 
     }
 }
