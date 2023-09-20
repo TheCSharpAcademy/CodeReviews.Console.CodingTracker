@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CodingTracker.Mo3ses.Interface;
 using CodingTracker.Mo3ses.Models;
 
@@ -25,6 +21,10 @@ namespace CodingTracker.Mo3ses.Controller
             codingSession.StartTime = startTimeParsed;
             codingSession.EndTime = endTimeParsed;
 
+            _codingSessionRepo.Create(codingSession);
+        }
+        public void Create(CodingSession codingSession)
+        {
             _codingSessionRepo.Create(codingSession);
         }
 

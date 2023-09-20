@@ -1,8 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Diagnostics;
 using CodingTracker.Mo3ses.Controller;
+using CodingTracker.Mo3ses.Models;
 using ConsoleTableExt;
 
 namespace CodingTracker.Mo3ses.UserMenu
@@ -24,7 +22,7 @@ namespace CodingTracker.Mo3ses.UserMenu
                 switch (answer)
                 {
                     case "1":
-                        System.Console.WriteLine("return false;");
+                        AutoTrack();
                         break;
                     case "2":
                         ManualTrack();
@@ -49,6 +47,7 @@ namespace CodingTracker.Mo3ses.UserMenu
         }
 
         public void StartMenu(){
+            Console.Clear();
               var menuData = new List<List<object>>
             {
                 new List<object> {"1 - Auto Track Coding Session"},
@@ -104,7 +103,7 @@ namespace CodingTracker.Mo3ses.UserMenu
             while (true)
             {
                 Console.Clear();
-                ReportMenu();
+                AllSessions();
                 System.Console.Write("Select One Id Session: ");
                 string input = Console.ReadLine();
 
@@ -132,7 +131,7 @@ namespace CodingTracker.Mo3ses.UserMenu
         }
         public void DeleteSession(){
              Console.Clear();
-                ReportMenu();
+                AllSessions();
                 System.Console.Write("Select One Id Session: ");
                 string input = Console.ReadLine();
 
@@ -141,7 +140,31 @@ namespace CodingTracker.Mo3ses.UserMenu
                     System.Console.WriteLine("Session deleted!");
                 }else System.Console.WriteLine("Wrong Id try again");
         }
+        public void AutoTrack(){
+            Stopwatch stopWatch = new Stopwatch();
+            CodingSession codingSession = new();
+            System.Console.WriteLine("Press Enter to Start the timer.");
+            var input = Console.ReadLine().ToUpper();
+            stopWatch.Start();
+            codingSession.StartTime = DateTime.Now;
+            do{
+                        Console.Clear();
+                        Console.WriteLine("Press Q to exit");
+                        System.Console.WriteLine();
+            }while(Console.ReadKey().Key != ConsoleKey.Q);
+            stopWatch.Stop();
+            codingSession.EndTime = DateTime.Now;
+            TimeSpan ts = stopWatch.Elapsed;
+            codingSession.Duration = ts.ToString();
+            _sessionController.Create(codingSession);
+        }
         public void ReportMenu(){
+            AllSessions();
+            System.Console.WriteLine("Press Any Key...");
+            Console.ReadKey();
+        }
+
+        public void AllSessions(){
             _sessionController.GetAll();
         }
     }

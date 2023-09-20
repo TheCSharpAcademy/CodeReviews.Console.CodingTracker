@@ -1,7 +1,5 @@
 ﻿using CodingTracker.Mo3ses.Controller;
 using CodingTracker.Mo3ses.Data;
-using CodingTracker.Mo3ses.Interface;
-using CodingTracker.Mo3ses.Models;
 using CodingTracker.Mo3ses.UserMenu;
 
 internal class Program

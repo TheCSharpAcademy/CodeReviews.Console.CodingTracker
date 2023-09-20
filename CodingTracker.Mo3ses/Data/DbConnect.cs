@@ -36,8 +36,11 @@ namespace CodingTracker.Mo3ses.Data
         }
 
         public void Create(CodingSession session){
-            TimeSpan duration = (session.EndTime - session.StartTime);
-            session.Duration = duration.ToString();
+            if (string.IsNullOrEmpty(session.Duration))
+            {
+                TimeSpan duration = (session.EndTime - session.StartTime);
+                session.Duration = duration.ToString();
+            }
 
             using (var conn = new SQLiteConnection(connectionString)){
                 conn.Open();
@@ -54,8 +57,11 @@ namespace CodingTracker.Mo3ses.Data
         }
 
         public void Update(CodingSession session){
-            TimeSpan duration = (session.EndTime - session.StartTime);
-            session.Duration = duration.ToString();
+            if (string.IsNullOrEmpty(session.Duration))
+            {
+                TimeSpan duration = (session.EndTime - session.StartTime);
+                session.Duration = duration.ToString();
+            }
 
             using (var conn = new SQLiteConnection(connectionString)){
                 conn.Open();
