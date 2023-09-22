@@ -38,9 +38,48 @@ namespace CodingTracker.TomDonegan
             }
         }
 
-        public static void DeleteSQLiteDatabase() { }
+        public static List<CodingSession> ViewAllSQLiteDatabase() {
+            string connectionString = ConfigurationManager.ConnectionStrings[
+                    "CodingTrackerDatabase"
+                ].ConnectionString;
 
-        public static void UpdateSQLiteDatabase() { }
+            string queryString = ConfigurationManager.ConnectionStrings[
+                    "QueryAllCodingSessions"
+                ].ConnectionString;
+
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SQLiteCommand command = new SQLiteCommand(queryString, connection))
+                {
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        List<CodingSession> session = new List<CodingSession>();
+
+                        while (reader.Read())
+                        {
+                            CodingSession model = new CodingSession
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                date = reader.GetString(reader.GetOrdinal("Date")),
+                                startTime = reader.GetString(reader.GetOrdinal("StartTime")),
+                                endTime = reader.GetString(reader.GetOrdinal("EndTime")),
+                                duration = reader.GetString(reader.GetOrdinal("Duration")),  
+                            };
+
+                            session.Add(model);
+                        }
+
+                        // Now you have a list of YourModel objects with the retrieved data
+                        return session;
+                    }
+                }
+            }
+        }
+        public static void DeleteEntrySQLiteDatabase() { }
+
+        public static void UpdateEntrySQLiteDatabase() { }
 
         public static void AddEntrySQLiteDatabase(CodingSession session)
         {

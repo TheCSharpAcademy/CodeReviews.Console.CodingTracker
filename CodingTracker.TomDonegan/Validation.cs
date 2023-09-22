@@ -51,6 +51,14 @@ namespace CodingTracker.TomDonegan
             return isValidTime;
         }
 
+        internal static bool isSecondTimeBeforeFirstTime(string[] sessionTimes)
+        {
+            DateTime firstTime = DateTime.ParseExact(sessionTimes[0], "HH:mm", null);
+            DateTime secondTime = DateTime.ParseExact(sessionTimes[1], "HH:mm", null);
+
+            return secondTime < firstTime;
+        }
+
         internal static bool IsWithinRange(int minValue, int maxValue, int value)
         {
             return value >= minValue && value <= maxValue;
