@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -14,53 +15,40 @@ namespace CodingTracker.TomDonegan
             return selectionOptions.Any(selection => selection == menuSelection);
         }
 
-        internal static string DateEntryValidation(string prompt)
+        internal static bool DateEntryValidation(string dateInput)
         {
-            Console.WriteLine(prompt);
-
+            bool isValidDate = false;
             string requiredFormat = @"\d{2}-\d{2}-\d{2}";
 
-            while (true)
+            if (Regex.IsMatch(dateInput, requiredFormat) && dateInput.Length == 8)
             {
-                string dateInput = Console.ReadLine();
+                int dayNumber = Convert.ToInt32(dateInput[..2]);
+                int monthNumber = Convert.ToInt32(dateInput.Substring(3, 2));
 
-                if (Regex.IsMatch(dateInput, requiredFormat) && dateInput.Length == 8)
+                if (IsWithinRange(01, 31, dayNumber) && IsWithinRange(01, 12, monthNumber))
                 {
-                    int dayNumber = Convert.ToInt32(dateInput[..2]);
-                    int monthNumber = Convert.ToInt32(dateInput.Substring(3, 2));
-
-                    if (IsWithinRange(01,31,dayNumber) && IsWithinRange(01,12, monthNumber))
-                    {
-                        return dateInput;
-                    }
+                    isValidDate = true;
                 }
-                Console.WriteLine("Invalid input. Please enter the date in DD-MM-YY format and within the valid range (DD: 01-31, MM: 01-12). Try again.");
             }
+            return isValidDate;
         }
 
-        internal static string TimeEntryValidation(string prompt)
+        internal static bool TimeEntryValidation(string timeInput)
         {
-            Console.WriteLine(prompt);            
-
+            bool isValidTime = false;
             string requiredTimeFormat = @"\d{2}:\d{2}";
 
-            while (true)
+            if (Regex.IsMatch(timeInput, requiredTimeFormat) && timeInput.Length == 5)
             {
-                string timeInput = Console.ReadLine();
+                int hour = Convert.ToInt32(timeInput[..2]);
+                int minute = Convert.ToInt32(timeInput.Substring(3, 2));
 
-                if (Regex.IsMatch(timeInput, requiredTimeFormat) && timeInput.Length == 5)
+                if (IsWithinRange(0, 23, hour) && IsWithinRange(0, 59, minute))
                 {
-                    int hour = Convert.ToInt32(timeInput[..2]);
-                    int minute = Convert.ToInt32(timeInput.Substring(3, 2));
-
-                    if (IsWithinRange(0, 23, hour) && IsWithinRange(0, 59, minute))
-                    {
-                        return timeInput;
-                    }
+                    isValidTime = true;
                 }
-
-                Console.WriteLine("Invalid input. Please enter the time in HH:MM format and within the valid range (HH: 00-23, MM: 00-59). Try again.");
             }
+            return isValidTime;
         }
 
         internal static bool IsWithinRange(int minValue, int maxValue, int value)

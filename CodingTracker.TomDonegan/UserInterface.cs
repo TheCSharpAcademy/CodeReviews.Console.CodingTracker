@@ -105,23 +105,71 @@ namespace CodingTracker.TomDonegan
 
         internal static void AddSessionInterface()
         {
-            CodingSession session = new()
+
+            Console.WriteLine("Please enter the date for the session (DD-MM-YY)");
+            string sessionDate;
+
+            do
+            {                
+                sessionDate = Console.ReadLine();
+
+                if (!Validation.DateEntryValidation(sessionDate))
+                {
+                    Console.WriteLine(
+                    "Invalid input. Please enter the date in DD-MM-YY format and within the valid range (DD: 01-31, MM: 01-12). Try again."
+                );
+                }
+            } while (!Validation.DateEntryValidation(sessionDate));
+
+
+            Console.WriteLine("Please enter a start and end time: (HH:MM)");
+            string sessionStartTime;
+            string sessionEndTime;
+
+            do
             {
-                date = Validation.DateEntryValidation(
-                "Please enter the date for the session (DD-MM-YY)"
-            ),
-                startTime = Validation.TimeEntryValidation(
-                "Please enter a start time: (HH:MM)"
-            ),
-                endTime = Validation.TimeEntryValidation("Please enter a finish time: (HH:MM)")
-            };
+                Console.Write("Start time: ");
+                sessionStartTime = Console.ReadLine();
+                Console.Write("End time: ");
+                sessionEndTime = Console.ReadLine();
+
+                if (!Validation.TimeEntryValidation(sessionStartTime) || !Validation.TimeEntryValidation(sessionEndTime))
+                {
+                    Console.WriteLine(
+                    "Invalid input. Please enter the time in HH:MM format and within the valid range (HH: 00-23, MM: 00-59). Try again."
+                );
+                }
+            } while (!Validation.TimeEntryValidation(sessionStartTime) || !Validation.TimeEntryValidation(sessionEndTime));
+
+            /*while (!Validation.TimeEntryValidation(sessionStartTime))
+            {
+                Console.WriteLine("Invalid input. Please enter the time in HH:MM format and within the valid range (HH: 00-23, MM: 00-59). Try again.");
+                sessionStartTime = Console.ReadLine();
+            }
+
+            Console.WriteLine("Please enter a start time: (HH:MM)");
+            string sessionEndTime = Console.ReadLine();
+
+            while (!Validation.TimeEntryValidation(sessionEndTime))
+            {
+                Console.WriteLine("Invalid input. Please enter the time in HH:MM format and within the valid range (HH: 00-23, MM: 00-59). Try again.");
+                sessionEndTime = Console.ReadLine();
+            }*/
+
+            CodingSession session =
+                new()
+                {
+                    date = sessionDate,
+                    startTime = sessionStartTime,
+                    endTime = sessionEndTime
+                };
 
             if (
                 DateTime.TryParse(session.startTime, out DateTime startTime)
                 && DateTime.TryParse(session.endTime, out DateTime endTime)
             )
 
-            session.duration = Helpers.CalculateDuration(startTime, endTime);
+                session.duration = Helpers.CalculateDuration(startTime, endTime);
 
             Database.AddEntrySQLiteDatabase(session);
         }
