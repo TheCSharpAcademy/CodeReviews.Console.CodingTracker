@@ -16,5 +16,20 @@ namespace CodingTracker.TomDonegan
 
             return duration.ToString();
         }
+
+        public static void MonitorHomeKey()
+        {
+            while (true)
+            {
+                if (Console.KeyAvailable)
+                {
+                    ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+                    if (keyInfo.Key == ConsoleKey.Home)
+                    {
+                        UserInterface.MainMenu();
+                    }
+                }
+            }
+        }
     }
 }
