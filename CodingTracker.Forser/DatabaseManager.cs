@@ -1,9 +1,8 @@
 ﻿using Microsoft.Data.Sqlite;
-using System.Configuration;
 
 internal class DatabaseManager
 {
-    static string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
+    static string connectionString = System.Configuration.ConfigurationManager.AppSettings.Get("ConnectionString");
 
     internal void CreateTable()
     {
