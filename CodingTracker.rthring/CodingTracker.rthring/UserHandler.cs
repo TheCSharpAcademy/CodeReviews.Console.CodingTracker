@@ -50,12 +50,24 @@ namespace CodingTracker.rthring
             }
             return false;
         }
-        private void Insert()
-        {
-            throw new NotImplementedException();
-        }
-
         private void GetAllRecords()
+        {
+            Console.Clear();
+            var result = Database.GetRecords();
+
+            if (result.Count == 0)
+            {
+                Console.WriteLine("No rows found");
+                return;
+            }
+
+            foreach (var session in result)
+            {
+                Console.WriteLine($"{session.Id} - {session.StartTime.ToString("yyyy/MM/dd HH:mm")} - {session.EndTime.ToString("yyyy/MM/dd HH:mm")} - Quantity: {session.Duration}");
+            }
+            return;
+        }
+        private void Insert()
         {
             throw new NotImplementedException();
         }
