@@ -2,7 +2,6 @@
 {
     CodingController codingController = new CodingController();
     Coding coding = new Coding();
-    Session session = new Session();
 
     internal void MainMenu()
     {
