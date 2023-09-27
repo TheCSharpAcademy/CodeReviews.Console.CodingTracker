@@ -2,6 +2,8 @@
 {
     CodingController codingController = new CodingController();
     Coding coding = new Coding();
+    Session session = new Session();
+
     internal void MainMenu()
     {
         bool closeApp = false;
@@ -138,13 +140,11 @@
     }
     private void ProcessAdd()
     {
-        DateTime startDate = Helpers.GetDateInput("Start Date");
-        DateTime endDate = Helpers.GetDateInput("End Date");
-        double duration = Helpers.CalculateDuration(startDate, endDate);
+        Session session = Helpers.GetNewSession();
 
-        coding.StartDate = startDate;
-        coding.EndDate = endDate;
-        coding.TotalDuration = duration;
+        coding.StartDate = session.StartDate;
+        coding.EndDate = session.EndDate;
+        coding.TotalDuration = session.TotalDuration;
 
         codingController.Post(coding);
     }

@@ -1,7 +1,9 @@
-﻿using System.Globalization;
+﻿using CodingTracker.Forser;
+using System.Globalization;
+using System.Numerics;
 
 internal class Helpers
-{
+{ 
     internal static DateTime GetDateInput(string dateMode)
     {
         Console.WriteLine($"\n\nPlease insert the {dateMode}: (Format: dd-mm-yy hh:mm). Type 0 to return to main menu.\n\n");
@@ -21,5 +23,32 @@ internal class Helpers
     {
         TimeSpan duration = endDate - startDate;
         return duration.TotalHours;
+    }
+
+    internal static Session GetNewSession()
+    {
+        Session session = new Session();
+        Validation newValidator = new Validation("yy-MM-dd HH:mm");
+
+        Console.WriteLine($"\n\nPlease enter your Start Date: - (Input must be in format: {newValidator.selectedFormat})");
+        var startDate = Console.ReadLine();
+
+        Console.WriteLine($"\n\nPlease enter your End Date: - (Input must be in format: {newValidator.selectedFormat})");
+        var endDate = Console.ReadLine();
+
+        if (newValidator.ValidateFormat(startDate, endDate))
+        {
+            session.StartDate = DateTime.Parse(startDate);
+            session.EndDate = DateTime.Parse(endDate);
+            session.TotalDuration = CalculateDuration(session.StartDate, session.EndDate);
+            Console.WriteLine("\n\nSession added!");
+            return session;
+        }
+        else
+        {
+            GetNewSession();
+        }
+
+        return session;
     }
 }
