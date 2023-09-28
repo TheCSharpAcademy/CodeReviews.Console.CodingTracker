@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CodingTracker.FarSM": {
+      "commandName": "Project",
+      "workingDirectory": "D:\\C#Programs\\C#Academy\\CodingTracker.FarSM\\CodingTracker.FarSM"
+    }
+  }
+}
