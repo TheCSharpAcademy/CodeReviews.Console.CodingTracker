@@ -52,14 +52,12 @@ namespace CodingTracker.rthring
 
                 if (reader.HasRows)
                 {
-                    Console.WriteLine("HAS ROWS");
                     while (reader.Read())
                     {
                         tableData.Add(
                             new CodingSession
                             {
                                 Id = reader.GetInt32(0),
-                                // MONTHS ARE WRONG WHEN OUTPUTTED
                                 StartTime = DateTime.ParseExact(reader.GetString(1), "yyyy/MM/dd HH:mm", new CultureInfo("en-US")),
                                 EndTime = DateTime.ParseExact(reader.GetString(2), "yyyy/MM/dd HH:mm", new CultureInfo("en-US")),
                                 Duration = reader.GetInt32(3)
@@ -70,6 +68,80 @@ namespace CodingTracker.rthring
                 connection.Close();
 
                 return tableData;
+            }
+        }
+
+        internal void InsertRecord(CodingSession session)
+        {
+            string startTime = session.StartTime.ToString("yyyy/MM/dd HH:mm", new CultureInfo("en-US"));
+            string endTime = session.EndTime.ToString("yyyy/MM/dd HH:mm", new CultureInfo("en-US"));
+            using (var connection = new SqliteConnection(ConnectionString))
+            {
+                connection.Open();
+                var tableCmd = connection.CreateCommand();
+                tableCmd.CommandText =
+                    $"INSERT INTO coding_session(StartTime, EndTime, Duration) VALUES('{startTime}', '{endTime}', {session.Duration})";
+                tableCmd.ExecuteNonQuery();
+
+                connection.Close();
+            }
+        }
+        
+        internal bool DeleteRecord(int id)
+        {
+            using (var connection = new SqliteConnection(ConnectionString))
+            {
+                connection.Open();
+                var tableCmd = connection.CreateCommand();
+
+                tableCmd.CommandText = $"DELETE from coding_session WHERE Id = {id}";
+
+                int rowCount = tableCmd.ExecuteNonQuery();
+
+                if (rowCount == 0)
+                {
+                    connection.Close();
+                    return false;
+                }
+                connection.Close();
+                return true;
+            }
+
+        }
+
+        internal bool RecordExistsById(int id)
+        {
+            using (var connection = new SqliteConnection(ConnectionString))
+            {
+                connection.Open();
+
+                var checkCmd = connection.CreateCommand();
+                checkCmd.CommandText = $"SELECT EXISTS(SELECT 1 FROM coding_session WHERE Id = {id})";
+                int checkQuery = Convert.ToInt32(checkCmd.ExecuteScalar());
+
+                if (checkQuery == 0)
+                {
+                    connection.Close();
+                    return false;
+                }
+                connection.Close();
+                return true;
+            }
+        }
+
+        internal void UpdateRecord(CodingSession session)
+        {
+            string startTime = session.StartTime.ToString("yyyy/MM/dd HH:mm", new CultureInfo("en-US"));
+            string endTime = session.EndTime.ToString("yyyy/MM/dd HH:mm", new CultureInfo("en-US"));
+            using (var connection = new SqliteConnection(ConnectionString))
+            {
+                connection.Open();
+                var tableCmd = connection.CreateCommand();
+                tableCmd.CommandText =
+                    $"UPDATE coding_session SET StartTime = '{startTime}', EndTime = '{endTime}', Duration = {session.Duration} WHERE Id = {session.Id}";
+                tableCmd.ExecuteNonQuery();
+
+                connection.Close();
             }
         }
     }

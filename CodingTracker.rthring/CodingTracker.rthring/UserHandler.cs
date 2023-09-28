@@ -1,6 +1,9 @@
-﻿using System;
+﻿using CodingTracker.rthring.Models;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -63,23 +66,103 @@ namespace CodingTracker.rthring
 
             foreach (var session in result)
             {
-                Console.WriteLine($"{session.Id} - {session.StartTime.ToString("yyyy/MM/dd HH:mm")} - {session.EndTime.ToString("yyyy/MM/dd HH:mm")} - Quantity: {session.Duration}");
+                Console.WriteLine($"{session.Id} - {session.StartTime.ToString("yyyy/MM/dd HH:mm",new CultureInfo("en-US"))}" +
+                    $" - {session.EndTime.ToString("yyyy/MM/dd HH:mm", new CultureInfo("en-US"))} - Quantity: {session.Duration}");
             }
             return;
         }
         private void Insert()
         {
-            throw new NotImplementedException();
+            if (!TryGetSessionInfo(out CodingSession session)) return;
+
+            Database.InsertRecord(session);
+            return;
         }
 
         private void Update()
         {
-            throw new NotImplementedException();
+            GetAllRecords();
+
+            Console.WriteLine("\n\nPlease type the Id of the record you want to update or type 0 to return to main menu.");
+            int recordId = GetNumberInput();
+            if (recordId == 0) return;
+            bool exists = Database.RecordExistsById(recordId);
+
+            while (!exists)
+            {
+                Console.WriteLine($"\n\nRecord with Id {recordId} doesn't exist. \n\n" +
+                    $"Please type the Id of the record you want to update or type 0 to return to main menu.");
+                recordId = GetNumberInput();
+                exists = Database.RecordExistsById(recordId);
+                if (recordId == 0) return;
+            }
+
+            if (!TryGetSessionInfo(out CodingSession session)) return;
+            session.Id = recordId;
+            Database.UpdateRecord(session);
         }
 
         private void Delete()
         {
-            throw new NotImplementedException();
+            GetAllRecords();
+
+            bool deleted = false;
+
+            while (!deleted)
+            {
+                Console.WriteLine("\n\nPlease type the Id of the record you want to delete or type 0 to return to main menu.");
+                int recordId = GetNumberInput();
+
+                if (recordId == 0) return;
+                deleted = Database.DeleteRecord(recordId);
+                if (!deleted) Console.WriteLine($"\n\nRecord with Id {recordId} doesn't exist.");
+            }
+        }
+
+        private static int GetNumberInput()
+        {
+            string numberInput = Console.ReadLine();
+
+            while (!Int32.TryParse(numberInput, out _) || Convert.ToInt32(numberInput) < 0)
+            {
+                Console.WriteLine("\n\nInvalid number. Try again.\n\n");
+                numberInput = Console.ReadLine();
+            }
+
+            return Convert.ToInt32(numberInput);
+        }
+
+        private DateTime? GetTimeInput()
+        {
+            Console.WriteLine("Please insert date and time: (Format: yyyy/MM/dd HH:mm). Type 0 to return to main menu.");
+
+            string dateInput = Console.ReadLine();
+
+            while (!DateTime.TryParseExact(dateInput, "yyyy/MM/dd HH:mm", new CultureInfo("en-US"), DateTimeStyles.None, out _) && dateInput != "0")
+            {
+                Console.WriteLine("\n\nInvalid date. (Format: yyyy/MM/dd HH:mm). Type 0 to return to main menu or try again:\n\n");
+                dateInput = Console.ReadLine();
+            }
+
+            if (dateInput == "0") return null;
+            return DateTime.ParseExact(dateInput, "yyyy/MM/dd HH:mm", new CultureInfo("en-US"));
+        }
+
+        private bool TryGetSessionInfo(out CodingSession session)
+        {
+            session = new CodingSession();
+            Console.WriteLine("\nStart Time: ");
+            DateTime? startTime = GetTimeInput();
+            if (startTime == null) return false;
+
+            Console.WriteLine("\nEnd Time: ");
+            DateTime? endTime = GetTimeInput();
+            if (endTime == null) return false;
+
+            session.StartTime = startTime ?? default;
+            session.EndTime = endTime ?? default;
+            session.Duration = Convert.ToInt32((session.EndTime.Subtract(session.StartTime)).TotalMinutes);
+            return true;
         }
     }
 }
