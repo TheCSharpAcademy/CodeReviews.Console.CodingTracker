@@ -1,11 +1,6 @@
 ﻿using CodingTracker.rthring.Models;
-using System;
-using System.Collections.Generic;
+using ConsoleTableExt;
 using System.Globalization;
-using System.Linq;
-using System.Reflection.PortableExecutable;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CodingTracker.rthring
 {
@@ -64,11 +59,19 @@ namespace CodingTracker.rthring
                 return;
             }
 
+            List<List<object>> tableData = new List<List<object>>();
+
             foreach (var session in result)
             {
-                Console.WriteLine($"{session.Id} - {session.StartTime.ToString("yyyy/MM/dd HH:mm",new CultureInfo("en-US"))}" +
-                    $" - {session.EndTime.ToString("yyyy/MM/dd HH:mm", new CultureInfo("en-US"))} - Quantity: {session.Duration}");
+                tableData.Add(new List<object>{
+                    session.Id,
+                    session.StartTime.ToString("yyyy/MM/dd HH:mm", new CultureInfo("en-US")),
+                    session.EndTime.ToString("yyyy/MM/dd HH:mm", new CultureInfo("en-US")),
+                    session.Duration});
             }
+            ConsoleTableBuilder.From(tableData)
+                .WithTitle("Coding Sessions").WithColumn("Id", "Start Time", "End Time", "Duration (Minutes)")
+                .ExportAndWriteLine();
             return;
         }
         private void Insert()
@@ -151,17 +154,25 @@ namespace CodingTracker.rthring
         private bool TryGetSessionInfo(out CodingSession session)
         {
             session = new CodingSession();
-            Console.WriteLine("\nStart Time: ");
-            DateTime? startTime = GetTimeInput();
-            if (startTime == null) return false;
 
-            Console.WriteLine("\nEnd Time: ");
-            DateTime? endTime = GetTimeInput();
-            if (endTime == null) return false;
+            bool valid = false;
+            while (!valid)
+            {
+                Console.WriteLine("\nStart Time: ");
+                DateTime? startTime = GetTimeInput();
+                if (startTime == null) return false;
 
-            session.StartTime = startTime ?? default;
-            session.EndTime = endTime ?? default;
-            session.Duration = Convert.ToInt32((session.EndTime.Subtract(session.StartTime)).TotalMinutes);
+                Console.WriteLine("\nEnd Time: ");
+                DateTime? endTime = GetTimeInput();
+                if (endTime == null) return false;
+
+                session.StartTime = startTime ?? default;
+                session.EndTime = endTime ?? default;
+                session.Duration = Convert.ToInt32((session.EndTime.Subtract(session.StartTime)).TotalMinutes);
+
+                if (session.Duration > 0) valid = true;
+                else Console.WriteLine("\nInvalid times. The end time must be later than the start time.");
+            }
             return true;
         }
     }
