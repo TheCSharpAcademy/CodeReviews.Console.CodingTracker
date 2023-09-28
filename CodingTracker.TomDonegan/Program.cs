@@ -5,10 +5,10 @@ namespace CodingTracker.TomDonegan
     {
         static void Main()
         {
+
             bool exit = false;
 
             Database.CreateSQLiteDatabase();
-            UserInterface.WelcomeScreen();
 
             while (!exit)
             {

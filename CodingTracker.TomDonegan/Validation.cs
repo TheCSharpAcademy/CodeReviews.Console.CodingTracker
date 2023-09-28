@@ -59,6 +59,27 @@ namespace CodingTracker.TomDonegan
             return secondTime < firstTime;
         }
 
+        internal static bool doesIdExistInTable(string id)
+        {
+            bool idExists = false;
+
+            List<CodingSession> sessionData = Database.ViewAllSQLiteDatabase();
+
+            if (!Int32.TryParse(id, out _))
+            {
+                return idExists;
+            }
+
+            foreach (var session in sessionData)
+            {
+                if (session.Id.ToString() == (id))
+                {
+                    idExists = true;
+                }
+            }
+            return idExists;
+        }
+
         internal static bool IsWithinRange(int minValue, int maxValue, int value)
         {
             return value >= minValue && value <= maxValue;
