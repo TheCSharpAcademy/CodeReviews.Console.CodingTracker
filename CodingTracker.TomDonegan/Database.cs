@@ -3,20 +3,19 @@ using System.Data.SQLite;
 
 namespace CodingTracker.TomDonegan
 {
-    public class Database
+    internal class Database
     {
         private static string connectionString = ConfigurationManager.ConnectionStrings[
             "CodingTrackerDatabase"
         ].ConnectionString;
 
-        public static void CreateSQLiteDatabase()
+        internal static void CreateSQLiteDatabase()
         {
             try
             {
                 using SQLiteConnection connection = new SQLiteConnection(connectionString);
                 connection.Open();
 
-                // Create a table (e.g., Person) in the database
                 using (
                     SQLiteCommand command = new SQLiteCommand(
                         ConfigurationManager.ConnectionStrings["CreationQuery"].ConnectionString,
@@ -35,7 +34,7 @@ namespace CodingTracker.TomDonegan
             }
         }
 
-        public static List<CodingSession> ViewAllSQLiteDatabase()
+        internal static List<CodingSession> ViewAllSQLiteDatabase()
         {
             string queryString = ConfigurationManager.ConnectionStrings[
                 "QueryAllCodingSessions"
@@ -62,11 +61,10 @@ namespace CodingTracker.TomDonegan
                 session.Add(model);
             }
 
-            // Now you have a list of YourModel objects with the retrieved data
             return session;
         }
 
-        public static void DeleteEntrySQLiteDatabase(string sessionId)
+        internal static void DeleteEntrySQLiteDatabase(string sessionId)
         {
             string queryString = ConfigurationManager.ConnectionStrings[
                 "DeleteSession"
@@ -77,16 +75,36 @@ namespace CodingTracker.TomDonegan
 
             using (SQLiteCommand command = new SQLiteCommand(queryString, connection))
             {
-                // Replace @ValueToDelete with the actual value you want to delete
                 command.Parameters.AddWithValue("@SessionToDelete", sessionId);
 
                 command.ExecuteNonQuery();
             }
         }
 
-        public static void UpdateEntrySQLiteDatabase() { }
+        internal static void UpdateEntrySQLiteDatabase(CodingSession session, string id)
+        {
+            string queryString = ConfigurationManager.ConnectionStrings[
+                "UpdateSession"
+            ].ConnectionString;
 
-        public static void AddEntrySQLiteDatabase(CodingSession session)
+            using SQLiteConnection connection = new SQLiteConnection(connectionString);
+            connection.Open();
+
+            using (SQLiteCommand command = new SQLiteCommand(queryString, connection))
+            {
+                command.Parameters.AddWithValue("@date", session.date);
+                command.Parameters.AddWithValue("@startTime", session.startTime);
+                command.Parameters.AddWithValue("@endTime", session.endTime);
+                command.Parameters.AddWithValue("@duration", session.duration);
+                command.Parameters.AddWithValue("@Id", id);
+
+                int rowsAffected = command.ExecuteNonQuery();
+            }
+
+            connection.Close();
+        }
+
+        internal static void AddEntrySQLiteDatabase(CodingSession session)
         {
             string connectionString = ConfigurationManager.ConnectionStrings[
                 "CodingTrackerDatabase"
@@ -99,15 +117,13 @@ namespace CodingTracker.TomDonegan
             using SQLiteConnection connection = new SQLiteConnection(connectionString);
             connection.Open();
 
-            // Create the SQLite command with the insert query and connection
             using SQLiteCommand command = new SQLiteCommand(queryString, connection);
-            // Add parameters with values
+
             command.Parameters.AddWithValue("@Date", session.date);
             command.Parameters.AddWithValue("@StartTime", session.startTime);
             command.Parameters.AddWithValue("@EndTime", session.endTime);
             command.Parameters.AddWithValue("@Duration", session.duration);
 
-            // Execute the SQLite command to insert the data
             command.ExecuteNonQuery();
         }
     }

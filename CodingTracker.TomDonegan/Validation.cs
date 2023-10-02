@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
 
 namespace CodingTracker.TomDonegan
 {
     internal class Validation
     {
-        public static bool MenuValidation(string[] selectionOptions, string menuSelection)
+        internal static bool MenuValidation(string[] selectionOptions, string menuSelection)
         {
             return selectionOptions.Any(selection => selection == menuSelection);
         }
@@ -83,6 +77,11 @@ namespace CodingTracker.TomDonegan
         internal static bool IsWithinRange(int minValue, int maxValue, int value)
         {
             return value >= minValue && value <= maxValue;
+        }
+
+        internal static bool YesNoConfirm(string message)
+        {
+            return message == "y" || message == "n";
         }
     }
 }

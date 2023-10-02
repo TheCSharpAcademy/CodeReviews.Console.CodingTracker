@@ -1,13 +1,10 @@
 ﻿using ConsoleTableExt;
-using Microsoft.SqlServer.Server;
-using Microsoft.VisualBasic.FileIO;
-using System.Collections.Generic;
 
 namespace CodingTracker.TomDonegan
 {
-    public static class UserInterface
+    internal static class UserInterface
     {
-        public static void WelcomeScreen()
+        internal static void WelcomeScreen()
         {
             var tableData = new List<List<object>>
             {
@@ -36,8 +33,9 @@ namespace CodingTracker.TomDonegan
             MainMenu();
         }
 
-        public static void MainMenu()
+        internal static void MainMenu()
         {
+            Console.Clear();
             var tableData = new List<List<object>>
             {
                 new List<object> { },
@@ -75,10 +73,10 @@ namespace CodingTracker.TomDonegan
                     AddSessionInterface();
                     break;
                 case "2":
-                    UpdateSessionInterface();
+                    UpdateSessionInterface("update");
                     break;
                 case "3":
-                    DeleteSessionInterface();
+                    UpdateSessionInterface("delete");
                     break;
                 case "4":
                     ViewAllSessions();
@@ -150,10 +148,8 @@ namespace CodingTracker.TomDonegan
                 if (viewReason == "overview")
                 {
                     Helpers.WaitForUserInput("Press Enter to return to the Main Menu.");
-                    Console.ReadLine();
                 }
                 return sessions;
-
             }
             catch (Exception ex)
             {
@@ -164,10 +160,37 @@ namespace CodingTracker.TomDonegan
             }
         }
 
-        private static void DeleteSessionInterface()
+        private static void DisplayEditSessionMenu(string title, string editSelection)
+        {
+            var tableData = new List<List<object>>
+            {
+                new List<object> { "" },
+                new List<object> { },
+                new List<object> { $"Here you can {editSelection} a previous session." },
+                new List<object> { },
+                new List<object>
+                {
+                    "Press 'Enter' to view sessions or '0' to return to the Main Menu."
+                },
+                new List<object> { },
+            };
+
+            Helpers.TableBuilder(tableData, title, TextAligntment.Center, "menuTable");
+        }
+
+        private static void UpdateSessionInterface(string updateOrDelete)
         {
             Console.Clear();
-            DisplayDeleteSessionMenu();
+
+            switch (updateOrDelete)
+            {
+                case "update":
+                    DisplayEditSessionMenu("UPDATE SESSION", "update");
+                    break;
+                case "delete":
+                    DisplayEditSessionMenu("DELETE SESSION", "delete");
+                    break;
+            }
 
             ConsoleKeyInfo keyInfo = Console.ReadKey();
 
@@ -179,9 +202,9 @@ namespace CodingTracker.TomDonegan
 
             if (keyInfo.KeyChar == '\r')
             {
-                ViewAllSessions("delete");
+                ViewAllSessions("nonoverview");
                 string selectedSessionId = Helpers.GetUserInput(
-                    "Please select a session ID to delete: "
+                    $"Please select a session ID to {updateOrDelete}: "
                 );
 
                 while (!Validation.doesIdExistInTable(selectedSessionId))
@@ -190,67 +213,64 @@ namespace CodingTracker.TomDonegan
                         $"Record No.{selectedSessionId} does not exist in the table. Please try again."
                     );
                     selectedSessionId = Helpers.GetUserInput(
-                        "Please select a session ID to delete: "
+                        $"Please select a session ID to {updateOrDelete}: "
                     );
                 }
 
-                Console.WriteLine($"Confirm deletion on session: {selectedSessionId}? (Y/N)");
+                Console.WriteLine(
+                    $"Confirm {updateOrDelete} on session: {selectedSessionId}? (Y/N)"
+                );
 
-                string deleteConfirmation = Console.ReadLine();
+                string editConfirmation = Console.ReadLine();
 
-                while (deleteConfirmation.ToLower() != "y" && deleteConfirmation.ToLower() != "n")
+                while (!Validation.YesNoConfirm(editConfirmation.ToLower()))
                 {
                     Console.WriteLine(
-                        $"{deleteConfirmation} is not a valid selection, please try again."
+                        $"{editConfirmation} is not a valid selection, please try again."
                     );
-                    deleteConfirmation = Console.ReadLine();
+                    editConfirmation = Console.ReadLine();
                 }
 
-                if (deleteConfirmation.ToLower() == "y")
+                if (editConfirmation.ToLower() == "y")
                 {
-                    try
+                    if (updateOrDelete == "delete")
                     {
-                        Database.DeleteEntrySQLiteDatabase(selectedSessionId);
-                        Helpers.WaitForUserInput(
-                            $"Session {selectedSessionId} successfully removed."
-                        );
+                        try
+                        {
+                            Database.DeleteEntrySQLiteDatabase(selectedSessionId);
+                            Helpers.WaitForUserInput(
+                                $"Session {selectedSessionId} successfully removed."
+                            );
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        Console.WriteLine(ex.Message);
+                        try
+                        {
+                            CodingSession updatedSession = CreateSession();
+                            Database.UpdateEntrySQLiteDatabase(updatedSession, selectedSessionId);
+                            Helpers.WaitForUserInput(
+                                $"Session {selectedSessionId} successfully updated."
+                            );
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
                     }
                 }
-                else if (deleteConfirmation.ToLower() == "n")
+                else
                 {
-                    DeleteSessionInterface();
+                    UpdateSessionInterface(updateOrDelete);
                 }
             }
         }
 
-        private static void DisplayDeleteSessionMenu()
-        {
-            var tableData = new List<List<object>>
-            {
-                new List<object> { "" },
-                new List<object> { },
-                new List<object> { "Here you can delete individual coding sessions." },
-                new List<object> { },
-                new List<object>
-                {
-                    "Press 'Enter' to view sessions or '0' to return to the Main Menu."
-                },
-                new List<object> { },
-            };
-
-            Helpers.TableBuilder(tableData, "SESSION REMOVAL", TextAligntment.Center, "menuTable");
-        }
-
-        private static void UpdateSessionInterface()
-        {
-            throw new NotImplementedException();
-        }
-
-        internal static void AddSessionInterface()
+        private static CodingSession CreateSession()
         {
             string sessionDate;
             string[] sessionTimes;
@@ -261,11 +281,11 @@ namespace CodingTracker.TomDonegan
                 sessionTimes = GetTimeInput();
 
                 if (sessionDate == null || sessionTimes == null)
-                    return;
+                    throw new ArgumentNullException("sessionDate and sessionTimes cannot be null.");
             }
             catch (OperationCanceledException)
             {
-                return;
+                throw new Exception("Operation was canceled.");
             }
 
             CodingSession session =
@@ -283,6 +303,12 @@ namespace CodingTracker.TomDonegan
 
                 session.duration = Helpers.CalculateDuration(startTime, endTime);
 
+            return session;
+        }
+
+        private static void AddSessionInterface()
+        {
+            CodingSession session = CreateSession();
             try
             {
                 Database.AddEntrySQLiteDatabase(session);
@@ -299,7 +325,7 @@ namespace CodingTracker.TomDonegan
             }
         }
 
-        internal static string GetDateInput()
+        private static string GetDateInput()
         {
             Console.WriteLine(
                 "Please enter the date for the session (DD-MM-YY). '0' key to return to the Main Menu."
@@ -329,7 +355,7 @@ namespace CodingTracker.TomDonegan
             return sessionDate;
         }
 
-        internal static string[] GetTimeInput()
+        private static string[] GetTimeInput()
         {
             Console.WriteLine("Please enter a start and end time: (HH:MM)");
 

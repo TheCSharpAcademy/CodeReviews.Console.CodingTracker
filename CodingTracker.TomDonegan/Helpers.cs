@@ -1,12 +1,10 @@
-﻿
-using ConsoleTableExt;
-using System.Security.Cryptography;
+﻿using ConsoleTableExt;
 
 namespace CodingTracker.TomDonegan
 {
     internal class Helpers
     { 
-        public static String CalculateDuration(DateTime startTime, DateTime endTime)
+        internal static String CalculateDuration(DateTime startTime, DateTime endTime)
         {
             if (endTime < startTime)
             {
@@ -18,7 +16,7 @@ namespace CodingTracker.TomDonegan
             return duration.ToString();
         }
 
-        public static void TableBuilder(
+        internal static void TableBuilder(
             List<List<object>> tableData,
             string title,
             TextAligntment alignment,
@@ -66,13 +64,13 @@ namespace CodingTracker.TomDonegan
             }
         }
 
-        public static void WaitForUserInput(string message)
+        internal static void WaitForUserInput(string message)
         {
             Console.WriteLine(message);
             Console.ReadLine();
         }
 
-        public static string GetUserInput(string prompt)
+        internal static string GetUserInput(string prompt)
         {
             Console.Write(prompt);
             return Console.ReadLine();
