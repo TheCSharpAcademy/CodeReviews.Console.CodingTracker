@@ -45,7 +45,7 @@ namespace CodingTracker.TomDonegan
             return isValidTime;
         }
 
-        internal static bool isSecondTimeBeforeFirstTime(string[] sessionTimes)
+        internal static bool IsSecondTimeBeforeFirstTime(string[] sessionTimes)
         {
             DateTime firstTime = DateTime.ParseExact(sessionTimes[0], "HH:mm", null);
             DateTime secondTime = DateTime.ParseExact(sessionTimes[1], "HH:mm", null);
@@ -53,7 +53,7 @@ namespace CodingTracker.TomDonegan
             return secondTime < firstTime;
         }
 
-        internal static bool doesIdExistInTable(string id)
+        internal static bool DoesIdExistInTable(string id)
         {
             bool idExists = false;
 

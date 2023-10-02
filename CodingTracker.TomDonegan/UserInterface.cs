@@ -100,13 +100,13 @@ namespace CodingTracker.TomDonegan
                     List<object> newRow = new List<object>
                     {
                         session.Id,
-                        session.date,
-                        session.startTime,
-                        session.endTime,
-                        session.duration
+                        session.Date,
+                        session.StartTime,
+                        session.EndTime,
+                        session.Duration
                     };
 
-                    if (TimeSpan.TryParse(session.duration, out TimeSpan sessionDuration))
+                    if (TimeSpan.TryParse(session.Duration, out TimeSpan sessionDuration))
                     {
                         totalCodingTime = totalCodingTime.Add(sessionDuration);
                     }
@@ -207,7 +207,7 @@ namespace CodingTracker.TomDonegan
                     $"Please select a session ID to {updateOrDelete}: "
                 );
 
-                while (!Validation.doesIdExistInTable(selectedSessionId))
+                while (!Validation.DoesIdExistInTable(selectedSessionId))
                 {
                     Console.WriteLine(
                         $"Record No.{selectedSessionId} does not exist in the table. Please try again."
@@ -291,17 +291,17 @@ namespace CodingTracker.TomDonegan
             CodingSession session =
                 new()
                 {
-                    date = sessionDate,
-                    startTime = sessionTimes[0],
-                    endTime = sessionTimes[1]
+                    Date = sessionDate,
+                    StartTime = sessionTimes[0],
+                    EndTime = sessionTimes[1]
                 };
 
             if (
-                DateTime.TryParse(session.startTime, out DateTime startTime)
-                && DateTime.TryParse(session.endTime, out DateTime endTime)
+                DateTime.TryParse(session.StartTime, out DateTime startTime)
+                && DateTime.TryParse(session.EndTime, out DateTime endTime)
             )
 
-                session.duration = Helpers.CalculateDuration(startTime, endTime);
+                session.Duration = Helpers.CalculateDuration(startTime, endTime);
 
             return session;
         }
@@ -313,7 +313,7 @@ namespace CodingTracker.TomDonegan
             {
                 Database.AddEntrySQLiteDatabase(session);
                 Console.WriteLine(
-                    $"\nSession: {session.date} | Start time: {session.startTime} | End time: {session.endTime} | Total duration: {session.duration}"
+                    $"\nSession: {session.Date} | Start time: {session.StartTime} | End time: {session.EndTime} | Total duration: {session.Duration}"
                 );
                 Helpers.WaitForUserInput("Session data added to the database.");
             }
@@ -373,7 +373,7 @@ namespace CodingTracker.TomDonegan
                     && Validation.TimeEntryValidation(startAndEndTimes[1])
                 )
                 {
-                    if (!Validation.isSecondTimeBeforeFirstTime(startAndEndTimes))
+                    if (!Validation.IsSecondTimeBeforeFirstTime(startAndEndTimes))
                     {
                         break;
                     }

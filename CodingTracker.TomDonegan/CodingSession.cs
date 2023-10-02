@@ -4,10 +4,10 @@ namespace CodingTracker.TomDonegan
     public class CodingSession
     {
         public int Id { get; set; }
-        public string date { get; set; }
-        public string startTime { get; set; }
-        public string endTime { get; set; }
-        public string duration { get; set; }
+        public string Date { get; set; }
+        public string StartTime { get; set; }
+        public string EndTime { get; set; }
+        public string Duration { get; set; }
 
     }
 }

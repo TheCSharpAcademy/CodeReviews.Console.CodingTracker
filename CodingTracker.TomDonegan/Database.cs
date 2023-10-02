@@ -52,10 +52,10 @@ namespace CodingTracker.TomDonegan
                 CodingSession model = new CodingSession
                 {
                     Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                    date = reader.GetString(reader.GetOrdinal("Date")),
-                    startTime = reader.GetString(reader.GetOrdinal("StartTime")),
-                    endTime = reader.GetString(reader.GetOrdinal("EndTime")),
-                    duration = reader.GetString(reader.GetOrdinal("Duration")),
+                    Date = reader.GetString(reader.GetOrdinal("Date")),
+                    StartTime = reader.GetString(reader.GetOrdinal("StartTime")),
+                    EndTime = reader.GetString(reader.GetOrdinal("EndTime")),
+                    Duration = reader.GetString(reader.GetOrdinal("Duration")),
                 };
 
                 session.Add(model);
@@ -92,13 +92,11 @@ namespace CodingTracker.TomDonegan
 
             using (SQLiteCommand command = new SQLiteCommand(queryString, connection))
             {
-                command.Parameters.AddWithValue("@date", session.date);
-                command.Parameters.AddWithValue("@startTime", session.startTime);
-                command.Parameters.AddWithValue("@endTime", session.endTime);
-                command.Parameters.AddWithValue("@duration", session.duration);
+                command.Parameters.AddWithValue("@date", session.Date);
+                command.Parameters.AddWithValue("@startTime", session.StartTime);
+                command.Parameters.AddWithValue("@endTime", session.EndTime);
+                command.Parameters.AddWithValue("@duration", session.Duration);
                 command.Parameters.AddWithValue("@Id", id);
-
-                int rowsAffected = command.ExecuteNonQuery();
             }
 
             connection.Close();
@@ -119,10 +117,10 @@ namespace CodingTracker.TomDonegan
 
             using SQLiteCommand command = new SQLiteCommand(queryString, connection);
 
-            command.Parameters.AddWithValue("@Date", session.date);
-            command.Parameters.AddWithValue("@StartTime", session.startTime);
-            command.Parameters.AddWithValue("@EndTime", session.endTime);
-            command.Parameters.AddWithValue("@Duration", session.duration);
+            command.Parameters.AddWithValue("@Date", session.Date);
+            command.Parameters.AddWithValue("@StartTime", session.StartTime);
+            command.Parameters.AddWithValue("@EndTime", session.EndTime);
+            command.Parameters.AddWithValue("@Duration", session.Duration);
 
             command.ExecuteNonQuery();
         }
