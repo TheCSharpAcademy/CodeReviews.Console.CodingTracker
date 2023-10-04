@@ -11,6 +11,5 @@ internal class Program
         UserInput user = new UserInput(sessionController);
 
         user.Execute();
-
     }
 }

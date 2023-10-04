@@ -16,8 +16,9 @@ namespace CodingTracker.Mo3ses.Data
             DbCreate();
         }
 
-        public void DbCreate(){
-           using (var conn = new SQLiteConnection(connectionString))
+        public void DbCreate()
+        {
+            using (var conn = new SQLiteConnection(connectionString))
             {
                 conn.Open();
                 var cmd = conn.CreateCommand();
@@ -35,17 +36,19 @@ namespace CodingTracker.Mo3ses.Data
             }
         }
 
-        public void Create(CodingSession session){
+        public void Create(CodingSession session)
+        {
             if (string.IsNullOrEmpty(session.Duration))
             {
                 TimeSpan duration = (session.EndTime - session.StartTime);
                 session.Duration = duration.ToString();
             }
 
-            using (var conn = new SQLiteConnection(connectionString)){
+            using (var conn = new SQLiteConnection(connectionString))
+            {
                 conn.Open();
                 var cmd = conn.CreateCommand();
-               
+
                 cmd.CommandText = "INSERT INTO CODINGTRACKER (STARTTIME, ENDTIME, DURATION) VALUES (@StartTime, @EndTime, @Duration)";
                 cmd.Parameters.AddWithValue("@StartTime", session.StartTime.ToString());
                 cmd.Parameters.AddWithValue("@EndTime", session.EndTime.ToString());
@@ -56,17 +59,19 @@ namespace CodingTracker.Mo3ses.Data
             }
         }
 
-        public void Update(CodingSession session){
+        public void Update(CodingSession session)
+        {
             if (string.IsNullOrEmpty(session.Duration))
             {
                 TimeSpan duration = (session.EndTime - session.StartTime);
                 session.Duration = duration.ToString();
             }
 
-            using (var conn = new SQLiteConnection(connectionString)){
+            using (var conn = new SQLiteConnection(connectionString))
+            {
                 conn.Open();
                 var cmd = conn.CreateCommand();
-               
+
                 cmd.CommandText = "UPDATE CODINGTRACKER SET STARTTIME = @StartTime, ENDTIME = @EndTime, DURATION = @Duration WHERE ID = @Id";
                 cmd.Parameters.AddWithValue("@Id", session.Id);
                 cmd.Parameters.AddWithValue("@StartTime", session.StartTime.ToString());
@@ -74,17 +79,19 @@ namespace CodingTracker.Mo3ses.Data
                 cmd.Parameters.AddWithValue("@Duration", session.Duration);
                 cmd.ExecuteNonQuery();
 
-                
+
                 conn.Close();
 
             }
         }
 
-        public void Delete(CodingSession session){
-            using (var conn = new SQLiteConnection(connectionString)){
+        public void Delete(CodingSession session)
+        {
+            using (var conn = new SQLiteConnection(connectionString))
+            {
                 conn.Open();
                 var cmd = conn.CreateCommand();
-               
+
                 cmd.CommandText = "DELETE FROM CODINGTRACKER WHERE ID = @Id";
                 cmd.Parameters.AddWithValue("@Id", session.Id);
                 cmd.ExecuteNonQuery();
@@ -93,39 +100,47 @@ namespace CodingTracker.Mo3ses.Data
 
             }
         }
-         public CodingSession GetById(int id){
+        public CodingSession GetById(int id)
+        {
 
-            using(var conn = new SQLiteConnection(connectionString)){
+            using (var conn = new SQLiteConnection(connectionString))
+            {
                 conn.Open();
                 var cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT * FROM CODINGTRACKER WHERE ID = @Id";
                 cmd.Parameters.AddWithValue("@Id", id);
-                
+
                 CodingSession codingSession = new CodingSession();
 
-                using (var reader = cmd.ExecuteReader()){
-                    if (reader.Read()){
-                    codingSession = new CodingSession
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        codingSession = new CodingSession
                         {
                             Id = Convert.ToInt32(reader["ID"]),
                             StartTime = Convert.ToDateTime(reader["STARTTIME"]),
                             EndTime = Convert.ToDateTime(reader["ENDTIME"]),
                             Duration = reader["DURATION"].ToString()
                         };
-                    }else{
+                    }
+                    else
+                    {
                         return null;
                     }
                     return codingSession;
                 }
-            } 
-            
-            
+            }
+
+
         }
-        public List<CodingSession> GetAll(){
-            
+        public List<CodingSession> GetAll()
+        {
+
             List<CodingSession> result = new List<CodingSession>();
 
-            using(var conn = new SQLiteConnection(connectionString)){
+            using (var conn = new SQLiteConnection(connectionString))
+            {
                 conn.Open();
 
                 var cmd = conn.CreateCommand();
@@ -137,11 +152,11 @@ namespace CodingTracker.Mo3ses.Data
                         var durationSpan = TimeSpan.Parse(reader["DURATION"].ToString());
                         CodingSession session = new CodingSession
                         {
-                            
+
                             Id = Convert.ToInt32(reader["Id"]),
                             StartTime = Convert.ToDateTime(reader["StartTime"]),
                             EndTime = Convert.ToDateTime(reader["EndTime"]),
-                            Duration = String.Format("{0} days, {1} hours, {2} minutes, {3} seconds",durationSpan.Days, durationSpan.Hours, durationSpan.Minutes, durationSpan.Seconds)
+                            Duration = String.Format("{0} days, {1} hours, {2} minutes, {3} seconds", durationSpan.Days, durationSpan.Hours, durationSpan.Minutes, durationSpan.Seconds)
                         };
 
                         result.Add(session);
@@ -171,17 +186,19 @@ namespace CodingTracker.Mo3ses.Data
                    })
                    .ExportAndWriteLine(TableAligntment.Left);
                 }
-                
+
             }
 
             return result;
         }
 
-        public List<CodingSession> GetSessionsPeriods(DateTime dateTime){
-            
+        public List<CodingSession> GetSessionsPeriods(DateTime dateTime)
+        {
+
             List<CodingSession> result = new List<CodingSession>();
 
-            using(var conn = new SQLiteConnection(connectionString)){
+            using (var conn = new SQLiteConnection(connectionString))
+            {
                 conn.Open();
 
                 var cmd = conn.CreateCommand();
@@ -194,11 +211,11 @@ namespace CodingTracker.Mo3ses.Data
                         var durationSpan = TimeSpan.Parse(reader["DURATION"].ToString());
                         CodingSession session = new CodingSession
                         {
-                            
+
                             Id = Convert.ToInt32(reader["Id"]),
                             StartTime = Convert.ToDateTime(reader["StartTime"]),
                             EndTime = Convert.ToDateTime(reader["EndTime"]),
-                            Duration = String.Format("{0} days, {1} hours, {2} minutes, {3} seconds",durationSpan.Days, durationSpan.Hours, durationSpan.Minutes, durationSpan.Seconds)
+                            Duration = String.Format("{0} days, {1} hours, {2} minutes, {3} seconds", durationSpan.Days, durationSpan.Hours, durationSpan.Minutes, durationSpan.Seconds)
                         };
 
                         result.Add(session);
@@ -228,7 +245,7 @@ namespace CodingTracker.Mo3ses.Data
                    })
                    .ExportAndWriteLine(TableAligntment.Left);
                 }
-                
+
             }
 
             return result;
