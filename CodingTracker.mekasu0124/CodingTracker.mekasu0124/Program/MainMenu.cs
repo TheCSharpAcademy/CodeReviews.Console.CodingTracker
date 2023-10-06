@@ -45,11 +45,11 @@ public class MainMenu
                 switch (input)
                 {
                     case "1":
-                        CRUDSessionController.NewSessionManual();
+                        CrudSessionController.NewSessionManual();
                         break;
 
                     case "2":
-                        CRUDSessionController.NewSessionStopWatch();
+                        CrudSessionController.NewSessionStopWatch();
                         break;
 
                     default:
@@ -61,36 +61,41 @@ public class MainMenu
                 break;
 
             case "2":
-                CRUDSessionController.EditSession();
+                CrudSessionController.EditSession();
                 break;
 
             case "3":
-                CRUDSessionController.DeleteSession();
+                CrudSessionController.DeleteSession();
                 break;
 
             case "4":
-                CRUDSessionController.ViewAllCodingSessions();
+                CrudSessionController.ViewAllCodingSessions();
                 break;
 
             case "5":
-                CRUDSessionController.NewGoal();
+                CrudGoalController.NewGoal();
                 break;
 
             case "6":
-                CRUDSessionController.EditGoal();
+                CrudGoalController.EditGoal();
                 break;
 
             case "7":
-                CRUDSessionController.DeleteGoal();
+                CrudGoalController.DeleteGoal();
                 break;
 
             case "8":
-                CRUDSessionController.ViewAllGoals();
+                CrudGoalController.ViewAllGoals();
                 break;
 
             case "0":
                 Console.WriteLine("Exiting Application...");
                 Environment.Exit(0);
+                break;
+
+            default:
+                Console.WriteLine("Invalid Input. Try Again!");
+                ShowMenu();
                 break;
         }
     }
