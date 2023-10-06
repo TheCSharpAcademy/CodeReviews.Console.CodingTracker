@@ -142,6 +142,8 @@ internal class Helpers
             DateTimeOffset start = DateTimeOffset.ParseExact(goal.StartDate, format, provider);
             DateTimeOffset end = DateTimeOffset.ParseExact(goal.EndDate, format, provider);
             int difference = Convert.ToInt32(end - start);
+
+            totalDays = totalDays + difference;
         }
 
         return totalDays;
