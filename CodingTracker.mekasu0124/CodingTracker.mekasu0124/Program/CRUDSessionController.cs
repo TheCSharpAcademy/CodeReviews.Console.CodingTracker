@@ -3,7 +3,7 @@ using CodingTracker.Models;
 
 namespace CodingTracker.Program;
 
-public class CRUDSessionController
+public class CrudSessionController
 {
     private static readonly List<string?>? sessionColHeaders = new() { "Id", "Date Created", "Start Time", "End Time", "Duration" };
 
