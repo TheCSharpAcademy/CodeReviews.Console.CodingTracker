@@ -7,7 +7,7 @@ namespace CodingTracker.Services;
 public class GoalQueries
 {
     private static readonly string? dbFile = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
-    public static void NewGoal(Goal? newGoal)
+    public static void NewGoal(Goal? goal)
     {
         using SQLiteConnection? conn = new SQLiteConnection(dbFile);
         using SQLiteCommand? cmd = conn.CreateCommand();
@@ -17,17 +17,17 @@ public class GoalQueries
         cmd.CommandText = @"INSERT INTO goals(Name, DateStarted, DateEnded, DaysToGoal, 
                                     HoursPerDay, Achieved) VALUES ($Name, $StartDate,
                                     $EndDate, $DaysToGoal, $HoursPerDay, $Achieved)";
-        cmd.Parameters.AddWithValue("$Name", newGoal.Name);
-        cmd.Parameters.AddWithValue("$StartDate", newGoal.StartDate);
-        cmd.Parameters.AddWithValue("$EndDate", newGoal.EndDate);
-        cmd.Parameters.AddWithValue("$DaysToGoal", newGoal.DaysToGoal);
-        cmd.Parameters.AddWithValue("$HoursPerDay", newGoal.HoursPerDay);
-        cmd.Parameters.AddWithValue("$Achieved", newGoal.Achieved);
+        cmd.Parameters.AddWithValue("$Name", goal.Name);
+        cmd.Parameters.AddWithValue("$StartDate", goal.StartDate);
+        cmd.Parameters.AddWithValue("$EndDate", goal.EndDate);
+        cmd.Parameters.AddWithValue("$DaysToGoal", goal.DaysToGoal);
+        cmd.Parameters.AddWithValue("$HoursPerDay", goal.HoursPerDay);
+        cmd.Parameters.AddWithValue("$Achieved", goal.Achieved);
 
         try
         {
             cmd.ExecuteNonQuery();
-            Helpers.Finished(null, newGoal, "Saved");
+            Helpers.Finished(null, goal, "Saved");
         }
         catch (SQLiteException ex)
         {
