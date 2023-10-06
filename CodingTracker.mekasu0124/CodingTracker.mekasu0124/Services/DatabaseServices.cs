@@ -1,11 +1,10 @@
-﻿using System.Configuration;
-using System.Data.SQLite;
+﻿using System.Data.SQLite;
 
 namespace CodingTracker.Services;
 
 public class Database
 {
-    private static string? dbConnection = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
+    private static string? dbConnection = System.Configuration.ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
 
     public static void CreateDatabase()
     {

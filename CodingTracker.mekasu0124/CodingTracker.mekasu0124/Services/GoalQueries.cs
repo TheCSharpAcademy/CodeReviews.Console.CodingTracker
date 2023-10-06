@@ -1,12 +1,11 @@
 ﻿using CodingTracker.Models;
-using System.Configuration;
 using System.Data.SQLite;
 
 namespace CodingTracker.Services;
 
 public class GoalQueries
 {
-    private static readonly string? dbFile = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
+    private static readonly string? dbFile = System.Configuration.ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
     public static void NewGoal(Goal? goal)
     {
         using SQLiteConnection? conn = new SQLiteConnection(dbFile);
