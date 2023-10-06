@@ -8,10 +8,10 @@ public class LogQueries
 {
     private static readonly string dbFile = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
 
-    public static void InsertData(CodeSession session)
+    public static void InsertData(CodeSession? session)
     {
-        using SQLiteConnection conn = new SQLiteConnection(dbFile);
-        using SQLiteCommand cmd = new SQLiteCommand(conn);
+        using SQLiteConnection? conn = new SQLiteConnection(dbFile);
+        using SQLiteCommand? cmd = conn.CreateCommand();
 
         conn.Open();
         cmd.CommandText = "INSERT INTO logs(Date, StartTime, EndTime, Duration) VALUES ($Date, $Start, $End, $Duration)";
@@ -23,7 +23,7 @@ public class LogQueries
         try
         {
             cmd.ExecuteNonQuery();
-            Helpers.FinishedCodingSession(session, "Saved");
+            Helpers.Finished(session, null, "Saved");
         }
         catch (SQLiteException ex)
         {
@@ -31,10 +31,10 @@ public class LogQueries
         }
     }
 
-    public static void UpdateData(CodeSession newSession)
+    public static void UpdateData(CodeSession? newSession)
     {
-        using SQLiteConnection conn = new SQLiteConnection(dbFile);
-        using SQLiteCommand cmd = new SQLiteCommand(conn);
+        using SQLiteConnection? conn = new SQLiteConnection(dbFile);
+        using SQLiteCommand? cmd = conn.CreateCommand();
 
         conn.Open();
 
@@ -48,7 +48,7 @@ public class LogQueries
         try
         {
             cmd.ExecuteNonQuery();
-            Helpers.FinishedCodingSession(newSession, "Edited");
+            Helpers.Finished(newSession, null, "Edited");
         }
         catch (SQLiteException ex)
         {
@@ -56,18 +56,19 @@ public class LogQueries
         }
     }
 
-    public static void DeleteData(int selectedId)
+    public static void DeleteData(CodeSession? currentSession)
     {
-        using SQLiteConnection conn = new SQLiteConnection(dbFile);
-        using SQLiteCommand cmd = new SQLiteCommand(conn);
+        using SQLiteConnection? conn = new SQLiteConnection(dbFile);
+        using SQLiteCommand? cmd = conn.CreateCommand();
 
         conn.Open();
         cmd.CommandText = "DELETE FROM logs WHERE Id=$selectedId";
-        cmd.Parameters.AddWithValue("$selectedId", selectedId);
+        cmd.Parameters.AddWithValue("$selectedId", currentSession.Id);
         
         try
         {
             cmd.ExecuteNonQuery();
+            Helpers.Finished(currentSession, null, "Deleted");
         }
         catch (SQLiteException ex)
         {
@@ -75,13 +76,13 @@ public class LogQueries
         }
     }
 
-    public static List<CodeSession> GetAllCodingSessions()
+    public static List<CodeSession?>? GetAllCodingSessions()
     {
-        using SQLiteConnection conn = new SQLiteConnection(dbFile);
-        using SQLiteCommand cmd = new SQLiteCommand(conn);
+        using SQLiteConnection? conn = new SQLiteConnection(dbFile);
+        using SQLiteCommand? cmd = conn.CreateCommand();
 
-        SQLiteDataReader reader;
-        List<CodeSession> sessions = new();
+        SQLiteDataReader? reader;
+        List<CodeSession?>? sessions = new();
 
         conn.Open();
         cmd.CommandText = "SELECT * FROM logs";
@@ -90,13 +91,13 @@ public class LogQueries
 
         while(reader.Read())
         {
-            int id = int.Parse(reader["Id"].ToString());
-            string date = reader["Date"].ToString();
-            string startTime = reader["StartTime"].ToString();
-            string endTime = reader["EndTime"].ToString();
-            string duration = reader["Duration"].ToString();
+            int? id = int.Parse(reader["Id"].ToString());
+            string? date = reader["Date"].ToString();
+            string? startTime = reader["StartTime"].ToString();
+            string? endTime = reader["EndTime"].ToString();
+            string? duration = reader["Duration"].ToString();
 
-            CodeSession sess = new()
+            CodeSession? sess = new()
             {
                 Id = id,
                 TodaysDate = date,
@@ -111,12 +112,12 @@ public class LogQueries
         return sessions;
     }
 
-    public static CodeSession GetCodeSession(int? selectedId)
+    public static CodeSession? GetCodeSession(int? selectedId)
     {
-        using SQLiteConnection conn = new SQLiteConnection(dbFile);
-        using SQLiteCommand cmd = new SQLiteCommand(conn);
+        using SQLiteConnection? conn = new SQLiteConnection(dbFile);
+        using SQLiteCommand? cmd = conn.CreateCommand();
 
-        SQLiteDataReader reader;
+        SQLiteDataReader? reader;
 
         conn.Open();
         cmd.CommandText = "SELECT * FROM logs WHERE Id=$selectedId";
@@ -126,13 +127,13 @@ public class LogQueries
 
         if (reader.Read())
         {
-            int id = int.Parse(reader["Id"].ToString());
-            string date = reader["Date"].ToString();
-            string startTime = reader["StartTime"].ToString();
-            string endTime = reader["EndTime"].ToString();
-            string duration = reader["Duration"].ToString();
+            int? id = int.Parse(reader["Id"].ToString());
+            string? date = reader["Date"].ToString();
+            string? startTime = reader["StartTime"].ToString();
+            string? endTime = reader["EndTime"].ToString();
+            string? duration = reader["Duration"].ToString();
 
-            CodeSession sess = new()
+            CodeSession? sess = new()
             {
                 Id = id,
                 TodaysDate = date,
