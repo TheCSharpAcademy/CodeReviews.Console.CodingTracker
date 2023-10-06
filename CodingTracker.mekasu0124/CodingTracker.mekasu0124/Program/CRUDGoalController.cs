@@ -1,14 +1,9 @@
 ﻿using CodingTracker.Models;
 using CodingTracker.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CodingTracker.Program;
 
-public class CRUDGoalController
+public class CrudGoalController
 {
     private static readonly List<string?>? goalColHeaders = new() { "Id", "Name", "Start Date", "End Date", "Days To Goal", "Hours Per Day", "Achieved" };
 
