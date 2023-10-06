@@ -1,11 +1,11 @@
 ﻿using CodingTracker.Models;
-using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace CodingTracker.Services;
 
 public class UserValidation
 {
-    public static string? ValidateMenuInput(string input)
+    public static string? ValidateMenuInput(string? input)
     {
         string numbers = "0123456789";
 
@@ -18,68 +18,44 @@ public class UserValidation
             Console.Write("Your Selection: ");
 
             input = Console.ReadLine();
-
-            return ValidateMenuInput(input);
         }
 
         return input;
     }
-
-    public static string? IsValidTimeFormat(string input)
+    public static int? ValidateIdSelection(int? selectedId, List<CodeSession>? sessions, List<Goal>? goals)
     {
-        TimeSpan dummyOutput;
-        while (!TimeSpan.TryParse(input, out dummyOutput))
+        if (sessions == null)
         {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("[Error] Invalid DateTime Format.");
-            Console.WriteLine("Use HH:MM Format");
+            while (!goals.Any(x => x.Id == selectedId))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[Error] Selected Number Does Not Exist");
 
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.Write("Your Entry: ");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write("Your Selection: ");
 
-            input = Console.ReadLine();
-            return IsValidTimeFormat(input);
+                string? input = Console.ReadLine();
+                selectedId = ValidateNumericInput(input);
+            }
+
+            return selectedId;
         }
-
-        return dummyOutput.ToString();
-    }
-
-    public static string? IsValidDateFormat(string input)
-    {
-        DateTime dummyOutput;
-
-        while(!DateTime.TryParse(input, out dummyOutput))
+        else
         {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("[Error] Invalid DateTime Format.");
-            Console.WriteLine("Use HH:MM Format");
+            while (!sessions.Any(x => x.Id == selectedId))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[Error] Selected Number Does Not Exist");
 
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.Write("Your Entry: ");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write("Your Selection: ");
 
-            input = Console.ReadLine();
-            return IsValidTimeFormat(input);
+                string? input = Console.ReadLine();
+                selectedId = ValidateNumericInput(input);
+            }
+
+            return selectedId;
         }
-
-        return dummyOutput.ToString("MM/dd/yyyy");
-    }
-
-    public static int? ValidateIdSelection(int? selectedId, List<CodeSession> sessions)
-    {
-        while (!sessions.Any(x => x.Id == selectedId))
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("[Error] Selected Number Does Not Exist");
-
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.Write($"Your Selection: ");
-
-            string input = Console.ReadLine();
-            selectedId = ValidateNumericInput(input);
-            return ValidateIdSelection(selectedId, sessions);
-        }
-
-        return selectedId;
     }
     public static int ValidateNumericInput(string input)
     {
@@ -93,36 +69,116 @@ public class UserValidation
             Console.Write($"Your Selection: ");
 
             input = Console.ReadLine();
-            return ValidateNumericInput(input);
         }
 
         return result;
     }
-
-    public static string? VerifyEmptyOrChanged(string? oldEntry, string newEntry)
+    public static string? ValidateAlphaInput(string? input, string? sentence)
     {
-        if (String.IsNullOrEmpty(newEntry) || newEntry == oldEntry)
+        string alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+        string? strippedInput = input.Replace(" ", "").ToLower();
+
+        foreach (char letter in strippedInput)
         {
-            return oldEntry;
+            while (!alphabet.Contains(letter))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[Error] Use Only The 26-Letter English Alphabet");
+
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write($"{sentence}: ");
+
+                input = Console.ReadLine();
+            }
         }
-        else
+
+        return input;
+    }
+    public static bool VerifyEmptyOrChanged(string? oldEntry, string? newEntry)
+    {
+        // true = changed ; false = not changed
+        return (String.IsNullOrEmpty(newEntry) || newEntry == oldEntry) ? false : true;
+    }
+    public static string? VerifyDateInput(string? input)
+    {
+        CultureInfo provider = CultureInfo.InvariantCulture;
+        string format = "MM/dd/yyyy";
+        DateTimeStyles style = DateTimeStyles.None;
+        DateTimeOffset result;
+
+        while (!DateTimeOffset.TryParseExact(input, format, provider, style, out result) && !String.IsNullOrEmpty(input))
         {
-            return newEntry;
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("[Error] Input Must Be In Format: MM/DD/YYYY");
+
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("Enter Corrected Date: ");
+
+            input = Console.ReadLine();
+        }
+
+        return result.ToString(format);
+    }
+    public static string? VerifyTimeInput(string? input)
+    {
+        CultureInfo? provider = CultureInfo.InvariantCulture;
+        string format = @"hh\:mm";
+        TimeSpan result;
+
+        while (!TimeSpan.TryParseExact(input, format, provider, out result) && !String.IsNullOrEmpty(input))
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("[Error] Input Must Be In Format: HH:MM");
+
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("Enter Corrected Time: ");
+
+            input = Console.ReadLine();
+        }
+
+        return result.ToString(format);
+    }
+    public static bool ValidateYesNo(string? sentence)
+    {
+        while (true)
+        {
+            Console.WriteLine(sentence);
+            Console.Write("Your Selection: ");
+
+            string? input = Console.ReadLine();
+
+            switch (input.ToLowerInvariant())
+            {
+                case "y" or "yes" or "true":
+                    return true;
+                case "n" or "no" or "false":
+                    return false;
+                default:
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("[Error] Input Must Be 'Y', 'Yes', 'N', or 'No'");
+
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write("Your Selection: ");
+
+                    input = Console.ReadLine();
+                    break;
+            }
         }
     }
-
-    public static string? ValidateYesNo(string? input)
+    public static string? ValidateSecondaryMenu(string? input)
     {
-        List<string> options = new() { "y", "n" };
+        List<string?>? options = new() { "1", "2" };
 
         while (!options.Contains(input))
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("[Error] Input Must Be Y or N");
-            Console.Write("Your Selection: ");
+            Console.WriteLine("[Error] Input Must Be 1 or 2");
+
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("Your Selection: ");
 
             input = Console.ReadLine();
-            return ValidateYesNo(input);
         }
 
         return input;
