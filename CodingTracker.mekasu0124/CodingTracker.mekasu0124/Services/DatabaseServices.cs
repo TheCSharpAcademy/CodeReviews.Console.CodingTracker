@@ -5,11 +5,11 @@ namespace CodingTracker.Services;
 
 public class Database
 {
-    private static string dbConnection = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
+    private static string? dbConnection = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
 
     public static void CreateDatabase()
     {
-        using SQLiteConnection sqlite = new SQLiteConnection(dbConnection);
+        using SQLiteConnection? sqlite = new SQLiteConnection(dbConnection);
         sqlite.Open();
 
         string sql = @"CREATE TABLE IF NOT EXISTS 
@@ -22,14 +22,15 @@ public class Database
         string sql2 = @"CREATE TABLE IF NOT EXISTS
                         [goals] (
                         [Id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                        [Name] VARCHAR(75) NULL,
+                        [Name] VARCHAR(2048) NULL,
                         [DateStarted] VARCHAR(75) NULL,
                         [DateEnded] VARCHAR(75) NULL,
-                        [TimePerDay] INTEGER,
+                        [DaysToGoal] REAL NULL,
+                        [HoursPerDay] INTEGER NULL,
                         [Achieved] VARCHAR(3) NULL)";
 
-        using SQLiteCommand cmd = new SQLiteCommand(sqlite);
-        using SQLiteCommand cmd2 = new SQLiteCommand(sqlite);
+        using SQLiteCommand? cmd = sqlite.CreateCommand();
+        using SQLiteCommand? cmd2 = sqlite.CreateCommand();
 
         cmd.CommandText = sql;
         cmd2.CommandText = sql2;
