@@ -12,7 +12,7 @@ public class CodingService
         _connectionString = connectionString;
     }
 
-    public List<CodingSession> ReadAll()
+    public List<CodingSession> ReadAll(string order)
     {
         var tableData = new List<CodingSession>();
 
@@ -22,7 +22,7 @@ public class CodingService
             connection.Open();
 
             using var tableCmd = connection.CreateCommand();
-            tableCmd.CommandText = @"SELECT * FROM sessions";
+            tableCmd.CommandText = @$"SELECT * FROM sessions ORDER BY Duration {order}";
 
             using var reader = tableCmd.ExecuteReader();
 
@@ -46,7 +46,7 @@ public class CodingService
         return tableData;
     }
 
-    public List<CodingSession> ReadAllBetweenDates(string startDateTime, string endDateTime)
+    public List<CodingSession> ReadAllBetweenDates(string startDateTime, string endDateTime, string order)
     {
         var tableData = new List<CodingSession>();
 
@@ -57,7 +57,7 @@ public class CodingService
 
             using var tableCmd = connection.CreateCommand();
             tableCmd.CommandText =
-                @$"SELECT * FROM sessions WHERE StartTime >= '{startDateTime}' AND EndTime <= '{endDateTime}'";
+                @$"SELECT * FROM sessions WHERE StartTime >= '{startDateTime}' AND EndTime <= '{endDateTime}' ORDER BY Duration {order}";
 
             using var reader = tableCmd.ExecuteReader();
 
@@ -172,5 +172,38 @@ public class CodingService
         {
             Console.WriteLine("Deleting record failed.");
         }
+    }
+
+    public List<ReportData> CreateReport(string startDateTime, string endDateTime)
+    {
+        var tableData = new List<ReportData>();
+
+        try
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+
+            using var tableCmd = connection.CreateCommand();
+            tableCmd.CommandText =
+                @$"SELECT SUM(Duration), avg(Duration)  FROM sessions WHERE StartTime >= '{startDateTime}' AND EndTime <= '{endDateTime}'";
+
+            using var reader = tableCmd.ExecuteReader();
+
+            if (reader.HasRows)
+                while (reader.Read())
+                    tableData.Add(new ReportData
+                    {
+                        Total = reader.GetDouble(0),
+                        Average = reader.GetDouble(1)
+                    });
+
+            connection.Close();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Creating report failed.");
+        }
+
+        return tableData;
     }
 }

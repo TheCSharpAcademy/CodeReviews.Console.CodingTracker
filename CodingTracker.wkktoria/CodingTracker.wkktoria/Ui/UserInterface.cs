@@ -38,15 +38,21 @@ public class UserInterface
                     _codingController.ShowOneById();
                     break;
                 case "4":
-                    _codingController.TrackTime();
+                    _codingController.ShowReport();
                     break;
                 case "5":
-                    _codingController.Add();
+                    _codingController.SetGoal();
                     break;
                 case "6":
-                    _codingController.Update();
+                    _codingController.TrackTime();
                     break;
                 case "7":
+                    _codingController.Add();
+                    break;
+                case "8":
+                    _codingController.Update();
+                    break;
+                case "9":
                     _codingController.Delete();
                     break;
                 default:
@@ -64,10 +70,12 @@ public class UserInterface
             Console.WriteLine("\u2022 1 - show all");
             Console.WriteLine("\u2022 2 - show all between two dates");
             Console.WriteLine("\u2022 3 - show one by id");
-            Console.WriteLine("\u2022 4 - track time");
-            Console.WriteLine("\u2022 5 - add new");
-            Console.WriteLine("\u2022 6 - update existing");
-            Console.WriteLine("\u2022 7 - delete existing");
+            Console.WriteLine("\u2022 4 - show report");
+            Console.WriteLine("\u2022 5 - set goal for current month");
+            Console.WriteLine("\u2022 6 - track time");
+            Console.WriteLine("\u2022 7 - add new");
+            Console.WriteLine("\u2022 8 - update existing");
+            Console.WriteLine("\u2022 9 - delete existing");
         }
     }
 }

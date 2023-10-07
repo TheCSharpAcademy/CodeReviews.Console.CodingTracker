@@ -36,4 +36,23 @@ public static class UserInput
 
         return int.Parse(numberInput);
     }
+
+    public static string GetOrderInput()
+    {
+        string orderInput;
+
+        Console.WriteLine("Select order for durations.");
+
+        do
+        {
+            Console.Write("Enter 'asc' for ascending, or 'desc' for descending: ");
+
+            orderInput = Console.ReadLine();
+            orderInput = orderInput.Trim().ToUpper();
+
+            if (orderInput != "ASC" && orderInput != "DESC") Console.WriteLine("Invalid order.");
+        } while (orderInput != "ASC" && orderInput != "DESC");
+
+        return orderInput;
+    }
 }

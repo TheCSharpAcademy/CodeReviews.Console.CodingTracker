@@ -25,4 +25,13 @@ public static class TableVisualisationEngine
         var tableData = new List<CodingSession> { record };
         PrintAllRecordTable(tableData);
     }
+
+    public static void PrintReportTable(List<ReportData> tableData)
+    {
+        ConsoleTableBuilder
+            .From(tableData)
+            .WithTitle("Report")
+            .WithColumn("Total Time (in hours)", "Average Time (in hours)")
+            .ExportAndWriteLine();
+    }
 }

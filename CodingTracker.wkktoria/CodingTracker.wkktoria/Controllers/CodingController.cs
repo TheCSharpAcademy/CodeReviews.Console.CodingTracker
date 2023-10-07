@@ -16,7 +16,9 @@ public class CodingController
     {
         Console.Clear();
 
-        var tableData = _codingService.ReadAll();
+        var order = UserInput.GetOrderInput();
+
+        var tableData = _codingService.ReadAll(order);
 
         if (tableData.Any())
             TableVisualisationEngine.PrintAllRecordTable(tableData);
@@ -36,13 +38,22 @@ public class CodingController
         var startDate = UserInput.GetDateTimeInput("start date");
         var endDate = UserInput.GetDateTimeInput("end date");
 
-        var tableData = _codingService.ReadAllBetweenDates(Helpers.PareDateToDbFormat(startDate),
-            Helpers.PareDateToDbFormat(endDate));
+        if (Validation.ValidateTwoDates(startDate, endDate))
+        {
+            var order = UserInput.GetOrderInput();
 
-        if (tableData.Any())
-            TableVisualisationEngine.PrintAllRecordTable(tableData);
+            var tableData = _codingService.ReadAllBetweenDates(Helpers.PareDateToDbFormat(startDate),
+                Helpers.PareDateToDbFormat(endDate), order);
+
+            if (tableData.Any())
+                TableVisualisationEngine.PrintAllRecordTable(tableData);
+            else
+                Console.WriteLine($"No records between {startDate} and {endDate} found.");
+        }
         else
-            Console.WriteLine($"No records between {startDate} and {endDate} found.");
+        {
+            Console.WriteLine("End time cannot be before start time.");
+        }
 
         Console.Write("Press any key to continue...");
         Console.ReadKey();
@@ -59,6 +70,39 @@ public class CodingController
             TableVisualisationEngine.PrintOneRecordTable(record);
         else
             Console.WriteLine($"Record with id '{id}' doesn't exists.");
+
+        Console.Write("Press any key to continue...");
+        Console.ReadKey();
+    }
+
+    public void ShowReport()
+    {
+        Console.Clear();
+
+        var startDate = UserInput.GetDateTimeInput("start date");
+        var endDate = UserInput.GetDateTimeInput("end date");
+
+        if (Validation.ValidateTwoDates(startDate, endDate))
+        {
+            var parsedStartDate = Helpers.PareDateToDbFormat(startDate);
+            var parsedEndDate = Helpers.PareDateToDbFormat(endDate);
+
+            var tableData = _codingService.ReadAllBetweenDates(parsedStartDate, parsedEndDate, "ASC");
+
+            if (tableData.Any())
+            {
+                var reportData = _codingService.CreateReport(parsedStartDate, parsedEndDate);
+                TableVisualisationEngine.PrintReportTable(reportData);
+            }
+            else
+            {
+                Console.WriteLine($"No records between {startDate} and {endDate} found.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("End time cannot be before start time.");
+        }
 
         Console.Write("Press any key to continue...");
         Console.ReadKey();
@@ -180,6 +224,37 @@ public class CodingController
 
         _codingService.Create(record);
         Console.WriteLine("Record has been added.");
+
+        Console.Write("Press any key to continue...");
+        Console.ReadKey();
+    }
+
+    public void SetGoal()
+    {
+        Console.Clear();
+
+        var goal = UserInput.GetNumberInput("goal hours for this month");
+        var todayDate = DateTime.UtcNow;
+        var currentMonth = todayDate.Month;
+
+        var allRecords = _codingService.ReadAll("ASC");
+        var currentMonthRecords = allRecords.FindAll(record => DateTime.Parse(record.StartTime).Month == currentMonth);
+        var totalHours = currentMonthRecords.Sum(record => record.Duration);
+
+        if (totalHours >= goal)
+        {
+            Console.WriteLine("Congratulations! You have reached the goal.");
+        }
+        else
+        {
+            var daysLeft = DateTime.DaysInMonth(todayDate.Year, todayDate.Month) - todayDate.Day;
+            var hoursLeft = goal - totalHours;
+            var hoursDay = hoursLeft / daysLeft;
+
+            Console.WriteLine($"{daysLeft} days left.");
+            Console.WriteLine($"{hoursLeft} hours left to reach the goal.");
+            Console.WriteLine($"{hoursDay} hours every day to reach the goal.");
+        }
 
         Console.Write("Press any key to continue...");
         Console.ReadKey();
