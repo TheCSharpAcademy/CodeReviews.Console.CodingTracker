@@ -158,4 +158,30 @@ public class CodingController
         Console.Write("Press any key to continue...");
         Console.ReadKey();
     }
+
+    public void TrackTime()
+    {
+        Console.Clear();
+
+        var startTime = DateTime.UtcNow;
+
+        Console.WriteLine("Tracking coding time has been started.\nPress any key to stop...");
+        Console.ReadKey();
+
+        var endTime = DateTime.UtcNow;
+        var duration = Helpers.CalculateDuration(startTime, endTime);
+
+        var record = new CodingSession
+        {
+            StartTime = Helpers.PareDateToDbFormat(startTime),
+            EndTime = Helpers.PareDateToDbFormat(endTime),
+            Duration = duration
+        };
+
+        _codingService.Create(record);
+        Console.WriteLine("Record has been added.");
+
+        Console.Write("Press any key to continue...");
+        Console.ReadKey();
+    }
 }
