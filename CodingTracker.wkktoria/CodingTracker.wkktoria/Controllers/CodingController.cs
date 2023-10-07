@@ -252,8 +252,8 @@ public class CodingController
             var hoursDay = hoursLeft / daysLeft;
 
             Console.WriteLine($"{daysLeft} days left.");
-            Console.WriteLine($"{hoursLeft} hours left to reach the goal.");
-            Console.WriteLine($"{hoursDay} hours every day to reach the goal.");
+            Console.WriteLine($"{hoursLeft:##.##} hours left to reach the goal.");
+            Console.WriteLine($"{hoursDay:##.##} hours every day to reach the goal.");
         }
 
         Console.Write("Press any key to continue...");
