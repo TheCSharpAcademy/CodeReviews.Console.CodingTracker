@@ -1,3 +1,6 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using System.Configuration;
 
-Console.WriteLine("Hello, World!");
+var pathToSaveDb = Path.GetDirectoryName(Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).Parent.Parent
+    .FullName);
+var dbPath = Path.Combine(pathToSaveDb, ConfigurationManager.AppSettings.Get("DbPath"));
+var connectionString = ConfigurationManager.AppSettings.Get("ConnectionString") + dbPath;
