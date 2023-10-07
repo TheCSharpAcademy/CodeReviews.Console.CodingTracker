@@ -37,7 +37,7 @@ public class DbManager
         }
     }
 
-    public void LoadDumpData()
+    public void LoadDumpData(int limit)
     {
         try
         {
@@ -46,7 +46,7 @@ public class DbManager
 
             using var tableCmd = connection.CreateCommand();
 
-            for (var i = 0; i < 100; i++)
+            for (var i = 0; i < limit; i++)
             {
                 var startTime = DateTime.UtcNow.AddDays(i);
                 var endTime = DateTime.UtcNow.AddDays(i).AddMinutes(new Random().Next(1, 361));

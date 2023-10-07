@@ -1,6 +1,9 @@
 ﻿using System.Configuration;
 using System.Globalization;
 using CodingTracker.wkktoria;
+using CodingTracker.wkktoria.Controllers;
+using CodingTracker.wkktoria.Services;
+using CodingTracker.wkktoria.Ui;
 
 var customCulture = (CultureInfo)CultureInfo.InvariantCulture.Clone();
 customCulture.NumberFormat.NumberDecimalSeparator = ".";
@@ -15,4 +18,9 @@ var connectionString = ConfigurationManager.AppSettings.Get("ConnectionString") 
 var dbManager = new DbManager(connectionString);
 
 dbManager.Initialize();
-// dbManager.LoadDumpData();
+dbManager.LoadDumpData(10);
+
+var service = new CodingService(connectionString);
+var ui = new UserInterface(new CodingController(service));
+
+ui.Run();
