@@ -36,32 +36,4 @@ public class DbManager
             Console.WriteLine("Database couldn't be initialized.");
         }
     }
-
-    public void LoadDumpData(int limit)
-    {
-        try
-        {
-            using var connection = new SqliteConnection(_connectionString);
-            connection.Open();
-
-            using var tableCmd = connection.CreateCommand();
-
-            for (var i = 0; i < limit; i++)
-            {
-                var startTime = DateTime.UtcNow.AddDays(i);
-                var endTime = DateTime.UtcNow.AddDays(i).AddMinutes(new Random().Next(1, 361));
-                var duration = Math.Round((endTime - startTime).TotalHours, 2);
-
-                tableCmd.CommandText =
-                    $@"INSERT INTO sessions(startTime, endTime, duration) VALUES('{Helpers.PareDateToDbFormat(startTime)}', '{Helpers.PareDateToDbFormat(endTime)}', '{duration}')";
-                tableCmd.ExecuteNonQuery();
-            }
-
-            connection.Close();
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine("Dump data couldn't be loaded.");
-        }
-    }
 }

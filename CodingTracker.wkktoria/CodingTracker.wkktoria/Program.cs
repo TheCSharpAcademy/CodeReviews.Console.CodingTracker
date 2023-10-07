@@ -18,7 +18,6 @@ var connectionString = ConfigurationManager.AppSettings.Get("ConnectionString") 
 var dbManager = new DbManager(connectionString);
 
 dbManager.Initialize();
-// dbManager.LoadDumpData(10);
 
 var service = new CodingService(connectionString);
 var ui = new UserInterface(new CodingController(service));

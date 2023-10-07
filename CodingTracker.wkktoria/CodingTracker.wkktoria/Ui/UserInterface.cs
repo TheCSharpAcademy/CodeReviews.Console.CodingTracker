@@ -64,18 +64,16 @@ public class UserInterface
 
     private static void ShowMenu()
     {
-        {
-            Console.WriteLine("Available options:");
-            Console.WriteLine("\u2022 0 - quit app");
-            Console.WriteLine("\u2022 1 - show all");
-            Console.WriteLine("\u2022 2 - show all between two dates");
-            Console.WriteLine("\u2022 3 - show one by id");
-            Console.WriteLine("\u2022 4 - show report");
-            Console.WriteLine("\u2022 5 - set goal for current month");
-            Console.WriteLine("\u2022 6 - track time");
-            Console.WriteLine("\u2022 7 - add new");
-            Console.WriteLine("\u2022 8 - update existing");
-            Console.WriteLine("\u2022 9 - delete existing");
-        }
+        Console.WriteLine("Available options:");
+        Console.WriteLine("\u2022 0 - quit app");
+        Console.WriteLine("\u2022 1 - show all");
+        Console.WriteLine("\u2022 2 - show all between two dates");
+        Console.WriteLine("\u2022 3 - show one by id");
+        Console.WriteLine("\u2022 4 - show report");
+        Console.WriteLine("\u2022 5 - set goal for current month");
+        Console.WriteLine("\u2022 6 - track time");
+        Console.WriteLine("\u2022 7 - add new");
+        Console.WriteLine("\u2022 8 - update existing");
+        Console.WriteLine("\u2022 9 - delete existing");
     }
 }
