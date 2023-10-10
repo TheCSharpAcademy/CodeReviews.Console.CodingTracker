@@ -1,4 +1,6 @@
-﻿namespace CodingTracker.K_MYR.Models
+﻿using System;
+
+namespace CodingTracker.K_MYR.Models
 {
     internal class CodingGoal
     {
@@ -14,15 +16,17 @@
 
         public TimeSpan ElapsedTime { get; set; }
 
-        public double ElapsedPercentage
+        public string ElapsedPercentage
         {
             get
-            {   double percentage = ElapsedTime / Goal;
-
-                if (percentage < 1)
-                    return percentage;
+            {       
+                if (ElapsedTime < Goal)
+                {
+                    double percentage = Math.Round(ElapsedTime / Goal, 4);
+                    return string.Format("{0:P2}",percentage);
+                }                    
                 else
-                    return 1;
+                    return "100%";
             }
         }
 
@@ -30,17 +34,17 @@
         {
             get
             {
-                double days = (Deadline - DateTime.Now).TotalDays;
+                double days = (Deadline - DateTime.Now).TotalDays;                
 
-                if (days > 0)
+                if (days > 0 && Goal > ElapsedTime)
                 {
-                    if (Goal > ElapsedTime)
-                        return (Goal - ElapsedTime) / days;
-                    else
-                        return new TimeSpan(0, 0, 0);
-                }                   
-                else 
-                    return new TimeSpan(0,0,0);                
+                    TimeSpan averageHours = ((Goal - ElapsedTime) / days);
+                    return TimeSpan.FromSeconds(Math.Round(averageHours.TotalSeconds));
+                }                     
+                else
+                {
+                    return new TimeSpan(0, 0, 0);
+                }
             }
         }
     }

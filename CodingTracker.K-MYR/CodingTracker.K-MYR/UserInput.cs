@@ -83,23 +83,22 @@ internal class UserInput
     private static void InsertRecord()
     {
         Console.Clear();
-        DateTime startTime;
-        DateTime endTime;
+        DateTime startTime = GetDateInput("Please enter the start time in a valid format (hh:mm dd-mm-yyyy)");
+        DateTime endTime = GetDateInput("Please enter the end time in a valid format (hh:mm dd-MM-yyyy)");        
 
-        do
+        while (startTime > endTime)
         {
-            startTime = GetDateInput("Please enter the start time in a valid format (hh:mm dd-MM-yyyy)");
-            endTime = GetDateInput("Please enter the end time in a valid format (hh:mm dd-MM-yyyy)");
+            Console.WriteLine("The start can't be after the end!");
+            startTime = GetDateInput("Please enter the start time in a valid format (hh:mm dd-mm-yyyy)");
+            endTime = GetDateInput("Please enter the end time in a valid format (hh:mm dd-mm-yyyy)");
 
-        } while (startTime > endTime);
+        } 
 
         TimeSpan duration = endTime - startTime;
 
-        SQLiteOperations.InsertRecord(startTime.ToString("HH:mm:ss dd-MM-yyyy"), endTime.ToString("HH:mm:ss dd-MM-yyyy"), duration.ToString("hh\\:mm\\:ss"));
+        SQLiteOperations.InsertRecord(startTime.ToString("HH:mm:ss dd-MM-yyyy"), endTime.ToString("HH:mm:ss dd-MM-yyyy"), duration.ToString("dd\\:hh\\:mm\\:ss"));
 
-        Helpers.AdjustElapsedTime(startTime);
-        
-        
+        Helpers.AdjustElapsedTime(startTime);       
     }
 
     private static void UpdateRecord()
@@ -120,14 +119,14 @@ internal class UserInput
 
                 do
                 {
-                    startTime = GetDateInput("Please enter the start time in a valid format (HH:mm dd-MM-yyyy)");
-                    endTime = GetDateInput("Please enter the end time in a valid format (HH:mm dd-MM-yyyy)");
+                    startTime = GetDateInput("Please enter the start time in a valid format (hh:mm dd-mm-yyyy)");
+                    endTime = GetDateInput("Please enter the end time in a valid format (hh:mm dd-mm-yyyy)");
 
                 } while (startTime >= endTime);
 
                 TimeSpan duration = startTime - endTime;
 
-                SQLiteOperations.UpdateRecord(input, startTime.ToString("HH:mm:ss dd-MM-yyyy"), endTime.ToString("HH:mm:ss dd-MM-yyyy"), duration.ToString("hh\\:mm\\:ss"));
+                SQLiteOperations.UpdateRecord(input, startTime.ToString("HH:mm:ss dd-MM-yyyy"), endTime.ToString("HH:mm:ss dd-MM-yyyy"), duration.ToString("dd\\:hh\\:mm\\:ss"));
 
                 Helpers.AdjustElapsedTime(startTime);
 
@@ -144,7 +143,7 @@ internal class UserInput
 
     private static void DeleteRecord()
     {
-        Helpers.PrintAllRecords();
+        var records = Helpers.PrintAllRecords();
 
         while (true)
         {
@@ -156,6 +155,9 @@ internal class UserInput
             if (SQLiteOperations.RecordExists(input) == 1)
             {
                 SQLiteOperations.DeleteRecord(input);
+                var record = records.Where(x => x.Id == input).ToList();
+                Helpers.AdjustElapsedTime(record[0].StartTime);
+
                 Console.Clear();
                 Helpers.PrintAllRecords();
                 Console.WriteLine($"Record with the id {input} has been deleted!");
@@ -209,6 +211,8 @@ internal class UserInput
 
         var tableData = Helpers.GetRecords(unitChar, numberOfTimeUnit);
 
+        Console.Clear();
+
         if (tableData.Count > 0)
         {
             var totalSpan = new TimeSpan(tableData.Sum(x => x.Duration.Ticks));
@@ -226,7 +230,7 @@ internal class UserInput
         }
         else
         {
-            Console.WriteLine("No exisitng records were found");
+            Console.WriteLine("No records were found");
         }
                 
         Console.WriteLine("\nPress enter to go back to the main menu");
@@ -257,7 +261,7 @@ internal class UserInput
                 {
                     endDate = DateTime.Now;
                     duration = endDate - startDate;
-                    Helpers.PrintStopwatchMenu(startDate.ToString("T"), endDate.ToString("T"), duration.ToString("hh\\:mm\\:ss"));
+                    Helpers.PrintStopwatchMenu(startDate.ToString("T"), endDate.ToString("T"), duration.ToString("dd\\:hh\\:mm\\:ss"));
                 }
                 else
                 {
@@ -272,7 +276,8 @@ internal class UserInput
             {
                 if (endDate != DateTime.MinValue)
                 {
-                    SQLiteOperations.InsertRecord(startDate.ToString("HH:mm:ss dd-MM-yyyy"), endDate.ToString("HH:mm:ss dd-MM-yyyy"), duration.ToString("hh\\:mm\\:ss"));
+                    SQLiteOperations.InsertRecord(startDate.ToString("HH:mm:ss dd-MM-yyyy"), endDate.ToString("HH:mm:ss dd-MM-yyyy"), duration.ToString("dd\\:hh\\:mm\\:ss"));
+                    Helpers.AdjustElapsedTime(startDate);
                     Console.WriteLine("Session has beend saved!");
                 }
                 else
@@ -308,29 +313,33 @@ internal class UserInput
 
     private static void InsertGoal()
     {
-        Console.Clear();
+        DateTime startDate;
         DateTime deadline;
-        TimeSpan goal;       
+        TimeSpan goal;
 
-        string name = GetStringInput("Please enter the name of the goal\n");
-        DateTime startDate = GetDateInput("Please enter a starting date for your goal in a valid format (dd-MM-yyyy)", format: "dd-MM-yyyy");
+        Console.Clear();
+
+        string name = GetStringInput("Please enter the name of the goal\n");        
 
         do
         {
-            deadline = GetDateInput("Please enter a upcoming deadline for your goal in a valid format (dd-MM-yyyy)", format: "dd-MM-yyyy");         
-        } while (DateTime.Now.Date >= deadline.Date);
+            startDate = GetDateInput("Please enter a start date for your goal in a valid format (dd-mm-yyyy)", format: "dd-MM-yyyy");
+            deadline = GetDateInput("Please enter a end date for your goal in a valid format (dd-mm-yyyy)", format: "dd-MM-yyyy");         
+        } while (startDate.Date >= deadline.Date);
 
-        goal = GetTimeSpanInput("Please enter your time goal in a valid format (hh:mm)");
+        goal = GetTimeSpanInput("Please enter your time goal in a valid format (dd:hh:mm)");
 
         TimeSpan elapsedTime = Helpers.CalculateElapsedTime(startDate, deadline);
 
-        SQLiteOperations.InsertGoal(name , startDate.ToString("dd-MM-yyyy"),  deadline.ToString("dd-MM-yyyy"), goal.ToString("hh\\:mm\\:ss"), elapsedTime.ToString("hh\\:mm\\:ss"));
+        SQLiteOperations.InsertGoal(name , startDate.ToString("dd-MM-yyyy"),  deadline.ToString("dd-MM-yyyy"), goal.ToString("dd\\:hh\\:mm\\:ss"), elapsedTime.ToString("dd\\:hh\\:mm\\:ss"));
     }
 
     private static void UpdateGoal()
     {
         Helpers.PrintAllGoals();
 
+
+        DateTime startDate;
         DateTime deadline;
         TimeSpan goal;  
 
@@ -342,21 +351,21 @@ internal class UserInput
             if (input == 0)
                 break;
 
-            if (SQLiteOperations.RecordExists(input) == 1)
+            if (SQLiteOperations.GoalExists(input) == 1)
             {
-                string name = GetStringInput("Please enter the name of the goal\n");
-                DateTime startDate = GetDateInput("Please enter a starting date for your goal in a valid format (dd-MM-yyyy)", format: "dd-MM-yyyy");
+                string name = GetStringInput("Please enter the name of the goal\n");                 
 
                 do
-                {
-                    deadline = GetDateInput("Please enter a upcoming deadline for your goal in a valid format (dd-MM-yyyy)", format: "dd-MM-yyyy");                   
-                } while (DateTime.Now.Date >= deadline.Date);
+                {   
+                    startDate = GetDateInput("Please enter a start date for your goal in a valid format (dd-mm-yyyy)", format: "dd-MM-yyyy");
+                    deadline = GetDateInput("Please enter a end date for your goal in a valid format (dd-mm-yyyy)", format: "dd-MM-yyyy");                   
+                } while (startDate.Date >= deadline.Date);
 
-                goal = GetTimeSpanInput("Please enter your goal in a valid format (hh:mm)");
+                goal = GetTimeSpanInput("Please enter your goal in a valid format (dd:hh:mm)");
 
                 TimeSpan elapsedTime = Helpers.CalculateElapsedTime(startDate, deadline);
 
-                SQLiteOperations.UpdateGoal(input, name, startDate.ToString("dd-MM-yyyy"),  deadline.ToString("dd-MM-yyyy"), goal.ToString("hh\\:mm\\:ss"), elapsedTime.ToString("hh\\:mm\\:ss"));
+                SQLiteOperations.UpdateGoal(input, name, startDate.ToString("dd-MM-yyyy"),  deadline.ToString("dd-MM-yyyy"), goal.ToString("dd\\:hh\\:mm\\:ss"), elapsedTime.ToString("dd\\:hh\\:mm\\:ss"));
 
                 Console.Clear();
                 Helpers.PrintAllGoals();
@@ -396,34 +405,36 @@ internal class UserInput
 
     private static string GetUnitOfTime()
     {
-        string unit;
-        do
+        Console.Clear();
+        Console.WriteLine("Please specify a unit of time");
+        Console.WriteLine("-----------------------------");
+        Console.WriteLine("D - Days");
+        Console.WriteLine("W - Weeks");
+        Console.WriteLine("Y - Years");
+        Console.WriteLine("-----------------------------\n");
+
+        string unit = Console.ReadLine().Trim().ToLower();
+
+        while (unit != "d" && unit != "w" && unit != "y")
         {
-            Console.Clear();
-            Console.WriteLine("Please specify a unit of time");
-            Console.WriteLine("-----------------------------");
-            Console.WriteLine("D - Days");
-            Console.WriteLine("W - Weeks");
-            Console.WriteLine("Y - Years");
-            Console.WriteLine("-----------------------------\n");
-
+            Console.WriteLine("Invalid input!");
             unit = Console.ReadLine().Trim().ToLower();
-
-        } while (unit != "d" && unit != "w" && unit != "y");
+        } 
 
         return unit;
     }
 
     private static bool GetSortingOrder()
-    {
-        string sortingOrder;
+    { 
 
         Console.WriteLine("Do you want to sort the records ascending? (y/n)");
+        string sortingOrder = Console.ReadLine().Trim().ToLower();
 
-        do
+        while (sortingOrder != "y" && sortingOrder != "n")
         {
-            sortingOrder = Console.ReadLine();
-        } while (sortingOrder != "y" && sortingOrder != "n");
+            Console.WriteLine("Invalid Input!");
+            sortingOrder = Console.ReadLine().Trim().ToLower();
+        } 
 
         bool reverseSorting = (sortingOrder == "n");
 
@@ -437,7 +448,7 @@ internal class UserInput
         DateTime date;
         while (!DateTime.TryParseExact(input, format, new CultureInfo("de-DE"), DateTimeStyles.None, out date))
         {
-            Console.WriteLine(message);
+            Console.WriteLine("Invalid Input! " + message);
             input = Console.ReadLine();
         }
         return date;
@@ -448,9 +459,10 @@ internal class UserInput
         Console.WriteLine(message);
         string? input = Console.ReadLine();
         TimeSpan timeSpan;
-        while (!TimeSpan.TryParseExact(input, "hh\\:mm", new CultureInfo("de-DE"), TimeSpanStyles.None, out timeSpan) || timeSpan.Ticks <= 0 )
+
+        while (!TimeSpan.TryParseExact(input, "dd\\:hh\\:mm", new CultureInfo("de-DE"), TimeSpanStyles.None, out timeSpan) || timeSpan.Ticks <= 0 )
         {
-            Console.WriteLine(message);
+            Console.WriteLine("Invalid Input! " + message);
             input = Console.ReadLine();
         }
         return timeSpan;
@@ -463,7 +475,7 @@ internal class UserInput
 
         while (!int.TryParse(input, out _) || Convert.ToInt32(input) < 0)
         {
-            Console.Write("Invalid Input!" + message);
+            Console.Write("Invalid Input! " + message);
             input = Console.ReadLine();
         }
 
@@ -483,5 +495,4 @@ internal class UserInput
 
         return input;
     }
-
 }

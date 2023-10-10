@@ -5,11 +5,12 @@ namespace CodingTracker.K_MYR
 {
     internal class Helpers
     {
-        internal static void PrintAllRecords()
-        {
-            Console.Clear();
+        internal static List<CodingSession> PrintAllRecords()
+        {            
             var records = SQLiteOperations.SelectAllRecords();
-            PrintRecords(records);            
+            PrintRecords(records);
+
+            return records;
         }
 
         internal static void PrintRecords(List<CodingSession> tableData, bool reverse = false)
@@ -28,9 +29,11 @@ namespace CodingTracker.K_MYR
                     .WithTitle("Coding Sessions", ConsoleColor.Green, ConsoleColor.Black)
                     .WithTextAlignment(new Dictionary<int, TextAligntment>
                         {
+                        {1, TextAligntment.Center },
                         {2, TextAligntment.Center },
-                        {1, TextAligntment.Center }
+                        {3, TextAligntment.Center },
                         })
+                    .WithColumn("ID", "Start", "End", "Duration")
                     .ExportAndWriteLine();
             }
             else
@@ -82,25 +85,7 @@ namespace CodingTracker.K_MYR
             Console.Clear();
 
             var tableData = SQLiteOperations.SelectAllGoals();
-
-            if (tableData.Count > 0)
-            {
-                tableData.Sort((x, y) => DateTime.Compare(x.Deadline, y.Deadline));
-
-                ConsoleTableBuilder
-                    .From(tableData)
-                    .WithTitle("Coding Goals", ConsoleColor.Green, ConsoleColor.Black)
-                    .WithTextAlignment(new Dictionary<int, TextAligntment>
-                        {
-                        {2, TextAligntment.Center },
-                        {1, TextAligntment.Center }
-                        })
-                    .ExportAndWriteLine();
-            }
-            else
-            {
-                Console.WriteLine("Now goals were found!");
-            }
+            PrintGoals(tableData);            
         }
 
         internal static void PrintGoals(List<CodingGoal> tableData, bool reverse = false)
@@ -119,9 +104,14 @@ namespace CodingTracker.K_MYR
                     .WithTitle("Coding Sessions", ConsoleColor.Green, ConsoleColor.Black)
                     .WithTextAlignment(new Dictionary<int, TextAligntment>
                         {
+                        {1, TextAligntment.Center },
                         {2, TextAligntment.Center },
-                        {1, TextAligntment.Center }
+                        {3, TextAligntment.Center },
+                        {4, TextAligntment.Center },
+                        {5, TextAligntment.Center },
+                        {6, TextAligntment.Center }
                         })
+                    .WithColumn("ID", "Name", "Start", "End", "Goal", "Accumulated", "%", "Hours per Day")
                     .ExportAndWriteLine();
             }
             else
@@ -158,7 +148,7 @@ namespace CodingTracker.K_MYR
             foreach (var goal in goals)
             {
                 TimeSpan elapsedTime = CalculateElapsedTime(goal.StartDate, goal.Deadline);
-                SQLiteOperations.UpdateGoalElapsedTime(goal.Id, elapsedTime.ToString("hh\\:mm\\:ss"));
+                SQLiteOperations.UpdateGoalElapsedTime(goal.Id, elapsedTime.ToString("dd\\:hh\\:mm\\:ss"));
             }
         }
 

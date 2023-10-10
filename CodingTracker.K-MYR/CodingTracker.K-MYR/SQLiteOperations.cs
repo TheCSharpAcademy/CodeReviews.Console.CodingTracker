@@ -2,6 +2,7 @@
 using Microsoft.Data.Sqlite;
 using System.Configuration;
 using System.Globalization;
+using System.Reflection.PortableExecutable;
 
 namespace CodingTracker.K_MYR;
 
@@ -56,13 +57,13 @@ internal class SQLiteOperations
                     Id = reader.GetInt32(0),
                     StartTime = DateTime.ParseExact(reader.GetString(1), "HH:mm:ss dd-MM-yyyy", new CultureInfo("de-DE")),
                     EndTime = DateTime.ParseExact(reader.GetString(2), "HH:mm:ss dd-MM-yyyy", new CultureInfo("de-DE")),
-                    Duration = TimeSpan.ParseExact(reader.GetString(3), "hh\\:mm\\:ss", new CultureInfo("de-DE"), TimeSpanStyles.None)
+                    Duration = TimeSpan.ParseExact(reader.GetString(3), "dd\\:hh\\:mm\\:ss", new CultureInfo("de-DE"), TimeSpanStyles.None)
                 });
             }
         }
         connection.Close();
         return records;
-    }    
+    }
 
     internal static void InsertRecord(string startTime, string endTime, string duration)
     {
@@ -126,8 +127,8 @@ internal class SQLiteOperations
                     Name = reader.GetString(1),                   
                     StartDate= DateTime.ParseExact(reader.GetString(2), "dd-MM-yyyy", new CultureInfo("de-DE"), DateTimeStyles.None),
                     Deadline = DateTime.ParseExact(reader.GetString(3), "dd-MM-yyyy", new CultureInfo("de-DE"), DateTimeStyles.None),
-                    Goal = TimeSpan.ParseExact(reader.GetString(4), "hh\\:mm\\:ss", new CultureInfo("de-DE"), TimeSpanStyles.None),
-                    ElapsedTime = TimeSpan.ParseExact(reader.GetString(5), "hh\\:mm\\:ss", new CultureInfo("de-DE"), TimeSpanStyles.None),
+                    Goal = TimeSpan.ParseExact(reader.GetString(4), "dd\\:hh\\:mm\\:ss", new CultureInfo("de-DE"), TimeSpanStyles.None),
+                    ElapsedTime = TimeSpan.ParseExact(reader.GetString(5), "dd\\:hh\\:mm\\:ss", new CultureInfo("de-DE"), TimeSpanStyles.None),
                 });
             }
         }
