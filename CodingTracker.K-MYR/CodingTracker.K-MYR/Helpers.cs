@@ -6,7 +6,7 @@ namespace CodingTracker.K_MYR
     internal class Helpers
     {
         internal static List<CodingSession> PrintAllRecords()
-        {            
+        {
             var records = SQLiteOperations.SelectAllRecords();
             PrintRecords(records);
 
@@ -36,6 +36,7 @@ namespace CodingTracker.K_MYR
                     .WithColumn("ID", "Start", "End", "Duration")
                     .ExportAndWriteLine();
             }
+
             else
             {
                 Console.WriteLine("Now records were found!");
@@ -85,7 +86,7 @@ namespace CodingTracker.K_MYR
             Console.Clear();
 
             var tableData = SQLiteOperations.SelectAllGoals();
-            PrintGoals(tableData);            
+            PrintGoals(tableData);
         }
 
         internal static void PrintGoals(List<CodingGoal> tableData, bool reverse = false)
@@ -114,6 +115,7 @@ namespace CodingTracker.K_MYR
                     .WithColumn("ID", "Name", "Start", "End", "Goal", "Accumulated", "%", "Hours per Day")
                     .ExportAndWriteLine();
             }
+
             else
             {
                 Console.WriteLine("Now records were found!");
@@ -125,7 +127,6 @@ namespace CodingTracker.K_MYR
             var activeGoals = SQLiteOperations.SelectAllGoals()
                                               .Where(x => x.Deadline.Date > DateTime.Now.Date && x.StartDate.Date <= DateTime.Now.Date)
                                               .ToList();
-
             return activeGoals;
         }
 
@@ -136,7 +137,6 @@ namespace CodingTracker.K_MYR
                                           .ToList();
 
             TimeSpan elapsedTime = new(records.Sum(x => x.Duration.Ticks));
-
             return elapsedTime;
         }
 

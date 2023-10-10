@@ -1,5 +1,4 @@
-﻿using System.Drawing.Drawing2D;
-using System.Globalization;
+﻿using System.Globalization;
 
 namespace CodingTracker.K_MYR;
 
@@ -20,11 +19,11 @@ internal class UserInput
             Console.WriteLine("4  - Update Record");
             Console.WriteLine("5  - Delete Record");
             Console.WriteLine("6  - Stopwatch");
-            Console.WriteLine("7  - Show All Coding Goals");
-            Console.WriteLine("8  - Show Current Coding Goals");
-            Console.WriteLine("9  - Add Coding Goal");
-            Console.WriteLine("10 - Update Coding Goal");
-            Console.WriteLine("11 - Delete Coding Goal");
+            Console.WriteLine("7  - Show All Goals");
+            Console.WriteLine("8  - Show Current Goals");
+            Console.WriteLine("9  - Add Goal");
+            Console.WriteLine("10 - Update Goal");
+            Console.WriteLine("11 - Delete Goal");
             Console.WriteLine("12 - Exit Application");
             Console.WriteLine("----------------------");
 
@@ -34,10 +33,10 @@ internal class UserInput
             switch (input)
             {
                 case "0":
-                    ShowAllRecords();                    
+                    ShowAllRecords();
                     break;
                 case "1":
-                    ShowSpecificRecords();                    
+                    ShowSpecificRecords();
                     break;
                 case "2":
                     ShowReport();
@@ -78,27 +77,26 @@ internal class UserInput
                     break;
             }
         }
-    }     
+    }
 
     private static void InsertRecord()
     {
         Console.Clear();
         DateTime startTime = GetDateInput("Please enter the start time in a valid format (hh:mm dd-mm-yyyy)");
-        DateTime endTime = GetDateInput("Please enter the end time in a valid format (hh:mm dd-MM-yyyy)");        
+        DateTime endTime = GetDateInput("Please enter the end time in a valid format (hh:mm dd-MM-yyyy)");
 
         while (startTime > endTime)
         {
             Console.WriteLine("The start can't be after the end!");
             startTime = GetDateInput("Please enter the start time in a valid format (hh:mm dd-mm-yyyy)");
             endTime = GetDateInput("Please enter the end time in a valid format (hh:mm dd-mm-yyyy)");
-
-        } 
+        }
 
         TimeSpan duration = endTime - startTime;
 
         SQLiteOperations.InsertRecord(startTime.ToString("HH:mm:ss dd-MM-yyyy"), endTime.ToString("HH:mm:ss dd-MM-yyyy"), duration.ToString("dd\\:hh\\:mm\\:ss"));
 
-        Helpers.AdjustElapsedTime(startTime);       
+        Helpers.AdjustElapsedTime(startTime);
     }
 
     private static void UpdateRecord()
@@ -232,7 +230,7 @@ internal class UserInput
         {
             Console.WriteLine("No records were found");
         }
-                
+
         Console.WriteLine("\nPress enter to go back to the main menu");
         Console.ReadLine();
     }
@@ -319,53 +317,51 @@ internal class UserInput
 
         Console.Clear();
 
-        string name = GetStringInput("Please enter the name of the goal\n");        
+        string name = GetStringInput("Please enter the name of the goal\n");
 
         do
         {
             startDate = GetDateInput("Please enter a start date for your goal in a valid format (dd-mm-yyyy)", format: "dd-MM-yyyy");
-            deadline = GetDateInput("Please enter a end date for your goal in a valid format (dd-mm-yyyy)", format: "dd-MM-yyyy");         
+            deadline = GetDateInput("Please enter a end date for your goal in a valid format (dd-mm-yyyy)", format: "dd-MM-yyyy");
         } while (startDate.Date >= deadline.Date);
 
         goal = GetTimeSpanInput("Please enter your time goal in a valid format (dd:hh:mm)");
 
         TimeSpan elapsedTime = Helpers.CalculateElapsedTime(startDate, deadline);
 
-        SQLiteOperations.InsertGoal(name , startDate.ToString("dd-MM-yyyy"),  deadline.ToString("dd-MM-yyyy"), goal.ToString("dd\\:hh\\:mm\\:ss"), elapsedTime.ToString("dd\\:hh\\:mm\\:ss"));
+        SQLiteOperations.InsertGoal(name, startDate.ToString("dd-MM-yyyy"), deadline.ToString("dd-MM-yyyy"), goal.ToString("dd\\:hh\\:mm\\:ss"), elapsedTime.ToString("dd\\:hh\\:mm\\:ss"));
     }
 
     private static void UpdateGoal()
     {
         Helpers.PrintAllGoals();
 
-
         DateTime startDate;
         DateTime deadline;
-        TimeSpan goal;  
+        TimeSpan goal;
 
         while (true)
         {
             int input = GetNumberInput("\nPlease enter the id of the goal you want to update or enter 0 to return to the main menu\n");
-            
 
             if (input == 0)
                 break;
 
             if (SQLiteOperations.GoalExists(input) == 1)
             {
-                string name = GetStringInput("Please enter the name of the goal\n");                 
+                string name = GetStringInput("Please enter the name of the goal\n");
 
                 do
-                {   
+                {
                     startDate = GetDateInput("Please enter a start date for your goal in a valid format (dd-mm-yyyy)", format: "dd-MM-yyyy");
-                    deadline = GetDateInput("Please enter a end date for your goal in a valid format (dd-mm-yyyy)", format: "dd-MM-yyyy");                   
+                    deadline = GetDateInput("Please enter a end date for your goal in a valid format (dd-mm-yyyy)", format: "dd-MM-yyyy");
                 } while (startDate.Date >= deadline.Date);
 
                 goal = GetTimeSpanInput("Please enter your goal in a valid format (dd:hh:mm)");
 
                 TimeSpan elapsedTime = Helpers.CalculateElapsedTime(startDate, deadline);
 
-                SQLiteOperations.UpdateGoal(input, name, startDate.ToString("dd-MM-yyyy"),  deadline.ToString("dd-MM-yyyy"), goal.ToString("dd\\:hh\\:mm\\:ss"), elapsedTime.ToString("dd\\:hh\\:mm\\:ss"));
+                SQLiteOperations.UpdateGoal(input, name, startDate.ToString("dd-MM-yyyy"), deadline.ToString("dd-MM-yyyy"), goal.ToString("dd\\:hh\\:mm\\:ss"), elapsedTime.ToString("dd\\:hh\\:mm\\:ss"));
 
                 Console.Clear();
                 Helpers.PrintAllGoals();
@@ -419,13 +415,13 @@ internal class UserInput
         {
             Console.WriteLine("Invalid input!");
             unit = Console.ReadLine().Trim().ToLower();
-        } 
+        }
 
         return unit;
     }
 
     private static bool GetSortingOrder()
-    { 
+    {
 
         Console.WriteLine("Do you want to sort the records ascending? (y/n)");
         string sortingOrder = Console.ReadLine().Trim().ToLower();
@@ -434,37 +430,43 @@ internal class UserInput
         {
             Console.WriteLine("Invalid Input!");
             sortingOrder = Console.ReadLine().Trim().ToLower();
-        } 
+        }
 
         bool reverseSorting = (sortingOrder == "n");
 
         return reverseSorting;
     }
-            
+
     private static DateTime GetDateInput(string message, string format = "HH:mm dd-MM-yyyy")
     {
+        DateTime date;
+
         Console.WriteLine(message);
         string? input = Console.ReadLine();
-        DateTime date;
+
+
         while (!DateTime.TryParseExact(input, format, new CultureInfo("de-DE"), DateTimeStyles.None, out date))
         {
             Console.WriteLine("Invalid Input! " + message);
             input = Console.ReadLine();
         }
+
         return date;
     }
 
     private static TimeSpan GetTimeSpanInput(string message)
     {
-        Console.WriteLine(message);
-        string? input = Console.ReadLine();
         TimeSpan timeSpan;
 
-        while (!TimeSpan.TryParseExact(input, "dd\\:hh\\:mm", new CultureInfo("de-DE"), TimeSpanStyles.None, out timeSpan) || timeSpan.Ticks <= 0 )
+        Console.WriteLine(message);
+        string? input = Console.ReadLine();
+
+        while (!TimeSpan.TryParseExact(input, "dd\\:hh\\:mm", new CultureInfo("de-DE"), TimeSpanStyles.None, out timeSpan) || timeSpan.Ticks <= 0)
         {
             Console.WriteLine("Invalid Input! " + message);
             input = Console.ReadLine();
         }
+
         return timeSpan;
     }
 

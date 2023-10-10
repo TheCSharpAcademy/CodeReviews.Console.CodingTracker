@@ -2,7 +2,6 @@
 using Microsoft.Data.Sqlite;
 using System.Configuration;
 using System.Globalization;
-using System.Reflection.PortableExecutable;
 
 namespace CodingTracker.K_MYR;
 
@@ -61,6 +60,7 @@ internal class SQLiteOperations
                 });
             }
         }
+
         connection.Close();
         return records;
     }
@@ -74,13 +74,14 @@ internal class SQLiteOperations
         tableCmd.CommandText = $"INSERT INTO CodingSessions (StartTime, EndTime, Duration) VALUES ('{startTime}', '{endTime}', '{duration}')";
         tableCmd.ExecuteNonQuery();
         connection.Close();
-    }    
+    }
 
     internal static void UpdateRecord(int id, string startTime, string endTime, string duration)
     {
         using SqliteConnection connection = new(connectionString);
         connection.Open();
         var tableCmd = connection.CreateCommand();
+
         tableCmd.CommandText = $"UPDATE CodingSessions SET StartTime = '{startTime}', EndTime = '{endTime}', Duration = '{duration}' WHERE Id = {id} ";
         tableCmd.ExecuteNonQuery();
         connection.Close();
@@ -90,8 +91,8 @@ internal class SQLiteOperations
     {
         using SqliteConnection connection = new(connectionString);
         connection.Open();
-
         var tableCmd = connection.CreateCommand();
+
         tableCmd.CommandText = $"DELETE FROM CodingSessions WHERE Id = {id}";
         tableCmd.ExecuteNonQuery();
         connection.Close();
@@ -102,6 +103,7 @@ internal class SQLiteOperations
         using SqliteConnection connection = new(connectionString);
         connection.Open();
         var tableCmd = connection.CreateCommand();
+
         tableCmd.CommandText = $"SELECT EXISTS (SELECT 1 FROM CodingSessions WHERE Id = {recordId})";
 
         return Convert.ToInt32(tableCmd.ExecuteScalar());
@@ -124,14 +126,15 @@ internal class SQLiteOperations
                 goals.Add(new CodingGoal
                 {
                     Id = reader.GetInt32(0),
-                    Name = reader.GetString(1),                   
-                    StartDate= DateTime.ParseExact(reader.GetString(2), "dd-MM-yyyy", new CultureInfo("de-DE"), DateTimeStyles.None),
+                    Name = reader.GetString(1),
+                    StartDate = DateTime.ParseExact(reader.GetString(2), "dd-MM-yyyy", new CultureInfo("de-DE"), DateTimeStyles.None),
                     Deadline = DateTime.ParseExact(reader.GetString(3), "dd-MM-yyyy", new CultureInfo("de-DE"), DateTimeStyles.None),
                     Goal = TimeSpan.ParseExact(reader.GetString(4), "dd\\:hh\\:mm\\:ss", new CultureInfo("de-DE"), TimeSpanStyles.None),
                     ElapsedTime = TimeSpan.ParseExact(reader.GetString(5), "dd\\:hh\\:mm\\:ss", new CultureInfo("de-DE"), TimeSpanStyles.None),
                 });
             }
         }
+
         connection.Close();
         return goals;
     }
@@ -152,6 +155,7 @@ internal class SQLiteOperations
         using SqliteConnection connection = new(connectionString);
         connection.Open();
         var tableCmd = connection.CreateCommand();
+
         tableCmd.CommandText = $"UPDATE CodingGoals SET Name = '{name}', StartDate = '{startDate}', Deadline = '{deadline}', Goal = '{goal}', ElapsedTime = '{elapsedTime}' WHERE Id = {id} ";
         tableCmd.ExecuteNonQuery();
         connection.Close();
@@ -162,6 +166,7 @@ internal class SQLiteOperations
         using SqliteConnection connection = new(connectionString);
         connection.Open();
         var tableCmd = connection.CreateCommand();
+
         tableCmd.CommandText = $"UPDATE CodingGoals SET ElapsedTime = '{elapsedTime}' WHERE Id = {id} ";
         tableCmd.ExecuteNonQuery();
         connection.Close();
@@ -171,8 +176,8 @@ internal class SQLiteOperations
     {
         using SqliteConnection connection = new(connectionString);
         connection.Open();
-
         var tableCmd = connection.CreateCommand();
+
         tableCmd.CommandText = $"DELETE FROM CodingGoals WHERE Id = {id}";
         tableCmd.ExecuteNonQuery();
         connection.Close();
