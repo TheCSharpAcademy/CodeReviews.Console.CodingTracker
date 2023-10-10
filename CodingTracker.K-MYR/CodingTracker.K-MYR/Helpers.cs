@@ -9,12 +9,12 @@ namespace CodingTracker.K_MYR
         {
             Console.Clear();
             var records = SQLiteOperations.SelectAllRecords();
-            PrintRecords(records);                             
+            PrintRecords(records);            
         }
 
         internal static void PrintRecords(List<CodingSession> tableData, bool reverse = false)
         {
-            Console.Clear();      
+            Console.Clear();
 
             if (tableData.Count > 0)
             {
@@ -37,7 +37,7 @@ namespace CodingTracker.K_MYR
             {
                 Console.WriteLine("Now records were found!");
             }
-        }        
+        }
 
         internal static List<CodingSession> GetRecords(string unit, int timespanNumber)
         {
@@ -57,7 +57,7 @@ namespace CodingTracker.K_MYR
                     break;
             }
 
-            var tableData = records.Where(x => x.StartTime >= DateTime.Now.Date.Subtract(period)).ToList();
+            var tableData = records.Where(x => x.StartTime >= DateTime.Now.Subtract(period)).ToList();
 
             return tableData;
         }
@@ -76,5 +76,91 @@ namespace CodingTracker.K_MYR
             Console.WriteLine("2 - Return to main menu");
             Console.WriteLine("-------------------------------------------");
         }
+
+        internal static void PrintAllGoals()
+        {
+            Console.Clear();
+
+            var tableData = SQLiteOperations.SelectAllGoals();
+
+            if (tableData.Count > 0)
+            {
+                tableData.Sort((x, y) => DateTime.Compare(x.Deadline, y.Deadline));
+
+                ConsoleTableBuilder
+                    .From(tableData)
+                    .WithTitle("Coding Goals", ConsoleColor.Green, ConsoleColor.Black)
+                    .WithTextAlignment(new Dictionary<int, TextAligntment>
+                        {
+                        {2, TextAligntment.Center },
+                        {1, TextAligntment.Center }
+                        })
+                    .ExportAndWriteLine();
+            }
+            else
+            {
+                Console.WriteLine("Now goals were found!");
+            }
+        }
+
+        internal static void PrintGoals(List<CodingGoal> tableData, bool reverse = false)
+        {
+            Console.Clear();
+
+            if (tableData.Count > 0)
+            {
+                tableData.Sort((x, y) => DateTime.Compare(x.Deadline, y.Deadline));
+
+                if (reverse)
+                    tableData.Reverse();
+
+                ConsoleTableBuilder
+                    .From(tableData)
+                    .WithTitle("Coding Sessions", ConsoleColor.Green, ConsoleColor.Black)
+                    .WithTextAlignment(new Dictionary<int, TextAligntment>
+                        {
+                        {2, TextAligntment.Center },
+                        {1, TextAligntment.Center }
+                        })
+                    .ExportAndWriteLine();
+            }
+            else
+            {
+                Console.WriteLine("Now records were found!");
+            }
+        }
+
+        internal static List<CodingGoal> GetActiveGoals()
+        {
+            var activeGoals = SQLiteOperations.SelectAllGoals()
+                                              .Where(x => x.Deadline.Date > DateTime.Now.Date && x.StartDate.Date <= DateTime.Now.Date)
+                                              .ToList();
+
+            return activeGoals;
+        }
+
+        internal static TimeSpan CalculateElapsedTime(DateTime goalStartDate, DateTime goalEndDate)
+        {
+            var records = SQLiteOperations.SelectAllRecords()
+                                          .Where(x => x.StartTime.Date >= goalStartDate.Date && x.StartTime < goalEndDate.Date)
+                                          .ToList();
+
+            TimeSpan elapsedTime = new(records.Sum(x => x.Duration.Ticks));
+
+            return elapsedTime;
+        }
+
+        internal static void AdjustElapsedTime(DateTime recordStartDate)
+        {
+            var goals = SQLiteOperations.SelectAllGoals()
+                                        .Where(x => x.StartDate.Date <= recordStartDate.Date && x.Deadline.Date > recordStartDate.Date)
+                                        .ToList();
+            foreach (var goal in goals)
+            {
+                TimeSpan elapsedTime = CalculateElapsedTime(goal.StartDate, goal.Deadline);
+                SQLiteOperations.UpdateGoalElapsedTime(goal.Id, elapsedTime.ToString("hh\\:mm\\:ss"));
+            }
+        }
+
     }
 }
