@@ -47,6 +47,7 @@ namespace CodingTracker.K_MYR
         {
             var records = SQLiteOperations.SelectAllRecords();
             TimeSpan period = new();
+            List<CodingSession> tableData = new();
 
             try
             {
@@ -62,18 +63,13 @@ namespace CodingTracker.K_MYR
                         period = TimeSpan.FromDays(timespanNumber * 365);
                         break;
                 }
+
+                tableData = records.Where(x => x.StartTime >= DateTime.Now.Subtract(period)).ToList();
             }
 
             catch (OverflowException)
             {
-                period = TimeSpan.MaxValue;
-            }
-
-            List<CodingSession> tableData = new();
-
-            try
-            {
-                tableData = records.Where(x => x.StartTime >= DateTime.Now.Subtract(period)).ToList();
+                tableData = records;
             }
 
             catch (ArgumentOutOfRangeException)
@@ -136,7 +132,7 @@ namespace CodingTracker.K_MYR
 
             else
             {
-                Console.WriteLine("Now records were found!");
+                Console.WriteLine("Now goals were found!");
             }
         }
 
