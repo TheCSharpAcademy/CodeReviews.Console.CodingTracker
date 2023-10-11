@@ -48,20 +48,38 @@ namespace CodingTracker.K_MYR
             var records = SQLiteOperations.SelectAllRecords();
             TimeSpan period = new();
 
-            switch (unit)
+            try
             {
-                case "d":
-                    period = TimeSpan.FromDays(timespanNumber);
-                    break;
-                case "w":
-                    period = TimeSpan.FromDays(timespanNumber * 7);
-                    break;
-                case "y":
-                    period = TimeSpan.FromDays(timespanNumber * 365);
-                    break;
+                switch (unit)
+                {
+                    case "d":
+                        period = TimeSpan.FromDays(timespanNumber);
+                        break;
+                    case "w":
+                        period = TimeSpan.FromDays(timespanNumber * 7);
+                        break;
+                    case "y":
+                        period = TimeSpan.FromDays(timespanNumber * 365);
+                        break;
+                }
             }
 
-            var tableData = records.Where(x => x.StartTime >= DateTime.Now.Subtract(period)).ToList();
+            catch (OverflowException)
+            {
+                period = TimeSpan.MaxValue;
+            }
+
+            List<CodingSession> tableData = new();
+
+            try
+            {
+                tableData = records.Where(x => x.StartTime >= DateTime.Now.Subtract(period)).ToList();
+            }
+
+            catch (ArgumentOutOfRangeException)
+            {
+                tableData = records;
+            }
 
             return tableData;
         }

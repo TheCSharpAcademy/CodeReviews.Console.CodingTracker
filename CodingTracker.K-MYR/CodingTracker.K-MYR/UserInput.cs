@@ -101,7 +101,7 @@ internal class UserInput
 
     private static void UpdateRecord()
     {
-        Helpers.PrintAllRecords();
+        var records = Helpers.PrintAllRecords();
 
         while (true)
         {
@@ -114,6 +114,7 @@ internal class UserInput
             {
                 DateTime startTime;
                 DateTime endTime;
+                var record = records.Where(x => x.Id == input).ToList();
 
                 do
                 {
@@ -127,6 +128,7 @@ internal class UserInput
                 SQLiteOperations.UpdateRecord(input, startTime.ToString("HH:mm:ss dd-MM-yyyy"), endTime.ToString("HH:mm:ss dd-MM-yyyy"), duration.ToString("dd\\:hh\\:mm\\:ss"));
 
                 Helpers.AdjustElapsedTime(startTime);
+                Helpers.AdjustElapsedTime(record[0].StartTime);
 
                 Console.Clear();
                 Helpers.PrintAllRecords();
@@ -276,6 +278,11 @@ internal class UserInput
                 {
                     SQLiteOperations.InsertRecord(startDate.ToString("HH:mm:ss dd-MM-yyyy"), endDate.ToString("HH:mm:ss dd-MM-yyyy"), duration.ToString("dd\\:hh\\:mm\\:ss"));
                     Helpers.AdjustElapsedTime(startDate);
+
+                    startDate = DateTime.MinValue;
+                    endDate = DateTime.MinValue;
+
+                    Helpers.PrintStopwatchMenu();
                     Console.WriteLine("Session has beend saved!");
                 }
                 else
