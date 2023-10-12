@@ -24,21 +24,3 @@ using (SqliteConnection connection = new SqliteConnection(connectionString))
 UserInput.GetUserInput();
 
 Console.ReadLine();
-
-/*Console.WriteLine("Testing date format conversion");
-string date = "15-09-23 14:30";
-Console.WriteLine(date);
-
-var cdate = Convert.ToDateTime(date);
-Console.WriteLine(cdate.ToString("F"));*/
-
-/*using ConsoleTableExt;
-
-var tableData = new List<List<object>>
-{
-    new List<object>{ "Sakura Yamamoto", "Support Engineer", "London", 46},
-    new List<object>{ "Serge Baldwin", "Data Coordinator", "San Francisco", 28, "something else" },
-    new List<object>{ "Shad Decker", "Regional Director", "Edinburgh"},
-};
-
-ConsoleTableBuilder.From(tableData).ExportAndWriteLine();*/

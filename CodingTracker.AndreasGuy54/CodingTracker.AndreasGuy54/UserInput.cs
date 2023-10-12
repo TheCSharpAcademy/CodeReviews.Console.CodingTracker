@@ -22,37 +22,42 @@ namespace CodingTracker.AndreasGuy54
                 Console.WriteLine("Type 4 to Update Record");
                 Console.WriteLine("------------------------------------------\n");
 
-                int userInput;
-                bool validInput = int.TryParse(Console.ReadLine().ToLower().Trim(), out userInput);
 
-                while (!validInput || userInput < 0)
+                string userInput = Console.ReadLine();
+                bool validInput = Validation.ValidInput(userInput);
+
+                while (!validInput)
                 {
                     Console.WriteLine("Enter a valid number");
-                    validInput = int.TryParse(Console.ReadLine().ToLower().Trim(), out userInput);
+                    userInput = Console.ReadLine();
+                    validInput = Validation.ValidInput(userInput);
                 }
 
-                switch (userInput)
+                if (validInput = true)
                 {
-                    case 0:
-                        Console.WriteLine("\nGoodbye:\n");
-                        closeApp = true;
-                        Environment.Exit(0);
-                        break;
-                    case 1:
-                        CodingController.ShowRecords();
-                        break;
-                    case 2:
-                        CodingController.InsertRecord();
-                        break;
-                    case 3:
-                        CodingController.DeleteRecord();
-                        break;
-                    case 4:
-                        CodingController.UpdateRecord();
-                        break;
-                    default:
-                        Console.WriteLine("Invalid Command. Please type a number from 0 to 4:\n");
-                        break;
+                    switch (userInput)
+                    {
+                        case "0":
+                            Console.WriteLine("\nGoodbye:\n");
+                            closeApp = true;
+                            Environment.Exit(0);
+                            break;
+                        case "1":
+                            CodingController.ShowRecords();
+                            break;
+                        case "2":
+                            CodingController.InsertRecord();
+                            break;
+                        case "3":
+                            CodingController.DeleteRecord();
+                            break;
+                        case "4":
+                            CodingController.UpdateRecord();
+                            break;
+                        default:
+                            Console.WriteLine("Invalid Command. Please type a number from 0 to 4:\n");
+                            break;
+                    }
                 }
             }
         }
@@ -65,11 +70,7 @@ namespace CodingTracker.AndreasGuy54
             if (dateInput.Length == 0)
                 GetUserInput();
 
-            while (!DateTime.TryParseExact(dateInput, "dd-MM-yy HH:mm", new CultureInfo("en-UK"), DateTimeStyles.None, out DateTime date))
-            {
-                Console.WriteLine("\n\nInvalid data. Format = dd-MM-yy HH:mm.\n");
-                dateInput = Console.ReadLine();
-            }
+            dateInput = Validation.ValidateDateInput(dateInput);
 
             return dateInput;
         }

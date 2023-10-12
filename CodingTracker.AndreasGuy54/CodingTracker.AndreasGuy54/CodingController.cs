@@ -16,19 +16,29 @@ namespace CodingTracker.AndreasGuy54
             Console.WriteLine("\n\nEnd date. (Format: dd-MM-yy HH:mm)");
             string endDate = UserInput.GetDateInput();
 
-            TimeSpan duration = CalculateDuration(startDate, endDate);
-            string formattedDuration = duration.ToString(@"hh\:mm");
-            //string formattedDuration = duration.ToString("hh:mm");
+            bool isValidatedTime = Validation.isValidatedTimes(startDate, endDate);
 
-            using (SqliteConnection connection = new SqliteConnection(connectionString))
+            if (!isValidatedTime)
             {
-                connection.Open();
+                Console.WriteLine("\nEnd Date cannot be lower than the Start Date\n");
+                InsertRecord();
+            }
 
-                SqliteCommand insertCommand = connection.CreateCommand();
-                insertCommand.CommandText = $@"INSERT INTO coding_hours(starttime, endtime, duration) 
+            else
+            {
+                TimeSpan duration = CalculateDuration(startDate, endDate);
+                string formattedDuration = duration.ToString(@"hh\:mm");
+
+                using (SqliteConnection connection = new SqliteConnection(connectionString))
+                {
+                    connection.Open();
+
+                    SqliteCommand insertCommand = connection.CreateCommand();
+                    insertCommand.CommandText = $@"INSERT INTO coding_hours(starttime, endtime, duration) 
                                                     VALUES ('{startDate}','{endDate}', '{formattedDuration}')";
-                insertCommand.ExecuteNonQuery();
-                connection.Close();
+                    insertCommand.ExecuteNonQuery();
+                    connection.Close();
+                }
             }
         }
 
@@ -102,14 +112,26 @@ namespace CodingTracker.AndreasGuy54
                 Console.WriteLine("\n\nEnd date. (Format: dd-MM-yy HH:mm)");
                 string endDate = UserInput.GetDateInput();
 
-                TimeSpan duration = CalculateDuration(startDate, endDate);
-                string formattedDuration = duration.ToString(@"hh\:mm");
+                bool isValidatedTime = Validation.isValidatedTimes(startDate, endDate);
 
-                SqliteCommand updateCmd = connection.CreateCommand();
-                updateCmd.CommandText = $@"UPDATE coding_hours SET starttime = '{startDate}', 
+                if (!isValidatedTime)
+                {
+                    Console.WriteLine("\nEnd Date cannot be lower than the Start Date\n");
+                    UpdateRecord();
+                }
+
+                else
+                {
+                    TimeSpan duration = CalculateDuration(startDate, endDate);
+                    string formattedDuration = duration.ToString(@"hh\:mm");
+
+                    SqliteCommand updateCmd = connection.CreateCommand();
+                    updateCmd.CommandText = $@"UPDATE coding_hours SET starttime = '{startDate}', 
                         endtime = '{endDate}', duration = '{formattedDuration}' WHERE Id = {recordId}";
 
-                updateCmd.ExecuteNonQuery();
+                    updateCmd.ExecuteNonQuery();
+                }
+
                 connection.Close();
             }
 
@@ -145,12 +167,8 @@ namespace CodingTracker.AndreasGuy54
             }
 
             Console.WriteLine($"\n\nRecord with Id {recordId} was deleted\n\n");
-
-            Console.WriteLine($"\n\nNew list with of coding session is shown in the table below\n\n");
-            ShowRecords();
-            Console.WriteLine("Hit Enter/Return Key to return to Main Menu");
-            
             Console.ReadLine();
+            
             UserInput.GetUserInput();
 
         }
