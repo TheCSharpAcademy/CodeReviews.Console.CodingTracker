@@ -62,7 +62,7 @@ namespace CodingTracker.AndreasGuy54
                     }
                     ConsoleTableBuilder.From(codingSessions).ExportAndWriteLine();
 
-                    Console.WriteLine("Hit Enter/Return Key to return to Main Menu");
+                    Console.WriteLine("Hit Enter/Return Key");
                     Console.ReadLine();
                 }
 
@@ -118,6 +118,41 @@ namespace CodingTracker.AndreasGuy54
             
             Console.ReadLine();
             UserInput.GetUserInput();
+        }
+
+        internal static void DeleteRecord()
+        {
+            Console.Clear();
+            ShowRecords();
+
+            int recordId = UserInput.GetNumberInput("\n\nPlease type the Id of the record you want to delete");
+
+            using (SqliteConnection connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+                SqliteCommand deleteCmd = connection.CreateCommand();
+                deleteCmd.CommandText = $"DELETE FROM coding_hours WHERE Id = '{recordId}'";
+
+                int rowCount = deleteCmd.ExecuteNonQuery();
+
+                if (rowCount == 0)
+                {
+                    Console.WriteLine($"\n\nRecord with Id {recordId} does not exist \n\n");
+                    DeleteRecord();
+                }
+
+                connection.Close();
+            }
+
+            Console.WriteLine($"\n\nRecord with Id {recordId} was deleted\n\n");
+
+            Console.WriteLine($"\n\nNew list with of coding session is shown in the table below\n\n");
+            ShowRecords();
+            Console.WriteLine("Hit Enter/Return Key to return to Main Menu");
+            
+            Console.ReadLine();
+            UserInput.GetUserInput();
+
         }
 
         internal static TimeSpan CalculateDuration(string sTime, string eTime)

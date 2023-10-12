@@ -45,7 +45,7 @@ namespace CodingTracker.AndreasGuy54
                         CodingController.InsertRecord();
                         break;
                     case 3:
-                        //DeleteRecord();
+                        CodingController.DeleteRecord();
                         break;
                     case 4:
                         CodingController.UpdateRecord();
