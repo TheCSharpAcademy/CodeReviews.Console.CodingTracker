@@ -6,13 +6,5 @@
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
         public TimeSpan Duration { get; set; }
-
-        //private TimeSpan myTime;
-
-        //public TimeSpan Duration
-        //{
-        //    get { return myTime; }
-        //    set { myTime = EndTime - StartTime; }
-        //}
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using ConsoleTableExt;
+using Microsoft.Data.Sqlite;
 using System.Configuration;
 
 namespace CodingTracker.AndreasGuy54
@@ -27,6 +28,45 @@ namespace CodingTracker.AndreasGuy54
                 insertCommand.CommandText = $@"INSERT INTO coding_hours(starttime, endtime, duration) 
                                                     VALUES ('{startDate}','{endDate}', '{formattedDuration}')";
                 insertCommand.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
+
+        internal static void ShowRecords()
+        {
+            Console.Clear();
+
+            using (SqliteConnection connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+                SqliteCommand showAllCommand = connection.CreateCommand();
+                showAllCommand.CommandText = $@"SELECT * FROM coding_hours";
+
+                List<CodingSession> codingSessions = new();
+
+                SqliteDataReader reader = showAllCommand.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        codingSessions.Add(
+                            new CodingSession
+                            {
+                                Id = reader.GetInt32(0),
+                                StartTime = DateTime.Parse(reader.GetString(1)),
+                                EndTime = DateTime.Parse(reader.GetString(2)),
+                                Duration = TimeSpan.Parse(reader.GetString(3))
+                            }
+                        );
+                    }
+                    ConsoleTableBuilder.From(codingSessions).ExportAndWriteLine();
+                }
+
+                else
+                {
+                    Console.WriteLine("No records found");
+                }
                 connection.Close();
             }
         }

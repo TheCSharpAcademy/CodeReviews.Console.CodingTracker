@@ -38,7 +38,7 @@ namespace CodingTracker.AndreasGuy54
                         Environment.Exit(0);
                         break;
                     case 1:
-                        //ShowAllRecords();
+                        CodingController.ShowRecords();
                         break;
                     case 2:
                         CodingController.InsertRecord();
