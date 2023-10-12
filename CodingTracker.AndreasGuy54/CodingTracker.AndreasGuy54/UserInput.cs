@@ -12,6 +12,7 @@ namespace CodingTracker.AndreasGuy54
 
             while (!closeApp)
             {
+                Console.Clear();
                 Console.WriteLine("\n\nMain Menu");
                 Console.WriteLine("\nWhat would you like to do?");
                 Console.WriteLine("\nType 0 to Close Application");
@@ -47,7 +48,7 @@ namespace CodingTracker.AndreasGuy54
                         //DeleteRecord();
                         break;
                     case 4:
-                        //UpdateRecord();
+                        CodingController.UpdateRecord();
                         break;
                     default:
                         Console.WriteLine("Invalid Command. Please type a number from 0 to 4:\n");
@@ -73,19 +74,19 @@ namespace CodingTracker.AndreasGuy54
             return dateInput;
         }
 
-        //internal static int GetNumberInput(string message)
-        //{
-        //    Console.WriteLine(message);
-        //    string numberInput = Console.ReadLine().ToLower().Trim();
+        internal static int GetNumberInput(string message)
+        {
+            Console.WriteLine(message);
+            string numberInput = Console.ReadLine().ToLower().Trim();
 
-        //    while (!int.TryParse(numberInput, out _) || Convert.ToInt32(numberInput) < 0)
-        //    {
-        //        Console.WriteLine("\n\nInvalid Input. Enter a valid positive number");
-        //        numberInput = Console.ReadLine().ToLower().Trim();
-        //    }
+            while (!int.TryParse(numberInput, out _) || Convert.ToInt32(numberInput) < 0)
+            {
+                Console.WriteLine("\n\nInvalid Input. Enter a valid positive number");
+                numberInput = Console.ReadLine().ToLower().Trim();
+            }
 
-        //    int finalInput = Convert.ToInt32(numberInput);
-        //    return finalInput;
-        //}
+            int finalInput = Convert.ToInt32(numberInput);
+            return finalInput;
+        }
     }
 }
