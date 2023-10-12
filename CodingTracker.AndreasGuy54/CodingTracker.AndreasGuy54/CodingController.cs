@@ -1,12 +1,11 @@
 ﻿using ConsoleTableExt;
 using Microsoft.Data.Sqlite;
-using System.Configuration;
 
 namespace CodingTracker.AndreasGuy54
 {
     internal static class CodingController
     {
-        static string connectionString = ConfigurationManager.AppSettings.Get("connString");
+        static string connectionString = System.Configuration.ConfigurationManager.AppSettings.Get("connString");
 
         internal static void InsertRecord()
         {
@@ -16,7 +15,7 @@ namespace CodingTracker.AndreasGuy54
             Console.WriteLine("\n\nEnd date. (Format: dd-MM-yy HH:mm)");
             string endDate = UserInput.GetDateInput();
 
-            bool isValidatedTime = Validation.isValidatedTimes(startDate, endDate);
+            bool isValidatedTime = Validation.IsValidatedTimes(startDate, endDate);
 
             if (!isValidatedTime)
             {
@@ -112,7 +111,7 @@ namespace CodingTracker.AndreasGuy54
                 Console.WriteLine("\n\nEnd date. (Format: dd-MM-yy HH:mm)");
                 string endDate = UserInput.GetDateInput();
 
-                bool isValidatedTime = Validation.isValidatedTimes(startDate, endDate);
+                bool isValidatedTime = Validation.IsValidatedTimes(startDate, endDate);
 
                 if (!isValidatedTime)
                 {

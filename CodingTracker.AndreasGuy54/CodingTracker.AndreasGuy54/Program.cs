@@ -1,8 +1,7 @@
 ﻿using CodingTracker.AndreasGuy54;
 using Microsoft.Data.Sqlite;
-using System.Configuration;
 
-string connectionString = ConfigurationManager.AppSettings.Get("connString");
+string connectionString = System.Configuration.ConfigurationManager.AppSettings.Get("connString");
 
 using (SqliteConnection connection = new SqliteConnection(connectionString))
 {

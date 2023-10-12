@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace CodingTracker.AndreasGuy54
+﻿namespace CodingTracker.AndreasGuy54
 {
     internal static class UserInput
     {

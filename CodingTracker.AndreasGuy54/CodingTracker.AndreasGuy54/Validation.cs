@@ -32,7 +32,7 @@ namespace CodingTracker.AndreasGuy54
             return dateInput;
         }
 
-        internal static bool isValidatedTimes(string startDate, string endDate)
+        internal static bool IsValidatedTimes(string startDate, string endDate)
         {
             bool validated = true;
 
