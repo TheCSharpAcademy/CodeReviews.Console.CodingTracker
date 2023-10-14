@@ -1,12 +1,11 @@
 using CodingTracker.Models;
 using Microsoft.Data.Sqlite;
-using System.Configuration;
 
 namespace CodingTracker.Data
 {
   public class DbManager
   {
-    private readonly string? _connectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
+    private readonly string? _connectionString = System.Configuration.ConfigurationManager.AppSettings.Get("ConnectionString");
 
 
     public void CreateDb()
