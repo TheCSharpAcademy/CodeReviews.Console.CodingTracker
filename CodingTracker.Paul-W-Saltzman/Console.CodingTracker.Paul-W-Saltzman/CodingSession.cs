@@ -255,12 +255,15 @@ namespace CodingTracker.Paul_W_Saltzman
 
         internal static CodingSession UpdateDate(CodingSession session, DateOnly date)
         {
-            TimeOnly startTime = UserInput.ParseTime(session.StartTime.ToLongTimeString());
-            TimeOnly endTime = UserInput.ParseTime(session.EndTime.ToLongTimeString());
+            TimeOnly startTime = TimeOnly.FromDateTime(session.StartTime);
+            TimeOnly endTime = TimeOnly.FromDateTime(session.EndTime);
+
             DateTime dateTimeStart = Helpers.DateTimeBuilder(date, startTime);
             DateTime dateTimeEnd = Helpers.DateTimeBuilder(date, endTime);
+
             session.StartTime = dateTimeStart;
             session.EndTime = dateTimeEnd;
+
             session = CodingSession.SessionTime(session);
             Data.UpdateSession(session);
 

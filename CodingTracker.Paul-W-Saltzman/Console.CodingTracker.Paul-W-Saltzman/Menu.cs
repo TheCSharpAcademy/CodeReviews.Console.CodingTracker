@@ -477,7 +477,7 @@ namespace CodingTracker.Paul_W_Saltzman
                             while (!inputGood)
                             {
                                 startTime = GetTime("Start Time Entry");
-                                TimeOnly eTime = UserInput.ParseTime(session.EndTime.ToLongTimeString());
+                                TimeOnly eTime = TimeOnly.FromDateTime(session.EndTime);
                                 if (eTime >= startTime)
                                 {
                                 session = CodingSession.UpdateStartTime(session, startTime);
@@ -485,8 +485,9 @@ namespace CodingTracker.Paul_W_Saltzman
                                 }
                                 else
                                 {
-                                    Helpers.Output("Invalid time press ENTER to Continue");
-                                    Console.ReadLine();
+                                Console.WriteLine();
+                                Helpers.Output("Invalid time: Start Time must be earlier than EndTime. Press ENTER to Continue");
+                                 Console.ReadLine();
                                 }
                             }
                             session = CodingSession.UpdateStartTime(session, startTime);
@@ -497,7 +498,7 @@ namespace CodingTracker.Paul_W_Saltzman
                         while (!inputGood)
                         {
                             endTime = GetTime("End Time Entry");
-                            TimeOnly sTime = UserInput.ParseTime(session.EndTime.ToLongTimeString());
+                            TimeOnly sTime = TimeOnly.FromDateTime(session.StartTime);
                             if (endTime >= sTime)
                             {
                                 session = CodingSession.UpdateEndTime(session, endTime);
@@ -505,7 +506,8 @@ namespace CodingTracker.Paul_W_Saltzman
                             }
                             else
                             {
-                                Helpers.Output("Invalid time press ENTER to Continue");
+                                Console.WriteLine();
+                                Helpers.Output("Invalid time: End Time must be later than Start Time. Press ENTER to Continue");
                                 Console.ReadLine();
                             }
                         }
