@@ -21,11 +21,7 @@ internal static class SingleLogViewScreen
 
     private static Screen GetErrorScreen()
     {
-        static string body(int _1, int _2)
-        {
-            return "There is no coding session with that id.\n\nPress any key to return.";
-        }
-        var screen = new Screen(body: body);
+        var screen = new Screen(body: (_, _) => "There is no coding session with that id.\n\nPress any key to return.");
         screen.SetAnyKeyAction(() => screen.ExitScreen());
         return screen;
     }
