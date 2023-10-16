@@ -18,7 +18,7 @@ internal static class LogManagementScreen
         int listUsableHeight = 0;
         int skip = 0;
 
-        string header(int _, int usableHeight)
+        var screen = new Screen(header: (_, usableHeight) =>
         {
             listUsableHeight = usableHeight - headerHeight - footerHeight - promptHeight;
             if (listUsableHeight != lastListUsableHeight)
@@ -38,9 +38,18 @@ internal static class LogManagementScreen
             {
                 return "Coding Sessions";
             }
-        }
-
-        string footer(int _1, int _2)
+        }, body: (_, _) =>
+        {
+            const string prompt = "\nSelect a session to manage: ";
+            if (dataAccess.Count() == 0)
+            {
+                return "There are no logged coding sessions yet.";
+            }
+            // TODO: Caching? Currently, we're getting all sessions every time we refresh the screen, which is suboptimal (but no problem with SQLite). But if we cache, we need to invalidate the cache when the user adds, modifies, or deletes a session.
+            var sessions = dataAccess.GetAll(skip: skip, limit: ListItemsPerPage(listUsableHeight)).ToList();
+            listNumbersToIds = sessions.ConvertAll(cs => cs.Id).ToArray();
+            return MakeListString(sessions) + prompt;
+        }, footer: (_, _) =>
         {
             const string escHint = "[Esc] to go back to the main menu.";
             var output = "Press ";
@@ -58,40 +67,9 @@ internal static class LogManagementScreen
             }
             output += escHint;
             return output;
-        }
+        });
 
-        string body(int _1, int _2)
-        {
-            const string prompt = "\nSelect a session to manage: ";
-            if (dataAccess.Count() == 0)
-            {
-                return "There are no logged coding sessions yet.";
-            }
-            // TODO: Caching? Currently, we're getting all sessions every time we refresh the screen, which is suboptimal (but no problem with SQLite). But if we cache, we need to invalidate the cache when the user adds, modifies, or deletes a session.
-            var sessions = dataAccess.GetAll(skip: skip, limit: ListItemsPerPage(listUsableHeight)).ToList();
-            listNumbersToIds = sessions.ConvertAll(cs => cs.Id).ToArray();
-            return MakeListString(sessions) + prompt;
-        }
-
-        void pgUp()
-        {
-            if (skip > 0)
-            {
-                skip = Math.Max(0, skip - ListItemsPerPage(listUsableHeight));
-            }
-        }
-
-        void pgDown()
-        {
-            if (dataAccess.Count() - skip > ListItemsPerPage(listUsableHeight))
-            {
-                skip += ListItemsPerPage(listUsableHeight);
-            }
-        }
-
-        var screen = new Screen(header: header, body: body, footer: footer);
-
-        void handleUserInput(string text)
+        void HandleUserInput(string text)
         {
             if (int.TryParse(text, out int result) && result >= 1 && result <= listNumbersToIds.Length)
             {
@@ -114,11 +92,23 @@ internal static class LogManagementScreen
             }
         }
         screen.AddAction(ConsoleKey.Escape, () => screen.ExitScreen());
-        screen.AddAction(ConsoleKey.PageUp, pgUp);
-        screen.AddAction(ConsoleKey.PageDown, pgDown);
+        screen.AddAction(ConsoleKey.PageUp, () =>
+        {
+            if (skip > 0)
+            {
+                skip = Math.Max(0, skip - ListItemsPerPage(listUsableHeight));
+            }
+        });
+        screen.AddAction(ConsoleKey.PageDown, () =>
+        {
+            if (dataAccess.Count() - skip > ListItemsPerPage(listUsableHeight))
+            {
+                skip += ListItemsPerPage(listUsableHeight);
+            }
+        });
         if (dataAccess.Count() > 0)
         {
-            screen.SetPromptAction(handleUserInput);
+            screen.SetPromptAction(HandleUserInput);
         }
         return screen;
     }

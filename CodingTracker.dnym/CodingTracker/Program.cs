@@ -1,5 +1,4 @@
 ﻿using CodingTracker.DataAccess;
-using System.Configuration;
 
 namespace CodingTracker;
 
@@ -14,7 +13,7 @@ internal static class Program
 
     static void Main()
     {
-        string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString") ?? _defaultConnectionString;
+        string connectionString = System.Configuration.ConfigurationManager.AppSettings.Get("ConnectionString") ?? _defaultConnectionString;
         IDataAccess dataAccess = new SqliteStorage(connectionString);
         UI.MainMenu.Get(dataAccess).Show();
         Console.Clear();

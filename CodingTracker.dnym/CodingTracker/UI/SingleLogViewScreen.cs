@@ -32,26 +32,13 @@ internal static class SingleLogViewScreen
 
     private static Screen GetScreen(IDataAccess dataAccess, int id)
     {
-        static string header(int _1, int _2)
-        {
-            return "Viewing Coding Session";
-        }
-
-        static string footer(int _1, int _2)
-        {
-            return "Press [M] to modify the session,\n[D] to delete,\nor [Esc] to go back to the main menu.";
-        }
-
-        string body(int _1, int _2)
-        {
+        var screen = new Screen(header: (_, _) => "Viewing Coding Session", body: (_, _) => {
             var session = dataAccess.Get(id)!;
             string start = session.StartTime.ToLocalTime().ToString(Program.mainFullFormat);
             string end = session.EndTime.ToLocalTime().ToString(Program.mainFullFormat);
             string duration = DurationString(session);
             return $"Start: {start}\nEnd: {end}\nDuration: {duration}";
-        }
-
-        var screen = new Screen(header: header, body: body, footer: footer);
+        }, footer: (_, _) => "Press [M] to modify the session,\n[D] to delete,\nor [Esc] to go back to the main menu.");
         screen.AddAction(ConsoleKey.Escape, () => screen.ExitScreen());
         screen.AddAction(ConsoleKey.M, () =>
         {

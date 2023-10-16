@@ -19,8 +19,7 @@ internal static class SessionLoggingScreen
         TimeOnly? endTime = null;
         DateTime now = DateTime.UtcNow;
 
-        string header(int _1, int _2)
-        {
+        var screen = new Screen(header: (_, _) => {
             if (codingSession == null)
             {
                 return "Log Coding Session";
@@ -29,12 +28,8 @@ internal static class SessionLoggingScreen
             {
                 return "Modifying Coding Session";
             }
-        }
-
-        string body(int _1, int _2)
-        {
+        }, body: (_, _) => {
             // The content of the body depends on which input part is currently being asked for. The ones already entered are repeated for convenience.
-            var bodyString = string.Empty;
             var startDatePrompt = "At what date did you start coding? " + (startDate == null ? string.Empty : ((DateOnly)startDate).ToString(Program.mainDateFormat));
             var startTimePrompt = "At what time did you start coding? " + (startTime == null ? string.Empty : ((TimeOnly)startTime).ToString(Program.mainTimeFormat));
             var endDatePrompt = "At what date did you stop coding? " + (endDate == null ? string.Empty : ((DateOnly)endDate).ToString(Program.mainDateFormat));
@@ -56,10 +51,7 @@ internal static class SessionLoggingScreen
             {
                 return $"{startDatePrompt}\n{startTimePrompt}\n\n{endDatePrompt}\n{endTimePrompt}";
             }
-        }
-
-        string footer(int _1, int _2)
-        {
+        }, footer: (_, _) => {
             // Like the body, the footer depends on what has been input so far. Here, we build a string which has the correct hint information.
             now = DateTime.UtcNow;
             var hintStart = codingSession?.StartTime ?? now;
@@ -68,7 +60,7 @@ internal static class SessionLoggingScreen
             string currentInput;
             string currentFormats;
             string currentData;
-            void prepareHint(string type, string[] formats, DateTime hintDateTime)
+            void PrepareHint(string type, string[] formats, DateTime hintDateTime)
             {
                 currentInput = type;
                 currentFormats = string.Join(" or ", formats.Select(f => f.ToUpper()).ToArray());
@@ -77,19 +69,19 @@ internal static class SessionLoggingScreen
 
             if (startDate == null)
             {
-                prepareHint("date", Program.dateFormats, hintStart);
+                PrepareHint("date", Program.dateFormats, hintStart);
             }
             else if (startTime == null)
             {
-                prepareHint("time", Program.timeFormats, hintStart);
+                PrepareHint("time", Program.timeFormats, hintStart);
             }
             else if (endDate == null)
             {
-                prepareHint("date", Program.dateFormats, hintEnd);
+                PrepareHint("date", Program.dateFormats, hintEnd);
             }
             else
             {
-                prepareHint("time", Program.timeFormats, hintEnd);
+                PrepareHint("time", Program.timeFormats, hintEnd);
             }
 
             if (endTime == null)
@@ -102,11 +94,9 @@ Press [Esc] to cancel {(codingSession == null ? "insertion" : "modification")}."
             {
                 return $"Press [Esc] to cancel {(codingSession == null ? "insertion" : "modification")},\nor any other key to confirm.";
             }
-        }
+        });
 
-        var screen = new Screen(header: header, body: body, footer: footer);
-
-        void promptHandler(string text)
+        void PromptHandler(string text)
         {
             // This function is called when the user presses [Enter] to submit their input. We can only tell what they were inputting by looking at what has already been input.
             // If the user has input an empty string, we use either the current time or the stored time, depending on whether we are creating or modifying a session.
@@ -166,7 +156,7 @@ Press [Esc] to cancel {(codingSession == null ? "insertion" : "modification")}."
                 }
             }
         }
-        screen.SetPromptAction(promptHandler);
+        screen.SetPromptAction(PromptHandler);
         screen.AddAction(ConsoleKey.Escape, () => screen.ExitScreen());
         return screen;
     }
