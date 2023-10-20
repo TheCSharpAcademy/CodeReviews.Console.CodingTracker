@@ -2,12 +2,9 @@
 {
     public class CodingSession
     {
-
         public int Id { get; set; }
         public string StartTime { get; set; }
         public string EndTime { get; set; }
-
-
 
         public String CalculateDuration()
         {
@@ -26,20 +23,13 @@
                 {
                     time = $"{timeSpan.Minutes} Minutes";
                 }
-
                 return time;
             }
             catch (Exception ex)
             {
-
                 Console.WriteLine("Unable to parse date");
-
             }
-
-
             return null;
-
-
         }
 
     }
