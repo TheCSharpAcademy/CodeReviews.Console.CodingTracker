@@ -1,36 +1,35 @@
-﻿namespace CodingTracker.Models
+﻿namespace CodingTracker.Models;
+
+public class CodingSession
 {
-    public class CodingSession
+    public int Id { get; set; }
+    public string StartTime { get; set; }
+    public string EndTime { get; set; }
+
+    public String CalculateDuration()
     {
-        public int Id { get; set; }
-        public string StartTime { get; set; }
-        public string EndTime { get; set; }
-
-        public String CalculateDuration()
+        try
         {
-            try
-            {
-                TimeSpan timeSpan = DateTime.Parse(EndTime) - DateTime.Parse(StartTime);
-                string time = "";
+            TimeSpan timeSpan = DateTime.Parse(EndTime) - DateTime.Parse(StartTime);
+            string time = "";
 
-                if (timeSpan.Ticks < 0) return null;
-                if (timeSpan.Hours > 0)
-                {
-                    time = $"{timeSpan.Hours} Hours {timeSpan.Minutes} Minutes";
-
-                }
-                else
-                {
-                    time = $"{timeSpan.Minutes} Minutes";
-                }
-                return time;
-            }
-            catch (Exception ex)
+            if (timeSpan.Ticks < 0) return null;
+            if (timeSpan.Hours > 0)
             {
-                Console.WriteLine("Unable to parse date");
+                time = $"{timeSpan.Hours} Hours {timeSpan.Minutes} Minutes";
+
             }
-            return null;
+            else
+            {
+                time = $"{timeSpan.Minutes} Minutes";
+            }
+            return time;
         }
-
+        catch (Exception ex)
+        {
+            Console.WriteLine("Unable to parse date");
+        }
+        return null;
     }
+
 }

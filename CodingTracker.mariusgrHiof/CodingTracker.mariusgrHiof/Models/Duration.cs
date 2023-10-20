@@ -1,8 +1,7 @@
-﻿namespace CodingTracker.Models
+﻿namespace CodingTracker.Models;
+
+public class Duration
 {
-    public class Duration
-    {
-        public double Hours { get; set; }
-        public double Minutes { get; set; }
-    }
+    public double Hours { get; set; }
+    public double Minutes { get; set; }
 }
