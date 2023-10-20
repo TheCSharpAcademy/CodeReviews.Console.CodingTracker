@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CodingTracker.Paul-W-Saltzman": {
+      "commandName": "Project",
+      "workingDirectory": "$(ProjectDir)"
+    }
+  }
+}
