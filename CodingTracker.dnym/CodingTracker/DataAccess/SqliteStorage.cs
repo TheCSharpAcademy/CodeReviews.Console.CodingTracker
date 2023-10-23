@@ -6,24 +6,28 @@ namespace CodingTracker.DataAccess;
 
 internal class SqliteStorage : IDataAccess
 {
-    private const string _createTableSql = @"CREATE TABLE IF NOT EXISTS ""sessions"" (
-	""id"" INTEGER NOT NULL UNIQUE,
-	""starttime"" TEXT NOT NULL,
-	""endtime"" TEXT NOT NULL,
-	PRIMARY KEY(""id"" AUTOINCREMENT)
-);";
-    private const string _insertSessionSql = "INSERT INTO \"sessions\" (\"starttime\", \"endtime\") VALUES (@starttime, @endtime);";
-    private const string _selectSessionSql = "SELECT \"id\", \"starttime\", \"endtime\" FROM \"sessions\" WHERE \"id\" = @id;";
-    private const string _selectSubsetSql = "SELECT \"id\", \"starttime\", \"endtime\" FROM \"sessions\" ORDER BY \"starttime\" @order LIMIT @limit OFFSET @skip;";
-    private const string _countSessionsSql = "SELECT COUNT(*) FROM \"sessions\";";
-    private const string _updateSessionSql = "UPDATE \"sessions\" SET \"starttime\" = @starttime, \"endtime\" = @endtime WHERE \"id\" = @id;";
-    private const string _deleteSessionSql = "DELETE FROM \"sessions\" WHERE \"id\" = @id;";
-    private const string _overlapTestSql = @"SELECT ""id"", ""starttime"", ""endtime"" FROM ""sessions""
-WHERE (""starttime"" <= @starttime AND @starttime <= ""endtime"")
-OR (""starttime"" <= @endtime AND @endtime <= ""endtime"")
-OR (@starttime <= ""starttime"" AND ""starttime"" <= @endtime)
-OR (@starttime <= ""endtime"" AND ""endtime"" <= @endtime)
-ORDER BY ""starttime"" ASC;";
+    private const string _createTableSql = """
+        CREATE TABLE IF NOT EXISTS "sessions" (
+        	"id" INTEGER NOT NULL UNIQUE,
+        	"starttime" TEXT NOT NULL,
+        	"endtime" TEXT NOT NULL,
+        	PRIMARY KEY("id" AUTOINCREMENT)
+        );
+        """;
+    private const string _insertSessionSql = """INSERT INTO "sessions" ("starttime", "endtime") VALUES (@starttime, @endtime);""";
+    private const string _selectSessionSql = """SELECT "id", "starttime", "endtime" FROM "sessions" WHERE "id" = @id;""";
+    private const string _selectSubsetSql = """SELECT "id", "starttime", "endtime" FROM "sessions" ORDER BY "starttime" @order LIMIT @limit OFFSET @skip;""";
+    private const string _countSessionsSql = """SELECT COUNT(*) FROM "sessions";""";
+    private const string _updateSessionSql = """UPDATE "sessions" SET "starttime" = @starttime, "endtime" = @endtime WHERE "id" = @id;""";
+    private const string _deleteSessionSql = """DELETE FROM "sessions" WHERE "id" = @id;""";
+    private const string _overlapTestSql = """
+        SELECT "id", "starttime", "endtime" FROM "sessions"
+        WHERE ("starttime" <= @starttime AND @starttime <= "endtime")
+        OR ("starttime" <= @endtime AND @endtime <= "endtime")
+        OR (@starttime <= "starttime" AND "starttime" <= @endtime)
+        OR (@starttime <= "endtime" AND "endtime" <= @endtime)
+        ORDER BY "starttime" ASC;
+        """;
 
     private readonly string _connectionString;
 

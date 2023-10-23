@@ -112,10 +112,20 @@ Press [Esc] to cancel {(codingSession == null ? "insertion" : "modification")}."
             else if (endDate == null)
             {
                 ProcessDate(ref endDate, text, codingSession?.EndTime ?? now);
+                if (endDate < startDate)
+                {
+                    Console.Beep();
+                    endDate = null;
+                }
             }
             else
             {
                 ProcessTime(ref endTime, text, codingSession?.EndTime ?? now);
+                if (endDate == startDate && endTime < startTime)
+                {
+                    Console.Beep();
+                    endTime = null;
+                }
 
                 if (endTime != null)
                 {
