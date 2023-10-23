@@ -20,9 +20,10 @@ while (keepGoing)
     Type 4 to Delete Record");
 
     string? choice = userInput.GetMenuChoice();
-
+    Console.Clear();
     switch (choice)
     {
+
         case "0":
             Console.WriteLine("Closing app");
             keepGoing = false;
@@ -32,7 +33,6 @@ while (keepGoing)
             break;
         case "2":
             ProcessAdd();
-
             break;
         case "3":
             ProcessUpdate();
@@ -55,7 +55,7 @@ void ProcessDelete()
 
     while (isValidId == false)
     {
-
+        ProcessGetAllSessions();
         Console.Write("Enter an id: ");
         inputId = Console.ReadLine();
         if (inputId.Equals("0"))
@@ -97,7 +97,7 @@ void ProcessUpdate()
     CodingSession session = null;
     while (isValidId == false)
     {
-
+        ProcessGetAllSessions();
         Console.Write("Enter an id: ");
         inputId = Console.ReadLine();
         if (inputId.Equals("0"))
