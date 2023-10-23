@@ -1,10 +1,8 @@
-﻿using System.Configuration;
-
-namespace StanChoi.CodingTracker
+﻿namespace StanChoi.CodingTracker
 {
     class Program
     {
-        static string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
+        static string connectionString = System.Configuration.ConfigurationManager.AppSettings.Get("ConnectionString");
         static void Main(string[] args)
         {
             DatabaseManager databaseManager = new();

@@ -1,11 +1,10 @@
 ﻿using Microsoft.Data.Sqlite;
-using System.Configuration;
 
 namespace StanChoi.CodingTracker
 {
     internal class CodingController
     {
-        string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
+        string connectionString = System.Configuration.ConfigurationManager.AppSettings.Get("ConnectionString");
 
         internal void Get()
         {
