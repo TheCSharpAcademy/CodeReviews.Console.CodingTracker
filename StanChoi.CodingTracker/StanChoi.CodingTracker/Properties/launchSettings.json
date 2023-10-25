@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "StanChoi.CodingTracker": {
+      "commandName": "Project",
+      "workingDirectory": "C:\\Stanimal\\CodeReviews.Console.CodingTracker\\StanChoi.CodingTracker\\StanChoi.CodingTracker"
+    }
+  }
+}
