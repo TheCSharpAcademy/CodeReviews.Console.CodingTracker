@@ -224,7 +224,7 @@ namespace CodingTracker.vilvee
             {
                 Console.WriteLine("WRONG INPUT");
                 input = Console.ReadLine();
-            };
+            }
             return parsedDate;
         }
     }

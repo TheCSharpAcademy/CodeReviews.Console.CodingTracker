@@ -1,7 +1,7 @@
 ﻿
+using System.Configuration;
 using ConsoleTableExt;
 using Microsoft.Data.Sqlite;
-using System.Configuration;
 using System.Data;
 
 namespace CodingTracker.vilvee;
