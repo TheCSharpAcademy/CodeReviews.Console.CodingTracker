@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CodingTracker.vilvee": {
+      "commandName": "Project",
+      "remoteDebugEnabled": false
+    }
+  }
+}
