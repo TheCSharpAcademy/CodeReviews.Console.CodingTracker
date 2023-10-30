@@ -173,7 +173,7 @@ namespace CodingTracker.vilvee
         {
             if (!string.IsNullOrEmpty(message))
                 Console.WriteLine(message);
-            Int32 userInput, parsedInput;
+            Int32 parsedInput;
 
             while (!Int32.TryParse(Console.ReadLine(), out parsedInput))
             {
@@ -220,11 +220,7 @@ namespace CodingTracker.vilvee
         internal static DateTime ParseToDateTime(string input)
         {
             DateTime parsedDate;
-            while (!DateTime.TryParseExact(input,
-                       "dd/MM/yy HH:mm:ss",
-                       CultureInfo.InvariantCulture,
-                       DateTimeStyles.None,
-                       out  parsedDate))
+            while (!DateTime.TryParseExact(input,"dd/MM/yy HH:mm:ss",CultureInfo.InvariantCulture,DateTimeStyles.None, out parsedDate))
             {
                 Console.WriteLine("WRONG INPUT");
                 input = Console.ReadLine();

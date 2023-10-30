@@ -283,6 +283,7 @@ static class Database
             WHERE Id = @Id";
             updateCmd.Parameters.AddWithValue("@Id", id);
             updateCmd.ExecuteNonQuery();
+            
 
             Console.WriteLine($"\n\nRecord {id} was successfully deleted.\n\n");
 
