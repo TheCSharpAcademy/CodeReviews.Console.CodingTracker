@@ -1,14 +1,14 @@
 ﻿
-using System.Configuration;
 using ConsoleTableExt;
 using Microsoft.Data.Sqlite;
 using System.Data;
+
 
 namespace CodingTracker.vilvee;
 
 static class Database
 {
-    public static string databaseConnection = ConfigurationManager.ConnectionStrings["connectionDb"].ConnectionString;
+    private static string databaseConnection = System.Configuration.ConfigurationManager.ConnectionStrings["connectionDb"].ConnectionString;
 
     public static void AddNewSessionToDatabase(CodingSession codingSession)
     {
