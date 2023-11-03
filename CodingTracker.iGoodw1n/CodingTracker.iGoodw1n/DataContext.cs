@@ -42,13 +42,7 @@ public class DataContext
         var records = new List<CodingSession>();
         while (reader.Read())
         {
-            records.Add(new CodingSession
-            {
-                Id = reader.GetInt32(0),
-                Language = reader.GetString(1),
-                Start = DateTime.ParseExact(reader.GetString(2), "o", CultureInfo.InvariantCulture),
-                End = DateTime.ParseExact(reader.GetString(3), "o", CultureInfo.InvariantCulture)
-            });
+            records.Add(CreateNext(reader));
         }
 
         return records;
@@ -63,7 +57,6 @@ public class DataContext
         command.CommandText =
             @$"INSERT INTO coding_tracker (language, start, end)
                   VALUES ('{record.Language}', '{record.Start:o}', '{record.End:o}');";
-        Console.WriteLine(command.CommandText);
 
         command.ExecuteNonQuery();
     }
@@ -82,13 +75,7 @@ public class DataContext
 
         if (!reader.HasRows) return null;
 
-        return new CodingSession
-        {
-            Id = reader.GetInt32(0),
-            Language = reader.GetString(1),
-            Start = DateTime.ParseExact(reader.GetString(2), "o", CultureInfo.InvariantCulture),
-            End = DateTime.ParseExact(reader.GetString(3), "o", CultureInfo.InvariantCulture)
-        };
+        return CreateNext(reader);
     }
 
     public void DeleteRecord(int id)
@@ -118,5 +105,16 @@ public class DataContext
             WHERE id = {record.Id};";
 
         command.ExecuteNonQuery();
+    }
+
+    private CodingSession CreateNext(SqliteDataReader reader)
+    {
+        return new CodingSession
+        {
+            Id = reader.GetInt32(0),
+            Language = reader.GetString(1),
+            Start = DateTime.ParseExact(reader.GetString(2), "o", CultureInfo.InvariantCulture),
+            End = DateTime.ParseExact(reader.GetString(3), "o", CultureInfo.InvariantCulture)
+        };
     }
 }

@@ -1,23 +1,15 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
+﻿namespace CodingTracker.iGoodw1n;
 
-namespace CodingTracker.iGoodw1n;
-
-public class CodingApp : INotifyPropertyChanged
+public class CodingApp
 {
-    private InfoForOutput _info;
+    private InfoForOutput _info = new InfoForOutput(null, InfoType.Text);
     private readonly DataContext _dataContext;
+    private readonly Action<InfoForOutput> _update;
 
-    public CodingApp(DataContext dataContext)
+    public CodingApp(DataContext dataContext, Action<InfoForOutput> update)
     {
         _dataContext = dataContext;
-    }
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        _update = update;
     }
 
     public InfoForOutput Info
@@ -26,7 +18,7 @@ public class CodingApp : INotifyPropertyChanged
         set
         {
             _info = value;
-            NotifyPropertyChanged();
+            _update(_info);
         }
     }
 

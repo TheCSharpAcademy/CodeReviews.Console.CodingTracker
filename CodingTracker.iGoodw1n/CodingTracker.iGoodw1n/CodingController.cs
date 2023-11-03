@@ -9,8 +9,7 @@ public class CodingController
 
     public CodingController(string connectionString)
     {
-        _app = new CodingApp(new DataContext(connectionString));
-        CodingOutput.SubscribeTo(_app);
+        _app = new CodingApp(new DataContext(connectionString), CodingOutput.ShowOnConsole);
     }
 
     internal void Start()

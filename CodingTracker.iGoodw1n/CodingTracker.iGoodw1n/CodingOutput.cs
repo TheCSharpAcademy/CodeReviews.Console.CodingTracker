@@ -1,22 +1,12 @@
 ﻿using ConsoleTableExt;
-using System.ComponentModel;
 using System.Globalization;
 
 namespace CodingTracker.iGoodw1n;
 
 public static class CodingOutput
 {
-    public static void SubscribeTo(CodingApp app)
+    public static void ShowOnConsole(InfoForOutput infoForOutput)
     {
-        app.PropertyChanged += ShowOnConsole;
-    }
-
-    private static void ShowOnConsole(object? sender, PropertyChangedEventArgs _)
-    {
-        if (sender == null) return;
-
-        var infoForOutput = ((CodingApp)sender).Info;
-
         switch (infoForOutput.Type)
         {
             case InfoType.Text:
@@ -37,7 +27,7 @@ public static class CodingOutput
                 ShowSession((CodingSession?)infoForOutput.Information);
                 break;
             default:
-                throw new ArgumentException(nameof(sender));
+                throw new ArgumentException(nameof(infoForOutput));
         }
     }
 
@@ -104,8 +94,7 @@ public static class CodingOutput
                 langData.Add($"{lang}: {
                     allSessionsForLanguage
                         .Where(s => s.Start.Month == month)
-                        .Aggregate(TimeSpan.Zero, (r, s) => r + (s.End - s.Start)).TotalMinutes
-                    }");
+                        .Aggregate(TimeSpan.Zero, (r, s) => r + (s.End - s.Start)).TotalMinutes:0}");
             }
 
             tableData.Add(langData);
