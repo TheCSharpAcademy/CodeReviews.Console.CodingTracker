@@ -91,10 +91,12 @@ public static class CodingOutput
             var lang = allSessionsForLanguage.First().Language;
             foreach (var month in Enumerable.Range(1, 12))
             {
-                langData.Add($"{lang}: {
+                langData.Add(string.Format("{0}: {1:0}",
+                    lang,
                     allSessionsForLanguage
                         .Where(s => s.Start.Month == month)
-                        .Aggregate(TimeSpan.Zero, (r, s) => r + (s.End - s.Start)).TotalMinutes:0}");
+                        .Aggregate(TimeSpan.Zero, (r, s) => r + (s.End - s.Start)).TotalMinutes
+                ));
             }
 
             tableData.Add(langData);
