@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using CodingTracker.SamGannon.Models;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using System.Configuration;
 

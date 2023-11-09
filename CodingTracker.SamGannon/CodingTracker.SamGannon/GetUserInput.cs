@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using CodingTracker.SamGannon.Models;
 
 namespace CodingTracker.SamGannon
 {
