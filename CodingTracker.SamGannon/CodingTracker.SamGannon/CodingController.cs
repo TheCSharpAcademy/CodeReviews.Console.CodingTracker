@@ -49,6 +49,8 @@ namespace CodingTracker.SamGannon
                         {
                             Console.WriteLine("\n\nNo rows found");
                         }
+
+                        TableVisualisation.ShowTable(tableData);
                     }
                 }
             }
