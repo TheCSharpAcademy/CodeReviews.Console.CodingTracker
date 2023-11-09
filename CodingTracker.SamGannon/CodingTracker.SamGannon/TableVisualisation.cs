@@ -1,4 +1,5 @@
 ﻿using ConsoleTableExt;
+using System.Configuration;
 
 namespace CodingTracker.SamGannon
 {
@@ -6,6 +7,7 @@ namespace CodingTracker.SamGannon
     {
         internal static void ShowTable<T>(List<T> tableData) where T : class
         {
+            Console.Clear();
             Console.WriteLine("\n\n");
 
             ConsoleTableBuilder
@@ -13,6 +15,9 @@ namespace CodingTracker.SamGannon
                 .WithTitle("Coding")
                 .ExportAndWriteLine();
             Console.Write("\n\n");
+
+            Console.WriteLine("press a key");
+            Console.ReadLine();
         }
     }
 }

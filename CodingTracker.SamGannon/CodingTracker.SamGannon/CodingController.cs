@@ -18,7 +18,7 @@ namespace CodingTracker.SamGannon
                 using (var tableCmd = connection.CreateCommand())
                 {
                     connection.Open();
-                    tableCmd.CommandText = $"INSERT INTO coding (date, duration VALUES (' {coding.Date}', '{coding.Duration }";
+                    tableCmd.CommandText = $"INSERT INTO coding (date, duration) VALUES ('{coding.Date}', '{coding.Duration }')";
                     tableCmd.ExecuteNonQuery();
                 }
             }
@@ -195,10 +195,38 @@ namespace CodingTracker.SamGannon
                     connection.Open();
                     tableCmd.CommandText = $@"UPDATE sleep SET
                         Duration = '{sleep.Duration}',
-                        SleepType = '{sleep.SleepType}',
+                        SleepType = '{sleep.SleepType}'
                     WHERE Id = {sleep.Id}";
 
                     tableCmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        internal void PostSleep(Sleep sleep)
+        {
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                using (var tableCmd = connection.CreateCommand())
+                {
+                    connection.Open();
+                    tableCmd.CommandText = $"INSERT INTO sleep (Duration, SleepType) VALUES ('{sleep.Duration}', '{sleep.SleepType}')";
+                    tableCmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        internal void DeleteSleep(int id)
+        {
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                using (var tableCmd = connection.CreateCommand())
+                {
+                    connection.Open();
+                    tableCmd.CommandText = $"DELETE FROM sleep WHERE Id = {id}";
+                    tableCmd.ExecuteNonQuery();
+
+                    Console.WriteLine($"\nRecord with id {id} was deleted");
                 }
             }
         }

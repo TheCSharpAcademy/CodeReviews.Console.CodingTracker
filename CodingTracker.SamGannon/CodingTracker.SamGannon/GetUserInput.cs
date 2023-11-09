@@ -12,6 +12,7 @@ namespace CodingTracker.SamGannon
             bool runningMainMenu = true;
             while (runningMainMenu)
             {
+                Console.Clear();
                 Console.WriteLine("-----Main Menu-----");
                 Console.WriteLine("Which habit would you like to track?");
                 Console.WriteLine("Press 0 to exit the application");
@@ -40,6 +41,7 @@ namespace CodingTracker.SamGannon
                         break;
                     default:
                         Console.WriteLine("Inalid command press any key and enter to continue.");
+                        Console.ReadLine();
                         break;
                 }
             }
@@ -47,16 +49,17 @@ namespace CodingTracker.SamGannon
 
         private void SleepMenu()
         {
+            Console.Clear();
             bool closeApp = false;
             while (closeApp == false)
             {
                 Console.WriteLine("-----Sleep Menu-----");
                 Console.WriteLine("What would you like to do? Press the corresponding number key:");
-                Console.WriteLine("1. View All Records");
-                Console.WriteLine("2 Add A Record");
-                Console.WriteLine("3 Delete A Record");
-                Console.WriteLine("4 Update A Record");
-                Console.WriteLine("0 Close Application");
+                Console.WriteLine("1 - View All Records");
+                Console.WriteLine("2 - Add A Record");
+                Console.WriteLine("3 - Delete A Record");
+                Console.WriteLine("4 - Update A Record");
+                Console.WriteLine("0 - Close Application");
 
                 var userCommand = Console.ReadLine();
 
@@ -123,23 +126,22 @@ namespace CodingTracker.SamGannon
             bool updating = true;
             while (updating == true)
             {
-                Console.WriteLine($"\nType 'u' to update record \n");
-                Console.WriteLine($"\nType 's' to save update \n");
-                Console.WriteLine($"\n Type '0' to go back to the Main Menu");
+                Console.Clear();
+                Console.WriteLine("What do you want to do?");
+                Console.WriteLine($"Type 'u' to update record");
+                Console.WriteLine($"Type '0' to go back to the Main Menu");
 
                 updateInput = Console.ReadLine();
 
                 switch (updateInput)
                 {
-                    case "d":
+                    case "u":
                         sleep.Duration = GetDurationInput();
-                        CalculateSleepType(sleep.Duration);
+                        sleep.SleepType = CalculateSleepType(sleep.Duration);
+                        updating = false;
                         break;
                     case "0":
                         MainMenu();
-                        break;
-                    case "s":
-                        updating = false;
                         break;
                     default:
                         Console.WriteLine($"\nType '0' to go back to the Main Menu");
@@ -148,6 +150,8 @@ namespace CodingTracker.SamGannon
                 }
             }
             codingController.UpdateSleep(sleep);
+            Console.WriteLine("Record has been updated. Press a key to continue");
+            Console.ReadLine();
             MainMenu();
         }
 
@@ -173,10 +177,10 @@ namespace CodingTracker.SamGannon
             while (sleep.Id == 0)
             {
                 Console.WriteLine($"\nRecord with id {id} doesn't exist\n");
-                DeleteRecord();
+                DeleteSleepRecord();
             }
 
-            codingController.Delete(id);
+            codingController.DeleteSleep(id);
         }
 
         private void ProcessSleepAdd()
@@ -188,6 +192,8 @@ namespace CodingTracker.SamGannon
 
             sleep.Duration = duration;
             sleep.SleepType = sleepType;
+
+            codingController.PostSleep(sleep);
         }
 
         private string CalculateSleepType(string duration)
@@ -206,16 +212,18 @@ namespace CodingTracker.SamGannon
 
         internal void CodingMenu()
         {
+            Console.Clear();
             bool closeApp = false;
             while (closeApp == false)
             {
+                Console.Clear();
                 Console.WriteLine("-----Coding Menu-----");
                 Console.WriteLine("What would you like to do? Press the corresponding number key:");
-                Console.WriteLine("1. View All Records");
-                Console.WriteLine("2 Add A Record");
-                Console.WriteLine("3 Delete A Record");
-                Console.WriteLine("4 Update A Record");
-                Console.WriteLine("0 Close Application");
+                Console.WriteLine("1 - View All Records");
+                Console.WriteLine("2 - Add A Record");
+                Console.WriteLine("3 - Delete A Record");
+                Console.WriteLine("4 - Update A Record");
+                Console.WriteLine("0 - Close Application");
 
                 var userCommand = Console.ReadLine();
 
@@ -282,10 +290,10 @@ namespace CodingTracker.SamGannon
             bool updating = true;
             while (updating == true)
             {
-                Console.WriteLine($"\nType 'd' for Date \n");
-                Console.WriteLine($"\nType 't' for Time \n");
-                Console.WriteLine($"\nType 's' to save update \n");
-                Console.WriteLine($"\n Type '0' to go back to the Main Menu");
+                Console.WriteLine("What do you want to update?");
+                Console.WriteLine($"Type 'd' for Date");
+                Console.WriteLine($"Type 't' for Time");
+                Console.WriteLine($"Type '0' to go back to the Main Menu");
 
                 updateInput = Console.ReadLine();
 
@@ -293,15 +301,14 @@ namespace CodingTracker.SamGannon
                 {
                     case "d":
                         coding.Date = GetDateInput();
+                        updating = false;
                         break;
                     case "t":
                         coding.Duration = GetDurationInput();
+                        updating = false;
                         break;
                     case "0":
                         CodingMenu();
-                        break;
-                    case "s":
-                        updating = false;
                         break;
                     default:
                         Console.WriteLine($"\nType '0' to go back to the Main Menu");
@@ -310,13 +317,15 @@ namespace CodingTracker.SamGannon
                 }
             }
             codingController.Update(coding);
+            Console.WriteLine("record updated Press a key to continue");
+            Console.ReadLine();
             CodingMenu();
         }
 
         private void DeleteRecord()
         {
             codingController.GetCodingData();
-            Console.WriteLine("Please add id of the category you want to delete (or press 0 to reutrn to Main Menu).");
+            Console.WriteLine("Please add id of the record you want to delete (or press 0 to return to Main Menu).");
 
             string commandInput = Console.ReadLine();
 
@@ -334,7 +343,8 @@ namespace CodingTracker.SamGannon
 
             while (coding.Id == 0)
             {
-                Console.WriteLine($"\nRecord with id {id} doesn't exist\n");
+                Console.WriteLine($"\nRecord with id {id} doesn't exist. Press a key to continue.\n");
+                Console.ReadLine();
                 DeleteRecord();
             }
 
@@ -375,7 +385,7 @@ namespace CodingTracker.SamGannon
 
         private string GetDateInput()
         {
-            Console.WriteLine("Please enter the date in the following format: {mm-dd-yyyy}. Type 0 to return to the main menu.");
+            Console.WriteLine("Please enter the date in the following format: (mm-dd-yy). Type 0 to return to the main menu.");
 
             string userDateInput = Console.ReadLine();
 
