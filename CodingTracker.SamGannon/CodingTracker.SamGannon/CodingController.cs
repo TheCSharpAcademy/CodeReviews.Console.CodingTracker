@@ -22,7 +22,7 @@ namespace CodingTracker.SamGannon
             }
         }
 
-        internal void Get()
+        internal void GetCodingData()
         {
             List<Coding> tableData = new List<Coding>();
             using (var connection = new SqliteConnection(connectionString))

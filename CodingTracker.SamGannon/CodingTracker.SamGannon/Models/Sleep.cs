@@ -10,7 +10,7 @@ namespace CodingTracker.SamGannon.Models
     {
         public int Id { get; set; }
         public string Duration { get; set; }
-        public SleepType sleepType { get; set; }
+        public SleepType SleepType { get; set; }
     }
 
     public enum SleepType

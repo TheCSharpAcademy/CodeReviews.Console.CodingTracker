@@ -6,12 +6,51 @@ namespace CodingTracker.SamGannon
     internal class GetUserInput
     {
         CodingController codingController = new();
+
         internal void MainMenu()
+        {
+            bool runningMainMenu = true;
+            while (runningMainMenu)
+            {
+                Console.WriteLine("-----Main Menu-----");
+                Console.WriteLine("Which habit would you like to track?");
+                Console.WriteLine("Press 0 to exit the application");
+                Console.WriteLine("Press 1 to see the coding menu");
+                Console.WriteLine("Press 2 to see the sleep menu");
+
+                string commandInput = Console.ReadLine();
+
+                while (string.IsNullOrEmpty(commandInput))
+                {
+                    Console.WriteLine("Invalid Command type a number 0 to 2");
+                }
+
+                switch (commandInput)
+                {
+                    case "0":
+                        runningMainMenu = false;
+                        break;
+                    case "1":
+                        runningMainMenu = false;
+                        CodingMenu();
+                        break;
+                    case "2":
+                        runningMainMenu = false;
+                        SleepMenu();
+                        break;
+                    default:
+                        Console.WriteLine("Inalid command press any key and enter to continue.");
+                        break;
+                }
+            }
+        }
+
+        private void SleepMenu()
         {
             bool closeApp = false;
             while (closeApp == false)
             {
-                Console.WriteLine("-----Main Menu-----");
+                Console.WriteLine("-----Sleep Menu-----");
                 Console.WriteLine("What would you like to do? Press the corresponding number key:");
                 Console.WriteLine("1. View All Records");
                 Console.WriteLine("2 Add A Record");
@@ -34,7 +73,55 @@ namespace CodingTracker.SamGannon
                         Environment.Exit(0);
                         break;
                     case "1":
-                        codingController.Get();
+                        codingController.GetCodingData();
+                        break;
+                    case "2":
+                        ProcessAdd();
+                        break;
+                    case "3":
+                        DeleteRecord();
+                        break;
+                    case "4":
+                        UpdateRecord();
+                        break;
+                    default:
+                        Console.WriteLine("Invalid Commmand. Press any key and enter to continue");
+                        Console.ReadLine();
+                        break;
+                }
+
+            }
+        }
+
+        internal void CodingMenu()
+        {
+            bool closeApp = false;
+            while (closeApp == false)
+            {
+                Console.WriteLine("-----Coding Menu-----");
+                Console.WriteLine("What would you like to do? Press the corresponding number key:");
+                Console.WriteLine("1. View All Records");
+                Console.WriteLine("2 Add A Record");
+                Console.WriteLine("3 Delete A Record");
+                Console.WriteLine("4 Update A Record");
+                Console.WriteLine("0 Close Application");
+
+                var userCommand = Console.ReadLine();
+
+                while (string.IsNullOrEmpty(userCommand))
+                {
+                    Console.WriteLine("\nInvalid Command type a number 0 to 4.\n");
+                    userCommand = Console.ReadLine();
+                }
+
+                switch (userCommand)
+                {
+                    case "0":
+                        closeApp = true;
+                        Environment.Exit(0);
+                        break;
+                    case "1":
+                        codingController.GetCodingData();
                         break;
                     case "2":
                         ProcessAdd();
@@ -56,7 +143,7 @@ namespace CodingTracker.SamGannon
 
         private void UpdateRecord()
         {
-            codingController.Get();
+            codingController.GetCodingData();
 
             Console.WriteLine("Please add id of the record you want to update (or 0 to return to the Main Menu).");
             string commandInput = Console.ReadLine();
@@ -69,7 +156,7 @@ namespace CodingTracker.SamGannon
 
             var id = Int32.Parse(commandInput);
 
-            if (id == 0) MainMenu();
+            if (id == 0) CodingMenu();
 
             var coding = codingController.GetById(id);
 
@@ -100,7 +187,7 @@ namespace CodingTracker.SamGannon
                         coding.Duration = GetDurationInput();
                         break;
                     case "0":
-                        MainMenu();
+                        CodingMenu();
                         break;
                     case "s":
                         updating = false;
@@ -112,12 +199,12 @@ namespace CodingTracker.SamGannon
                 }
             }
             codingController.Update(coding);
-            MainMenu();
+            CodingMenu();
         }
 
         private void DeleteRecord()
         {
-            codingController.Get();
+            codingController.GetCodingData();
             Console.WriteLine("Please add id of the category you want to delete (or press 0 to reutrn to Main Menu).");
 
             string commandInput = Console.ReadLine();
@@ -130,7 +217,7 @@ namespace CodingTracker.SamGannon
 
             var id = Int32.Parse(commandInput);
 
-            if (id == 0) MainMenu();
+            if (id == 0) CodingMenu();
 
             var coding = codingController.GetById(id);
 
@@ -144,10 +231,31 @@ namespace CodingTracker.SamGannon
 
         }
 
-        private void ViewAllRecords()
+        private void ProccessSleepAdd()
         {
-            throw new NotImplementedException();
+            var duration = GetDurationInput();
+            var sleepType = CalculateSleepType(duration);
+
+            Sleep sleep = new();
+
+            sleep.Duration = duration;
+            sleep.SleepType = sleepType;
         }
+
+        private SleepType CalculateSleepType(string duration)
+        {
+            TimeSpan sleepDuration = TimeSpan.ParseExact(duration, "h\\:mm", CultureInfo.InvariantCulture);
+
+            if (sleepDuration.TotalHours > 4)
+            {
+                return SleepType.LongRest;
+            }
+            else
+            {
+                return SleepType.ShortRest;
+            }
+        }
+
 
         private void ProcessAdd()
         {
@@ -174,7 +282,7 @@ namespace CodingTracker.SamGannon
             {
                 Console.WriteLine("\n\nDuration invalid. Please insert the duration: (Format: hh:mm) or type 0 to return to the main menu\n\n");
                 userDuration = Console.ReadLine();
-                if (userDuration != "0") MainMenu();
+                if (userDuration == "0") MainMenu();
             }
 
             return userDuration;
@@ -191,7 +299,7 @@ namespace CodingTracker.SamGannon
 
             string userDateInput = Console.ReadLine();
 
-            if (userDateInput == "0") MainMenu();
+            if (userDateInput == "0") CodingMenu();
 
             while (!DateTime.TryParseExact(userDateInput, "dd-MM-yy", new CultureInfo("en-US"), DateTimeStyles.None, out _))
             {

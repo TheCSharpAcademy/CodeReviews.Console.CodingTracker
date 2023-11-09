@@ -13,7 +13,8 @@ namespace CodingTracker.SamGannon
             DatabaseManager databaseManager = new();
             GetUserInput getUserInput = new();
 
-            databaseManager.CreateTable(connectionString);
+            databaseManager.CreateCodingTable(connectionString);
+            databaseManager.CreateSleepTable(connectionString);
             getUserInput.MainMenu();
         }
     }
