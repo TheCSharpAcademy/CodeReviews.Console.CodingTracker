@@ -12,6 +12,8 @@ namespace CodingTracker.SamGannon
         {
             DatabaseManager databaseManager = new();
             databaseManager.CreateTable(connectionString);
+
+            UserInput u
         }
     }
 }
