@@ -69,7 +69,28 @@ namespace CodingTracker.SamGannon
 
         private void ProcessAdd()
         {
-            GetDateInput();
+            var date = GetDateInput();
+            var duration = GetDurationInput();
+
+            Coding coding = new();
+        }
+
+        private object GetDurationInput()
+        {
+            Console.WriteLine("PLease enter the duration of your session in the following format: (hh:mm). Type 0 to return to main menu\n\n");
+
+            string userDuration = Console.ReadLine();
+
+            if (userDuration == "0") MainMenu();
+
+            while (!TimeSpan.TryParseExact(userDuration, "h\\:mm", CultureInfo.InvariantCulture, out _))
+            {
+                Console.WriteLine("\n\nDuration invalid. Please insert the duration: (Format: hh:mm) or type 0 to return to the main menu\n\n");
+                userDuration = Console.ReadLine();
+                if (userDuration != "0") MainMenu();
+            }
+
+            return userDuration;
         }
 
         private void AddRecord()
@@ -85,9 +106,9 @@ namespace CodingTracker.SamGannon
 
             if (userDateInput == "0") MainMenu();
 
-            while (!DateTime.TryParse(userDateInput, "dd-MM-yy", new CultureInfo("en-US"), DateTimeStyles.None, out _))
+            while (!DateTime.TryParseExact(userDateInput, "dd-MM-yy", new CultureInfo("en-US"), DateTimeStyles.None, out _))
             {
-                Console.Writeline("\n\nNot a valid date. Please insert the date with the format: dd-mm-yy.\n\n");
+                Console.WriteLine("\n\nNot a valid date. Please insert the date with the format: dd-mm-yy.\n\n");
                 userDateInput = Console.ReadLine();
             }
 

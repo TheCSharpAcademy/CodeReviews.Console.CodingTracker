@@ -11,9 +11,10 @@ namespace CodingTracker.SamGannon
         static void Main(string[] args)
         {
             DatabaseManager databaseManager = new();
-            databaseManager.CreateTable(connectionString);
+            GetUserInput getUserInput = new();
 
-            UserInput u
+            databaseManager.CreateTable(connectionString);
+            getUserInput.MainMenu();
         }
     }
 }
