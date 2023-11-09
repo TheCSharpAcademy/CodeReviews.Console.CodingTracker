@@ -73,10 +73,10 @@ namespace CodingTracker.SamGannon
                         Environment.Exit(0);
                         break;
                     case "1":
-                        codingController.GetCodingData();
+                        codingController.GetSleepData();
                         break;
                     case "2":
-                        ProcessAdd();
+                        ProcessSleepAdd();
                         break;
                     case "3":
                         DeleteRecord();
@@ -231,7 +231,7 @@ namespace CodingTracker.SamGannon
 
         }
 
-        private void ProccessSleepAdd()
+        private void ProcessSleepAdd()
         {
             var duration = GetDurationInput();
             var sleepType = CalculateSleepType(duration);
@@ -242,17 +242,17 @@ namespace CodingTracker.SamGannon
             sleep.SleepType = sleepType;
         }
 
-        private SleepType CalculateSleepType(string duration)
+        private string CalculateSleepType(string duration)
         {
             TimeSpan sleepDuration = TimeSpan.ParseExact(duration, "h\\:mm", CultureInfo.InvariantCulture);
 
             if (sleepDuration.TotalHours > 4)
             {
-                return SleepType.LongRest;
+                return "long";
             }
             else
             {
-                return SleepType.ShortRest;
+                return "Short";
             }
         }
 

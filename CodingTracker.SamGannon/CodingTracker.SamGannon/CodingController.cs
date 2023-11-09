@@ -118,5 +118,41 @@ namespace CodingTracker.SamGannon
                 }
             }
         }
+
+        internal void GetSleepData()
+        {
+            List<Sleep> tableData = new List<Sleep>();
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                using (var tableCmd = connection.CreateCommand())
+                {
+                    connection.Open();
+                    tableCmd.CommandText = "SELECT * FROM sleep";
+
+                    using (var reader = tableCmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                tableData.Add(
+                                    new Sleep
+                                    {
+                                        Id = reader.GetInt32(0),
+                                        Duration = reader.GetString(1),
+                                        SleepType = reader.GetString(2)
+                                    });
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("\n\nNo rows found");
+                        }
+
+                        TableVisualisation.ShowTable(tableData);
+                    }
+                }
+            }
+        }
     }
 }
