@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using System.Configuration;
 
 namespace CodingTracker.SamGannon
@@ -52,6 +53,50 @@ namespace CodingTracker.SamGannon
 
                         TableVisualisation.ShowTable(tableData);
                     }
+                }
+            }
+        }
+
+        internal Coding GetById(int id)
+        {
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                using (var tableCmd = connection.CreateCommand())
+                {
+                    connection.Open();
+                    tableCmd.CommandText = $"SELECT * FROM coding WHERE Id = {id}";
+
+                    using (var reader = tableCmd.ExecuteReader())
+                    {
+                        Coding coding = new();
+                        if (reader.HasRows)
+                        {
+                            reader.Read();
+                            coding.Id = reader.GetInt32(0);
+                            coding.Date = reader.GetString(1);
+                            coding.Duration = reader.GetString(2);
+
+                        }
+
+                        Console.WriteLine("\n\n");
+
+                        return coding;
+                    }
+                }
+            }
+        }
+
+        internal void Delete(int id)
+        {
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                using (var tableCmd = connection.CreateCommand())
+                {
+                    connection.Open();
+                    tableCmd.CommandText = $"DELETE FROM coding WHERE Id = {id}";
+                    tableCmd.ExecuteNonQuery();
+
+                    Console.WriteLine($"\nRecord with id {id} was deleted");
                 }
             }
         }

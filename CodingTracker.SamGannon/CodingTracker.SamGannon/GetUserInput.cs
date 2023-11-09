@@ -33,10 +33,10 @@ namespace CodingTracker.SamGannon
                         Environment.Exit(0);
                         break;
                     case "1":
-                        ViewAllRecords();
+                        codingController.Get();
                         break;
                     case "2":
-                        AddRecord();
+                        ProcessAdd();
                         break;
                     case "3":
                         DeleteRecord();
@@ -60,7 +60,38 @@ namespace CodingTracker.SamGannon
 
         private void DeleteRecord()
         {
-            throw new NotImplementedException();
+            codingController.Get();
+            Console.WriteLine("Please add id of the category you want to delete (or press 0 to reutrn to Main Menu).");
+
+            string commandInput = Console.ReadLine();
+
+            while (!int.TryParse(commandInput, out _) || string.IsNullOrEmpty(commandInput) || Int32.Parse(commandInput) < 0)
+            {
+                Console.WriteLine("\n You have to type a valid Id (or 0 to return to the Main Menu). \n");
+                commandInput = Console.ReadLine();
+            }
+
+            var id = Int32.Parse(commandInput);
+
+            if (id == 0) MainMenu();
+
+            var coding = codingController.GetById(id);
+
+            while (coding.Id == 0)
+            {
+                Console.WriteLine($"\nRecord with id {id} doesn't exist\n");
+                Console.WriteLine("\nPlease add id of the record you want to delete or press 0 to return to the Main Menu.\n");
+
+                commandInput = Console.ReadLine();
+                id = int.Parse(commandInput);
+
+                if (id == 0) MainMenu();
+
+                coding = codingController.GetById(id);
+            }
+
+            codingController.Delete(id);
+
         }
 
         private void ViewAllRecords()
