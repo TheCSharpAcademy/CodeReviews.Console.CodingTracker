@@ -55,7 +55,61 @@ namespace CodingTracker.SamGannon
 
         private void UpdateRecord()
         {
-            throw new NotImplementedException();
+            codingController.Get();
+
+            Console.WriteLine("Please add id of the record you want to update (or 0 to return to the Main Menu).");
+            string commandInput = Console.ReadLine();
+
+            while (!Int32.TryParse(commandInput, out _) || string.IsNullOrEmpty(commandInput) || Int32.Parse(commandInput) < 0)
+            {
+                Console.WriteLine("\nYou have to type an Id (or 0 to return to the Main Menu).\n");
+                commandInput = Console.ReadLine();
+            }
+
+            var id = Int32.Parse(commandInput);
+
+            if (id == 0) MainMenu();
+
+            var coding = codingController.GetById(id);
+
+            while (coding.Id == 0)
+            {
+                Console.WriteLine($"\nRecord with Id {id} doesn't exist\n");
+                UpdateRecord();
+            }
+
+            var updateInput = "";
+
+            bool updating = true;
+            while (updating == true)
+            {
+                Console.WriteLine($"\nType 'd' for Date \n");
+                Console.WriteLine($"\nType 't' for Time \n");
+                Console.WriteLine($"\nType 's' to save update \n");
+                Console.WriteLine($"\n Type '0' to go back to the Main Menu");
+
+                updateInput = Console.ReadLine();
+
+                switch (updateInput)
+                {
+                    case "d":
+                        coding.Date = GetDateInput();
+                        break;
+                    case "t":
+                        coding.Duration = GetDurationInput();
+                        break;
+                    case "0":
+                        MainMenu();
+                        break;
+                    case "s":
+                        updating = false;
+                        break;
+                    default:
+                        Console.WriteLine($"\nType '0' to go back to the Main Menu");
+                        break;
+
+                }
+            }
         }
 
         private void DeleteRecord()
@@ -80,16 +134,11 @@ namespace CodingTracker.SamGannon
             while (coding.Id == 0)
             {
                 Console.WriteLine($"\nRecord with id {id} doesn't exist\n");
-                ProcessDelete();
+                DeleteRecord();
             }
 
             codingController.Delete(id);
 
-        }
-
-        private void ProcessDelete()
-        {
-            throw new NotImplementedException();
         }
 
         private void ViewAllRecords()
