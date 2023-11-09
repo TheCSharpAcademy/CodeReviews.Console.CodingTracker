@@ -4,6 +4,7 @@ namespace CodingTracker.SamGannon
 {
     internal class GetUserInput
     {
+        CodingController codingController = new();
         internal void MainMenu()
         {
             bool closeApp = false;
@@ -73,9 +74,14 @@ namespace CodingTracker.SamGannon
             var duration = GetDurationInput();
 
             Coding coding = new();
+
+            coding.Date = date;
+            coding.Duration = duration;
+
+            codingController.Post(coding);
         }
 
-        private object GetDurationInput()
+        private string GetDurationInput()
         {
             Console.WriteLine("PLease enter the duration of your session in the following format: (hh:mm). Type 0 to return to main menu\n\n");
 
