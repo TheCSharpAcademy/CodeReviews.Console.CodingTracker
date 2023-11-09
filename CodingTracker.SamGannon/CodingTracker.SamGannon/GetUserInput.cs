@@ -80,18 +80,16 @@ namespace CodingTracker.SamGannon
             while (coding.Id == 0)
             {
                 Console.WriteLine($"\nRecord with id {id} doesn't exist\n");
-                Console.WriteLine("\nPlease add id of the record you want to delete or press 0 to return to the Main Menu.\n");
-
-                commandInput = Console.ReadLine();
-                id = int.Parse(commandInput);
-
-                if (id == 0) MainMenu();
-
-                coding = codingController.GetById(id);
+                ProcessDelete();
             }
 
             codingController.Delete(id);
 
+        }
+
+        private void ProcessDelete()
+        {
+            throw new NotImplementedException();
         }
 
         private void ViewAllRecords()
