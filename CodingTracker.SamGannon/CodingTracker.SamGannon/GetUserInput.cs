@@ -79,7 +79,7 @@ namespace CodingTracker.SamGannon
                         ProcessSleepAdd();
                         break;
                     case "3":
-                        DeleteRecord();
+                        DeleteSleepRecord();
                         break;
                     case "4":
                         UpdateRecord();
@@ -91,6 +91,34 @@ namespace CodingTracker.SamGannon
                 }
 
             }
+        }
+
+        private void DeleteSleepRecord()
+        {
+            codingController.GetSleepData();
+            Console.WriteLine("Please add id of the record you want to delete (or press 0 to reutrn to Main Menu).");
+
+            string commandInput = Console.ReadLine();
+
+            while (!int.TryParse(commandInput, out _) || string.IsNullOrEmpty(commandInput) || Int32.Parse(commandInput) < 0)
+            {
+                Console.WriteLine("\n You have to type a valid Id (or 0 to return to the Main Menu). \n");
+                commandInput = Console.ReadLine();
+            }
+
+            var id = Int32.Parse(commandInput);
+
+            if (id == 0) MainMenu();
+
+            var sleep = codingController.GetBySleepId(id);
+
+            while (sleep.Id == 0)
+            {
+                Console.WriteLine($"\nRecord with id {id} doesn't exist\n");
+                DeleteRecord();
+            }
+
+            codingController.Delete(id);
         }
 
         internal void CodingMenu()

@@ -154,5 +154,34 @@ namespace CodingTracker.SamGannon
                 }
             }
         }
+
+        internal Sleep GetBySleepId(int id)
+        {
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                using (var tableCmd = connection.CreateCommand())
+                {
+                    connection.Open();
+                    tableCmd.CommandText = $"SELECT * FROM sleep WHERE Id = {id}";
+
+                    using (var reader = tableCmd.ExecuteReader())
+                    {
+                        Sleep sleep = new();
+                        if (reader.HasRows)
+                        {
+                            reader.Read();
+                            sleep.Id = reader.GetInt32(0);
+                            sleep.Duration = reader.GetString(1);
+                            sleep.SleepType = reader.GetString(2);
+
+                        }
+
+                        Console.WriteLine("\n\n");
+
+                        return sleep;
+                    }
+                }
+            }
+        }
     }
 }
