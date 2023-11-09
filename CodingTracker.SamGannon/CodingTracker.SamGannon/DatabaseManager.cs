@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore.Sqlite;
 
 namespace CodingTracker.SamGannon
 {
