@@ -100,5 +100,22 @@ namespace CodingTracker.SamGannon
                 }
             }
         }
+
+        internal void Update(Coding coding)
+        {
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                using (var tableCmd = connection.CreateCommand())
+                {
+                    connection.Open();
+                    tableCmd.CommandText = $@"UPDATE coding SET
+                        Date = '{coding.Date}',
+                        Duration = '{coding.Duration}'
+                    WHERE Id = {coding.Id}";
+
+                    tableCmd.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }

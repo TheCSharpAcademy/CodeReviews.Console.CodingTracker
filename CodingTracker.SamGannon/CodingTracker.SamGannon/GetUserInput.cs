@@ -110,6 +110,8 @@ namespace CodingTracker.SamGannon
 
                 }
             }
+            codingController.Update(coding);
+            MainMenu();
         }
 
         private void DeleteRecord()
