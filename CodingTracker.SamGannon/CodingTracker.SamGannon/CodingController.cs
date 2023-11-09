@@ -2,6 +2,8 @@
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using System.Configuration;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using System.Text;
 
 namespace CodingTracker.SamGannon
 {
@@ -180,6 +182,23 @@ namespace CodingTracker.SamGannon
 
                         return sleep;
                     }
+                }
+            }
+        }
+
+        internal void UpdateSleep(Sleep sleep)
+        {
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                using (var tableCmd = connection.CreateCommand())
+                {
+                    connection.Open();
+                    tableCmd.CommandText = $@"UPDATE sleep SET
+                        Duration = '{sleep.Duration}',
+                        SleepType = '{sleep.SleepType}',
+                    WHERE Id = {sleep.Id}";
+
+                    tableCmd.ExecuteNonQuery();
                 }
             }
         }

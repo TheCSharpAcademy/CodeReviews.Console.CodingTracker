@@ -82,7 +82,7 @@ namespace CodingTracker.SamGannon
                         DeleteSleepRecord();
                         break;
                     case "4":
-                        UpdateRecord();
+                        UpdateSleepRecord();
                         break;
                     default:
                         Console.WriteLine("Invalid Commmand. Press any key and enter to continue");
@@ -91,6 +91,64 @@ namespace CodingTracker.SamGannon
                 }
 
             }
+        }
+
+        private void UpdateSleepRecord()
+        {
+            codingController.GetSleepData();
+
+            Console.WriteLine("Please add id of the record you want to update (or 0 to return to the Main Menu).");
+            string commandInput = Console.ReadLine();
+
+            while (!Int32.TryParse(commandInput, out _) || string.IsNullOrEmpty(commandInput) || Int32.Parse(commandInput) < 0)
+            {
+                Console.WriteLine("\nYou have to type an Id (or 0 to return to the Main Menu).\n");
+                commandInput = Console.ReadLine();
+            }
+
+            var id = Int32.Parse(commandInput);
+
+            if (id == 0) MainMenu();
+
+            var sleep = codingController.GetBySleepId(id);
+
+            while (sleep.Id == 0)
+            {
+                Console.WriteLine($"\nRecord with Id {id} doesn't exist\n");
+                UpdateRecord();
+            }
+
+            var updateInput = "";
+
+            bool updating = true;
+            while (updating == true)
+            {
+                Console.WriteLine($"\nType 'u' to update record \n");
+                Console.WriteLine($"\nType 's' to save update \n");
+                Console.WriteLine($"\n Type '0' to go back to the Main Menu");
+
+                updateInput = Console.ReadLine();
+
+                switch (updateInput)
+                {
+                    case "d":
+                        sleep.Duration = GetDurationInput();
+                        CalculateSleepType(sleep.Duration);
+                        break;
+                    case "0":
+                        MainMenu();
+                        break;
+                    case "s":
+                        updating = false;
+                        break;
+                    default:
+                        Console.WriteLine($"\nType '0' to go back to the Main Menu");
+                        break;
+
+                }
+            }
+            codingController.UpdateSleep(sleep);
+            MainMenu();
         }
 
         private void DeleteSleepRecord()
@@ -119,6 +177,31 @@ namespace CodingTracker.SamGannon
             }
 
             codingController.Delete(id);
+        }
+
+        private void ProcessSleepAdd()
+        {
+            var duration = GetDurationInput();
+            var sleepType = CalculateSleepType(duration);
+
+            Sleep sleep = new();
+
+            sleep.Duration = duration;
+            sleep.SleepType = sleepType;
+        }
+
+        private string CalculateSleepType(string duration)
+        {
+            TimeSpan sleepDuration = TimeSpan.ParseExact(duration, "h\\:mm", CultureInfo.InvariantCulture);
+
+            if (sleepDuration.TotalHours > 4)
+            {
+                return "long";
+            }
+            else
+            {
+                return "Short";
+            }
         }
 
         internal void CodingMenu()
@@ -259,32 +342,6 @@ namespace CodingTracker.SamGannon
 
         }
 
-        private void ProcessSleepAdd()
-        {
-            var duration = GetDurationInput();
-            var sleepType = CalculateSleepType(duration);
-
-            Sleep sleep = new();
-
-            sleep.Duration = duration;
-            sleep.SleepType = sleepType;
-        }
-
-        private string CalculateSleepType(string duration)
-        {
-            TimeSpan sleepDuration = TimeSpan.ParseExact(duration, "h\\:mm", CultureInfo.InvariantCulture);
-
-            if (sleepDuration.TotalHours > 4)
-            {
-                return "long";
-            }
-            else
-            {
-                return "Short";
-            }
-        }
-
-
         private void ProcessAdd()
         {
             var date = GetDateInput();
@@ -316,18 +373,13 @@ namespace CodingTracker.SamGannon
             return userDuration;
         }
 
-        private void AddRecord()
-        {
-            GetDateInput();
-        }
-
         private string GetDateInput()
         {
             Console.WriteLine("Please enter the date in the following format: {mm-dd-yyyy}. Type 0 to return to the main menu.");
 
             string userDateInput = Console.ReadLine();
 
-            if (userDateInput == "0") CodingMenu();
+            if (userDateInput == "0") MainMenu();
 
             while (!DateTime.TryParseExact(userDateInput, "dd-MM-yy", new CultureInfo("en-US"), DateTimeStyles.None, out _))
             {
