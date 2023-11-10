@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using System.Text;
-
-namespace CodingTracker.SamGannon.Models
+﻿namespace CodingTracker.SamGannon.Models
 {
     internal class Sleep
     {
