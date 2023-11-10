@@ -1,5 +1,4 @@
 ﻿using ConsoleTableExt;
-using System.Configuration;
 
 namespace CodingTracker.SamGannon
 {
