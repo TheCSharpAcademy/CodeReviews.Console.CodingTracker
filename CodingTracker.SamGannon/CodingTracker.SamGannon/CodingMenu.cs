@@ -1,0 +1,167 @@
+﻿using CodingTracker.SamGannon.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CodingTracker.SamGannon
+{
+    internal class CodingMenu
+    {
+        internal void ShowCodingMenu()
+        {
+            Console.Clear();
+            bool closeApp = false;
+            while (closeApp == false)
+            {
+                Console.Clear();
+                Console.WriteLine("-----Coding Menu-----");
+                Console.WriteLine("What would you like to do? Press the corresponding number key:");
+                Console.WriteLine("1 - View All Records");
+                Console.WriteLine("2 - Add A Record");
+                Console.WriteLine("3 - Delete A Record");
+                Console.WriteLine("4 - Update A Record");
+                Console.WriteLine("0 - Close Application");
+
+                var userCommand = Console.ReadLine();
+
+                while (string.IsNullOrEmpty(userCommand))
+                {
+                    Console.WriteLine("\nInvalid Command type a number 0 to 4.\n");
+                    userCommand = Console.ReadLine();
+                }
+
+                switch (userCommand)
+                {
+                    case "0":
+                        closeApp = true;
+                        Environment.Exit(0);
+                        break;
+                    case "1":
+                        codingController.GetCodingData();
+                        break;
+                    case "2":
+                        ProcessAdd();
+                        break;
+                    case "3":
+                        DeleteRecord();
+                        break;
+                    case "4":
+                        UpdateRecord();
+                        break;
+                    default:
+                        Console.WriteLine("Invalid Commmand. Press any key and enter to continue");
+                        Console.ReadLine();
+                        break;
+                }
+
+            }
+        }
+
+        private void ProcessAdd()
+        {
+            var date = GetDateInput();
+            var duration = GetDurationInput();
+
+            Coding coding = new();
+
+            coding.Date = date;
+            coding.Duration = duration;
+
+            codingController.Post(coding);
+        }
+
+        private void DeleteRecord()
+        {
+            codingController.GetCodingData();
+            Console.WriteLine("Please add id of the record you want to delete (or press 0 to return to Main Menu).");
+
+            string commandInput = Console.ReadLine();
+
+            while (!int.TryParse(commandInput, out _) || string.IsNullOrEmpty(commandInput) || Int32.Parse(commandInput) < 0)
+            {
+                Console.WriteLine("\n You have to type a valid Id (or 0 to return to the Main Menu). \n");
+                commandInput = Console.ReadLine();
+            }
+
+            var id = Int32.Parse(commandInput);
+
+            if (id == 0) ShowCodingMenu();
+
+            var coding = codingController.GetById(id);
+
+            while (coding.Id == 0)
+            {
+                Console.WriteLine($"\nRecord with id {id} doesn't exist. Press a key to continue.\n");
+                Console.ReadLine();
+                DeleteRecord();
+            }
+
+            codingController.Delete(id);
+
+        }
+
+        private void UpdateRecord()
+        {
+            codingController.GetCodingData();
+
+            Console.WriteLine("Please add id of the record you want to update (or 0 to return to the Main Menu).");
+            string commandInput = Console.ReadLine();
+
+            while (!Int32.TryParse(commandInput, out _) || string.IsNullOrEmpty(commandInput) || Int32.Parse(commandInput) < 0)
+            {
+                Console.WriteLine("\nYou have to type an Id (or 0 to return to the Main Menu).\n");
+                commandInput = Console.ReadLine();
+            }
+
+            var id = Int32.Parse(commandInput);
+
+            if (id == 0) ShowCodingMenu();
+
+            var coding = codingController.GetById(id);
+
+            while (coding.Id == 0)
+            {
+                Console.WriteLine($"\nRecord with Id {id} doesn't exist\n");
+                UpdateRecord();
+            }
+
+            var updateInput = "";
+
+            bool updating = true;
+            while (updating == true)
+            {
+                Console.WriteLine("What do you want to update?");
+                Console.WriteLine($"Type 'd' for Date");
+                Console.WriteLine($"Type 't' for Time");
+                Console.WriteLine($"Type '0' to go back to the Main Menu");
+
+                updateInput = Console.ReadLine();
+
+                switch (updateInput)
+                {
+                    case "d":
+                        coding.Date = GetDateInput();
+                        updating = false;
+                        break;
+                    case "t":
+                        coding.Duration = GetDurationInput();
+                        updating = false;
+                        break;
+                    case "0":
+                        ShowCodingMenu();
+                        break;
+                    default:
+                        Console.WriteLine($"\nType '0' to go back to the Main Menu");
+                        break;
+
+                }
+            }
+            codingController.Update(coding);
+            Console.WriteLine("record updated Press a key to continue");
+            Console.ReadLine();
+            ShowCodingMenu();
+        }
+    }
+}
