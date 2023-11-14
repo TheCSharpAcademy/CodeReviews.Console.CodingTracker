@@ -9,10 +9,6 @@ namespace CodingTracker.SamGannon
 {
     internal class SleepMenu
     {
-        CodingController codingController = new();
-        Validation validation = new();
-        GetUserInput getUserInput = new();
-
         internal void ShowSleepMenu()
         {
             Console.Clear();
@@ -42,7 +38,10 @@ namespace CodingTracker.SamGannon
                         Environment.Exit(0);
                         break;
                     case "1":
+                        CodingController codingController = new();
                         codingController.GetSleepData();
+                        Console.WriteLine("\nPress any key to continue");
+                        Console.ReadLine();
                         break;
                     case "2":
                         ProcessSleepAdd();
@@ -64,23 +63,32 @@ namespace CodingTracker.SamGannon
 
         private void ProcessSleepAdd()
         {
+            Validation validation = new();
+            var startTime = validation.GetStartTime();
+            var endTime = validation.GetEndTime();
+            var duration = validation.CalculateDuration(startTime, endTime, ProcessSleepAdd);
+
             Sleep sleep = new();
 
-            sleep.Duration = validation.GetDuration();
+            sleep.Duration = duration;
             sleep.SleepType = validation.CalculateSleepType(sleep.Duration);
 
+            CodingController codingController = new();
             codingController.PostSleep(sleep);
         }
 
         private void DeleteSleepRecord()
         {
+            CodingController codingController = new();
             codingController.GetSleepData();
             Console.WriteLine("Please add id of the record you want to delete (or press 0 to reutrn to Main Menu).");
 
             string commandInput = Console.ReadLine();
 
+            Validation validation = new();
             var id = validation.ValidateIdInput(commandInput);
 
+            GetUserInput getUserInput = new();
             if (id == 0) getUserInput.MainMenu();
 
             var sleep = codingController.GetBySleepId(id);
@@ -96,13 +104,16 @@ namespace CodingTracker.SamGannon
 
         private void UpdateSleepRecord()
         {
+            CodingController codingController = new();
             codingController.GetSleepData();
 
             Console.WriteLine("Please add id of the record you want to update (or 0 to return to the Main Menu).");
             string commandInput = Console.ReadLine();
 
+            Validation validation = new();
             var id = validation.ValidateIdInput(commandInput);
 
+            GetUserInput getUserInput = new();
             if (id == 0) getUserInput.MainMenu();
 
             var sleep = codingController.GetBySleepId(id);
@@ -128,7 +139,9 @@ namespace CodingTracker.SamGannon
                 switch (updateInput)
                 {
                     case "u":
-                        sleep.Duration = validation.GetDuration();
+                        var startTime = validation.GetStartTime();
+                        var endTime = validation.GetEndTime();
+                        sleep.Duration = validation.CalculateDuration(startTime, endTime, UpdateSleepRecord);
                         sleep.SleepType = validation.CalculateSleepType(sleep.Duration);
                         updating = false;
                         break;

@@ -8,11 +8,7 @@ using System.Threading.Tasks;
 namespace CodingTracker.SamGannon
 {
     internal class CodingMenu
-    {
-        CodingController codingController = new();
-        Validation validation = new();
-        GetUserInput getUserInput = new();
-
+    { 
         internal void ShowCodingMenu()
         {
             Console.Clear();
@@ -43,7 +39,10 @@ namespace CodingTracker.SamGannon
                         Environment.Exit(0);
                         break;
                     case "1":
+                        CodingController codingController = new();
                         codingController.GetCodingData();
+                        Console.WriteLine("\nPress any key to continue");
+                        Console.ReadLine();
                         break;
                     case "2":
                         ProcessAdd();
@@ -65,21 +64,29 @@ namespace CodingTracker.SamGannon
 
         private void ProcessAdd()
         {
+            Validation validation = new();
+            var startTime = validation.GetStartTime();
+            var endTime = validation.GetEndTime();
+            var duration = validation.CalculateDuration(startTime, endTime, ProcessAdd);
+
             Coding coding = new();
 
             coding.Date = validation.GetDateInput();
-            coding.Duration = validation.GetDuration();
+            coding.Duration = duration;
 
+            CodingController codingController = new();
             codingController.Post(coding);
         }
 
         private void DeleteRecord()
         {
+            CodingController codingController = new();
             codingController.GetCodingData();
             Console.WriteLine("Please add id of the record you want to delete (or press 0 to return to Main Menu).");
 
             string commandInput = Console.ReadLine();
 
+            Validation validation = new();
             var id = validation.ValidateIdInput(commandInput);
 
             var coding = codingController.GetById(id);
@@ -96,11 +103,14 @@ namespace CodingTracker.SamGannon
 
         private void UpdateRecord()
         {
+            CodingController codingController = new();
+            GetUserInput getUserInput = new();
             codingController.GetCodingData();
 
             Console.WriteLine("Please add id of the record you want to update (or 0 to return to the Main Menu).");
             string commandInput = Console.ReadLine();
 
+            Validation validation = new();
             var id = validation.ValidateIdInput(commandInput);
 
             if (id == 0) ShowCodingMenu();
@@ -132,7 +142,9 @@ namespace CodingTracker.SamGannon
                         updating = false;
                         break;
                     case "t":
-                        coding.Duration = validation.GetDuration();
+                        var startTime = validation.GetStartTime();
+                        var endTime = validation.GetEndTime();
+                        coding.Duration = validation.CalculateDuration(startTime, endTime, UpdateRecord);
                         updating = false;
                         break;
                     case "0":

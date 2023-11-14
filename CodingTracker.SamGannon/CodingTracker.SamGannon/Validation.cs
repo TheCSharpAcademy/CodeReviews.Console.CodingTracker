@@ -10,8 +10,6 @@ namespace CodingTracker.SamGannon
     
     public class Validation
     {
-        GetUserInput getUserInput = new();
-
         public string CalculateSleepType(string duration)
         {
             TimeSpan sleepDuration = TimeSpan.ParseExact(duration, "h\\:mm", CultureInfo.InvariantCulture);
@@ -26,30 +24,53 @@ namespace CodingTracker.SamGannon
             }
         }
 
-        public string GetDuration()
+        public string GetStartTime()
         {
-            Console.WriteLine("PLease enter the start time of your session in the following format: (hh:mm). Type 0 to return to main menu\n\n");
+            Console.WriteLine("Please enter the start time of your session in the following format: (HH:mm).");
+            Console.WriteLine("Use 24-hour format (e.g., 14:30).");
+
             string startTime = Console.ReadLine();
-            if (startTime == "0") getUserInput.MainMenu();
             ValidateTimeFormat(startTime);
 
-            Console.WriteLine("PLease enter the ending time of your session in the following format: (hh:mm). Type 0 to return to main menu\n\n");
+            return startTime;
+        }
+
+        public string GetEndTime()
+        {
+            Console.WriteLine("Please enter the ending time of your session in the following format: (HH:mm).");
+            Console.WriteLine("Use 24-hour format (e.g., 17:45).");
+
             string endTime = Console.ReadLine();
-            if (endTime == "0") getUserInput.MainMenu();
             ValidateTimeFormat(endTime);
 
-            string duration = CalculateDuration(startTime, endTime);
-
-            return duration;
+            return endTime;
         }
+
+        private void ValidateTimeFormat(string time)
+        {
+            while (!IsValid24HourFormat(time))
+            {
+                Console.WriteLine("\n\nDuration invalid. Please insert the duration in 24-hour format HH:mm: (e.g., 17:45)\n\n");
+                time = Console.ReadLine();
+            }
+        }
+
+        private bool IsValid24HourFormat(string time)
+        {
+            bool isValid = TimeSpan.TryParseExact(time, "HH\\:mm", CultureInfo.InvariantCulture, out _);
+            if (!isValid)
+            {
+                Console.WriteLine($"Invalid time format: {time}");
+            }
+            return isValid;
+        }
+
 
         public string GetDateInput()
         {
-            Console.WriteLine("Please enter the date in the following format: (dd-mm-yy). Type 0 to return to the main menu.");
+            Console.WriteLine("Please enter the date in the following format: (dd-mm-yy).");
 
             string userDateInput = Console.ReadLine();
-
-            if (userDateInput == "0") getUserInput.MainMenu();
 
             while (!DateTime.TryParseExact(userDateInput, "dd-MM-yy", new CultureInfo("en-US"), DateTimeStyles.None, out _))
             {
@@ -60,37 +81,25 @@ namespace CodingTracker.SamGannon
             return userDateInput;
         }
 
-        private void ValidateTimeFormat(string time)
+        public string CalculateDuration(string startTime, string endTime, Action crudProcess)
         {
-            while (!TimeSpan.TryParseExact(time, "hh\\:mm", CultureInfo.InvariantCulture, out _))
-            {
-                Console.WriteLine("\n\nDuration invalid. Please insert the duration: (Format: hh:mm) or type 0 to return to the main menu\n\n");
-                time = Console.ReadLine();
-                if (time == "0") getUserInput.MainMenu();
-            }
-        }
-
-        private string CalculateDuration(string startTime, string endTime)
-        {
-            TimeSpan start = TimeSpan.ParseExact(startTime, "hh\\:mm", CultureInfo.InvariantCulture);
-            TimeSpan end = TimeSpan.ParseExact(endTime, "hh\\:mm", CultureInfo.InvariantCulture);
+            TimeSpan start = TimeSpan.ParseExact(startTime, "HH\\:mm", CultureInfo.InvariantCulture);
+            TimeSpan end = TimeSpan.ParseExact(endTime, "HH\\:mm", CultureInfo.InvariantCulture);
 
             TimeSpan duration = end - start;
 
-            return duration.ToString("hh:mm");
+            return $"{(int)duration.TotalHours:D2}:{duration.Minutes:D2}";
         }
 
         internal int ValidateIdInput(string? commandInput)
         {
             while (!int.TryParse(commandInput, out _) || string.IsNullOrEmpty(commandInput) || Int32.Parse(commandInput) < 0)
             {
-                Console.WriteLine("\n You have to type a valid Id (or 0 to return to the Main Menu). \n");
+                Console.WriteLine("\n You have to type a valid Id\n");
                 commandInput = Console.ReadLine();
             }
 
             var id = Int32.Parse(commandInput);
-
-            if (id == 0) getUserInput.MainMenu();
 
             return id;
         }
