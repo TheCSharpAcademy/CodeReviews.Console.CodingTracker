@@ -6,6 +6,8 @@ namespace CodingTracker.SamGannon
     internal class GetUserInput
     {
         CodingController codingController = new();
+        CodingMenu codingMenu = new();
+        SleepMenu sleepMenu = new();
 
         internal void MainMenu()
         {
@@ -33,11 +35,11 @@ namespace CodingTracker.SamGannon
                         break;
                     case "1":
                         runningMainMenu = false;
-                        CodingMenu();
+                        codingMenu.ShowCodingMenu();
                         break;
                     case "2":
                         runningMainMenu = false;
-                        SleepMenu();
+                        sleepMenu.ShowSleepMenu();
                         break;
                     default:
                         Console.WriteLine("Inalid command press any key and enter to continue.");
@@ -45,57 +47,6 @@ namespace CodingTracker.SamGannon
                         break;
                 }
             }
-        }
-
-        private string CalculateSleepType(string duration)
-        {
-            TimeSpan sleepDuration = TimeSpan.ParseExact(duration, "h\\:mm", CultureInfo.InvariantCulture);
-
-            if (sleepDuration.TotalHours > 4)
-            {
-                return "long";
-            }
-            else
-            {
-                return "Short";
-            }
-        }
-
-
-
-        private string GetDurationInput()
-        {
-            Console.WriteLine("PLease enter the duration of your session in the following format: (hh:mm). Type 0 to return to main menu\n\n");
-
-            string userDuration = Console.ReadLine();
-
-            if (userDuration == "0") MainMenu();
-
-            while (!TimeSpan.TryParseExact(userDuration, "h\\:mm", CultureInfo.InvariantCulture, out _))
-            {
-                Console.WriteLine("\n\nDuration invalid. Please insert the duration: (Format: hh:mm) or type 0 to return to the main menu\n\n");
-                userDuration = Console.ReadLine();
-                if (userDuration == "0") MainMenu();
-            }
-
-            return userDuration;
-        }
-
-        private string GetDateInput()
-        {
-            Console.WriteLine("Please enter the date in the following format: (dd-mm-yy). Type 0 to return to the main menu.");
-
-            string userDateInput = Console.ReadLine();
-
-            if (userDateInput == "0") MainMenu();
-
-            while (!DateTime.TryParseExact(userDateInput, "dd-MM-yy", new CultureInfo("en-US"), DateTimeStyles.None, out _))
-            {
-                Console.WriteLine("\n\nNot a valid date. Please insert the date with the format: dd-mm-yy.\n\n");
-                userDateInput = Console.ReadLine();
-            }
-
-            return userDateInput;
         }
     }
 }

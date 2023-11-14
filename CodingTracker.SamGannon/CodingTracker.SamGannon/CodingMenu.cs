@@ -9,6 +9,10 @@ namespace CodingTracker.SamGannon
 {
     internal class CodingMenu
     {
+        CodingController codingController = new();
+        Validation validation = new();
+        GetUserInput getUserInput = new();
+
         internal void ShowCodingMenu()
         {
             Console.Clear();
@@ -61,13 +65,10 @@ namespace CodingTracker.SamGannon
 
         private void ProcessAdd()
         {
-            var date = GetDateInput();
-            var duration = GetDurationInput();
-
             Coding coding = new();
 
-            coding.Date = date;
-            coding.Duration = duration;
+            coding.Date = validation.GetDateInput();
+            coding.Duration = validation.GetDuration();
 
             codingController.Post(coding);
         }
@@ -79,15 +80,7 @@ namespace CodingTracker.SamGannon
 
             string commandInput = Console.ReadLine();
 
-            while (!int.TryParse(commandInput, out _) || string.IsNullOrEmpty(commandInput) || Int32.Parse(commandInput) < 0)
-            {
-                Console.WriteLine("\n You have to type a valid Id (or 0 to return to the Main Menu). \n");
-                commandInput = Console.ReadLine();
-            }
-
-            var id = Int32.Parse(commandInput);
-
-            if (id == 0) ShowCodingMenu();
+            var id = validation.ValidateIdInput(commandInput);
 
             var coding = codingController.GetById(id);
 
@@ -99,7 +92,6 @@ namespace CodingTracker.SamGannon
             }
 
             codingController.Delete(id);
-
         }
 
         private void UpdateRecord()
@@ -109,13 +101,7 @@ namespace CodingTracker.SamGannon
             Console.WriteLine("Please add id of the record you want to update (or 0 to return to the Main Menu).");
             string commandInput = Console.ReadLine();
 
-            while (!Int32.TryParse(commandInput, out _) || string.IsNullOrEmpty(commandInput) || Int32.Parse(commandInput) < 0)
-            {
-                Console.WriteLine("\nYou have to type an Id (or 0 to return to the Main Menu).\n");
-                commandInput = Console.ReadLine();
-            }
-
-            var id = Int32.Parse(commandInput);
+            var id = validation.ValidateIdInput(commandInput);
 
             if (id == 0) ShowCodingMenu();
 
@@ -142,11 +128,11 @@ namespace CodingTracker.SamGannon
                 switch (updateInput)
                 {
                     case "d":
-                        coding.Date = GetDateInput();
+                        coding.Date = validation.GetDateInput();
                         updating = false;
                         break;
                     case "t":
-                        coding.Duration = GetDurationInput();
+                        coding.Duration = validation.GetDuration();
                         updating = false;
                         break;
                     case "0":
@@ -161,7 +147,7 @@ namespace CodingTracker.SamGannon
             codingController.Update(coding);
             Console.WriteLine("record updated Press a key to continue");
             Console.ReadLine();
-            ShowCodingMenu();
+            getUserInput.MainMenu();
         }
     }
 }

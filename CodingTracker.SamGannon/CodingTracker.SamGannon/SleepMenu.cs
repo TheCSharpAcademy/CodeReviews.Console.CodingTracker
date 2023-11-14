@@ -9,6 +9,10 @@ namespace CodingTracker.SamGannon
 {
     internal class SleepMenu
     {
+        CodingController codingController = new();
+        Validation validation = new();
+        GetUserInput getUserInput = new();
+
         internal void ShowSleepMenu()
         {
             Console.Clear();
@@ -60,13 +64,10 @@ namespace CodingTracker.SamGannon
 
         private void ProcessSleepAdd()
         {
-            var duration = GetDurationInput();
-            var sleepType = CalculateSleepType(duration);
-
             Sleep sleep = new();
 
-            sleep.Duration = duration;
-            sleep.SleepType = sleepType;
+            sleep.Duration = validation.GetDuration();
+            sleep.SleepType = validation.CalculateSleepType(sleep.Duration);
 
             codingController.PostSleep(sleep);
         }
@@ -78,15 +79,9 @@ namespace CodingTracker.SamGannon
 
             string commandInput = Console.ReadLine();
 
-            while (!int.TryParse(commandInput, out _) || string.IsNullOrEmpty(commandInput) || Int32.Parse(commandInput) < 0)
-            {
-                Console.WriteLine("\n You have to type a valid Id (or 0 to return to the Main Menu). \n");
-                commandInput = Console.ReadLine();
-            }
+            var id = validation.ValidateIdInput(commandInput);
 
-            var id = Int32.Parse(commandInput);
-
-            if (id == 0) MainMenu();
+            if (id == 0) getUserInput.MainMenu();
 
             var sleep = codingController.GetBySleepId(id);
 
@@ -106,22 +101,16 @@ namespace CodingTracker.SamGannon
             Console.WriteLine("Please add id of the record you want to update (or 0 to return to the Main Menu).");
             string commandInput = Console.ReadLine();
 
-            while (!Int32.TryParse(commandInput, out _) || string.IsNullOrEmpty(commandInput) || Int32.Parse(commandInput) < 0)
-            {
-                Console.WriteLine("\nYou have to type an Id (or 0 to return to the Main Menu).\n");
-                commandInput = Console.ReadLine();
-            }
+            var id = validation.ValidateIdInput(commandInput);
 
-            var id = Int32.Parse(commandInput);
-
-            if (id == 0) MainMenu();
+            if (id == 0) getUserInput.MainMenu();
 
             var sleep = codingController.GetBySleepId(id);
 
             while (sleep.Id == 0)
             {
                 Console.WriteLine($"\nRecord with Id {id} doesn't exist\n");
-                UpdateRecord();
+                UpdateSleepRecord();
             }
 
             var updateInput = "";
@@ -139,12 +128,12 @@ namespace CodingTracker.SamGannon
                 switch (updateInput)
                 {
                     case "u":
-                        sleep.Duration = GetDurationInput();
-                        sleep.SleepType = CalculateSleepType(sleep.Duration);
+                        sleep.Duration = validation.GetDuration();
+                        sleep.SleepType = validation.CalculateSleepType(sleep.Duration);
                         updating = false;
                         break;
                     case "0":
-                        MainMenu();
+                        getUserInput.MainMenu();
                         break;
                     default:
                         Console.WriteLine($"\nType '0' to go back to the Main Menu");
@@ -155,7 +144,7 @@ namespace CodingTracker.SamGannon
             codingController.UpdateSleep(sleep);
             Console.WriteLine("Record has been updated. Press a key to continue");
             Console.ReadLine();
-            MainMenu();
+            getUserInput.MainMenu();
         }
     }
 }
