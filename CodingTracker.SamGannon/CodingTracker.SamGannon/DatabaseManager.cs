@@ -45,6 +45,5 @@ namespace CodingTracker.SamGannon
 
             }
         }
-
     }
 }
