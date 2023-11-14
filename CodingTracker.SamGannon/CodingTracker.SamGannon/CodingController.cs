@@ -1,7 +1,7 @@
 ﻿using CodingTracker.SamGannon.Models;
 using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using System.Configuration;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace CodingTracker.SamGannon
