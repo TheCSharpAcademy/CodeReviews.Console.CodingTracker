@@ -23,10 +23,10 @@ public class Validation
     public string GetStartTime()
     {
         Console.WriteLine("Please enter the start time of your session in the following format: (HH:mm).");
-        Console.WriteLine("Use 24-hour format (e.g., 17:45).");
+        Console.WriteLine("Use 24-hour format (e.g., 17:45).\n");
 
         string startTime = Console.ReadLine();
-        ValidateTimeFormat(startTime);
+        startTime = ValidateTimeFormat(startTime);
 
         return startTime;
     }
@@ -37,18 +37,20 @@ public class Validation
         Console.WriteLine("Use 24-hour format (e.g., 17:45).");
 
         string endTime = Console.ReadLine();
-        ValidateTimeFormat(endTime);
+        endTime = ValidateTimeFormat(endTime);
 
         return endTime;
     }
 
-    private void ValidateTimeFormat(string time)
+    private string ValidateTimeFormat(string time)
     {
         while (!IsValid24HourFormat(time))
         {
             Console.WriteLine("\n\nDuration invalid. Please insert the duration in 24-hour format HH:mm: (e.g., 17:45)\n\n");
             time = Console.ReadLine();
         }
+
+        return time;
     }
 
     private bool IsValid24HourFormat(string time)
@@ -56,7 +58,7 @@ public class Validation
         bool isValid = TimeSpan.TryParseExact(time, "hh\\:mm", CultureInfo.InvariantCulture, out _);
         if (!isValid)
         {
-            Console.WriteLine($"Invalid time format: {time}");
+            return false;
         }
         return isValid;
     }
@@ -76,20 +78,23 @@ public class Validation
         return userDateInput;
     }
 
-    public string CalculateDuration(string startTime, string endTime, Action crudProcess)
+    public string CalculateDuration(string startTime, string endTime)
     {
         TimeSpan tsStartTime = TimeSpan.ParseExact(startTime, "h\\:mm", CultureInfo.InvariantCulture);
         TimeSpan tsEndTime = TimeSpan.ParseExact(endTime, "hh\\:mm", CultureInfo.InvariantCulture);
 
         while (tsEndTime < tsStartTime)
         {
-            Console.WriteLine("\nEnd time cannot occur before the start time. Please try again.");
+            Console.WriteLine("\nEnd time cannot occur before the start time. Please try again.\n");
 
             startTime = GetStartTime();
             ValidateTimeFormat(startTime);
 
             endTime = GetEndTime();
             ValidateTimeFormat(endTime);
+
+            tsStartTime = TimeSpan.ParseExact(startTime, "h\\:mm", CultureInfo.InvariantCulture);
+            tsEndTime = TimeSpan.ParseExact(endTime, "hh\\:mm", CultureInfo.InvariantCulture);
         }
 
         TimeSpan duration = tsEndTime - tsStartTime;

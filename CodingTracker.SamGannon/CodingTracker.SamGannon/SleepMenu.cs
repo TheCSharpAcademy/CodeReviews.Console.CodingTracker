@@ -63,7 +63,7 @@ internal class SleepMenu
         Validation validation = new();
         var startTime = validation.GetStartTime();
         var endTime = validation.GetEndTime();
-        var duration = validation.CalculateDuration(startTime, endTime, ProcessSleepAdd);
+        var duration = validation.CalculateDuration(startTime, endTime);
 
         Sleep sleep = new();
 
@@ -138,7 +138,7 @@ internal class SleepMenu
                 case "u":
                     var startTime = validation.GetStartTime();
                     var endTime = validation.GetEndTime();
-                    sleep.Duration = validation.CalculateDuration(startTime, endTime, UpdateSleepRecord);
+                    sleep.Duration = validation.CalculateDuration(startTime, endTime);
                     sleep.SleepType = validation.CalculateSleepType(sleep.Duration);
                     updating = false;
                     break;

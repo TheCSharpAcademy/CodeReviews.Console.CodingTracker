@@ -64,7 +64,7 @@ internal class CodingMenu
         Validation validation = new();
         var startTime = validation.GetStartTime();
         var endTime = validation.GetEndTime();
-        var duration = validation.CalculateDuration(startTime, endTime, ProcessAdd);
+        var duration = validation.CalculateDuration(startTime, endTime);
 
         Coding coding = new();
 
@@ -141,7 +141,7 @@ internal class CodingMenu
                 case "t":
                     var startTime = validation.GetStartTime();
                     var endTime = validation.GetEndTime();
-                    coding.Duration = validation.CalculateDuration(startTime, endTime, UpdateRecord);
+                    coding.Duration = validation.CalculateDuration(startTime, endTime);
                     updating = false;
                     break;
                 case "0":
