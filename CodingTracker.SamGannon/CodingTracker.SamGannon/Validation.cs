@@ -61,7 +61,6 @@ public class Validation
         return isValid;
     }
 
-
     public string GetDateInput()
     {
         Console.WriteLine("Please enter the date in the following format: (dd-mm-yy).");
@@ -79,11 +78,21 @@ public class Validation
 
     public string CalculateDuration(string startTime, string endTime, Action crudProcess)
     {
-        TimeSpan start = TimeSpan.ParseExact(startTime, "hh\\:mm", CultureInfo.InvariantCulture);
-        TimeSpan end = TimeSpan.ParseExact(endTime, "hh\\:mm", CultureInfo.InvariantCulture);
+        TimeSpan tsStartTime = TimeSpan.ParseExact(startTime, "h\\:mm", CultureInfo.InvariantCulture);
+        TimeSpan tsEndTime = TimeSpan.ParseExact(endTime, "hh\\:mm", CultureInfo.InvariantCulture);
 
-        TimeSpan duration = end - start;
+        while (tsEndTime < tsStartTime)
+        {
+            Console.WriteLine("\nEnd time cannot occur before the start time. Please try again.");
 
+            startTime = GetStartTime();
+            ValidateTimeFormat(startTime);
+
+            endTime = GetEndTime();
+            ValidateTimeFormat(endTime);
+        }
+
+        TimeSpan duration = tsEndTime - tsStartTime;
         return $"{(int)duration.TotalHours:D2}:{duration.Minutes:D2}";
     }
 
