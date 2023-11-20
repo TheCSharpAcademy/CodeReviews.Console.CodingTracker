@@ -1,8 +1,6 @@
-﻿using System.Configuration;
-using System.Collections.Specialized;
+﻿using CodingTracker;
 using Microsoft.Data.Sqlite;
-using CodingTracker.Models;
-using CodingTracker;
+using System.Configuration;
 
 
 //initialize DB

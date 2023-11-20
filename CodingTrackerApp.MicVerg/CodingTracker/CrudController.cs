@@ -1,13 +1,7 @@
 ﻿using CodingTracker.Models;
 using ConsoleTableExt;
 using Microsoft.Data.Sqlite;
-using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Collections.Specialized.BitVector32;
 
 namespace CodingTracker
 {
