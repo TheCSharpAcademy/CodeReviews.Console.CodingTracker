@@ -16,9 +16,19 @@ namespace CodingTracker
             Console.WriteLine("\t++ Inserting new record ++");
             Console.WriteLine("\t++++++++++++++++++++++++++");
 
-            DateTime parsedStartDate = Validation.ParseAndValidateDate("\nEnter a start time. (d/M/yyyy HH:mm)");
-            DateTime parsedEndDate = Validation.ParseAndValidateDate("\nEnter an end time. (d/M/yyyy HH:mm)");
-            TimeSpan duration = parsedEndDate - parsedStartDate;
+            DateTime parsedStartDate, parsedEndDate;
+            TimeSpan duration;
+            do
+            {
+                parsedStartDate = Validation.ParseAndValidateDate("\nEnter a start time. (d/M/yyyy HH:mm)");
+                parsedEndDate = Validation.ParseAndValidateDate("\nEnter an end time. (d/M/yyyy HH:mm)");
+                duration = parsedEndDate - parsedStartDate;
+
+                if (duration.TotalMinutes < 0)
+                {
+                    Console.WriteLine("End date should be greater than or equal to start date. Please try again.");
+                }
+            } while (duration.TotalMinutes < 0);
 
             //write to db
             using (var connection = new SqliteConnection(connectionString))
@@ -175,9 +185,20 @@ namespace CodingTracker
                 Console.Clear();
             }
 
-            DateTime newStartDate = Validation.ParseAndValidateDate("\nEnter new start time. (d/M/yyyy HH:mm)");
-            DateTime newEndDate = Validation.ParseAndValidateDate("\nEnter new end time. (d/M/yyyy HH:mm)");
-            TimeSpan newDuration = newEndDate - newStartDate;
+            DateTime newStartDate, newEndDate;
+            TimeSpan newDuration;
+            do
+            {
+                newStartDate = Validation.ParseAndValidateDate("\nEnter new start time. (d/M/yyyy HH:mm)");
+                newEndDate = Validation.ParseAndValidateDate("\nEnter new end time. (d/M/yyyy HH:mm)");
+                newDuration = newEndDate - newStartDate;
+
+                if (newDuration.TotalMinutes < 0)
+                {
+                    Console.WriteLine("End date should be greater than or equal to start date. Please try again.");
+                }
+            } while (newDuration.TotalMinutes < 0);
+            
 
             // update in db
             using (var connection = new SqliteConnection(connectionString))
