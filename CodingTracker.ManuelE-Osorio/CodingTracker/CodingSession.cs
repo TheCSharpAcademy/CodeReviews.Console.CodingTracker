@@ -1,33 +1,31 @@
-using System.Diagnostics.Contracts;
+using System.Diagnostics;
+using System.Globalization;
 
 class CodingSession
 {
-    private string StartDate;
-    private string StartTime;
-    private string EndDate;
-    private string EndTime;
+    public DateTime StartDateTime;
+    public DateTime EndDateTime;
 
-    public CodingSession(string _startDate, string _startTime, string _endDate, string _endTime)
+    public TimeSpan ElapsedTime;
+
+    public int ID;
+
+    public CodingSession(string id, string startDate, string startTime, string endDate, string endTime)
     {
-        StartDate = _startDate;
-        StartTime = _startTime;
-        EndDate = _endDate;
-        EndTime = _endTime;
+        DateTime.TryParseExact(startDate+" "+startTime, "yyyy/MM/dd HH:mm",CultureInfo.InvariantCulture,
+        DateTimeStyles.None,out StartDateTime);
+        DateTime.TryParseExact(endDate+" "+endTime, "yyyy/MM/dd HH:mm",CultureInfo.InvariantCulture,
+        DateTimeStyles.None,out DateTime TempDateTime);
+        EndDateTime = TempDateTime;
+        ID = Convert.ToInt32(id);
+        ElapsedTime = EndDateTime - StartDateTime;
     }
 
-    public string SessionTime()
+    public CodingSession(int id, DateTime startDateTime, DateTime endDateTime, TimeSpan elapsedTime)
     {
-        TimeOnly startDateTime;
-        TimeOnly endDateTime;
-        TimeSpan elapsedTime;
-        string elpasedTimeString;
-
-        TimeOnly.TryParseExact(StartTime,"HH:mm", out startDateTime);
-        TimeOnly.TryParseExact(EndTime,"HH:mm",out endDateTime);
-        
-        elapsedTime = endDateTime - startDateTime;
-        elpasedTimeString = elapsedTime.Hours.ToString()+":"+elapsedTime.Minutes.ToString();
-        
-        return elpasedTimeString;
+        StartDateTime = startDateTime;
+        EndDateTime = endDateTime;
+        ID = id;
+        ElapsedTime = elapsedTime;
     }
 }

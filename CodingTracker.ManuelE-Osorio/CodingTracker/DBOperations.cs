@@ -1,8 +1,14 @@
+using System.Collections;
 using Microsoft.Data.Sqlite;
+using System.Configuration;
+using System.Collections.Specialized;
 
 class DBOperations
 {
-    public static void CreateTable(string connectionString, string tableName)
+    private static readonly string connectionString = ConfigurationManager.ConnectionStrings["CodingTrackerConnectionString"].ConnectionString;
+    private static readonly string? tableName = ConfigurationManager.AppSettings.Get("TableName");
+    
+    public static void CreateTable()
     {
         using (var connection = new SqliteConnection(connectionString))
         {
@@ -14,14 +20,15 @@ class DBOperations
                 StartDate STRING,
                 StartTime STRING,
                 EndDate STRING,
-                EndTime STRING )";
+                EndTime STRING,
+                SessionTime STRING)";
 
             tableCmd.ExecuteNonQuery();
             connection.Close();
         }
     }
 
-    public static void DeleteTable(string connectionString, string tableName)
+    public static void DeleteTable()
     {
         using (var connection = new SqliteConnection(connectionString))
         {
@@ -35,10 +42,10 @@ class DBOperations
         }
     }
 
-    public static bool IsTableEmpty(string connectionString, string tableName)
+    public static bool IsTableEmpty()
     {
         bool isDBEmpty = true;
-        if(TableExists(connectionString,tableName))
+        if(TableExists())
         {
             using (var connection = new SqliteConnection(connectionString))
             {
@@ -57,7 +64,7 @@ class DBOperations
         return isDBEmpty;
     }
 
-    public static bool TableExists(string connectionString, string tableName)
+    public static bool TableExists()
     {
         bool tableExists;
         using (var connection = new SqliteConnection(connectionString))
@@ -76,20 +83,19 @@ class DBOperations
         return tableExists;
     }
 
-    public static bool InsertValue(string connectionString, string tableName, string startDate, string startTime,
-    string endDate, string endTime)
+    public static bool InsertValue(string startDate, string startTime, string endDate, string endTime, string sessionTime)
     {
         bool insertSuccess = false;
         int rowsUpdated;
-        if(TableExists(connectionString,tableName))
+        if(TableExists())
         {
             using (var connection = new SqliteConnection(connectionString))
             {
                 connection.Open();
                 var tableCmd = connection.CreateCommand();
 
-                tableCmd.CommandText = $@"INSERT INTO {tableName} (StartDate, EndDate, StartTime, EndTime)
-                    VALUES ( '{startDate}', '{endDate}', '{startTime}', '{endTime}');";
+                tableCmd.CommandText = $@"INSERT INTO {tableName} (StartDate, EndDate, StartTime, EndTime, SessionTime)
+                    VALUES ( '{startDate}', '{endDate}', '{startTime}', '{endTime}','{sessionTime}');";
 
                 rowsUpdated = tableCmd.ExecuteNonQuery();
                 if (rowsUpdated>0)
@@ -103,11 +109,11 @@ class DBOperations
         return insertSuccess;
     }
 
-    public static bool InsertValue(string connectionString, string tableName, string startDate, string startTime)
+    public static bool InsertValue(string startDate, string startTime)
     {
         bool insertSuccess = false;
         int rowsUpdated;
-        if(TableExists(connectionString,tableName))
+        if(TableExists())
         {
             using (var connection = new SqliteConnection(connectionString))
             {
@@ -133,7 +139,7 @@ class DBOperations
     {
         bool deleteValueSuccess = false;
        
-        if (TableExists(connectionString, tableName))
+        if (TableExists())
         {
             using (var connection = new SqliteConnection(connectionString))
             {
@@ -150,11 +156,10 @@ class DBOperations
         return deleteValueSuccess;
     }
 
-    public static bool UpdateValue(string connectionString, string tableName, int ID, string startDate, string startTime,
-    string endDate, string endTime)
+    public static bool UpdateValue(int ID, string startDate, string startTime, string endDate, string endTime)
     {
         bool updateValueSuccess = false; 
-        if (TableExists(connectionString,tableName))
+        if (TableExists())
         {
             using (var connection = new SqliteConnection(connectionString))
             {
@@ -176,4 +181,125 @@ class DBOperations
         }
         return updateValueSuccess;
     }
+
+    public static bool SelectValue(List<CodingSession> codingSessions)
+    {
+        bool selectValueSuccess = false;
+    
+        if(TableExists())
+        {        
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+                var tableCmd = connection.CreateCommand();
+
+                tableCmd.CommandText = $@"SELECT ID, StartDate, StartTime, EndDate, EndTime                
+                FROM {tableName};";
+
+                SqliteDataReader reader = tableCmd.ExecuteReader();
+
+                while(reader.Read())
+                {
+                    codingSessions.Add(new (
+                        reader.GetString(0),
+                        reader.GetString(1),
+                        reader.GetString(2),
+                        reader.GetString(3),
+                        reader.GetString(4)         
+                    ));
+                }
+                connection.Close(); 
+            }
+        }
+
+
+        return selectValueSuccess;
+    }
+
+    public static bool SelectValue(List<CodingSession> codingSessions,string startDate, string endDate)
+    {
+        bool selectValueSuccess = false;
+    
+        if(TableExists())
+        {        
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+                var tableCmd = connection.CreateCommand();
+
+                tableCmd.CommandText = $@"SELECT ID, StartDate, StartTime, EndDate, EndTime                
+                FROM {tableName}
+                WHERE StartDate BETWEEN '{startDate}' AND '{endDate}';";
+
+                SqliteDataReader reader = tableCmd.ExecuteReader();
+
+                while(reader.Read())
+                {
+                    codingSessions.Add(new (
+                        reader.GetString(0),
+                        reader.GetString(1),
+                        reader.GetString(2),
+                        reader.GetString(3),
+                        reader.GetString(4)         
+                    ));
+                }
+                connection.Close(); 
+            }
+        }
+
+
+        return selectValueSuccess;
+    }
+
+    public static bool SelectValue(List<CodingSession> codingSessions,string startDate, string endDate,int operation)
+    {
+        bool selectValueSuccess = false;
+        string operationString = "ASC";
+
+
+        switch(operation)
+        {
+            case(1):
+                operationString = ";";
+                break;
+            case(2):
+                operationString = " ORDER BY SessionTime DESC;";
+                break;
+            case(3):
+                operationString = " ORDER BY SessionTime ASC;";
+                break;        
+        }
+
+        if(TableExists())
+        {        
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+                var tableCmd = connection.CreateCommand();
+
+                tableCmd.CommandText = $@"SELECT ID, StartDate, StartTime, EndDate, EndTime                
+                FROM {tableName}
+                WHERE StartDate BETWEEN '{startDate}' AND '{endDate}'
+                {operationString};";
+
+                SqliteDataReader reader = tableCmd.ExecuteReader();
+
+                while(reader.Read())
+                {
+                    codingSessions.Add(new (
+                        reader.GetString(0),
+                        reader.GetString(1),
+                        reader.GetString(2),
+                        reader.GetString(3),
+                        reader.GetString(4)         
+                    ));
+                }
+                connection.Close(); 
+            }
+        }
+
+
+        return selectValueSuccess;
+    }
+
 }
