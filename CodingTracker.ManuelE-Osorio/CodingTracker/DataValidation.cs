@@ -5,9 +5,23 @@ class DataValidation
     public static bool ValidateInteger(string? input)
     {
         bool validInput;
-        input = input?.Trim();
 
         validInput = int.TryParse(input, out int validInputInt);
+        return validInput;
+    }
+
+    public static bool ValidateInteger(string? input, int minvalue, int maxvalue)
+    {
+        bool validInput;
+
+        validInput = int.TryParse(input, out int validInputInt);
+        if(validInput)
+        {
+            if(validInputInt<minvalue || validInputInt > maxvalue)
+            {
+                validInput = false;
+            }
+        }
         return validInput;
     }
 
@@ -57,7 +71,6 @@ class DataValidation
     public static bool ValidateYesNoQuestion(string? input)
     {
         bool validInput = false;
-        input = input?.ToLower().Trim();
 
         if (input == "y" || input == "n")
         {

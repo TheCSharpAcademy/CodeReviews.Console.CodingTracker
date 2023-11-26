@@ -10,7 +10,7 @@ class CodingSession
 
     public int ID;
 
-    public CodingSession(string id, string startDate, string startTime, string endDate, string endTime)
+    public CodingSession(string? id, string? startDate, string? startTime, string? endDate, string? endTime)
     {
         DateTime.TryParseExact(startDate+" "+startTime, "yyyy/MM/dd HH:mm",CultureInfo.InvariantCulture,
         DateTimeStyles.None,out StartDateTime);
@@ -27,5 +27,18 @@ class CodingSession
         EndDateTime = endDateTime;
         ID = id;
         ElapsedTime = elapsedTime;
+    }
+
+    public string[] GetString()
+    {
+        string[] codingSessionString = new string[6];
+        
+        codingSessionString[0] = StartDateTime.Date.ToString("yyyy/MM/dd");
+        codingSessionString[1] = StartDateTime.TimeOfDay.ToString("hh\\:mm");
+        codingSessionString[2] = EndDateTime.Date.ToString("yyyy/MM/dd");
+        codingSessionString[3] = EndDateTime.TimeOfDay.ToString("hh\\:mm");
+        codingSessionString[4] = ElapsedTime.ToString("d\\.hh\\:mm");
+        codingSessionString[5] = ID.ToString();
+        return codingSessionString;
     }
 }

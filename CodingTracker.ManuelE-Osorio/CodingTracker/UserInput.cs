@@ -118,4 +118,56 @@ class UserInput
 
         return answer;
     }
+
+    public static string? GetSortOperation()
+    {
+        bool sortOperationInvalid = true;
+        string? sortOperation;
+
+        Console.Clear();
+        Console.WriteLine("Please select one of the following values\n"+
+            "1) Ascending\n"+
+            "2) Descending\n");
+        
+        do
+        {
+            sortOperation = Console.ReadLine();
+            if(DataValidation.ValidateInteger(sortOperation, 1, 2))
+            {
+                sortOperationInvalid = false;   
+            }
+            else
+            {
+                Console.WriteLine("The value you entered is invalid. Please enter a valid option:");
+            }
+        }
+        while(sortOperationInvalid);
+
+        return sortOperation;
+    }
+
+    public static string? GetID(List<CodingSession> modifyCodingSession)
+    {
+        string? selectedID;
+        bool IDInvalid = true;
+
+        Console.WriteLine("Please enter the ID you want to modify");
+
+        do
+        {
+            selectedID = Console.ReadLine();
+            if(DataValidation.ValidateInteger(selectedID) && modifyCodingSession.Any(
+            modifyCodingSession=>modifyCodingSession.ID==Convert.ToInt32(selectedID)))
+            {
+                IDInvalid = false;
+            }
+            else
+            {
+                Console.WriteLine("The value you entered is invalid. Please enter a valid value:");
+            }
+        }
+        while(IDInvalid);
+
+        return selectedID;
+    }
 }
