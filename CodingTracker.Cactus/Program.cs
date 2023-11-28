@@ -30,6 +30,9 @@ namespace ConConfig
                     case "2":
                         ShowAllCodingSessionRecords();
                         break;
+                    case "3":
+                        UpdateSpecificWaterHabitRecord();
+                        break;
                     default:
                         break;
                 }
@@ -81,6 +84,22 @@ namespace ConConfig
                                         $"endTime: {session.EndTime.ToString("dd-MM-yyyy")}\t" +
                                         $"duration: {session.Duration}\n"));
             Console.WriteLine("-------------------------------------------------------------------------------");
+        }
+
+        private static void UpdateSpecificWaterHabitRecord()
+        {
+            Console.Clear();
+            Console.WriteLine("UPDATE MENU");
+            ShowAllCodingSessionRecords();
+            if (codingSessionCache == null || codingSessionCache.Count == 0) return;
+            HashSet<int> ids = codingSessionCache.Select(x => x.Id).ToHashSet<int>();
+            int id = InputUtils.GetInValidInputId(ids);
+            DateTime startTime = InputUtils.GetValidTime();
+            DateTime endTime = InputUtils.GetValidTime("end");
+            CodingSession codingSession = codingSessionCache.Where(session => session.Id == id).ToList()[0];
+            codingSession.StartTime = startTime;
+            codingSession.EndTime = endTime;
+            CodingSessionDBHelper.Update(codingSession);
         }
     }
 }

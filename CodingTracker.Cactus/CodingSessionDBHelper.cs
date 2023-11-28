@@ -72,7 +72,7 @@ namespace CodingTracker.Cactus
             {
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText = $@"UPDATE codingSession SET startTime='{codingSession.StartTime}', 
+                command.CommandText = $@"UPDATE codingTracker SET startTime='{codingSession.StartTime}', 
                                          endTime='{codingSession.EndTime}'
                                          WHERE id='{codingSession.Id}'";
                 command.ExecuteNonQuery();

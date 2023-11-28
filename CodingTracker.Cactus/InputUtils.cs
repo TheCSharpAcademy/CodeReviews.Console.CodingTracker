@@ -17,5 +17,18 @@ namespace ConConfig
             }
             return date;
         }
+
+        public static int GetInValidInputId(HashSet<int> ids)
+        {
+            Console.WriteLine($"Please type a id you want to operate:");
+            int id = -1;
+            string? idStr = Console.ReadLine();
+            while (!int.TryParse(idStr, out id) || !ids.Contains(id))
+            {
+                Console.WriteLine($"Sorry, your id is invalid. Please type a valid id:");
+                idStr = Console.ReadLine();
+            }
+            return id;
+        }
     }
 }
