@@ -21,16 +21,17 @@
 
         public DateTime EndTime { set; get; }
 
-        public int Duration
+        public double Duration
         {
             get
             {
-                return CalculateDuration();
+                return Math.Round(CalculateDuration(), 0);
             }
         }
-        public int CalculateDuration()
+        public double CalculateDuration()
         {
-            return EndTime.Minute - StartTime.Minute;
+
+            return (EndTime - StartTime).TotalMinutes;
         }
     }
 }
