@@ -31,7 +31,10 @@ namespace ConConfig
                         ShowAllCodingSessionRecords();
                         break;
                     case "3":
-                        UpdateSpecificWaterHabitRecord();
+                        UpdateSpecificCodingSessionRecord();
+                        break;
+                    case "4":
+                        DeleteSpecificCodingSessionRecord();
                         break;
                     default:
                         break;
@@ -77,7 +80,7 @@ namespace ConConfig
                 Console.WriteLine("There is no coding session record.");
                 return;
             }
-            Console.WriteLine("---------------------------------Habit Records---------------------------------");
+            Console.WriteLine("---------------------------------Coding Session---------------------------------");
             codingSessionCache.ForEach(session => Console.WriteLine(
                                         $"id: {session.Id}\t" +
                                         $"startTime: {session.StartTime.ToString("dd-MM-yyyy")}\t" +
@@ -86,7 +89,7 @@ namespace ConConfig
             Console.WriteLine("-------------------------------------------------------------------------------");
         }
 
-        private static void UpdateSpecificWaterHabitRecord()
+        private static void UpdateSpecificCodingSessionRecord()
         {
             Console.Clear();
             Console.WriteLine("UPDATE MENU");
@@ -100,6 +103,18 @@ namespace ConConfig
             codingSession.StartTime = startTime;
             codingSession.EndTime = endTime;
             CodingSessionDBHelper.Update(codingSession);
+        }
+
+        private static void DeleteSpecificCodingSessionRecord()
+        {
+            Console.Clear();
+            Console.WriteLine("DELETE MENU");
+            ShowAllCodingSessionRecords();
+            if (codingSessionCache == null || codingSessionCache.Count == 0) return;
+            HashSet<int> ids = codingSessionCache.Select(x => x.Id).ToHashSet<int>();
+            int id = InputUtils.GetInValidInputId(ids);
+            CodingSessionDBHelper.Delete(id);
+            codingSessionCache = CodingSessionDBHelper.SeleteAll(); // Update the cache after deleting a record
         }
     }
 }
