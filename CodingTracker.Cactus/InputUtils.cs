@@ -7,12 +7,12 @@ namespace ConConfig
         public static DateTime GetValidTime(string dateType = "start")
         {
             DateTime date;
-            Console.WriteLine($"Please type your {dateType} date(dd-MM-yyyy):");
+            Console.WriteLine($"Please type your {dateType} date(HH:mm dd-MM-yyyy):");
             string? dateStr = Console.ReadLine();
-            while (!DateTime.TryParseExact(dateStr, "dd-MM-yyyy", new CultureInfo("en-US"),
+            while (!DateTime.TryParseExact(dateStr, "HH:mm dd-MM-yyyy", new CultureInfo("en-US"),
                                    DateTimeStyles.None, out date))
             {
-                Console.WriteLine("Sorry, your date is invalid. Please type a valid date(dd-MM-yyyy):");
+                Console.WriteLine("Sorry, your date is invalid. Please type a valid date(HH:mm dd-MM-yyyy):");
                 dateStr = Console.ReadLine();
             }
             return date;

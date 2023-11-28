@@ -40,7 +40,7 @@ namespace ConConfig
                     default:
                         break;
                 }
-                Console.Write("\n Press 'q' and Enter to close the app, or press any other key and Enter to return MAIN MENU. ");
+                Console.Write("\nPress 'q' and Enter to close the app, or press any other key and Enter to return MAIN MENU. ");
                 if (Console.ReadLine() == "q") endApp = true;
                 Console.WriteLine("\n");
             }
@@ -68,8 +68,20 @@ namespace ConConfig
         {
             Console.Clear();
             Console.WriteLine("=> INSERT");
+            bool isValidSession = false;
             DateTime startTime = InputUtils.GetValidTime();
             DateTime endTime = InputUtils.GetValidTime("end");
+            while (!isValidSession)
+            {
+                if (startTime.CompareTo(endTime) <= 0)
+                {
+                    isValidSession = true;
+                    continue;
+                }
+                Console.WriteLine("[!] Start time should not later than end time.\n");
+                startTime = InputUtils.GetValidTime();
+                endTime = InputUtils.GetValidTime("end");
+            }
             CodingSession codingSession = new CodingSession(startTime, endTime);
             codingSession.Id = CodingSessionDBHelper.Insert(codingSession);
             if (codingSession.Id != -1)
