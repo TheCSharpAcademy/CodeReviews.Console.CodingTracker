@@ -100,9 +100,20 @@ namespace ConConfig
                 return;
             }
             Console.WriteLine("CODE SESSION RECORDS TABLE:");
+            var records = new List<List<object>>();
+            codingSessionCache.ForEach(session =>
+            {
+                var data = new List<object>
+                {
+                    session.Id.ToString(),
+                    session.StartTime.ToString("HH:mm dd-MM-yyyy"),
+                    session.EndTime.ToString("HH:mm dd-MM-yyyy"),
+                    $"{session.Duration}min"
+                };
+                records.Add(data);
+            });
             ConsoleTableBuilder
-                .From(codingSessionCache)
-                .WithFormat(ConsoleTableBuilderFormat.Alternative)
+                .From(records)
                 .ExportAndWriteLine();
         }
 
