@@ -1,4 +1,5 @@
 ﻿using CodingTracker.Cactus;
+using ConsoleTableExt;
 
 namespace ConConfig
 {
@@ -39,8 +40,8 @@ namespace ConConfig
                     default:
                         break;
                 }
-                Console.Write("Press 'n' and Enter to close the app, or press any other key and Enter to continue. ");
-                if (Console.ReadLine() == "n") endApp = true;
+                Console.Write("\n Press 'q' and Enter to close the app, or press any other key and Enter to return MAIN MENU. ");
+                if (Console.ReadLine() == "q") endApp = true;
                 Console.WriteLine("\n");
             }
         }
@@ -48,19 +49,25 @@ namespace ConConfig
         private static void PrintMenu()
         {
             Console.Clear();
-            Console.WriteLine("---------------------------------------------------------");
-            Console.WriteLine("= Main Menu =");
-            Console.WriteLine("<0> Exit app.");
-            Console.WriteLine("<1> Insert a coding record.");
-            Console.WriteLine("<2> Show all coding records.");
-            Console.WriteLine("<3> Update a specific coding record.");
-            Console.WriteLine("<4> Delete a specific coding record.");
-            Console.WriteLine("---------------------------------------------------------");
+            List<string> menuData = new List<string>
+            {
+                "<0> Exit app.",
+                "<1> Insert a coding record.",
+                "<2> Show all coding records.",
+                "<3> Update a specific coding record.",
+                "<4> Delete a specific coding record."
+            };
+            ConsoleTableBuilder
+            .From(menuData)
+            .WithTitle("MAIN MENU", ConsoleColor.Yellow, ConsoleColor.DarkGray)
+            .WithFormat(ConsoleTableBuilderFormat.Alternative)
+            .ExportAndWriteLine(TableAligntment.Center);
         }
+
         private static void InsertCodingSessionRecord()
         {
             Console.Clear();
-            Console.WriteLine("= Insert Menu =");
+            Console.WriteLine("=> INSERT");
             DateTime startTime = InputUtils.GetValidTime();
             DateTime endTime = InputUtils.GetValidTime("end");
             CodingSession codingSession = new CodingSession(startTime, endTime);
@@ -80,19 +87,17 @@ namespace ConConfig
                 Console.WriteLine("There is no coding session record.");
                 return;
             }
-            Console.WriteLine("---------------------------------Coding Session---------------------------------");
-            codingSessionCache.ForEach(session => Console.WriteLine(
-                                        $"id: {session.Id}\t" +
-                                        $"startTime: {session.StartTime.ToString("dd-MM-yyyy")}\t" +
-                                        $"endTime: {session.EndTime.ToString("dd-MM-yyyy")}\t" +
-                                        $"duration: {session.Duration}\n"));
-            Console.WriteLine("-------------------------------------------------------------------------------");
+            Console.WriteLine("CODE SESSION RECORDS TABLE:");
+            ConsoleTableBuilder
+                .From(codingSessionCache)
+                .WithFormat(ConsoleTableBuilderFormat.Alternative)
+                .ExportAndWriteLine();
         }
 
         private static void UpdateSpecificCodingSessionRecord()
         {
             Console.Clear();
-            Console.WriteLine("UPDATE MENU");
+            Console.WriteLine("=> UPDATE");
             ShowAllCodingSessionRecords();
             if (codingSessionCache == null || codingSessionCache.Count == 0) return;
             HashSet<int> ids = codingSessionCache.Select(x => x.Id).ToHashSet<int>();
@@ -108,7 +113,7 @@ namespace ConConfig
         private static void DeleteSpecificCodingSessionRecord()
         {
             Console.Clear();
-            Console.WriteLine("DELETE MENU");
+            Console.WriteLine("=> DELETE");
             ShowAllCodingSessionRecords();
             if (codingSessionCache == null || codingSessionCache.Count == 0) return;
             HashSet<int> ids = codingSessionCache.Select(x => x.Id).ToHashSet<int>();
