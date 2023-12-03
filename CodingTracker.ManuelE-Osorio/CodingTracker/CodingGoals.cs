@@ -7,9 +7,6 @@ class CodingGoals
     public DateTime StartDate;
     public DateTime EndDate;
     public TimeSpan CodingGoal;
-    bool GoalSet = false;
-
-    public bool IsGoalSet {get => GoalSet;}
 
     public CodingGoals(string? startDate, string? endDate, string? codingGoal)
     {
@@ -18,7 +15,6 @@ class CodingGoals
         DateTime.TryParseExact(endDate, "yyyy/MM/dd", CultureInfo.InvariantCulture, 
         DateTimeStyles.None, out EndDate);
         TimeSpan.TryParseExact(codingGoal,"d\\.hh\\:mm",CultureInfo.InvariantCulture, out CodingGoal);
-        GoalSet = true;
     }
 
     public bool GoalAchieved(string codingGoalProgress)

@@ -10,7 +10,7 @@ class DataVisualization
         tableData.Clear();
         Console.Clear();
         Console.WriteLine("\x1b[3J");
-        Console.Clear();;
+        Console.Clear();
         foreach (CodingSession session in sessions)
         {
             tableData.Add(new List<object>{session.ID,session.StartDateTime.ToString("yyyy/MM/dd HH:mm"),
