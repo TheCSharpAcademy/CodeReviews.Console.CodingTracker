@@ -1,7 +1,7 @@
-using System.Collections;
 using Microsoft.Data.Sqlite;
 using System.Configuration;
-using System.Collections.Specialized;
+
+namespace CodingTracker;
 
 class DBOperations
 {
@@ -89,7 +89,7 @@ class DBOperations
         int rowsUpdated;
 
         
-        if(TableExists())
+        if(TableExists() && !IsTableEmpty())
         {
             using (var connection = new SqliteConnection(connectionString))
             {
@@ -116,7 +116,7 @@ class DBOperations
     {
         bool insertSuccess = false;
         int rowsUpdated;
-        if(TableExists())
+        if(TableExists() && !IsTableEmpty())
         {
             using (var connection = new SqliteConnection(connectionString))
             {
@@ -142,7 +142,7 @@ class DBOperations
     {
         bool deleteValueSuccess = false;
        
-        if (TableExists())
+        if (TableExists() && !IsTableEmpty())
         {
             using (var connection = new SqliteConnection(connectionString))
             {
@@ -162,7 +162,7 @@ class DBOperations
     public static bool UpdateValue(string[] codingSessionString)
     {
         bool updateValueSuccess = false; 
-        if (TableExists())
+        if (TableExists() && !IsTableEmpty())
         {
             using (var connection = new SqliteConnection(connectionString))
             {
@@ -189,7 +189,7 @@ class DBOperations
     {
         List<CodingSession> codingSessions = new();    
      
-        if(TableExists())
+        if(TableExists() && !IsTableEmpty())
         {        
             using (var connection = new SqliteConnection(connectionString))
             {
@@ -208,8 +208,7 @@ class DBOperations
                         reader.GetString(1),
                         reader.GetString(2),
                         reader.GetString(3),
-                        reader.GetString(4)         
-                    ));
+                        reader.GetString(4)));
                 }
                 connection.Close(); 
             }
@@ -221,7 +220,7 @@ class DBOperations
     {
         List<CodingSession> codingSessions = new();    
     
-        if(TableExists())
+        if(TableExists() && !IsTableEmpty())
         {        
             using (var connection = new SqliteConnection(connectionString))
             {
@@ -247,8 +246,6 @@ class DBOperations
                 connection.Close(); 
             }
         }
-
-
         return codingSessions;
     }
 
@@ -273,7 +270,7 @@ class DBOperations
             filterString = $"WHERE StartDate BETWEEN '{startDate}' AND '{endDate}'";
         }
 
-        if (TableExists())
+        if (TableExists() && !IsTableEmpty())
         {        
             using (var connection = new SqliteConnection(connectionString))
             {
@@ -294,8 +291,7 @@ class DBOperations
                         reader.GetString(1),
                         reader.GetString(2),
                         reader.GetString(3),
-                        reader.GetString(4)         
-                    ));
+                        reader.GetString(4)));
                 }
                 connection.Close(); 
             }
@@ -314,7 +310,7 @@ class DBOperations
             _ => ";",
         };
 
-        if (TableExists())
+        if (TableExists() && !IsTableEmpty())
         {        
             using (var connection = new SqliteConnection(connectionString))
             {
@@ -334,12 +330,57 @@ class DBOperations
                         reader.GetString(1),
                         reader.GetString(2),
                         reader.GetString(3),
-                        reader.GetString(4)         
-                    ));
+                        reader.GetString(4)));
                 }
                 connection.Close(); 
             }
         }
         return codingSessions;
+    }
+
+    public static string[] GetTotalAndAverageValue(string? startDate, string? endDate)
+    {
+        List<TimeSpan> sessionLenghtList = new(); 
+        string[] totalAndAverage = new string[2];
+        
+        string filterString;
+        if (startDate == null || endDate ==null)
+        {
+            filterString = "";
+        }
+        else
+        {
+            filterString = $"WHERE StartDate BETWEEN '{startDate}' AND '{endDate}'";
+        }
+
+        if(TableExists() && !IsTableEmpty())
+        {       
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+                var tableCmd = connection.CreateCommand();
+
+                tableCmd.CommandText = $@"SELECT SessionTime
+                    FROM {tableName}
+                    {filterString}";
+            
+                SqliteDataReader reader = tableCmd.ExecuteReader();
+                while(reader.Read())
+                {
+                    sessionLenghtList.Add(TimeSpan.Parse(reader.GetString(0)));         
+                }
+                connection.Close();
+            }
+
+            TimeSpan averageLenght = new();
+            TimeSpan totalLenght = new();
+            double averageSeconds = sessionLenghtList.Average(timeSpan => timeSpan.TotalSeconds);
+            double totalSeconds = sessionLenghtList.Sum(timeSpan => timeSpan.TotalSeconds);
+            averageLenght = TimeSpan.FromSeconds(averageSeconds);
+            totalLenght = TimeSpan.FromSeconds(totalSeconds);
+            totalAndAverage[0] = averageLenght.ToString(("d\\.hh\\:mm"));
+            totalAndAverage[1] = totalLenght.ToString(("d\\.hh\\:mm"));     
+        }
+        return totalAndAverage;
     }
 }

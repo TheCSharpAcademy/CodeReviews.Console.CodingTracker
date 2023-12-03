@@ -1,5 +1,7 @@
 using System.Globalization;
 
+namespace CodingTracker;
+
 class DataValidation
 {
     public static bool ValidateInteger(string? input)
@@ -76,6 +78,13 @@ class DataValidation
         {
             validInput = true;
         }
+        return validInput;
+    }
+
+    public static bool ValidateTotalHours(string? input)
+    {
+        bool validInput;
+        validInput = TimeSpan.TryParseExact(input,"d\\.hh\\:mm",CultureInfo.InvariantCulture, out TimeSpan inputTime);
         return validInput;
     }
 }

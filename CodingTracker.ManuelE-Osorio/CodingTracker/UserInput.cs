@@ -1,12 +1,16 @@
+namespace CodingTracker;
+
 class UserInput
 {
-    public static string? GetDate()
+    public static string? GetDate(string option)
     {
         bool startDateInvalid = true;
         string? startDate;
 
         Console.Clear();
-        Console.WriteLine("Please write the starting date of the session in the format yyyy/MM/dd");
+        Console.WriteLine("\x1b[3J");
+        Console.Clear();
+        Console.WriteLine($"Please write the start date {option} in the format yyyy/MM/dd");
         do
         {
             startDate = Console.ReadLine();
@@ -20,16 +24,23 @@ class UserInput
             }
         }
         while(startDateInvalid);
+
+        Console.Clear();
+        Console.WriteLine("\x1b[3J");
+        Console.Clear();
+
         return startDate;
     }
 
-    public static string? GetDate(string? startDate)
+    public static string? GetDate(string option, string? startDate)
     {
         bool endDateInvalid = true;
         string? endDate;
 
-        Console.Clear();        
-        Console.WriteLine("Please write the end date of the session in the format yyyy/MM/dd");
+        Console.Clear(); 
+        Console.WriteLine("\x1b[3J");
+        Console.Clear();       
+        Console.WriteLine($"Please write the end date {option} in the format yyyy/MM/dd");
         do
         {
             endDate = Console.ReadLine();
@@ -44,6 +55,10 @@ class UserInput
         }
         while(endDateInvalid);
 
+        Console.Clear();
+        Console.WriteLine("\x1b[3J");
+        Console.Clear();
+
         return endDate;
     }
 
@@ -52,6 +67,8 @@ class UserInput
         bool startTimeInvalid = true;
         string? startTime;
 
+        Console.Clear();
+        Console.WriteLine("\x1b[3J");
         Console.Clear();
         Console.WriteLine("Please write the starting time of the session in the format HH:mm");
         do
@@ -68,6 +85,10 @@ class UserInput
         }
         while(startTimeInvalid);
         
+        Console.Clear();
+        Console.WriteLine("\x1b[3J");
+        Console.Clear();
+
         return startTime;
     }
 
@@ -76,6 +97,8 @@ class UserInput
         bool endTimeInvalid = true;
         string? endTime;
 
+        Console.Clear();
+        Console.WriteLine("\x1b[3J");
         Console.Clear();
         Console.WriteLine("Please write the end time of the session in the format HH:mm");
         do
@@ -92,6 +115,10 @@ class UserInput
         }
         while(endTimeInvalid);
 
+        Console.Clear();
+        Console.WriteLine("\x1b[3J");
+        Console.Clear();
+
         return endTime;
     }
 
@@ -101,6 +128,9 @@ class UserInput
         string? answer;
 
         Console.Clear();
+        Console.WriteLine("\x1b[3J");
+        Console.Clear();
+
         Console.WriteLine($"Do you want to {question} y/n?");
         do
         {
@@ -116,6 +146,10 @@ class UserInput
         }
         while(answerInvalid);
 
+        Console.Clear();
+        Console.WriteLine("\x1b[3J");
+        Console.Clear();
+
         return answer;
     }
 
@@ -125,6 +159,9 @@ class UserInput
         string? sortOperation;
 
         Console.Clear();
+        Console.WriteLine("\x1b[3J");
+        Console.Clear();
+
         Console.WriteLine("Please select one of the following values\n"+
             "1) Ascending\n"+
             "2) Descending\n");
@@ -143,15 +180,19 @@ class UserInput
         }
         while(sortOperationInvalid);
 
+        Console.Clear();
+        Console.WriteLine("\x1b[3J");
+        Console.Clear();
+
         return sortOperation;
     }
 
-    public static string? GetID(List<CodingSession> modifyCodingSession)
+    public static string? GetID(List<CodingSession> modifyCodingSession, string option)
     {
         string? selectedID;
         bool IDInvalid = true;
 
-        Console.WriteLine("Please enter the ID you want to modify");
+        Console.WriteLine($"Please enter the ID you want to {option}");
 
         do
         {
@@ -168,6 +209,40 @@ class UserInput
         }
         while(IDInvalid);
 
+        Console.Clear();
+        Console.WriteLine("\x1b[3J");
+        Console.Clear();
+
         return selectedID;
+    }
+
+    public static string? GetTotalHours()
+    {
+        string? totalHours;
+        bool totalHoursInvalid = true;
+        
+        Console.Clear(); 
+        Console.WriteLine("\x1b[3J");
+        Console.Clear();       
+        Console.WriteLine("Please write the total hours of the coding goal in the format d.HH:mm");
+        do
+        {
+            totalHours = Console.ReadLine();
+            if(DataValidation.ValidateTotalHours(totalHours))
+            {
+                totalHoursInvalid = false;
+            }
+            else
+            {
+                Console.WriteLine("The total hours you entered is invalid. Please enter the hours in the format d.HH:mm");
+            }
+        }
+        while(totalHoursInvalid);
+
+        Console.Clear();
+        Console.WriteLine("\x1b[3J");
+        Console.Clear();
+
+        return totalHours;
     }
 }

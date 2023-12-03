@@ -1,13 +1,12 @@
-using System.Diagnostics;
 using System.Globalization;
+
+namespace CodingTracker;
 
 class CodingSession
 {
     public DateTime StartDateTime;
     public DateTime EndDateTime;
-
     public TimeSpan ElapsedTime;
-
     public int ID;
 
     public CodingSession(string? id, string? startDate, string? startTime, string? endDate, string? endTime)
@@ -15,18 +14,17 @@ class CodingSession
         DateTime.TryParseExact(startDate+" "+startTime, "yyyy/MM/dd HH:mm",CultureInfo.InvariantCulture,
         DateTimeStyles.None,out StartDateTime);
         DateTime.TryParseExact(endDate+" "+endTime, "yyyy/MM/dd HH:mm",CultureInfo.InvariantCulture,
-        DateTimeStyles.None,out DateTime TempDateTime);
-        EndDateTime = TempDateTime;
+        DateTimeStyles.None,out EndDateTime);
         ID = Convert.ToInt32(id);
         ElapsedTime = EndDateTime - StartDateTime;
     }
 
-    public CodingSession(int id, DateTime startDateTime, DateTime endDateTime, TimeSpan elapsedTime)
+    public CodingSession(int id, SessionStopWatch currentSession)
     {
-        StartDateTime = startDateTime;
-        EndDateTime = endDateTime;
+        StartDateTime = currentSession.StartDate;
+        EndDateTime = currentSession.EndDate;
         ID = id;
-        ElapsedTime = elapsedTime;
+        ElapsedTime = currentSession.SessionTimer;
     }
 
     public string[] GetString()

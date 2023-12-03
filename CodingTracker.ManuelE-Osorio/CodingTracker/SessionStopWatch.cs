@@ -1,20 +1,27 @@
 using System.Diagnostics;
 
+namespace CodingTracker;
+
 class SessionStopWatch
 {
     public DateTime StartDate;
     public DateTime EndDate;
     private readonly Stopwatch sessionTimer;
-
     public TimeSpan SessionTimer {get => sessionTimer.Elapsed;}
-
     public bool IsRunning {get => sessionTimer.IsRunning;}
 
     public SessionStopWatch()
     {
-        StartDate = DateTime.Now;
         sessionTimer = new Stopwatch();
-        sessionTimer.Start();
+    }
+
+    public void StartSession()
+    {
+        if (!sessionTimer.IsRunning)
+        {    
+            StartDate = DateTime.Now;
+            sessionTimer.Start();
+        }
     }
 
     public void EndSession()

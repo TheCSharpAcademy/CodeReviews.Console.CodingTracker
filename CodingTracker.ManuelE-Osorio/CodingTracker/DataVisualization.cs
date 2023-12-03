@@ -1,13 +1,16 @@
-using System.Data;
 using ConsoleTableExt;
+
+namespace CodingTracker;
 
 class DataVisualization
 {
     public static void PrintTable(List<CodingSession> sessions)
-    {
-        
+    {  
         var tableData = new List<List<object>>();
-
+        tableData.Clear();
+        Console.Clear();
+        Console.WriteLine("\x1b[3J");
+        Console.Clear();;
         foreach (CodingSession session in sessions)
         {
             tableData.Add(new List<object>{session.ID,session.StartDateTime.ToString("yyyy/MM/dd HH:mm"),
