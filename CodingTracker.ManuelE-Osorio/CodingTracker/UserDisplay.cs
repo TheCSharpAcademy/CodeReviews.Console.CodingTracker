@@ -213,7 +213,6 @@ class UserDisplay
                 Console.WriteLine($"You need to code on average {averageHours:d\\.hh\\:mm} each day to achieve your goal\n");
             }
         }
-
     }
 
     public static bool DeleteCodingGoal()
