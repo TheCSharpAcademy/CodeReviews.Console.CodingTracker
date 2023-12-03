@@ -204,7 +204,14 @@ class UserDisplay
         else
         {
             TimeSpan averageHours = codingGoal.DailyAverage(totalAndAverage[1]);
-            Console.WriteLine($"You need to code on average {averageHours:d\\.hh\\:mm} each day to achieve your goal\n");
+            if(averageHours<TimeSpan.Zero)
+            {
+                Console.WriteLine("You didn't reached your coding goal");
+            }
+            else
+            {
+                Console.WriteLine($"You need to code on average {averageHours:d\\.hh\\:mm} each day to achieve your goal\n");
+            }
         }
 
     }
