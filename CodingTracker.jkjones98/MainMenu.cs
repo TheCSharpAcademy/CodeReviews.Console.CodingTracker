@@ -6,6 +6,7 @@ namespace CodingTracker.jkjones98
         internal void DisplayMenu()
         {
             GetUserInputs getUserInputs = new();
+            ReportMenu reportMenu = new();
             bool closeApp = false;
             while(!closeApp)
             {
@@ -16,6 +17,10 @@ namespace CodingTracker.jkjones98
                 Console.WriteLine("Enter 2 to insert a record");
                 Console.WriteLine("Enter 3 to delete a record");
                 Console.WriteLine("Enter 4 to update a record");
+                Console.WriteLine("Enter 5 to time todays session");
+                Console.WriteLine("Enter 6 to set goals");
+                Console.WriteLine("Enter 7 to view goals");
+                Console.WriteLine("Enter 8 to view reports");
 
                 string selectionInput = Console.ReadLine();
 
@@ -32,23 +37,31 @@ namespace CodingTracker.jkjones98
                         Environment.Exit(0);
                         break;
                     case "1":
-                        // View records - read data from Db and display using ConsoleTableExt
-                        controller.GetRecords();
+                        getUserInputs.ViewRecords();
                         break;
                     case "2":
-                        // Insert record - 
                         getUserInputs.InsertRecord();
                         break;
                     case "3":
-                        // Delete a record - 
                         getUserInputs.DeleteRecord();
                         break;
                     case "4":
-                        // Update a record
                         getUserInputs.UpdateRecord();
                         break;
+                    case "5":
+                        getUserInputs.StopWatchMenu();
+                        break;
+                    case "6":
+                        getUserInputs.AddGoals();
+                        break;
+                    case "7":
+                        controller.GetGoalRecords();
+                        break;  
+                    case "8":
+                        reportMenu.DisplayReportMenu();
+                        break;
                     default:
-                        Console.WriteLine("\nInvalid entry. Please choose between 0 and 4");
+                        Console.WriteLine("\nInvalid entry. Please choose between 0 and 8");
                         break;
                 }
             }

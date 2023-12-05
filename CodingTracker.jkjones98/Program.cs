@@ -8,9 +8,11 @@ class Program
     static void Main(string[] args)
     {
         DbTableCreator dbTableCreator = new();
+        GoalTableCreator goalTableCreator = new();
         MainMenu mainMenu = new();
 
         dbTableCreator.CreateTable(connectionString);
+        goalTableCreator.CreateTable(connectionString);
         mainMenu.DisplayMenu();
     }
 }

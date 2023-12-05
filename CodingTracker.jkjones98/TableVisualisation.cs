@@ -14,5 +14,16 @@ namespace CodingTracker.jkjones98
                 .ExportAndWriteLine();
             Console.WriteLine("\n\n");
         }
+
+        internal static void ShowGoalTable<T>(List<T> goalData) where T : class
+        {
+            Console.WriteLine("\n\n");
+
+            ConsoleTableBuilder
+                .From(goalData)
+                .WithTitle("Goals")
+                .ExportAndWriteLine();
+            Console.WriteLine("\n\n");
+        }
     }
 }
