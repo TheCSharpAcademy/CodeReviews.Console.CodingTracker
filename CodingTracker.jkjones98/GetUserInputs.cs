@@ -202,8 +202,6 @@ namespace CodingTracker.jkjones98
                 if(dateInput == "0") mainMenu.DisplayMenu();
             }
 
-            DateTime test = DateTime.ParseExact(dateInput, "dd-MM-yy", new CultureInfo("en-US"), DateTimeStyles.None);
-
             return dateInput;
         }
 
@@ -229,7 +227,7 @@ namespace CodingTracker.jkjones98
         internal string CalculateDuration(string start, string end)
         {
             TimeSpan duration = TimeSpan.Parse(start).Subtract(TimeSpan.Parse(end));
-            return duration.ToString(@"hh\:mm");;
+            return duration.ToString(@"hh\:mm");
         }
         
         internal string CalculateDuration(DateTime startDateTime, DateTime endDateTime)

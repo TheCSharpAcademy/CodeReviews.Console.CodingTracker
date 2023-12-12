@@ -1,5 +1,4 @@
 using System.Configuration;
-using System.Data;
 using Microsoft.Data.Sqlite;
 
 namespace CodingTracker.jkjones98
