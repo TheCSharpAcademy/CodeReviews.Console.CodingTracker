@@ -24,13 +24,13 @@ namespace CodingTracker.jkjones98
                     Console.WriteLine("Please enter the numeric value for the month you would like to filter using a 2 digit format");
                     Console.WriteLine("January would be entered as 01 or enter 0 to return to the main menu");
                     string month = Console.ReadLine();
-
-                    if(month == "0") mainMenu.DisplayMenu();
-                    if(string.IsNullOrEmpty(month) || !Int32.TryParse(month, out _) || Int32.Parse(month) < 0 || Int32.Parse(month) > 12)
+                    
+                    while(string.IsNullOrEmpty(month) || !Int32.TryParse(month, out _) || Int32.Parse(month) < 0 || Int32.Parse(month) > 12)
                     {
                         Console.WriteLine("\nInvalid entry please try again");
                         month = Console.ReadLine();
                     }
+                    if(month == "0") mainMenu.DisplayMenu();
 
                     controller.GetFilterRecords("-" + month);
                     break;
@@ -39,13 +39,13 @@ namespace CodingTracker.jkjones98
                     Console.WriteLine("Please enter the last 2 digits of the year you would like to filter e.g. 2022 = 22, 2023 = 23");
                     Console.WriteLine("Or enter 0 to return to the main menu");
                     string year = Console.ReadLine();
-
-                    if(year == "0") mainMenu.DisplayMenu();
-                    if(string.IsNullOrEmpty(year) || !Int32.TryParse(year, out _) || Int32.Parse(year) < 0 || Int32.Parse(year) > 23)
+                    
+                    while(string.IsNullOrEmpty(year) || !Int32.TryParse(year, out _) || Int32.Parse(year) < 0 || Int32.Parse(year) > 23)
                     {
                         Console.WriteLine("\nInvalid entry please try again");
                         month = Console.ReadLine();
                     }
+                    if(year == "0") mainMenu.DisplayMenu();
 
                     controller.GetFilterRecords("-" + year);
                     break; 
@@ -59,11 +59,17 @@ namespace CodingTracker.jkjones98
             DateTime startDateTimeParsed = DateTime.Parse(startDateTime);
             string endDateTime = GetDateInput("end") + " " + GetTime("end");
             DateTime endDateTimeParsed = DateTime.Parse(endDateTime);
+            while(endDateTimeParsed < startDateTimeParsed)
+            {
+                Console.WriteLine("\nInvalid end date, end date cannot be before start date");
+                endDateTime = GetDateInput("end") + " " + GetTime("end");
+                endDateTimeParsed = DateTime.Parse(endDateTime);
+            }
             var duration = CalculateDuration(startDateTimeParsed, endDateTimeParsed);
 
             CodingSession coding = new();
 
-            coding.Date = startDateTimeParsed.ToString("dd-mm-yy");
+            coding.Date = startDateTimeParsed.ToString("dd-MM-yy");
             coding.StartTime = startDateTimeParsed.ToString("HH:mm");
             coding.EndTime = endDateTimeParsed.ToString("HH:mm");
             coding.Duration = duration;
@@ -188,7 +194,7 @@ namespace CodingTracker.jkjones98
 
             if(dateInput == "0") mainMenu.DisplayMenu();
 
-            while(!DateTime.TryParseExact(dateInput, "dd-mm-yy", new CultureInfo("en-US"), DateTimeStyles.None, out _))
+            while(!DateTime.TryParseExact(dateInput, "dd-MM-yy", new CultureInfo("en-US"), DateTimeStyles.None, out _))
             {
                 Console.WriteLine("\nInvalid date format please enter with the following format: dd-mm-yy or enter 0 to return to the main menu");
                 dateInput = Console.ReadLine();
@@ -196,7 +202,7 @@ namespace CodingTracker.jkjones98
                 if(dateInput == "0") mainMenu.DisplayMenu();
             }
 
-            DateTime test = DateTime.ParseExact(dateInput, "dd-mm-yy", new CultureInfo("en-US"), DateTimeStyles.None);
+            DateTime test = DateTime.ParseExact(dateInput, "dd-MM-yy", new CultureInfo("en-US"), DateTimeStyles.None);
 
             return dateInput;
         }
