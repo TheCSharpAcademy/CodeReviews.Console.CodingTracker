@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodingTracker.wkktoria", "CodingTracker.wkktoria\CodingTracker.wkktoria.csproj", "{3B4888F6-804F-49DA-9EAD-744A684AE85F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3B4888F6-804F-49DA-9EAD-744A684AE85F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B4888F6-804F-49DA-9EAD-744A684AE85F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B4888F6-804F-49DA-9EAD-744A684AE85F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B4888F6-804F-49DA-9EAD-744A684AE85F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
