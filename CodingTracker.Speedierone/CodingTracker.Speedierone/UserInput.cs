@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Configuration;
 
 namespace CodeTracker;
-internal class UserInput
+public class UserInput
 {
     internal static DateTime CheckDate(DateTime startTime, DateTime endTime)
     {
@@ -15,7 +15,7 @@ internal class UserInput
         }
         return endTime;
     }
-    internal static int GetNumberInput(string message)
+    public static int GetNumberInput(string message)
     {
         Console.WriteLine(message);
 

@@ -1,22 +1,32 @@
 ﻿using System.Globalization;
 
 namespace CodeTracker;
-internal class Helpers
+public class Helpers
 {
-    internal static string GetDate()
+    public static string GetDate()
     {
         Console.WriteLine("Please enter date in format dd-mm-yy");
         string dateInput = Console.ReadLine();
-        if (dateInput == "0") MainMenu.ShowMenu();
+        if (dateInput == "0") 
+        { 
+            MainMenu.ShowMenu(); 
+            return null;
+        }
 
         while (!DateTime.TryParseExact(dateInput, "dd-MM-yy", new CultureInfo("en-GB"), DateTimeStyles.None, out _))
         {
             Console.WriteLine("Invalid date (Format needed: dd-mm-yy)");
             dateInput = Console.ReadLine();
+
+            if(dateInput == "0")
+            {
+                MainMenu.ShowMenu();
+                return null;
+            }
         }
         return dateInput;
     }
-    internal static string GetStartTime()
+    public static string GetStartTime()
     {
         Console.WriteLine("Please enter start time in format HH:mm (24hr clock)");
         var startTime = Console.ReadLine();
@@ -28,7 +38,7 @@ internal class Helpers
         }
         return startTime;
     }
-    internal static string GetEndTime()
+    public static string GetEndTime()
     {
         Console.WriteLine("Please enter end time in format hh:mm (24hr clock)");
         var endTime = Console.ReadLine();
@@ -40,7 +50,7 @@ internal class Helpers
         }   
         return endTime;
     }
-    internal static string CodingTime(string timeStart, string timeEnd)
+    public static string CodingTime(string timeStart, string timeEnd)
     {
         var parsedTimeStart = DateTime.Parse(timeStart);
         var parsedTimeEnd = DateTime.Parse(timeEnd);
