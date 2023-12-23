@@ -6,14 +6,15 @@ using System.Configuration;
 namespace CodeTracker;
 public class UserInput
 {
-    internal static DateTime CheckDate(DateTime startTime, DateTime endTime)
+    public static bool CheckDate(DateTime startTime, DateTime endTime)
     {
         if (endTime <= startTime)
         {
             Console.WriteLine("Invalid entry. End time is earlier then start time.");
             Helpers.GetEndTime();
+            return false;
         }
-        return endTime;
+        return true;
     }
     public static int GetNumberInput(string message)
     {

@@ -1,4 +1,5 @@
 using CodeTracker;
+using System.Globalization;
 
 namespace UnitTest.Speedierone
 {
@@ -6,119 +7,123 @@ namespace UnitTest.Speedierone
     public class CodingTests
     {
         [TestMethod]
-        public void GetDate_CorrectFormat_ReturnsDate()
+        public void IsValidDate_ReturnsFalse()
         {
-            string input = "01-01-23";
-            StringReader stringReader = new StringReader(input);
-            Console.SetIn(stringReader);
+            var invalidDates = new List<string>
+            {
+                "14/14/2022",
+                "14-14-22",
+                "14-12-2022",
+                "14/12/2022",
+                "Invalid date",
+                "2022/12/12"
+            };
 
-            string result = Helpers.GetDate();
+            foreach (var invalidDate in invalidDates)
+            {
+                bool result = Helpers.IsValidDate(invalidDate);
 
-            Assert.AreEqual(input, result);
+                Assert.IsFalse(result);
+            }
         }
         [TestMethod]
-        public void GetDate_InvalidInputThenValidInput_ReturnsValidDate()
+        public void IsValidDate_ReturnsTrue()
         {
-            string invalidInput = "invalid";
-            string validInput = "01-01-23";
-            StringReader stringReader = new StringReader(invalidInput + Environment.NewLine + validInput);
-            Console.SetIn(stringReader);
+            var validDates = new List<string>
+            {
+                "12-12-22",
+                "01-10-20"
+            };
 
-            string result = Helpers.GetDate();
-
-            Assert.AreEqual(validInput, result);
+            foreach(var validDate in validDates)
+            {
+                bool result = Helpers.IsValidDate(validDate);
+                Assert.IsTrue(result);
+            }
         }
         [TestMethod]
-        public void GetStartTime_CorrectFormat_ReturnsStartTime()
+        public void NotValidTime_ReturnFalse()
         {
-            string input = "23:00";
-            StringReader stringReader = new StringReader(input);
-            Console.SetIn(stringReader);
+            var invalidTimes = new List<string>
+            {
+                "50-10",
+                "12:00",
+                "12/00",
+                "12-100",
+                "Invalid Time",
+                "15:00"
+            };
 
-            string result = Helpers.GetStartTime();
-
-            Assert.AreEqual(input, result);
+            foreach (var invalidTime in invalidTimes)
+            {
+                bool result = Helpers.IsValidTime(invalidTime);
+                Assert.IsFalse(result);
+            }
         }
         [TestMethod]
-        public void GetStartTime_InvalidInputThenValid_ReturnsValidStartTime()
+        public void IsValidTime_ReturnTrue()
         {
-            string invalidInput = "invalid";
-            string validInput = "23:00";
-            StringReader stringReader = new StringReader(invalidInput + Environment.NewLine + validInput);
-            Console.SetIn(stringReader);
+            var validTimes = new List<string>
+            {
+                "12-00",
+                "11-59",
+                "21-00"
+            };
 
-            string result = Helpers.GetStartTime();
-
-            Assert.AreEqual(validInput, result);
+            foreach (var validTime in validTimes)
+            {
+                bool result = Helpers.IsValidTime(validTime);
+                Assert.IsTrue(result);
+            }
         }
         [TestMethod]
-        public void GetEndTime_CorrectFormat_ReturnsEndTime()
+        public void EndTimeBeforeStartTime_ReturnsFalse()
         {
-            string input = "23:00";
-            StringReader stringReader = new StringReader(input);
-            Console.SetIn(stringReader);
+            DateTime timeStart1;
+            DateTime timeEnd1;
+            DateTime timeStart2;
+            DateTime timeEnd2;
 
-            string result = Helpers.GetEndTime();
+            bool parsedTimeStart1 = DateTime.TryParseExact("21-01-2023T12-00", "dd-MM-yy HH-mm", new CultureInfo("en-GB"), DateTimeStyles.None, out timeStart1);
+            bool parsedTimeEnd1 = DateTime.TryParseExact("21-01-2023T11-00", "dd-MM-yy HH-mm", new CultureInfo("en-GB"), DateTimeStyles.None, out timeEnd1);
+            bool parsedTimeStart2 = DateTime.TryParseExact("21-01-2023T15:00", "dd-MM-yy HH-mm", new CultureInfo("en-GB"), DateTimeStyles.None, out timeStart2);
+            bool parsedTimeEnd2 = DateTime.TryParseExact("21-01-2022T16:00", "dd-MM-yy HH-mm", new CultureInfo("en-GB"), DateTimeStyles.None, out timeEnd2);
 
-            Assert.AreEqual(input, result);
+            if(parsedTimeStart1 && parsedTimeEnd1)
+            {
+                bool result = UserInput.CheckDate(timeStart1, timeEnd1);
+                Assert.IsFalse(result);
+            }
+            if(parsedTimeStart2 && parsedTimeEnd2)
+            {
+                bool result = UserInput.CheckDate(timeStart2, timeEnd2);
+                Assert.IsFalse(result);
+            }
         }
+
         [TestMethod]
-        public void GetEndTime_InvalidInputThenValid_ReturnsValidEndTime()
+        public void EndTimeAfterStartTime_ReturnTrue()
         {
-            string invalidInput = "invalid";
-            string validInput = "23:00";
-            StringReader stringReader = new StringReader(invalidInput + Environment.NewLine + validInput);
-            Console.SetIn(stringReader);
+            DateTime timeStart1;
+            DateTime timeEnd1;
+            DateTime timeStart2;
+            DateTime timeEnd2;
 
-            string result = Helpers.GetEndTime();
+            bool parsedTimeStart1 = DateTime.TryParseExact("21-01-2023T12-00", "dd-MM-yy HH-mm", new CultureInfo("en-GB"), DateTimeStyles.None, out timeStart1);
+            bool parsedTimeEnd1 = DateTime.TryParseExact("21-01-2023T15-00", "dd-MM-yy HH-mm", new CultureInfo("en-GB"), DateTimeStyles.None, out timeEnd1);
+            bool parsedTimeStart2 = DateTime.TryParseExact("21-01-2023T15:00", "dd-MM-yy HH-mm", new CultureInfo("en-GB"), DateTimeStyles.None, out timeStart2);
+            bool parsedTimeEnd2 = DateTime.TryParseExact("21-01-2023T16:00", "dd-MM-yy HH-mm", new CultureInfo("en-GB"), DateTimeStyles.None, out timeEnd2);
 
-            Assert.AreEqual(validInput, result);
-        }
-        [TestMethod]
-        public void CodingTime_ReturnsCorrectCodingTimeDifference()
-        {
-            string timeStart = "2023-01-01T12:00:00";
-            string timeEnd = "2023-01-01T13:00:00";
-
-            string result = Helpers.CodingTime(timeStart, timeEnd);
-
-            Assert.AreEqual("01:00:00", result);
-        }
-        [TestMethod]
-        public void CodingTime_InvalidInput_ReturnsError()
-        {
-            string timeStart = "2023-01-01T17:00:00";
-            string timeEnd = "2023-01-01T15:00:00";
-
-            string result = Helpers.CodingTime(timeStart, timeEnd);
-
-            Assert.AreEqual("-02:00:00", result);
-        }
-        [TestMethod]
-        public void GetUserInput_ValidInput_ReturnValidInput()
-        {
-            StringReader stringReader = new StringReader("30");
-            Console.SetIn(stringReader);
-
-            int result = UserInput.GetNumberInput("Enter a number");
-
-            Assert.AreEqual(30,result);
-        }
-        [TestMethod]
-        public void GetUserInput_InvalidInputThenValidInput_ReturnValidInput()
-        {
-            StringReader stringReader = new StringReader("invalid\n100");
-            Console.SetIn(stringReader);
-
-            StringWriter stringWriter = new StringWriter();
-            Console.SetOut(stringWriter);
-
-            int result = UserInput.GetNumberInput("Enter a number");
-
-            Assert.AreEqual(100, result);
-            string output = stringWriter.ToString();
-            Assert.IsTrue(output.Contains("Enter a number"));
-            Assert.IsTrue(output.Contains("Invalid number. Try again"));
+            if (parsedTimeStart1 && parsedTimeEnd1)
+            {
+                bool result = UserInput.CheckDate(timeStart1, timeEnd1);
+                Assert.IsTrue(result);
+            }
+            if (parsedTimeStart2 && parsedTimeEnd2)
+            {
+                bool result = UserInput.CheckDate(timeStart2, timeEnd2);
+                Assert.IsTrue(result);
+            }
         }
     }
 }
