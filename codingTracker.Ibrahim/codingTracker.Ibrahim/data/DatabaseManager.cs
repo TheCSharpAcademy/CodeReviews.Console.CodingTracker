@@ -16,10 +16,10 @@ namespace codingTracker.Ibrahim.data
                 {
                     command.CommandText = @"
                         CREATE TABLE IF NOT EXISTS coding_tracker(
-                        Id INTEGER PRIMARY KEY AUTOINCREMENT
-                        StartTime TEXT
-                        EndTime TEXT
-                        Duration TEXT";
+                        Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        StartTime TEXT,
+                        EndTime TEXT,
+                        Duration TEXT)";
                     command.ExecuteNonQuery();
                 }               
             }
@@ -107,7 +107,7 @@ namespace codingTracker.Ibrahim.data
                     }
                     else if (string.IsNullOrEmpty(StartTime) && !string.IsNullOrEmpty(EndTime))
                     {
-                        EndTime = helper.ValidateDateTime(null, EndTime);
+                        EndTime = helper.ValidateDateTime(Id,null,EndTime);
 
                         command.CommandText = "Update coding_tracker SET EndTime = @EndTime WHERE Id = @Id";
                         command.Parameters.AddWithValue("@Id", Id);
@@ -161,6 +161,11 @@ namespace codingTracker.Ibrahim.data
                 }
             }
             return sessionExists;
+        }
+
+        internal static void GetReports()
+        {
+            throw new NotImplementedException();
         }
     }
 }

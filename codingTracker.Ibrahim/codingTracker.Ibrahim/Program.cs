@@ -11,14 +11,8 @@ class Program
     static void Main(string[] args)
     {
         DatabaseManager databaseManager = new DatabaseManager();
-
-        bool endApp = false;
-
-        while(!endApp)
-        {
-            UserMenu.showMenu();
-
-        }
         
+        UserMenu.showMenu();
+
     }
 }

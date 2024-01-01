@@ -23,8 +23,10 @@ namespace codingTracker.Ibrahim.Helpers
                 else
                 {
                     Console.WriteLine("start date can't be after end date please enter dates again in the format 'MM-dd-yyyy HH:mm:ss': \n");
-                    Console.WriteLine($"start date = {startTime=Console.ReadLine()}");
-                    Console.WriteLine($"end date = {endTime=Console.ReadLine()}");
+                    Console.Write($"start date = ");
+                    startTime = Console.ReadLine();
+                    Console.Write($"end date = ");
+                    endTime = Console.ReadLine();
                 }
             }
             while (!Valid);
@@ -37,7 +39,8 @@ namespace codingTracker.Ibrahim.Helpers
 
             while (!DateTime.TryParseExact(dateTime, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
             {
-                Console.WriteLine("Invalid format. Please enter a date and time in the format 'MM-dd-yyyy HH:mm:ss':");
+                Console.WriteLine("Invalid format. Please enter a date and time in the format 'MM-dd-yyyy HH:mm:ss'");
+                Console.Write("Enter Here: ");
                 dateTime = Console.ReadLine();
             }
 
@@ -62,7 +65,8 @@ namespace codingTracker.Ibrahim.Helpers
                     else
                     {
                         Console.WriteLine("start date can't be after end date please enter Start Date again in the format 'MM-dd-yyyy HH:mm:ss': \n");
-                        Console.WriteLine($"start date = {StartTime = Console.ReadLine()}");
+                        Console.Write($"start date = ");
+                        StartTime = Console.ReadLine();
                     }
                 }
                 while (!Valid);
@@ -88,7 +92,8 @@ namespace codingTracker.Ibrahim.Helpers
                         else
                         {
                             Console.WriteLine("start date can't be after end date please enter End Date again in the format 'MM-dd-yyyy HH:mm:ss': \n");
-                            Console.WriteLine($"start date = {EndTime = Console.ReadLine()}");
+                            Console.Write($"start date = ");
+                            EndTime = Console.ReadLine();
                         }
                     }
                     while (!Valid);
@@ -115,8 +120,10 @@ namespace codingTracker.Ibrahim.Helpers
                 else
                 {
                     Console.WriteLine("start date can't be after end date please enter dates again in the format 'MM-dd-yyyy HH:mm:ss': \n");
-                    Console.WriteLine($"start date = {StartTime = Console.ReadLine()}");
-                    Console.WriteLine($"end date = {EndTime = Console.ReadLine()}");
+                    Console.Write($"start date = ");
+                    StartTime = Console.ReadLine();
+                    Console.WriteLine($"end date = ");
+                    EndTime = Console.ReadLine();
                 }
             }
             while (!Valid);
@@ -141,7 +148,7 @@ namespace codingTracker.Ibrahim.Helpers
                     }
                     else
                     {
-                        Console.WriteLine("that session does not exist please enter a valid session number");
+                        Console.Write("that session does not exist please enter a valid session number: ");
                         Id = validateInt(Console.ReadLine());
                     }
                 }
@@ -155,12 +162,45 @@ namespace codingTracker.Ibrahim.Helpers
             int result;
             while (!int.TryParse(input, out result))
             {
-                Console.WriteLine("Invalid input. Please enter a valid session number:");
+                Console.Write("Invalid input. Please enter a valid session number:");
                 input = Console.ReadLine();
             }
             return result;
         }
 
+        internal static string ValidateUserChoice(string menuOptionSelected)
+        {
 
+            string retVal = "";
+            int number;
+            bool result;
+
+            do
+            {
+                result = int.TryParse(menuOptionSelected, out number);
+                if (result)
+                {
+                    if (number <= 5 && number >= 0)
+                    {
+                        retVal = menuOptionSelected;
+                    }
+                    else
+                    {
+                        result = false;
+                        Console.Write($"please enter a number between 0 and 5");
+                        menuOptionSelected = Console.ReadLine();
+                    }
+                }
+                else //not a number
+                {
+                    result = false;
+                    Console.Write($"please enter a number between 0 and 5");
+                    menuOptionSelected = Console.ReadLine();
+                }
+            }
+            while (!result);
+
+            return retVal;
+        }
     }
 }
