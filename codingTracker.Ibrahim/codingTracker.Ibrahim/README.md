@@ -18,8 +18,6 @@ The Coding Tracker App is a C# application designed to log and track coding sess
 - **SQLite**
 - **ConsoleTableExt**
 
-## Application Components
-
 ## Validation in the Application
 - **Date and Time Validation:** Ensures that the date and time inputs for coding sessions are in the correct format and logical (e.g., start time is before end time).
 - **User Input Validation:** Checks for valid user inputs throughout the application, preventing erroneous data entries and ensuring smooth operation.
