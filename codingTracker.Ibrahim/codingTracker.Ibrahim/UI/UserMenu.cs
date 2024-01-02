@@ -1,4 +1,5 @@
 ﻿
+using System.Diagnostics;
 using codingTracker.Ibrahim.data;
 using codingTracker.Ibrahim.Helpers;
 using codingTracker.Ibrahim.UI;
@@ -19,7 +20,8 @@ namespace codingTracker.Ibrahim.UI
                 Console.WriteLine("Press 2 to update a coding session");
                 Console.WriteLine("Press 3 to delete a coding session");
                 Console.WriteLine("Press 4 to view all your coding sessions");
-                Console.WriteLine("Press 5 to view your analytics \n");
+                Console.WriteLine("Press 5 to view your analytics");
+                Console.WriteLine("Press 6 to start tracking a coding session");
                 Console.Write($"Enter here: ");
                 string userChoice = helper.ValidateUserChoice(Console.ReadLine());
                 switch (userChoice)
@@ -28,30 +30,100 @@ namespace codingTracker.Ibrahim.UI
                         Environment.Exit(0);
                         break;
                     case "1":
-                        Console.Write("Enter the Date and Time you started your coding session in the format 'MM-dd-yyyy HH:mm:ss'");
-                        string StartTime= Console.ReadLine();
-                        Console.Write("Enter the Date and Time you ended your coding session in the format 'MM-dd-yyyy HH:mm:ss'");
-                        string EndTime= Console.ReadLine();
-                        (StartTime, EndTime)= helper.ValidateDateTimes(StartTime, EndTime);
+                        Console.Clear();
+                        Console.WriteLine("Enter the Date and Time you started your coding session in the format MM-DD-YYYY HH:MM AM/PM (e.g., 04-26-2001 1:00 PM)");
+                        Console.Write("\nEnter here: ");
+                        string StartTime = Console.ReadLine();
+                        Console.WriteLine("\nEnter the Date and Time you ended your coding session in the format MM-DD-YYYY HH:MM AM/PM (e.g., 04-26-2001 1:00 PM)");
+                        Console.Write("\nEnter here: ");
+                        string EndTime = Console.ReadLine();
+                        (StartTime, EndTime) = helper.ValidateDateTimes(StartTime, EndTime);
                         DatabaseManager.InsertData(StartTime, EndTime);
                         break;
                     case "2":
-                       // DatabaseManager.UpdateData(Id, StartTime, EndTime);
+                        Console.Clear();
+                        Console.Write("please enter the coding session Id you wish to update: ");
+                        int Id = helper.validateInt(Console.ReadLine());
+                        Console.Clear();
+                        Console.WriteLine("Enter the Date and Time you started your coding session in the format MM-DD-YYYY HH:MM AM/PM (e.g., 04-26-2001 1:00 PM)");
+                        Console.Write("\nEnter here: ");
+                        StartTime = Console.ReadLine();
+                        Console.WriteLine("\nEnter the Date and Time you ended your coding session in the format MM-DD-YYYY HH:MM AM/PM (e.g., 04-26-2001 1:00 PM)");
+                        Console.Write("\nEnter here: ");
+                        EndTime = Console.ReadLine();
+                        (StartTime, EndTime) = helper.ValidateDateTime(Id, StartTime, EndTime);
+                        DatabaseManager.UpdateData(Id, StartTime, EndTime);
                         break;
                     case "3":
-                       // DatabaseManager.DeleteData(Id);
+                        Console.Clear();
+                        Console.Write("please enter the coding session Id you wish to delete: ");
+                        Id = helper.validateInt(Console.ReadLine());
+                        DatabaseManager.DeleteData(Id);
                         break;
                     case "4":
+                        Console.Clear();
                         TableVisualizationEngine.ShowTable(DatabaseManager.GetALLData());
+                        Console.WriteLine("press any key to go back");
+                        Console.ReadLine();
                         break;
                     case "5":
-                        DatabaseManager.GetReports();
+                        Console.Clear();
+                        Console.WriteLine("Choose which type of report you'd like to see\n");
+                        Console.WriteLine("Type A to view Averages");
+                        Console.WriteLine("Type T to view Totals");
+                        Console.Write("\nEnter here: ");
+                        string option = Console.ReadLine().ToUpper();
+
+                    
+                        string type = option == "A"? "Averages": "Total";
+                        Console.WriteLine($"\nType W to view Weekly {type}");
+                        Console.WriteLine($"Type M to view Monthly {type}");
+                        Console.WriteLine($"Type Y to view Yearly {type}");
+                        Console.Write("\nEnter here: ");
+                        string reportRange = Console.ReadLine().ToUpper();
+                        Console.Clear();
+
+                        string reportRange1 = reportRange == "W" ? "Weekly"
+                            : reportRange == "M" ? "Monthly"
+                            : reportRange == "Y" ? "Yearly"
+                            : "Invalid";
+
+                        string option1 = option == "A" ? "Average" : "Total";
+
+                        Console.WriteLine($"Showing {reportRange1} {option1} \n");
+                        TableVisualizationEngine.ShowTable(DatabaseManager.GetReports(option,reportRange));
+  
+                        Console.WriteLine("press any key to go back");
+                        Console.ReadLine();
+                        break;
+
+                    case "6":
+                        Console.Clear();
+                        Console.WriteLine("Press any key to start timer");
+                        Console.ReadLine();
+                        SessionTracker session = new SessionTracker();
+                        session.StartTimer();
+                        Console.WriteLine("Stopwatch started (press any key to stop)... \n");
+                        while (!Console.KeyAvailable)
+                        {
+                            Console.SetCursorPosition(0, Console.CursorTop);
+                            Console.Write($"Elapsed time: {session.stopwatch.Elapsed:hh\\:mm\\:ss}");
+                            Thread.Sleep(100);
+                        }
+                        session.EndTimer();
+                        var time = session.GetTime();
+                        DatabaseManager.InsertData(time.startTime,time.endTime);
+                        Console.WriteLine("\npress any key to go back");
+                        Console.ReadKey();
+                        Console.ReadLine();  
                         break;
                     default:
                         Console.WriteLine("that option isn't available yet press any key to go back to the main menu");
                         break;
 
                 }
+               
+                Console.Clear();
             }
         }
     }

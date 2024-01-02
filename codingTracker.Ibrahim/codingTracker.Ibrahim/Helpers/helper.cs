@@ -8,7 +8,7 @@ namespace codingTracker.Ibrahim.Helpers
 
         public static string CalculateDuration(string startTime, string endTime)
         {
-            string duration="";
+            TimeSpan duration = TimeSpan.Zero;
             bool Valid = false;
             do
             {
@@ -18,7 +18,7 @@ namespace codingTracker.Ibrahim.Helpers
                 if (et > st)
                 {
                     Valid = true;
-                    duration = Convert.ToString(et - st);
+                    duration = et - st;
                 }
                 else
                 {
@@ -30,26 +30,26 @@ namespace codingTracker.Ibrahim.Helpers
                 }
             }
             while (!Valid);
-            return duration;
+            return $"{duration.Hours}";
         }
         public static string ValidateDateTimeFormat(string dateTime)
         {
-            string format = "MM-dd-yyyy HH:mm:ss";
+            string format = "MM-dd-yyyy h:mm tt";
             DateTime result;
 
             while (!DateTime.TryParseExact(dateTime, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
             {
-                Console.WriteLine("Invalid format. Please enter a date and time in the format 'MM-dd-yyyy HH:mm:ss'");
+                Console.WriteLine("Invalid format. Please enter the date and time in the format MM-DD-YYYY HH:MM AM/PM (e.g., 04-26-2001 1:00 PM): ");
                 Console.Write("Enter Here: ");
                 dateTime = Console.ReadLine();
             }
 
             return dateTime;
         }
-        public static string ValidateDateTime(int Id, string? StartTime,string? EndTime)
+        public static (string startTime, string endTime) ValidateDateTime(int Id, string? StartTime, string? EndTime)
         {
-            string validDateTime = "";
-            if(StartTime!= null && EndTime ==null)
+            var validDateTime = ("", "");
+            if (StartTime != null && EndTime == null)
             {
                 StartTime = ValidateDateTimeFormat(StartTime);
                 bool Valid = false;
@@ -64,16 +64,16 @@ namespace codingTracker.Ibrahim.Helpers
                     }
                     else
                     {
-                        Console.WriteLine("start date can't be after end date please enter Start Date again in the format 'MM-dd-yyyy HH:mm:ss': \n");
+                        Console.WriteLine("start date can't be after end date please enter Start Date again in the format MM-DD-YYYY HH:MM AM/PM (e.g., 04-26-2001 1:00 PM):\" \n");
                         Console.Write($"start date = ");
                         StartTime = Console.ReadLine();
                     }
                 }
                 while (!Valid);
-                validDateTime = StartTime;
+                validDateTime = (StartTime, null);
             }
 
-            else if (StartTime==null && EndTime!=null)
+            else if (StartTime == null && EndTime != null)
             {
                 EndTime = ValidateDateTimeFormat(EndTime);
                 if (StartTime == null && EndTime != null)
@@ -91,16 +91,44 @@ namespace codingTracker.Ibrahim.Helpers
                         }
                         else
                         {
-                            Console.WriteLine("start date can't be after end date please enter End Date again in the format 'MM-dd-yyyy HH:mm:ss': \n");
+                            Console.WriteLine("start date can't be after end date please enter End Date again in the format MM-DD-YYYY HH:MM AM/PM (e.g., 04-26-2001 1:00 PM):\" \n");
                             Console.Write($"start date = ");
                             EndTime = Console.ReadLine();
                         }
                     }
                     while (!Valid);
-                    validDateTime = EndTime;
+                    validDateTime = (null, EndTime);
                 }
             }
 
+            else if (StartTime != null && EndTime != null)
+            {
+                StartTime = ValidateDateTimeFormat(StartTime);
+                EndTime = ValidateDateTimeFormat(EndTime);
+                bool Valid = false;
+                do
+                {
+                    DateTime et = DateTime.Parse(EndTime);
+                    DateTime st = DateTime.Parse(StartTime);
+
+                    if (et > st)
+                    {
+                        Valid = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("start date can't be after end date please enter Start Date again in the format MM-DD-YYYY HH:MM AM/PM (e.g., 04-26-2001 1:00 PM):\" \n");
+                        Console.Write($"start date = ");
+                        StartTime = Console.ReadLine();
+                        Console.WriteLine("start date can't be after end date please enter End Date again in the format MM-DD-YYYY HH:MM AM/PM (e.g., 04-26-2001 1:00 PM):\" \n");
+                        Console.Write($"end date = ");
+                        EndTime = Console.ReadLine();
+                    }
+                }
+                while (!Valid);
+                validDateTime = (StartTime, EndTime);
+
+            }
             return validDateTime;
         }
         public static (string startTime, string EndTime) ValidateDateTimes(string StartTime, string EndTime)
@@ -119,7 +147,7 @@ namespace codingTracker.Ibrahim.Helpers
                 }
                 else
                 {
-                    Console.WriteLine("start date can't be after end date please enter dates again in the format 'MM-dd-yyyy HH:mm:ss': \n");
+                    Console.WriteLine("start date can't be after end date please enter dates again in the format MM-DD-YYYY HH:MM AM/PM (e.g., 04-26-2001 1:00 PM):\" \n");
                     Console.Write($"start date = ");
                     StartTime = Console.ReadLine();
                     Console.WriteLine($"end date = ");
@@ -136,7 +164,7 @@ namespace codingTracker.Ibrahim.Helpers
 
             bool databaseCheck = DatabaseManager.SessionExists(Id);
 
-            if(checkingForExists) // we want it to be there, if not prompt user for an existing date and set dateExists to that
+            if (checkingForExists)
             {
                 do
                 {
@@ -180,21 +208,21 @@ namespace codingTracker.Ibrahim.Helpers
                 result = int.TryParse(menuOptionSelected, out number);
                 if (result)
                 {
-                    if (number <= 5 && number >= 0)
+                    if (number <= 6 && number >= 0)
                     {
                         retVal = menuOptionSelected;
                     }
                     else
                     {
                         result = false;
-                        Console.Write($"please enter a number between 0 and 5");
+                        Console.Write($"please enter a number between 0 and 6");
                         menuOptionSelected = Console.ReadLine();
                     }
                 }
                 else //not a number
                 {
                     result = false;
-                    Console.Write($"please enter a number between 0 and 5");
+                    Console.Write($"please enter a number between 0 and 6");
                     menuOptionSelected = Console.ReadLine();
                 }
             }
