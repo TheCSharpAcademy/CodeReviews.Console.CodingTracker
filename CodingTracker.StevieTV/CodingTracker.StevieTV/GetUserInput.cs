@@ -59,18 +59,18 @@ What would you like to do?
         var date = GetDateInput();
         var duration = GetDurationInput();
 
-        var coding = new Coding() {Date = date, Duration = duration};
+        var codingSession = new CodingSession() {Date = date, Duration = duration};
 
-        codingController.Post(coding);
+        codingController.Post(codingSession);
     }
 
     private void ProcessDelete()
     {
         codingController.Get();
 
-        var coding = new Coding();
+        var codingSession = new CodingSession();
 
-        while (coding.Id == 0)
+        while (codingSession.Id == 0)
         {
             Console.WriteLine("Please enter the id of the entry you want to delete, or enter 0 to return to the main menu:\n");
             var inputId = Console.ReadLine();
@@ -84,9 +84,9 @@ What would you like to do?
             
             var id = Int32.Parse(inputId);
             if (id == 0) MainMenu();
-            coding = codingController.GetById(id);
+            codingSession = codingController.GetById(id);
 
-            if (coding.Id != 0)
+            if (codingSession.Id != 0)
             {
                 codingController.Delete(id);
             }
@@ -98,9 +98,9 @@ What would you like to do?
     {
         codingController.Get();
 
-        var coding = new Coding();
+        var codingSession = new CodingSession();
 
-        while (coding.Id == 0)
+        while (codingSession.Id == 0)
         {
             Console.WriteLine("Please enter the id of the entry you want to update, or enter 0 to return to the main menu:\n");
             var inputId = Console.ReadLine();
@@ -114,9 +114,9 @@ What would you like to do?
             
             var id = Int32.Parse(inputId);
             if (id == 0) MainMenu();
-            coding = codingController.GetById(id);
+            codingSession = codingController.GetById(id);
 
-            if (coding.Id != 0)
+            if (codingSession.Id != 0)
             {
                 var action = "";
                 bool updating = true;
@@ -132,10 +132,10 @@ What would you like to do?
                     switch (action)
                     {
                         case "d":
-                            coding.Date = GetDateInput();
+                            codingSession.Date = GetDateInput();
                             break;
                         case "t":
-                            coding.Duration = GetDurationInput();
+                            codingSession.Duration = GetDurationInput();
                             break;
                         case "0":
                             updating = false;
@@ -150,7 +150,7 @@ What would you like to do?
                     }
                 }
 
-                codingController.Update(coding);
+                codingController.Update(codingSession);
                 MainMenu();
             }
             Console.WriteLine($"Record with id {id} doesn't exist\n");

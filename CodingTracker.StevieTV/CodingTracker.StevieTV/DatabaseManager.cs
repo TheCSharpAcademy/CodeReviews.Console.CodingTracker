@@ -13,9 +13,11 @@ internal class DatabaseManager
                 connection.Open();
 
                 tableCmd.CommandText =
-                    @"CREATE TABLE IF NOT EXISTS coding (
+                    @"CREATE TABLE IF NOT EXISTS coding_sessions (
                     Id INTEGER PRIMARY KEY AUTOINCREMENT,
                     Date TEXT,
+                    StartTime TEXT,
+                    EndTime TEXT,
                     Duration TEXT
                 )";
 

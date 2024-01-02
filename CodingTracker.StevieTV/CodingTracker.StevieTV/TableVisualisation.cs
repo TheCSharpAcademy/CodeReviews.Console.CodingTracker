@@ -8,7 +8,7 @@ internal class TableVisualisation
     {
         ConsoleTableBuilder
             .From(tableData)
-            .WithTitle("Coding")
+            .WithTitle("Coding Sessions")
             .ExportAndWriteLine();
         Console.WriteLine("\n");
     }
