@@ -4,7 +4,7 @@ namespace CodingTracker.StevieTV;
 
 class CodingTracker
 {
-    private static string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
+    private static readonly string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
 
     static void Main()
     {

@@ -5,7 +5,7 @@ namespace CodingTracker.StevieTV;
 
 internal class CodingController
 {
-    private string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
+    private readonly string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
 
     internal void Get()
     {
@@ -28,7 +28,9 @@ internal class CodingController
                             {
                                 Id = reader.GetInt32(0),
                                 Date = reader.GetString(1),
-                                Duration = reader.GetString(2)
+                                StartTime = reader.GetString(2),
+                                EndTime = reader.GetString(3),
+                                Duration = reader.GetString(4)
                             });
                         }
                     }
@@ -49,12 +51,15 @@ internal class CodingController
             using (var tableCmd = connection.CreateCommand())
             {
                 connection.Open();
-                tableCmd.CommandText = $"INSERT INTO coding_sessions (Date, Duration) VALUES ('{codingSession.Date}', '{codingSession.Duration}')";
+                tableCmd.CommandText = 
+                    @$"INSERT INTO coding_sessions (Date, StartTime, EndTime, Duration) 
+                    VALUES ('{codingSession.Date}', '{codingSession.StartTime}', '{codingSession.EndTime}','{codingSession.Duration}')";
+
                 tableCmd.ExecuteNonQuery();
             }
         }
     }
-    
+
     internal void Delete(int id)
     {
         using (var connection = new SqliteConnection(connectionString))
@@ -64,12 +69,12 @@ internal class CodingController
                 connection.Open();
                 tableCmd.CommandText = $"DELETE FROM coding_sessions WHERE Id = '{id}'";
                 tableCmd.ExecuteNonQuery();
-                
             }
         }
+
         Console.WriteLine($"Record with ID {id} was deleted");
     }
-    
+
     public void Update(CodingSession codingSession)
     {
         using (var connection = new SqliteConnection(connectionString))
@@ -77,11 +82,17 @@ internal class CodingController
             using (var tableCmd = connection.CreateCommand())
             {
                 connection.Open();
-                tableCmd.CommandText = $"UPDATE coding_sessions SET Date = '{codingSession.Date}', Duration = '{codingSession.Duration}' WHERE Id = '{codingSession.Id}'";
+                tableCmd.CommandText = 
+                    @$"UPDATE coding_sessions SET 
+                        Date = '{codingSession.Date}', 
+                        StartTime = '{codingSession.StartTime}',
+                        EndTime = '{codingSession.EndTime}',
+                        Duration = '{codingSession.Duration}' 
+                        WHERE Id = '{codingSession.Id}'";
                 tableCmd.ExecuteNonQuery();
-                
             }
-        }    
+        }
+
         Console.WriteLine($"Record with ID {codingSession.Id} was updated");
     }
 
@@ -103,13 +114,14 @@ internal class CodingController
                         reader.Read();
                         codingSession.Id = reader.GetInt32(0);
                         codingSession.Date = reader.GetString(1);
-                        codingSession.Duration = reader.GetString(2);
+                        codingSession.StartTime = reader.GetString(2);
+                        codingSession.EndTime = reader.GetString(3);
+                        codingSession.Duration = reader.GetString(4);
                     }
 
                     return codingSession;
                 }
             }
         }
-        
     }
 }

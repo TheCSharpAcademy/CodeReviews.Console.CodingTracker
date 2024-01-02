@@ -22,7 +22,7 @@ internal class DatabaseManager
                 )";
 
                 tableCmd.ExecuteNonQuery();
-            };
-        };
+            }
+        }
     }
 }

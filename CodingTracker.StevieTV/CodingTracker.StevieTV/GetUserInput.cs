@@ -4,7 +4,7 @@ namespace CodingTracker.StevieTV;
 
 internal class GetUserInput
 {
-    CodingController codingController = new();
+    readonly CodingController codingController = new();
     internal void MainMenu()
     {
         bool closeApp = false;
@@ -57,9 +57,11 @@ What would you like to do?
     private void ProcessAdd()
     {
         var date = GetDateInput();
-        var duration = GetDurationInput();
+        var startTime = GetStartTimeInput();
+        var endTime = GetEndTimeInput(startTime);
+        var duration = CalculateDuration(startTime, endTime);
 
-        var codingSession = new CodingSession() {Date = date, Duration = duration};
+        var codingSession = new CodingSession() {Date = date, StartTime = startTime, EndTime = endTime, Duration = duration};
 
         codingController.Post(codingSession);
     }
@@ -119,11 +121,12 @@ What would you like to do?
             if (codingSession.Id != 0)
             {
                 var action = "";
-                bool updating = true;
-                while (updating == true)
+                var updating = true;
+                while (updating)
                 {
                     Console.WriteLine($"Type 'd' for Date");
-                    Console.WriteLine($"Type 't' for Duration");
+                    Console.WriteLine($"Type 'b' for Start Time");
+                    Console.WriteLine($"Type 'e' for End Time");
                     Console.WriteLine($"Type 's' to save update");
                     Console.WriteLine($"Type '0' to cancel update");
 
@@ -134,14 +137,24 @@ What would you like to do?
                         case "d":
                             codingSession.Date = GetDateInput();
                             break;
-                        case "t":
-                            codingSession.Duration = GetDurationInput();
+                        case "b":
+                            codingSession.StartTime = GetStartTimeInput();
+                            break;
+                        case "e":
+                            codingSession.EndTime = GetEndTimeInput(codingSession.StartTime);
                             break;
                         case "0":
                             updating = false;
                             MainMenu();
                             break;
                         case "s":
+                            while (!Validations.IsValidEndTime(codingSession.EndTime, codingSession.StartTime))
+                            {
+                                Console.WriteLine("\nThe end time is before the start time, please enter them both again\n");
+                                codingSession.StartTime = GetStartTimeInput();
+                                codingSession.EndTime = GetEndTimeInput(codingSession.StartTime);
+                            }
+                            codingSession.Duration = CalculateDuration(codingSession.StartTime, codingSession.EndTime);
                             updating = false;
                             break;
                         default:
@@ -165,7 +178,7 @@ What would you like to do?
 
         if (dateInput == "0") MainMenu();
 
-        while (!DateTime.TryParseExact(dateInput, "dd-MM-yy", new CultureInfo("en-US"), DateTimeStyles.None, out _))
+        while (String.IsNullOrEmpty(dateInput) || !Validations.IsValidDateFormat(dateInput))
         {
             Console.WriteLine("\nNot a valid date, please enter the date with the format dd-mm-yy or enter 0 to return to the main menu.\n");
             dateInput = Console.ReadLine();
@@ -174,22 +187,49 @@ What would you like to do?
 
         return dateInput;
     }
-
-    internal string GetDurationInput()
+    
+    internal string GetStartTimeInput()
     {
-        Console.WriteLine("\nPlease enter the duration (hh:mm), or enter 0 to return to the main menu:\n");
+        Console.WriteLine($"\nPlease enter the start time of your activity (hh:mm), or enter 0 to return to the main menu:\n");
 
-        var durationInput = Console.ReadLine();
+        var timeInput = Console.ReadLine();
 
-        if (durationInput == "0") MainMenu();
+        if (timeInput == "0") MainMenu();
 
-        while (!TimeSpan.TryParseExact(durationInput, "h\\:mm", CultureInfo.InvariantCulture, out _))
+        while (string.IsNullOrEmpty(timeInput) || !Validations.IsValidTimeFormat(timeInput))
         {
-            Console.WriteLine("\nNot a valid duration, please enter the date with the format hh:mm, or enter 0 to return to the main menu.\n");
-            durationInput = Console.ReadLine();
-            if (durationInput == "0") MainMenu();
+            Console.WriteLine("\nNot a valid time, please enter the date with the format hh:mm, or enter 0 to return to the main menu.\n");
+            timeInput = Console.ReadLine();
+            if (timeInput == "0") MainMenu();
         }
 
-        return durationInput;
+        return timeInput;
+    }
+    
+    internal string GetEndTimeInput(string startTime)
+    {
+        Console.WriteLine($"\nPlease enter the end time of your activity (hh:mm) that is also later that {startTime}, or enter 0 to return to the main menu:\n");
+
+        var timeInput = Console.ReadLine();
+
+        if (timeInput == "0") MainMenu();
+
+        while (string.IsNullOrEmpty(timeInput) || !Validations.IsValidTimeFormat(timeInput) || !Validations.IsValidEndTime(timeInput, startTime))
+        {
+            Console.WriteLine($"\nNot a valid time, please enter the date with the format hh:mm that is also later than {startTime}, or enter 0 to return to the main menu.\n");
+            timeInput = Console.ReadLine();
+            if (timeInput == "0") MainMenu();
+        }
+
+        return timeInput;
+    }
+
+    internal string CalculateDuration(string startTime, string endTime)
+    {
+        TimeSpan.TryParseExact(startTime, "h\\:mm", CultureInfo.InvariantCulture, out TimeSpan start);
+        TimeSpan.TryParseExact(endTime, "h\\:mm", CultureInfo.InvariantCulture, out TimeSpan end);
+        TimeSpan duration = new TimeSpan(end.Ticks - start.Ticks);
+
+        return duration.ToString("h\\:mm");
     }
 }
