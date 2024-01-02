@@ -177,6 +177,8 @@ namespace codingTracker.Ibrahim.data
         public static List<CodingSessionReport> GetReports(string A_or_T,string W_or_M_or_Y )
         {
             A_or_T = A_or_T == "A" ? "AVG" : "SUM";
+            Console.WriteLine(A_or_T + W_or_M_or_Y);
+            
             List<CodingSessionReport> weeklyHistory = new List<CodingSessionReport>();
 
             using (var connection = new SqliteConnection(ConfigurationManager.AppSettings.Get("connectionString")))
@@ -218,6 +220,8 @@ namespace codingTracker.Ibrahim.data
                             {
                                 while (reader.Read())
                                 {
+                                    //Console.WriteLine($"Debug: Weeks = {reader.Get(0)}, Duration = {reader.GetDataTypeName(1)}");
+
                                     var weeklySummary = new WeeklyCodingSessionReport
                                     {
                                         Weeks = reader.GetString(0),

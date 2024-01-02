@@ -30,7 +30,7 @@ namespace codingTracker.Ibrahim.Helpers
                 }
             }
             while (!Valid);
-            return $"{duration.Hours}";
+            return $"{duration.Hours} Hours {duration.Minutes} minutes";
         }
         public static string ValidateDateTimeFormat(string dateTime)
         {
