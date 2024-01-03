@@ -91,7 +91,7 @@ internal static class UserInterface
         {
             TimeSpan elapsedTime = stopwatch.Elapsed;
             Console.SetCursorPosition(0, 0);
-            AnsiConsole.Write(new FigletText(string.Format("{0} : {1} : {2}  ", elapsedTime.Hours, elapsedTime.Minutes, elapsedTime.Seconds % 60)).Color(Color.Chartreuse1));
+            AnsiConsole.Write(new FigletText(string.Format("{0} : {1} : {2}        ", elapsedTime.Hours, elapsedTime.Minutes, elapsedTime.Seconds % 60)).Color(Color.Chartreuse1));
             AnsiConsole.Markup("[DarkMagenta]Press Enter to end session...[/]");
         }
         stopwatch.Stop();
