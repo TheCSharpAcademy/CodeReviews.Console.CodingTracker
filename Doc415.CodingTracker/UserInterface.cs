@@ -80,7 +80,10 @@ internal static class UserInterface
         bool exit = false;
         Task.Factory.StartNew(() =>
         {
-            while (Console.ReadKey().Key != ConsoleKey.Enter) ;
+            while (Console.ReadKey().Key != ConsoleKey.Enter) 
+            {
+                exit=false;
+            }
             exit = true;
         });
 
