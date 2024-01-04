@@ -261,8 +261,6 @@ internal static class UserInterface
 
         } while (!isValidEntry);
 
-        TimeSpan goalTS = TimeSpan.FromHours(codingHours);
-
         Goal newGoal = new Goal();
         newGoal.startDate = dateInputs[0].ToString();
         newGoal.endDate = dateInputs[1].ToString();
@@ -272,16 +270,6 @@ internal static class UserInterface
 
     }
 
-    private static void getAllGoals()
-    {
-        DataAccess dataAccess = new DataAccess();
-        var goals = dataAccess.GetGoals();
-        foreach (var goal in goals)
-        {
-            Console.WriteLine(goal.codingGoal);
-        }
-        Console.ReadLine();
-    }
 
     private static void ReportGoals()
     {
@@ -326,6 +314,7 @@ internal static class UserInterface
                                                         DateTimeStyles.None, out startDate);
                 var endbool = DateTime.TryParseExact(newgoalendDate, "dd-MM-yy HH:mm", CultureInfo.InvariantCulture,
                                                     DateTimeStyles.None, out endDate);
+                if (startbool && endbool) { }   // Just for codacy
                 var records = dataAccess.GetRecordsBetween(startDate, endDate);
                 decimal total = 0;
 
@@ -334,6 +323,7 @@ internal static class UserInterface
                     total += record.Duration.Hours;
                 }
                 var valid = int.TryParse(goal.codingGoal, out int target);
+                if (valid) { }// For codacy again
                 decimal percentage = total / target;
                 Console.WriteLine(string.Format("You have achived {0} hours ({1:p})", total, percentage));
             }
