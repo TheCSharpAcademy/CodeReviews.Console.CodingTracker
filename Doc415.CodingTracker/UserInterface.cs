@@ -321,7 +321,7 @@ internal static class UserInterface
                 {
                     total += record.Duration.Hours;
                 }
-                var valid = int.TryParse(goal.codingGoal, out int target);
+                int target = int.Parse(goal.codingGoal);
                 decimal percentage = total / target;
                 Console.WriteLine(string.Format("You have achived {0} hours ({1:p})", total, percentage));
             }
