@@ -314,7 +314,6 @@ internal static class UserInterface
                                           DateTimeStyles.None);
                 endDate = DateTime.ParseExact(newgoalendDate, "dd-MM-yy HH:mm", CultureInfo.InvariantCulture,
                                      DateTimeStyles.None);
-                if (startbool && endbool) { }   // Just for codacy
                 var records = dataAccess.GetRecordsBetween(startDate, endDate);
                 decimal total = 0;
 
@@ -323,7 +322,6 @@ internal static class UserInterface
                     total += record.Duration.Hours;
                 }
                 var valid = int.TryParse(goal.codingGoal, out int target);
-                if (valid) { }// For codacy again
                 decimal percentage = total / target;
                 Console.WriteLine(string.Format("You have achived {0} hours ({1:p})", total, percentage));
             }
