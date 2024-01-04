@@ -310,10 +310,10 @@ internal static class UserInterface
 
                 Console.WriteLine($"Target coding time between {goal.startDate} and {goal.endDate}  is {goal.codingGoal} hours");
 
-                var startbool = DateTime.TryParseExact(newgoalStartDate, "dd-MM-yy HH:mm", CultureInfo.InvariantCulture,
-                                                        DateTimeStyles.None, out startDate);
-                var endbool = DateTime.TryParseExact(newgoalendDate, "dd-MM-yy HH:mm", CultureInfo.InvariantCulture,
-                                                    DateTimeStyles.None, out endDate);
+                startDate = DateTime.ParseExact(newgoalStartDate, "dd-MM-yy HH:mm", CultureInfo.InvariantCulture,
+                                          DateTimeStyles.None);
+                endDate = DateTime.ParseExact(newgoalendDate, "dd-MM-yy HH:mm", CultureInfo.InvariantCulture,
+                                     DateTimeStyles.None);
                 if (startbool && endbool) { }   // Just for codacy
                 var records = dataAccess.GetRecordsBetween(startDate, endDate);
                 decimal total = 0;
