@@ -6,7 +6,7 @@ using System.Configuration;
 class Program
 {
     static int codingGoal;
-    static double totalHours = 0;
+    static double totalHours;
 
     static string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
 
