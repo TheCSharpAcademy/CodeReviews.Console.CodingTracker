@@ -8,8 +8,6 @@ namespace CodingTracker
         {
             Console.WriteLine(message);
             string dateInput = "";
-            var cultureInfo = new CultureInfo("en-US");
-
             do
             {
                 Console.WriteLine("(Format: yyyy-MM-dd HH:mm)");
