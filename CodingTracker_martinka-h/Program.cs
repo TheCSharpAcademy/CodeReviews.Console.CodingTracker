@@ -2,16 +2,17 @@
 using CodingTracker;
 using ConsoleTableExt;
 using System.Configuration;
+using System.Globalization;
 
 class Program
 {
     static int codingGoal;
-    static double totalHours;
+    static double totalHours = 0;
 
     static string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
 
     DatabaseManager databaseManager = new();
- 
+
     static void Main(string[] args)
     {
         DatabaseManager.CreateTable(connectionString);
@@ -78,7 +79,19 @@ Choose one of the following options:
         {
             Console.WriteLine("Please provide the coding session information.");
             string startDateTime = Helpers.GetDateTimeInput("Provide the session start time and date");
-            string endDateTime = Helpers.GetDateTimeInput("Provide the session end time and date");
+            string endDateTime;
+
+            do
+            {
+                endDateTime = Helpers.GetDateTimeInput("Provide the session end time and date");
+
+                if (DateTime.ParseExact(endDateTime, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture) <= DateTime.ParseExact(startDateTime, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture))
+                {
+                    Console.WriteLine("End date and time must be later than the start date and time. Please try again.");
+                }
+
+            } while (DateTime.ParseExact(endDateTime, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture) <= DateTime.ParseExact(startDateTime, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture));
+
             string duration = Helpers.CalculateDuration(endDateTime, startDateTime);
 
             connection.Open();
@@ -88,6 +101,7 @@ Choose one of the following options:
             tableCmd.ExecuteNonQuery();
         }
     }
+
     private static void UpdateRecord()
     {
         Console.Clear();
@@ -119,28 +133,30 @@ Choose one of the following options:
                 }
             }
 
-            string newDate = "";
+            string newStartDate = "";
+            string newEndDate = "";
             var tableCmd = connection.CreateCommand();
 
-            Console.WriteLine("\nType 1 to update the start date, or type 2 to update the end date.");
+            newStartDate = Helpers.GetDateTimeInput("Please provide a new start date");
+            tableCmd.CommandText = $"UPDATE coding_sessions SET startDateTime = '{newStartDate}'";
 
-            string userInput = Console.ReadLine();
-
-            if (userInput == "1")
+            do
             {
-                newDate = Helpers.GetDateTimeInput("Please provide a new start date");
-                tableCmd.CommandText = $"UPDATE coding_sessions SET startDateTime = '{newDate}'";
+                newEndDate = Helpers.GetDateTimeInput("Please provide a new end date");
+                if (DateTime.ParseExact(newEndDate, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture) <= DateTime.ParseExact(newStartDate, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture))
+                {
+                    Console.WriteLine("End date and time must be later than the start date and time. Please try again.");
+                }
 
             }
-            else if (userInput == "2")
-            {
-                newDate = Helpers.GetDateTimeInput("Please providee a new end date");
-                tableCmd.CommandText = $"UPDATE coding_sessions SET endDateTime = '{newDate}'";
-            }
+            while (DateTime.ParseExact(newEndDate, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture) <= DateTime.ParseExact(newStartDate, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture));
+
+            tableCmd.CommandText = $"UPDATE coding_sessions SET endDateTime = '{newEndDate}'";
+
 
             tableCmd.ExecuteNonQuery();
 
-            Console.WriteLine("The record with Id {recordId} was updated. Press any key to continue");
+            Console.WriteLine($"The record with Id {recordId} was updated. Press any key to continue");
             Console.ReadLine();
             MainMenu();
         }
