@@ -16,7 +16,11 @@ namespace UnitTest.Speedierone
                 "14-12-2022",
                 "14/12/2022",
                 "Invalid date",
-                "2022/12/12"
+                "2022/12/12",
+                "",
+                " ",
+                "1",
+                "a"
             };
 
             foreach (var invalidDate in invalidDates)
@@ -32,7 +36,11 @@ namespace UnitTest.Speedierone
             var validDates = new List<string>
             {
                 "12-12-22",
-                "01-10-20"
+                "01-10-20",
+                "",
+                " ",
+                "1",
+                "a"
             };
 
             foreach(var validDate in validDates)
@@ -51,7 +59,11 @@ namespace UnitTest.Speedierone
                 "12/00",
                 "12-100",
                 "Invalid Time",
-                "15:00"
+                "15:00",
+                "",
+                " ",
+                "1",
+                "a"
             };
 
             foreach (var invalidTime in invalidTimes)
@@ -67,7 +79,11 @@ namespace UnitTest.Speedierone
             {
                 "12-00",
                 "11-59",
-                "21-00"
+                "21-00",
+                "",
+                " ",
+                "1",
+                "a"
             };
 
             foreach (var validTime in validTimes)
