@@ -17,15 +17,70 @@ namespace Library
                     Id INTEGER PRIMARY KEY AUTOINCREMENT,
                     Start_Time TEXT,
                     End_Time TEXT,
-                    Duration TEXT)";
+                    Duration BIGINT)";
                 command.ExecuteNonQuery();
                 connection.Close();
             }
         }
 
-        public void AddCodingSession(CodingSession session)
+        public void InsertCodingSession(CodingSession session)
         {
-            throw new NotImplementedException();
+            using (SqliteConnection connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+                SqliteCommand command = connection.CreateCommand();
+                command.CommandText = @$"INSERT INTO coding_time(start_time, end_time, duration) 
+                                      VALUES ('{session.StartTime}','{session.EndTime}', '{session.Duration.Ticks}')"; // Use TimeSpan FromTicks() to reconstitute the time
+                command.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
+
+        public void UpdateCodingSession(CodingSession session)
+        {
+            using (SqliteConnection connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+                SqliteCommand command = connection.CreateCommand();
+                command.CommandText = $@"UPDATE coding_time 
+                                        SET start_time = '{session.StartTime}', end_time = '{session.EndTime}', duration = {session.Duration.Ticks} 
+                                        WHERE id = {session.Id}";
+
+                command.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
+
+        public bool ValidateSessionById(int id)
+        {
+            using (SqliteConnection connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+                SqliteCommand command = connection.CreateCommand();
+                command.CommandText = $@"SELECT EXISTS(SELECT 1 FROM coding_time WHERE Id = {id})";
+                int checkQuery = Convert.ToInt32(command.ExecuteScalar());
+                connection.Close();
+                if (checkQuery == 0)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+        }
+
+        public void DeleteCodingSession(int id)
+        {
+            using (SqliteConnection connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+                SqliteCommand command = connection.CreateCommand();
+                command.CommandText = $"DELETE FROM coding_time WHERE id = {id}";
+                command.ExecuteNonQuery();
+                connection.Close();
+            }
         }
 
         public List<CodingSession> GetCodingSessions()

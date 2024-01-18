@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 using Library;
+using frockett.CodingTracker.Library;
 
 namespace frockett.CodingTracker;
 
@@ -8,15 +9,13 @@ internal class Program
     static void Main(string[] args)
     {
         // selects implementation of IDbMethods
-
-        //var dbMethods = new SqliteDbMethods();
         var dbMethods = InitializeSqliteDatabase();
-        
+
         //TODO stopwatchService
-        //TODO userInputService
-        //TODO codingSessionController
+        var userInteractionService = new UserInputValidationService();
+        var codingSessionController = new CodingSessionController(dbMethods, userInteractionService);
         //TODO reportGenerator???
-        var menuHandler = new MenuHandler();
+        var menuHandler = new MenuHandler(codingSessionController);
 
 
         menuHandler.ShowMainMenu();

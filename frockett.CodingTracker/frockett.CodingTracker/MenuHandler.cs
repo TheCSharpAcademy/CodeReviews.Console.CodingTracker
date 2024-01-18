@@ -1,24 +1,38 @@
-﻿using Spectre.Console;
+﻿using Library;
+using Spectre.Console;
 
 namespace frockett.CodingTracker
 {
     internal class MenuHandler
     {
+        private readonly CodingSessionController codingSessionController;
+        
+        public MenuHandler(CodingSessionController controller)
+        {
+            codingSessionController = controller;
+        }
+
         public void ShowMainMenu()
         {
+            string[] menuOptions =
+                    {"Insert Coding Session", "Modify Coding Session Record",
+                    "Delete Coding Session Record", "Coding Session Timer",
+                    "Generate Reports", "Exit Program",};
+
             string choice = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
-                .Title("Which operation would you like to perform?")
+                .Title("Which operation would you like to perform? Use [green]arrow[/] and [green]enter[/] keys to make a selection.")
                 .PageSize(10)
-                .MoreChoicesText("Use the arrow and enter keys to select")
-                .AddChoices(new[]
-                {
-                    "1. Insert Coding Session", "2. Modify Coding Session Record", 
-                    "3. Delete Coding Session Record", "4. Coding Session Timer", 
-                    "5. Generate Reports", "0. Exit Program",
-                }));
+                .MoreChoicesText("Keep scrolling for more options")
+                .AddChoices(menuOptions));
 
-            int menuSelection = UserChoiceToInt(choice);
+            /* 
+             * Before, the menu selection was parsed based on an int.parse of the first character, which was a number. 
+             * But having the numbers could confuse the user, since you can't input a number in the menu.
+             * So instead, menuSelection is the index in the menu array + 1 (the +1 is for ease of human readability)
+             */
+
+            int menuSelection = Array.IndexOf(menuOptions, choice) + 1;
             
             switch (menuSelection)
             {
@@ -32,38 +46,29 @@ namespace frockett.CodingTracker
                     HandleDeleteRecord();
                     break;
                 case 4:
-                    HandleStartCodingSession();
+                    //HandleStartCodingSession();
                     break;
                 case 5:
-                    HandleReportSubmenu();
+                    //HandleReportSubmenu();
                     break;
-                case 0:
+                case 6:
                     break;
             }
-            
-            
-            AnsiConsole.WriteLine(menuSelection);
-        }
-
-        private int UserChoiceToInt(string choice)
-        {
-            int menuSelection = int.Parse(choice.Substring(0, 1));
-            return menuSelection;  
         }
 
         private void HandleInsertRecord() 
-        { 
-            throw new NotImplementedException(); 
+        {
+            codingSessionController.InsertCodingSession();
         }
 
         private void HandleDeleteRecord()
         {
-            throw new NotImplementedException();
+            codingSessionController.DeleteCodingSession();
         }
 
         private void HandleUpdateRecord()
         {
-            throw new NotImplementedException();
+            codingSessionController.UpdateCodingSession();
         }
 
         private void HandleStartCodingSession()
