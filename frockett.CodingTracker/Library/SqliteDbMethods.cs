@@ -186,8 +186,6 @@ public class SqliteDbMethods : IDbMethods
         {
             using (SqliteConnection connection = new SqliteConnection(connectionString))
             {
-                //string month = date.ToString("MM");
-
                 connection.Open();
                 SqliteCommand command = connection.CreateCommand();
                 command.CommandText = $@"SELECT * FROM coding_time

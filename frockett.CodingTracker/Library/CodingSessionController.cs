@@ -1,7 +1,6 @@
 ﻿using Spectre.Console;
 using frockett.CodingTracker.Library;
 using System.Diagnostics;
-using Microsoft.VisualBasic;
 
 namespace Library;
 
@@ -78,7 +77,6 @@ public class CodingSessionController
         stopwatchService.ResetStopwatch();
     }
 
-
     public List<CodingSession> FetchAllSessionHistory()
     {
         if (!dbMethods.CheckForTableData())
@@ -130,5 +128,4 @@ public class CodingSessionController
         AnsiConsole.WriteLine("Seeding successful. Don't overdo it, now! Press enter to return to main menu.");
         Console.ReadLine();
     }
-
 }

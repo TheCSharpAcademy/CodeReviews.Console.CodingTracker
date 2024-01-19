@@ -1,7 +1,5 @@
-﻿using ConsoleTableExt;
-using frockett.CodingTracker.Library;
+﻿using frockett.CodingTracker.Library;
 using Spectre.Console;
-using Spectre.Console.Extensions.Table;
 using System.Diagnostics;
 
 namespace frockett.CodingTracker;
@@ -21,6 +19,7 @@ internal class DisplayService
             table.AddRow(session.Id.ToString(), session.StartTime.ToString("dd-MM-yyyy HH:mm"), session.EndTime.ToString("dd-MM-yyyy HH:mm"), session.Duration.ToString(@"h\:mm") + " hh:mm");
         }
         AnsiConsole.Write(table);
+        AnsiConsole.WriteLine("Press enter to continue");
         Console.ReadLine();
     }
 
@@ -38,6 +37,7 @@ internal class DisplayService
             table.AddRow(session.Month, session.TotalTime.ToString() + " hours total", session.AverageTime.ToString() + " hours per session", Math.Round((session.TotalTime / 30), 1).ToString() + " hours per day");
         }
         AnsiConsole.Write(table);
+        AnsiConsole.WriteLine("Press enter to continue");
         Console.ReadLine();
     }
 
@@ -62,5 +62,4 @@ internal class DisplayService
         }
         return stopwatch;
     }
-
 }
