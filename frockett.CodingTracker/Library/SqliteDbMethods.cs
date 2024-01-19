@@ -1,6 +1,5 @@
 ﻿using frockett.CodingTracker.Library;
 using Microsoft.Data.Sqlite;
-using System.Globalization;
 
 namespace Library;
 

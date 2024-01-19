@@ -1,5 +1,4 @@
 ﻿using Spectre.Console;
-using System.Data.SqlTypes;
 using System.Globalization;
 
 namespace frockett.CodingTracker.Library
