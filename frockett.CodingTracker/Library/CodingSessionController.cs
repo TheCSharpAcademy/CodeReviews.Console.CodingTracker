@@ -1,55 +1,94 @@
 ﻿using Spectre.Console;
 using frockett.CodingTracker.Library;
+using System.Diagnostics;
 
 namespace Library
 {
     public class CodingSessionController
     {
         private readonly IDbMethods dbMethods;
-        private readonly UserInputValidationService userInteractionService;
+        private readonly UserInputValidationService inputValidationService;
+        private readonly StopwatchService stopwatchService;
 
-        public CodingSessionController(IDbMethods dbMethods, UserInputValidationService ui)
+        public CodingSessionController(IDbMethods dbMethods, UserInputValidationService ui, StopwatchService stopwatch)
         {
             this.dbMethods = dbMethods;
-            userInteractionService = ui;
+            inputValidationService = ui;
+            stopwatchService = stopwatch;
         }
 
         public void InsertCodingSession()
         {
-            dbMethods.InsertCodingSession(userInteractionService.GetStartEndTimeInput());
+            dbMethods.InsertCodingSession(inputValidationService.GetStartEndTimeInput());
         }
 
         public void UpdateCodingSession()
         {
-            // TODO print sessions so user can see the IDs
+            int sessionIdToUpdate = inputValidationService.GetSessionId("Which session would you like to update? Enter 0 to return to main menu");
 
-            int sessionIdToUpdate = userInteractionService.GetSessionId("Which session would you like to update?");
+            if (sessionIdToUpdate == 0)
+            {
+                return;
+            }
             
             if(!dbMethods.ValidateSessionById(sessionIdToUpdate))
             {
                 AnsiConsole.WriteLine($"[red]Record {sessionIdToUpdate} does not exist");
-                sessionIdToUpdate = userInteractionService.GetSessionId("Please enter a valid session ID");
+                sessionIdToUpdate = inputValidationService.GetSessionId("Please enter a valid session ID");
             }
 
-            CodingSession sessionToUpdate = userInteractionService.GetStartEndTimeInput();
+            CodingSession sessionToUpdate = inputValidationService.GetStartEndTimeInput();
             sessionToUpdate.Id = sessionIdToUpdate;
-            //sessionToUpdate.Duration = sessionToUpdate.EndTime - sessionToUpdate.StartTime;
+            
             dbMethods.UpdateCodingSession(sessionToUpdate);
         }
 
         public void DeleteCodingSession()
         {
-            // TODO print sessions so user can see the IDs
-            
-            int sessionIdToDelete = userInteractionService.GetSessionId("Which session would you like to delete?");
+            int sessionIdToDelete = inputValidationService.GetSessionId("Which session would you like to delete? Enter 0 to return to main menu.");
+
+            if (sessionIdToDelete == 0)
+            {
+                return;
+            }
 
             if (!dbMethods.ValidateSessionById(sessionIdToDelete))
             {
                 AnsiConsole.WriteLine($"[red]Record {sessionIdToDelete} does not exist");
-                sessionIdToDelete = userInteractionService.GetSessionId("Please enter a valid session ID");
+                sessionIdToDelete = inputValidationService.GetSessionId("Please enter a valid session ID");
             }
 
             dbMethods.DeleteCodingSession(sessionIdToDelete);
+        }
+
+        public Stopwatch StartCodingSession()
+        {
+            return stopwatchService.StartStopwatch();
+        }
+
+        public void StopCodingSession(Stopwatch stopwatch)
+        {
+            CodingSession timedSession = new CodingSession();
+            timedSession.Duration = stopwatch.Elapsed;
+            timedSession.EndTime = DateTime.Now;
+            timedSession.StartTime = DateTime.Now - stopwatch.Elapsed;
+            dbMethods.InsertCodingSession(timedSession);
+            stopwatchService.StopStopwatch();
+            stopwatchService.ResetStopwatch();
+        }
+
+
+        public List<CodingSession> FetchAllSessionHistory()
+        {
+            if (!dbMethods.CheckForTableData())
+            {
+                AnsiConsole.MarkupLine("[red]There are no sessions available to display! Get coding![/]\n");
+                AnsiConsole.MarkupLine("Press [green]any[/] key to return to the main menu...");
+                Console.ReadKey(true);
+            }
+
+            List<CodingSession> sessions = dbMethods.GetAllCodingSessions();
+            return sessions;
         }
 
     }

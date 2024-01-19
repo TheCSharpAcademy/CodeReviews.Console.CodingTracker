@@ -7,8 +7,8 @@ namespace frockett.CodingTracker.Library
     {
         public CodingSession GetStartEndTimeInput()
         {
-            DateTime startTime = GetDateTime("Enter start time (DD-MM-YYYY HH:mm): ");
-            DateTime endTime = GetDateTime("Enter end time (DD-MM-YYYY HH:mm): ");
+            DateTime startTime = GetDateTime("Enter start time (DD-MM-YYYY HH:mm) || Please use 24-hour clock: ");
+            DateTime endTime = GetDateTime("Enter end time (DD-MM-YYYY HH:mm) || Please use 24-hour clock: ");
 
             return new CodingSession { StartTime = startTime, EndTime = endTime, Duration = endTime - startTime };
         }
@@ -24,7 +24,7 @@ namespace frockett.CodingTracker.Library
         private DateTime GetDateTime(string prompt)
         {
             DateTime dateTime;
-            string validFormat = "dd-MM-yyyy hh:mm";
+            string validFormat = "dd-MM-yyyy HH:mm";
 
             var sDateTime = AnsiConsole.Ask<string>(prompt);
             

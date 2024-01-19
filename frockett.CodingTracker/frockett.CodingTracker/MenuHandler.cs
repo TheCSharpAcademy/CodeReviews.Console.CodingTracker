@@ -6,14 +6,18 @@ namespace frockett.CodingTracker
     internal class MenuHandler
     {
         private readonly CodingSessionController codingSessionController;
+        private readonly DisplayService displayService;
         
-        public MenuHandler(CodingSessionController controller)
+        public MenuHandler(CodingSessionController controller, DisplayService display)
         {
             codingSessionController = controller;
+            displayService = display;
         }
 
         public void ShowMainMenu()
         {
+            AnsiConsole.Clear();
+
             string[] menuOptions =
                     {"Insert Coding Session", "Modify Coding Session Record",
                     "Delete Coding Session Record", "Coding Session Timer",
@@ -46,10 +50,10 @@ namespace frockett.CodingTracker
                     HandleDeleteRecord();
                     break;
                 case 4:
-                    //HandleStartCodingSession();
+                    HandleStartCodingSession();
                     break;
                 case 5:
-                    //HandleReportSubmenu();
+                    HandleReportSubmenu();
                     break;
                 case 6:
                     break;
@@ -59,26 +63,38 @@ namespace frockett.CodingTracker
         private void HandleInsertRecord() 
         {
             codingSessionController.InsertCodingSession();
+            ShowMainMenu();
         }
 
         private void HandleDeleteRecord()
         {
+            displayService.PrintSessionList(codingSessionController.FetchAllSessionHistory());
             codingSessionController.DeleteCodingSession();
+            ShowMainMenu();
         }
 
         private void HandleUpdateRecord()
         {
+            displayService.PrintSessionList(codingSessionController.FetchAllSessionHistory());
             codingSessionController.UpdateCodingSession();
+            ShowMainMenu();
         }
 
         private void HandleStartCodingSession()
         {
-            throw new NotImplementedException();
+            var stopwatch = displayService.DisplayStopwatch(codingSessionController.StartCodingSession());
+            codingSessionController.StopCodingSession(stopwatch);
+            AnsiConsole.Markup("\n[green]Session recorded, please press any key to return to the main menu...[/]");
+            Console.ReadKey(true);
+            Thread.Sleep(100);
+            ShowMainMenu();
         }
 
         private void HandleReportSubmenu()
         {
-            throw new NotImplementedException();
+            // TODO create submenu and options for custom reports
+            displayService.PrintSessionList(codingSessionController.FetchAllSessionHistory());
+            ShowMainMenu();
         }
     }
 }

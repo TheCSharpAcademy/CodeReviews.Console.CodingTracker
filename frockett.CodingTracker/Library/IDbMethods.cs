@@ -1,9 +1,4 @@
 ﻿using frockett.CodingTracker.Library;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Library;
 
@@ -14,5 +9,6 @@ public interface IDbMethods
     public void UpdateCodingSession(CodingSession session);
     public bool ValidateSessionById(int id);
     public void DeleteCodingSession(int id);
-    public List<CodingSession> GetCodingSessions();
+    public List<CodingSession> GetAllCodingSessions();
+    public bool CheckForTableData();
 }
