@@ -1,39 +1,43 @@
 ﻿using ConsoleTableExt;
 using frockett.CodingTracker.Library;
 using Spectre.Console;
+using Spectre.Console.Extensions.Table;
 using System.Diagnostics;
-using System.Transactions;
 
 namespace frockett.CodingTracker;
 
 internal class DisplayService
 {
-    
     public void PrintSessionList(List<CodingSession> sessions)
     {
-        // This is from experimenting with converting the list contents to strings first
-        /*
-        List<CodingSessionStrings> toPrint = new List<CodingSessionStrings>();
+        Table table = new Table();
+        table.AddColumn("Data ID");
+        table.AddColumn("Start Time");
+        table.AddColumn("End Time");
+        table.AddColumn("Duration");
 
-        foreach (CodingSession s in sessions)
+        foreach (CodingSession session in sessions)
         {
-            toPrint.Add( 
-                new CodingSessionStrings
-                {
-                    PrintStartTime = s.StartTime.ToString(),
-                    PrintEndTime = s.EndTime.ToString(),  
-                    PrintDuration = s.Duration.TotalHours.ToString(),
-                }
-                );
+            table.AddRow(session.Id.ToString(), session.StartTime.ToString("dd-MM-yyyy HH:mm"), session.EndTime.ToString("dd-MM-yyyy HH:mm"), session.Duration.ToString(@"h\:mm") + " hh:mm");
         }
+        AnsiConsole.Write(table);
+        Console.ReadLine();
+    }
 
-        var tableBuilder = ConsoleTableBuilder.From(toPrint);
-        */
+    public void PrintMonthlyAverages(List<CodingSession> sessions)
+    {
+        Table table = new Table();
+        table.Title("Monthly Averages");
+        table.AddColumn("Month");
+        table.AddColumn("Total Time");
+        table.AddColumn("Average Per Session");
+        table.AddColumn("Average Per Day");
 
-        var tableBuilder = ConsoleTableBuilder.From(sessions);
-
-        tableBuilder.ExportAndWriteLine();
-
+        foreach (var session in sessions)
+        {
+            table.AddRow(session.Month, session.TotalTime.ToString() + " hours total", session.AverageTime.ToString() + " hours per session", Math.Round((session.TotalTime / 30), 1).ToString() + " hours per day");
+        }
+        AnsiConsole.Write(table);
         Console.ReadLine();
     }
 
@@ -56,25 +60,7 @@ internal class DisplayService
                 isRunning = false;
             }
         }
-
         return stopwatch;
     }
 
-    /*
-    async void PrintStopwatch(Stopwatch stopwatch)
-    {
-        var table = new Table();
-        table.AddColumn(new TableColumn("[yellow]Time[/]").Centered());
-
-        while (true)
-        {
-            AnsiConsole.Clear();
-            table.Rows.Clear();
-            table.AddRow(stopwatch.Elapsed.ToString("hh\\:mm\\:ss"));
-            AnsiConsole.Write(table);
-            //await Task.Delay(1000);
-            Thread.Sleep(100);
-        }
-    }
-    */
 }

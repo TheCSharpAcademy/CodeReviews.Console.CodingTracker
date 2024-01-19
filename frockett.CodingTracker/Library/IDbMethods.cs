@@ -10,5 +10,7 @@ public interface IDbMethods
     public bool ValidateSessionById(int id);
     public void DeleteCodingSession(int id);
     public List<CodingSession> GetAllCodingSessions();
-    public bool CheckForTableData();
+    public List<CodingSession> GetCustomCodingSessions(bool isListOfAverages, DateOnly date);
+    public bool CheckForTableData(int year = 0, int month = 0);
+    public void SeedRandomData(int iterations);
 }

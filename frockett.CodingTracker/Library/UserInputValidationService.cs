@@ -1,4 +1,5 @@
 ﻿using Spectre.Console;
+using System.Data.SqlTypes;
 using System.Globalization;
 
 namespace frockett.CodingTracker.Library
@@ -20,6 +21,33 @@ namespace frockett.CodingTracker.Library
             return sessionId;
         }
 
+        public DateOnly GetYearOnly(string prompt)
+        {
+            DateOnly date;
+
+            string sDate = AnsiConsole.Ask<string>(prompt);
+
+            while (!DateOnly.TryParseExact(sDate, "yyyy", out date))
+            {
+                AnsiConsole.WriteLine("Invalid input, please input a valid year");
+                sDate = AnsiConsole.Ask<string>(prompt);
+            }
+            return date;
+        }
+
+        public DateOnly GetMonthAndYear(string prompt)
+        {
+            DateOnly date;
+
+            string sDate = AnsiConsole.Ask<string>(prompt);
+
+            while (!DateOnly.TryParseExact(sDate, "MM-yyyy", out date))
+            {
+                AnsiConsole.WriteLine("Invalid input, please input a valid year");
+                sDate = AnsiConsole.Ask<string>(prompt);
+            }
+            return date;
+        }
 
         private DateTime GetDateTime(string prompt)
         {
