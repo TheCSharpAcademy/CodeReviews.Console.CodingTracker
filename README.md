@@ -1,6 +1,6 @@
 # .NET SQLite Coding Tracker Console App
 
-This repository contains my version of [this](https://thecsharpacademy.com/project/13) project from the C# Academy website. It uses the ADO.NET framework to perform simple CRUD operations on an SQLite database that tracks programming sessions.
+[This repository](https://github.com/frockett/CodeReviews.Console.CodingTracker/tree/main/frockett.CodingTracker) contains my version of [this](https://thecsharpacademy.com/project/13) project from the C# Academy website. It uses the ADO.NET framework to perform simple CRUD operations on an SQLite database that tracks programming sessions.
 
 ## Features
 - Insert, update, and delete records based on date/time or record ID.
