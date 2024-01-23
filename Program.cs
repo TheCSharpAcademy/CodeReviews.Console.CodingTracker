@@ -1,2 +1,11 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿
+namespace CodingTracker;
+internal class Program
+{
+    private static void Main(string[] args)
+    {
+        var configReader = new ConfigReader();
+        var database = new Database(configReader.GetConnectionString(),configReader.GetFileNameString());
+
+    }
+}
