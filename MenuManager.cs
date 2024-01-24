@@ -12,6 +12,7 @@ public class MenuManager
     public MenuManager()
     {
         menuStack.Push(new MainMenu(this));
+        DisplayCurrentMenu();
     }
 
     public void DisplayCurrentMenu()

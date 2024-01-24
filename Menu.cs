@@ -23,6 +23,31 @@ public abstract class Menu
 
     public override void Display()
     {
+        UserInterface.MainMenu();
+        switch(OptionsPicker.CurrentIndex)
+        {
+            case 0:
+            CodingSessionMenu codingSessionMenu = new(MenuManager);
+            MenuManager.NewMenu(codingSessionMenu);
+            MenuManager.DisplayCurrentMenu();
+            break;
+        }
+    }
+}
 
+public class CodingSessionMenu : Menu
+{
+    public CodingSessionMenu(MenuManager menuManager) : base(menuManager){}
+    public override void Display()
+    {
+        UserInterface.CodingSessionMenu();
+        
+        switch(OptionsPicker.CurrentIndex)
+        {
+            case 2:
+            MenuManager.GoBack();
+            MenuManager.DisplayCurrentMenu();
+            break;
+        }
     }
 }
