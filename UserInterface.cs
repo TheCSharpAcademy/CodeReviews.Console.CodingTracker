@@ -24,9 +24,20 @@ public static class UserInterface
 
         Console.Clear();
         Console.WriteLine("-----NEW CODING SESSION-----");
+        Console.WriteLine();
 
         OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top);
+    }
 
+    public static void ShowRecordsMenu()
+    {
+        string[] menuOptions = { "Show all", "Show filters", "Update a record", "Delete a record", "Go back" };
+
+        Console.Clear();
+        Console.WriteLine("-----SHOW RECORDS-----");
+        Console.WriteLine();
+
+        OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top);
     }
 }
 

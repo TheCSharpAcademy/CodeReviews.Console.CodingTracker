@@ -11,9 +11,11 @@ public static class OptionsPicker
     public static int MenuIndex { get; private set; }
     private static int currentIndex;
     private static int lastIndex = 0;
+    private static int lastMenuIndex = 0;
+
     private static int longestStringLength = 0;
     private static int higlightBoxWidth = 0;
-    
+
     public static void Navigate(string[] menuOptions, int headerLines)
     {
         bool enterPressed = false;
@@ -46,28 +48,30 @@ public static class OptionsPicker
             if (keypress == ConsoleKey.DownArrow && MenuIndex < menuOptions.Length - 1)
             {
                 lastIndex = currentIndex;
+                lastMenuIndex = MenuIndex;
                 MenuIndex++;
                 currentIndex++;
             }
             else if (keypress == ConsoleKey.UpArrow && MenuIndex > 0)
             {
                 lastIndex = currentIndex;
+                lastMenuIndex = MenuIndex;
                 MenuIndex--;
                 currentIndex--;
             }
             else if (keypress == ConsoleKey.Enter)
             {
-                EnterPressed(menuOptions,headerLines);
+                EnterPressed(menuOptions);
                 enterPressed = true;
 
             }
 
-            if (!enterPressed) SwitchHighlight(menuOptions, headerLines);
+            if (!enterPressed) SwitchHighlight(menuOptions);
 
         } while (!enterPressed);
     }
 
-    private static void EnterPressed(string[] menuOptions, int headerLines)
+    private static void EnterPressed(string[] menuOptions)
     {
         Console.SetCursorPosition(0, currentIndex);
         Console.BackgroundColor = ConsoleColor.Red;
@@ -82,11 +86,11 @@ public static class OptionsPicker
         Console.ForegroundColor = ConsoleColor.Black;
     }
 
-    private static void SwitchHighlight(string[] menuOptions, int headerLines)
+    private static void SwitchHighlight(string[] menuOptions)
     {
         Console.SetCursorPosition(0, lastIndex);
         Console.ResetColor();
-        Console.WriteLine(string.Format("  {0,-" + higlightBoxWidth + "}", menuOptions[MenuIndex]));
+        Console.WriteLine(string.Format("  {0,-" + higlightBoxWidth + "}", menuOptions[lastMenuIndex]));
 
         Console.SetCursorPosition(0, currentIndex);
         HighlightOption();
