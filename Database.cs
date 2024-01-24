@@ -4,35 +4,38 @@ namespace CodingTracker
 {
     public class Database
     {
-        private string ConnectionString { get; set; }
-        private string FileName { get; set; }
+        private string _connectionString;
+        private string _fileName;
         public Database(string connectionString, string fileName)
         {
-            ConnectionString = connectionString;
-            FileName = fileName;
-            CreateDatabase();
+            _connectionString = connectionString;
+            _fileName = fileName;
+            InitializeDatabase();
         }
-        public void CreateDatabase()
+        public void InitializeDatabase()
         {
-            using (var connection = new SQLiteConnection(ConnectionString))
+            if (!File.Exists(_fileName))
             {
-                if (!File.Exists(FileName))
-                {
-                    System.Console.WriteLine("Database file does not exist. A new database will be created.");
-                    string commandText = "CREATE TABLE IF NOT EXISTS coding_tracker(id INTEGER PRIMARY KEY AUTOINCREMENT, notes TEXT, date_start TEXT, date_end TEXT)";
-                    SQLiteCommand command = new(commandText, connection);
+                System.Console.WriteLine("Database file does not exist. A new database will be created.");
+            }
 
-                    try
-                    {
-                        connection.Open();
-                        command.ExecuteNonQuery();
-                        System.Console.WriteLine("New file and table created.");
-                    }
-                    catch (Exception ex)
-                    {
-                        System.Console.WriteLine($"Error: {ex.Message}");
-                    }
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+
+                string commandText = "CREATE TABLE IF NOT EXISTS coding_tracker(id INTEGER PRIMARY KEY AUTOINCREMENT, notes TEXT, date_start TEXT, date_end TEXT)";
+                SQLiteCommand command = new(commandText, connection);
+
+                try
+                {
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                    System.Console.WriteLine("Database initialized.");
                 }
+                catch (Exception ex)
+                {
+                    System.Console.WriteLine($"Error: {ex.Message}");
+                }
+
             }
         }
     }

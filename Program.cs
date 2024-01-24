@@ -5,7 +5,21 @@ internal class Program
     private static void Main(string[] args)
     {
         var configReader = new ConfigReader();
-        var database = new Database(configReader.GetConnectionString(),configReader.GetFileNameString());
+
+        try
+        {
+            string connectionString = configReader.GetConnectionString();
+            string fileName = configReader.GetFileNameString();
+
+            var database = new Database(connectionString, fileName);
+        }
+        catch (InvalidOperationException ex)
+        {
+            Console.WriteLine($"Error:{ex.Message}");
+            Environment.Exit(1);   
+        }
+
+        MenuManager menuManager = new MenuManager();
 
     }
 }
