@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Intrinsics.Arm;
 using System.Threading.Tasks;
 
 namespace CodingTracker;
@@ -32,6 +33,9 @@ public class MainMenu : Menu
             case 1:
                 MenuManager.NewMenu(new ShowRecordsMenu(MenuManager));
                 break;
+            case 2:
+                MenuManager.NewMenu(new GoalsMenu(MenuManager));
+                break;
             default:
                 Environment.Exit(0);
                 break;
@@ -50,6 +54,12 @@ public class CodingSessionMenu : Menu
 
         switch (OptionsPicker.MenuIndex)
         {
+            case 0:
+                MenuManager.NewMenu(new ManualSessionMenu(MenuManager));
+                MenuManager.DisplayCurrentMenu();
+                break;
+            case 1:
+                break;
             case 2:
                 MenuManager.GoBack();
                 MenuManager.DisplayCurrentMenu();
@@ -63,7 +73,7 @@ public class ShowRecordsMenu : Menu
     public ShowRecordsMenu(MenuManager menuManager) : base(menuManager) { }
     public override void Display()
     {
-        UserInterface.ShowRecordsMenu();
+        UserInterface.RecordsMenu();
 
         switch (OptionsPicker.MenuIndex)
         {
@@ -72,5 +82,33 @@ public class ShowRecordsMenu : Menu
                 MenuManager.DisplayCurrentMenu();
                 break;
         }
+    }
+}
+public class GoalsMenu : Menu
+{
+    public GoalsMenu(MenuManager menuManager) : base(menuManager) { }
+    public override void Display()
+    {
+        UserInterface.GoalsMenu();
+
+        switch (OptionsPicker.MenuIndex)
+        {
+            case 2:
+                MenuManager.GoBack();
+                MenuManager.DisplayCurrentMenu();
+                break;
+        }
+    }
+}
+public class ManualSessionMenu : Menu
+{
+    public ManualSessionMenu(MenuManager menuManager) : base(menuManager) { }
+    public override void Display()
+    {
+        UserInterface.ManualSessionMenuA();
+        string timeInput = UserInput.TimeInput();
+        Console.WriteLine(timeInput);
+        
+
     }
 }

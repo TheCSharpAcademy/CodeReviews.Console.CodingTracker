@@ -29,7 +29,7 @@ public static class UserInterface
         OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top);
     }
 
-    public static void ShowRecordsMenu()
+    public static void RecordsMenu()
     {
         string[] menuOptions = { "Show all", "Show filters", "Update a record", "Delete a record", "Go back" };
 
@@ -38,6 +38,26 @@ public static class UserInterface
         Console.WriteLine();
 
         OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top);
+    }
+     public static void GoalsMenu()
+    {
+        string[] menuOptions = { "Set a Goal", "Show Goals", "Go back"};
+
+        Console.Clear();
+        Console.WriteLine("-----GOALS-----");
+        Console.WriteLine();
+
+        OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top);
+    }
+
+    public static void ManualSessionMenuA()
+    {
+        Console.Clear();
+        Console.WriteLine("-----SHOW RECORDS-----");
+        Console.WriteLine();
+
+        Console.SetCursorPosition(2,Console.GetCursorPosition().Top);
+        Console.WriteLine("Enter the Start time of your session (HH:mm):");
     }
 }
 
