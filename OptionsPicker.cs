@@ -2,73 +2,94 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.VisualBasic;
 
 namespace CodingTracker;
 
 public static class OptionsPicker
 {
-    public static int CurrentIndex { get; private set; }
-    public static void Navigate(string[] menuOptions)
+    public static int MenuIndex { get; private set; }
+    private static int currentIndex;
+    private static int lastIndex = 0;
+    private static int longestStringLength = 0;
+    private static int higlightBoxWidth = 0;
+    public static void Navigate(string[] menuOptions, int headerLines)
     {
         bool enterPressed = false;
-        CurrentIndex = 0;
+        MenuIndex = 0;
+        currentIndex = MenuIndex + headerLines;
+        longestStringLength = menuOptions.OrderByDescending(s => s.Length).First().Length; //to set the width of higlighted box in a menu
+        higlightBoxWidth = longestStringLength + 5;
+
+        for (int i = 0; i < menuOptions.Length; i++)
+        {
+            if (MenuIndex == i)
+            {
+                HighlightOption();
+            }
+            else
+            {
+                Console.ResetColor();
+            }
+
+            Console.WriteLine(string.Format("  {0,-" + higlightBoxWidth + "}", menuOptions[i]));
+            Console.ResetColor();
+        }
 
         do
         {
+            while (!Console.KeyAvailable) { };
 
-            Console.Clear();
-            for (int i = 0; i < menuOptions.Length; i++)
+            var keypress = Console.ReadKey().Key;
+
+            if (keypress == ConsoleKey.DownArrow && MenuIndex < menuOptions.Length - 1)
             {
-                if (CurrentIndex == i)
-                {
-                    HighlightOption();
-                }
-                else
-                {
-                    Console.ResetColor();
-                }
-
-                Console.WriteLine(string.Format("  {0,-30}", menuOptions[i]));
-                Console.ResetColor();
+                lastIndex = currentIndex;
+                MenuIndex++;
+                currentIndex++;
             }
-            do
+            else if (keypress == ConsoleKey.UpArrow && MenuIndex > 0)
             {
-                while (!Console.KeyAvailable) { };
-                var keypress = Console.ReadKey().Key;
+                lastIndex = currentIndex;
+                MenuIndex--;
+                currentIndex--;
+            }
+            else if (keypress == ConsoleKey.Enter)
+            {
+                EnterPressed(menuOptions);
+                enterPressed = true;
 
-                if (keypress == ConsoleKey.DownArrow && CurrentIndex < menuOptions.Length - 1)
-                {
-                    CurrentIndex++;
-                    break;
-                }
-                else if (keypress == ConsoleKey.UpArrow && CurrentIndex > 0)
-                {
-                    CurrentIndex--;
-                    break;
-                }
-                else if (keypress == ConsoleKey.Enter)
-                {
-                    Console.SetCursorPosition(0, CurrentIndex);
-                    EnterPressed(menuOptions);
-                    enterPressed = true;
-                    break;
-                }
-            } while (true);
+            }
+
+            if (!enterPressed) SwitchHighlight(menuOptions);
 
         } while (!enterPressed);
     }
+
     private static void EnterPressed(string[] menuOptions)
     {
+        Console.SetCursorPosition(0, currentIndex);
         Console.BackgroundColor = ConsoleColor.Red;
-        Console.WriteLine(string.Format("  {0,-30}", menuOptions[CurrentIndex]));
+        Console.WriteLine(string.Format("  {0,-" + higlightBoxWidth + "}", menuOptions[currentIndex-1]));
         Console.ResetColor();
-        Thread.Sleep(150);
+        Thread.Sleep(100);
 
     }
     private static void HighlightOption()
     {
         Console.BackgroundColor = ConsoleColor.White;
         Console.ForegroundColor = ConsoleColor.Black;
+    }
+
+    private static void SwitchHighlight(string[] menuOptions)
+    {
+        Console.SetCursorPosition(0, lastIndex);
+        Console.ResetColor();
+        Console.WriteLine(string.Format("  {0,-" + higlightBoxWidth + "}", menuOptions[lastIndex-1]));
+
+        Console.SetCursorPosition(0, currentIndex);
+        HighlightOption();
+        Console.WriteLine(string.Format("  {0,-" + higlightBoxWidth + "}", menuOptions[currentIndex-1]));
     }
 }
 
