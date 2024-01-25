@@ -105,14 +105,19 @@ public class ManualSessionMenu : Menu
     public ManualSessionMenu(MenuManager menuManager) : base(menuManager) { }
     public override void Display()
     {
-        UserInterface.ManualSessionStartTime();
-        string timeInput = UserInput.TimeInput();
-        if (timeInput == "_escape_") 
-        {
-            MenuManager.GoBack();
-            MenuManager.DisplayCurrentMenu();
-        }
+        UserInterface.ManualSessionTime(true);
+        string startTimeInput = UserInput.TimeInput(MenuManager);
 
-        UserInterface.ManualSessionDate();
+        UserInterface.ManualSessionTime(false);
+        string endTimeInput = UserInput.TimeInput(MenuManager);
+
+        UserInterface.ManualSessionDate(true);
+        string startDateInput = UserInput.DateInput(MenuManager);
+
+        UserInterface.ManualSessionDate(false);
+        string endDateInput = UserInput.DateInput(MenuManager);
+
+
+
     }
 }

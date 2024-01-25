@@ -8,11 +8,13 @@ namespace CodingTracker
 {
     public static class UserInput
     {
-        public static string TimeInput()
+        private static bool _priorError = false;
+
+        public static string TimeInput(MenuManager menuManager)
         {
             do
             {
-                string? userInput = InputWithSpecialKeys();
+                string? userInput = InputWithSpecialKeys(menuManager);
 
                 if (userInput == "_escape_") return userInput;
 
@@ -24,24 +26,49 @@ namespace CodingTracker
                     }
                     catch
                     {
-                        Console.WriteLine("  \nEnter a valid time (HH:mm):");
+                        HandleInputError(userInput, "\n  Enter a valid time (HH:mm):");
                     }
                 }
             } while (true);
         }
 
-        public static string InputWithSpecialKeys()
+        public static string DateInput(MenuManager menuManager)
+        {
+            do
+            {
+                string? userInput = InputWithSpecialKeys(menuManager);
+
+                if (userInput == "_escape_") return userInput;
+                else if (userInput == "") return DateTime.Now.ToString("yyyy-MM-dd");
+
+                    if (userInput != null)
+                    {
+                        try
+                        {
+                            return DateTime.Parse(userInput).ToString("yyyy-MM-dd");
+                        }
+                        catch
+                        {
+                            HandleInputError(userInput, "\n  Enter a valid date (YYYY-MM-DD):");
+                        }
+                    }
+            } while (true);
+        }
+
+        private static string InputWithSpecialKeys(MenuManager menuManager)
         {
             StringBuilder userInput = new StringBuilder();
             ConsoleKeyInfo keyPress;
-            Console.SetCursorPosition(2,Console.GetCursorPosition().Top);
 
             do
             {
                 keyPress = Console.ReadKey(true);
 
                 if (keyPress.Key == ConsoleKey.Escape)
-                    break;
+                {
+                    menuManager.GoBack();
+                    menuManager.DisplayCurrentMenu();
+                }
 
                 else if (keyPress.Key == ConsoleKey.Enter)
                 {
@@ -63,6 +90,21 @@ namespace CodingTracker
             } while (keyPress.Key != ConsoleKey.Escape);
 
             return "_escape_";
+        }
+        private static void HandleInputError(string userInput, string errorMessage)
+        {
+            if (_priorError)
+            {
+                Console.SetCursorPosition(userInput.Length, Console.GetCursorPosition().Top - 1);
+
+                foreach (char character in userInput)
+                {
+                    Console.Write("\b \b");
+                }
+                Console.SetCursorPosition(0, Console.GetCursorPosition().Top - 2);
+            }
+            _priorError = true;
+            Console.WriteLine(errorMessage);
         }
     }
 }
