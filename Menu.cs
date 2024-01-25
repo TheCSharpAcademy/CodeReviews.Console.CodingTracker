@@ -112,12 +112,11 @@ public class ManualSessionMenu : Menu
         string endTimeInput = UserInput.TimeInput(MenuManager);
 
         UserInterface.ManualSessionDate(true);
-        string startDateInput = UserInput.DateInput(MenuManager);
+        string startDateInput = UserInput.DateInput(MenuManager,true);
 
         UserInterface.ManualSessionDate(false);
-        string endDateInput = UserInput.DateInput(MenuManager);
-
-
+        string endDateInput = UserInput.DateInput(MenuManager,false);
+        if (endDateInput == "_sameAsStart_") endDateInput = startDateInput;
 
     }
 }

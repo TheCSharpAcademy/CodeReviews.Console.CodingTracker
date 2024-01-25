@@ -32,14 +32,15 @@ namespace CodingTracker
             } while (true);
         }
 
-        public static string DateInput(MenuManager menuManager)
+        public static string DateInput(MenuManager menuManager, bool startDate)
         {
             do
             {
                 string? userInput = InputWithSpecialKeys(menuManager);
 
                 if (userInput == "_escape_") return userInput;
-                else if (userInput == "") return DateTime.Now.ToString("yyyy-MM-dd");
+                else if (userInput == "" && startDate) return DateTime.Now.ToString("yyyy-MM-dd");
+                else if (userInput == "" && !startDate) return "_sameAsStart_";
 
                     if (userInput != null)
                     {
