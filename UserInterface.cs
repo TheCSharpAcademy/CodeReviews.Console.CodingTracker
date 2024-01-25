@@ -50,7 +50,7 @@ public static class UserInterface
         OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top);
     }
 
-    public static void ManualSessionMenuA()
+    public static void ManualSessionStartTime()
     {
         Console.Clear();
         Console.WriteLine("-----SHOW RECORDS-----");
@@ -58,6 +58,15 @@ public static class UserInterface
 
         Console.SetCursorPosition(2,Console.GetCursorPosition().Top);
         Console.WriteLine("Enter the Start time of your session (HH:mm):");
+    }
+     public static void ManualSessionDate()
+    {
+        Console.Clear();
+        Console.WriteLine("-----SHOW RECORDS-----");
+        Console.WriteLine();
+
+        Console.SetCursorPosition(2,Console.GetCursorPosition().Top);
+        Console.WriteLine("Start time of your session (HH:mm)(Escape to go back):");
     }
 }
 
