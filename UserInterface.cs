@@ -12,9 +12,7 @@ public static class UserInterface
     {
         string[] menuOptions = { "New Coding Session", "Show Records", "Goals", "Exit" };
 
-        Console.Clear();
-        Console.WriteLine("-----CODING TRACKER-----");
-        Console.WriteLine();
+        Header("coding tracker");
 
         OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top);
     }
@@ -23,9 +21,7 @@ public static class UserInterface
     {
         string[] menuOptions = { "Enter Coding Session manually", "Start a new Coding Session", "Go back" };
 
-        Console.Clear();
-        Console.WriteLine("-----NEW CODING SESSION-----");
-        Console.WriteLine();
+        Header("new coding session");
 
         OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top);
     }
@@ -34,9 +30,7 @@ public static class UserInterface
     {
         string[] menuOptions = { "Show all", "Show filters", "Update a record", "Delete a record", "Go back" };
 
-        Console.Clear();
-        Console.WriteLine("-----SHOW RECORDS-----");
-        Console.WriteLine();
+        Header("show records");
 
         OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top);
     }
@@ -44,9 +38,7 @@ public static class UserInterface
     {
         string[] menuOptions = { "Set a Goal", "Show Goals", "Go back" };
 
-        Console.Clear();
-        Console.WriteLine("-----GOALS-----");
-        Console.WriteLine();
+        Header("goals");
 
         OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top);
     }
@@ -56,9 +48,7 @@ public static class UserInterface
 
         string sessionTimeLabel = isStart ? "Start" : "End";
 
-        Console.Clear();
-        Console.WriteLine("-----NEW CODING SESSION-----");
-        Console.WriteLine();
+        Header("new coding session");
 
         Console.SetCursorPosition(2, Console.GetCursorPosition().Top);
         Console.WriteLine($"{sessionTimeLabel} time of your session (HH:mm):");
@@ -69,21 +59,28 @@ public static class UserInterface
         string autoDateEnter = isStart ? "Enter, if it's today." : "Enter, if it's the same as start date.";
         int boxWidthModifier = 5;
 
-        Console.Clear();
-        Console.WriteLine("-----NEW CODING SESSION-----");
-        Console.WriteLine();
+        Header("new coding session");
 
         Console.SetCursorPosition(2, Console.GetCursorPosition().Top);
         Console.WriteLine($"{sessionDateLabel} date of your session (YYYY-MM-DD)(Escape to go back):");
 
         Console.BackgroundColor = ConsoleColor.White;
         Console.ForegroundColor = ConsoleColor.Black;
-        Console.WriteLine(string.Format("  {0,-"+ (autoDateEnter.Length + boxWidthModifier) +"}", autoDateEnter));
+        Console.WriteLine(string.Format("  {0,-" + (autoDateEnter.Length + boxWidthModifier) + "}", autoDateEnter));
         Console.ResetColor();
 
     }
+    public static void SessionConfirm(string startDateTime, string endDateTime)
+    {
+        Header("new coding session");// dodělat okno pro potvrzení zadaného času, pak udělat i samotnou mechaniku
+    }
 
-
+    private static void Header(string headerText)
+    {
+        Console.Clear();
+        Console.WriteLine($"-----{headerText.ToUpper()}-----");
+        Console.WriteLine();
+    }
 }
 
 

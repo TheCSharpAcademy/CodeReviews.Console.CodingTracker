@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.Intrinsics.Arm;
 using System.Threading.Tasks;
@@ -112,11 +113,17 @@ public class ManualSessionMenu : Menu
         string endTimeInput = UserInput.TimeInput(MenuManager);
 
         UserInterface.ManualSessionDate(true);
-        string startDateInput = UserInput.DateInput(MenuManager,true);
+        string startDateInput = UserInput.DateInput(MenuManager, true);
 
         UserInterface.ManualSessionDate(false);
-        string endDateInput = UserInput.DateInput(MenuManager,false);
+        string endDateInput = UserInput.DateInput(MenuManager, false);
         if (endDateInput == "_sameAsStart_") endDateInput = startDateInput;
 
+        
+
+        string startDateTime = LogicOperations.ConstructDateTime(startTimeInput,startDateInput);
+        string endDateTime = LogicOperations.ConstructDateTime(endTimeInput,endDateInput);
     }
+
+
 }
