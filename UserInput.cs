@@ -12,9 +12,11 @@ namespace CodingTracker
 
         public static string TimeInput(MenuManager menuManager)
         {
+            _priorError = false;
+
             do
             {
-                string? userInput = InputWithSpecialKeys(menuManager);
+                string? userInput = InputWithSpecialKeys(menuManager, true);
 
                 if (userInput == "_escape_") return userInput;
 
@@ -34,29 +36,31 @@ namespace CodingTracker
 
         public static string DateInput(MenuManager menuManager, bool startDate)
         {
+            _priorError = false;
+
             do
             {
-                string? userInput = InputWithSpecialKeys(menuManager);
+                string? userInput = InputWithSpecialKeys(menuManager, true);
 
                 if (userInput == "_escape_") return userInput;
                 else if (userInput == "" && startDate) return DateTime.Now.ToString("yyyy-MM-dd");
                 else if (userInput == "" && !startDate) return "_sameAsStart_";
 
-                    if (userInput != null)
+                if (userInput != null)
+                {
+                    try
                     {
-                        try
-                        {
-                            return DateTime.Parse(userInput).ToString("yyyy-MM-dd");
-                        }
-                        catch
-                        {
-                            HandleInputError(userInput, "\n  Enter a valid date (YYYY-MM-DD):");
-                        }
+                        return DateTime.Parse(userInput).ToString("yyyy-MM-dd");
                     }
+                    catch
+                    {
+                        HandleInputError(userInput, "\n  Enter a valid date (YYYY-MM-DD):");
+                    }
+                }
             } while (true);
         }
 
-        private static string InputWithSpecialKeys(MenuManager menuManager)
+        public static string InputWithSpecialKeys(MenuManager menuManager, bool escapeOption)
         {
             StringBuilder userInput = new StringBuilder();
             ConsoleKeyInfo keyPress;
@@ -65,8 +69,11 @@ namespace CodingTracker
             {
                 keyPress = Console.ReadKey(true);
 
+
                 if (keyPress.Key == ConsoleKey.Escape)
                 {
+                    if(!escapeOption) continue;
+
                     menuManager.GoBack();
                     menuManager.DisplayCurrentMenu();
                 }
@@ -82,15 +89,14 @@ namespace CodingTracker
                     Console.Write("\b \b");
                     userInput.Length--;
                 }
+                
                 else if (!char.IsControl(keyPress.KeyChar))
                 {
                     Console.Write(keyPress.KeyChar);
                     userInput.Append(keyPress.KeyChar);
                 }
+            } while (true);
 
-            } while (keyPress.Key != ConsoleKey.Escape);
-
-            return "_escape_";
         }
         private static void HandleInputError(string userInput, string errorMessage)
         {

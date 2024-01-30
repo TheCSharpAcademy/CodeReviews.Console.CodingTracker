@@ -106,23 +106,48 @@ public class ManualSessionMenu : Menu
     public ManualSessionMenu(MenuManager menuManager) : base(menuManager) { }
     public override void Display()
     {
-        UserInterface.ManualSessionTime(true);
-        string startTimeInput = UserInput.TimeInput(MenuManager);
+        bool menuContinue = true;
+        string sessionNote;
 
-        UserInterface.ManualSessionTime(false);
-        string endTimeInput = UserInput.TimeInput(MenuManager);
+        while (menuContinue)
+        {
+            UserInterface.ManualSessionTime(true);
+            string startTimeInput = UserInput.TimeInput(MenuManager);
 
-        UserInterface.ManualSessionDate(true);
-        string startDateInput = UserInput.DateInput(MenuManager, true);
+            UserInterface.ManualSessionTime(false);
+            string endTimeInput = UserInput.TimeInput(MenuManager);
 
-        UserInterface.ManualSessionDate(false);
-        string endDateInput = UserInput.DateInput(MenuManager, false);
-        if (endDateInput == "_sameAsStart_") endDateInput = startDateInput;
+            UserInterface.ManualSessionDate(true);
+            string startDateInput = UserInput.DateInput(MenuManager, true);
 
-        
+            UserInterface.ManualSessionDate(false);
+            string endDateInput = UserInput.DateInput(MenuManager, false);
+            if (endDateInput == "_sameAsStart_") endDateInput = startDateInput;
 
-        string startDateTime = LogicOperations.ConstructDateTime(startTimeInput,startDateInput);
-        string endDateTime = LogicOperations.ConstructDateTime(endTimeInput,endDateInput);
+            DateTime startDateTime = LogicOperations.ConstructDateTime(startTimeInput, startDateInput);
+            DateTime endDateTime = LogicOperations.ConstructDateTime(endTimeInput, endDateInput);
+            TimeSpan duration = LogicOperations.CalculateDuration(endDateTime, startDateTime);
+
+            UserInterface.SessionConfirm(startDateTime, endDateTime, duration);
+
+            switch (OptionsPicker.MenuIndex)
+            {
+                case 0:
+                    menuContinue = false;
+                    UserInterface.SessionNote();
+                    sessionNote = UserInput.InputWithSpecialKeys(MenuManager, false);
+                    Console.WriteLine("entry sent to the database"); //ENTRY SENT TO THE DATABASE
+                    break;
+                case 1:
+                    menuContinue = true;
+                    break;
+                case 2:
+                    menuContinue = false;
+                    MenuManager.GoBack();
+                    MenuManager.DisplayCurrentMenu();
+                    break;
+            }
+        }
     }
 
 

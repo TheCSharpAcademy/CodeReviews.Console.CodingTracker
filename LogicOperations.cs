@@ -7,7 +7,9 @@ namespace CodingTracker
 {
     public static class LogicOperations
     {
-    public static string ConstructDateTime(string timeInput, string dateInput) => DateTime.Parse(dateInput + " " + timeInput).ToString("MM/DD/yyyy HH:mm");        
+        public static DateTime ConstructDateTime(string timeInput, string dateInput) => DateTime.Parse(dateInput + " " + timeInput);
+
+        public static TimeSpan CalculateDuration(DateTime startTime, DateTime endTime) => startTime - endTime;
 
     }
 }

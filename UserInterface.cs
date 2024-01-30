@@ -70,9 +70,26 @@ public static class UserInterface
         Console.ResetColor();
 
     }
-    public static void SessionConfirm(string startDateTime, string endDateTime)
+    public static void SessionConfirm(DateTime startDateTime, DateTime endDateTime, TimeSpan duration)
     {
-        Header("new coding session");// dodělat okno pro potvrzení zadaného času, pak udělat i samotnou mechaniku
+        string[] menuOptions = { "Confirm", "Enter again", "Go back" };
+        
+        Header("new coding session");
+        Console.WriteLine($"Start time:\t{startDateTime.ToString("HH:mm")}\t{startDateTime.ToString("yyyy-MM-dd")}");
+        Console.WriteLine($"End time:\t{endDateTime.ToString("HH:mm")}\t{endDateTime.ToString("yyyy-MM-dd")}\n");
+
+        if (duration.ToString().Length <= 8)
+            Console.WriteLine($"Duration:\t{duration:hh\\:mm}");
+        else
+            Console.WriteLine($"Duration:\t{duration.Days} days, {duration:hh\\:mm}");
+        
+        OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top);
+    }
+
+    public static void SessionNote()
+    {
+        Header("new coding session");
+        Console.WriteLine("Enter a note (Press Enter to leave blank)): ");
     }
 
     private static void Header(string headerText)
