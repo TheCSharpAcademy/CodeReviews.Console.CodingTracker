@@ -1,5 +1,4 @@
 ﻿using Microsoft.Data.Sqlite;
-using System.Configuration;
 
 namespace CodingTracker.Cactus
 {
@@ -7,7 +6,7 @@ namespace CodingTracker.Cactus
     {
         private static string GetConnectionStr()
         {
-            string dataSource = ConfigurationManager.AppSettings.Get("DataSource");
+            string dataSource = System.Configuration.ConfigurationManager.AppSettings.Get("DataSource");
             return $"Data Source={dataSource}";
         }
 
