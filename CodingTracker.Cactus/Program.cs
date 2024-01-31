@@ -49,6 +49,7 @@ namespace ConConfig
         private static void PrintMenu()
         {
             Console.Clear();
+
             List<string> menuData = new List<string>
             {
                 "<0> Exit app.",
@@ -57,6 +58,7 @@ namespace ConConfig
                 "<3> Update a specific coding record.",
                 "<4> Delete a specific coding record."
             };
+
             ConsoleTableBuilder
             .From(menuData)
             .WithTitle("MAIN MENU", ConsoleColor.Yellow, ConsoleColor.DarkGray)
@@ -68,6 +70,7 @@ namespace ConConfig
         {
             Console.Clear();
             Console.WriteLine("=> INSERT");
+
             bool isValidSession = false;
             DateTime startTime = InputUtils.GetValidTime();
             DateTime endTime = InputUtils.GetValidTime("end");
@@ -82,6 +85,7 @@ namespace ConConfig
                 startTime = InputUtils.GetValidTime();
                 endTime = InputUtils.GetValidTime("end");
             }
+
             CodingSession codingSession = new CodingSession(startTime, endTime);
             codingSession.Id = CodingSessionDBHelper.Insert(codingSession);
             if (codingSession.Id != -1)
@@ -94,12 +98,14 @@ namespace ConConfig
         private static void ShowAllCodingSessionRecords()
         {
             Console.Clear();
+
             if (codingSessionCache == null || codingSessionCache.Count == 0)
             {
                 Console.WriteLine("There is no coding session record.");
                 return;
             }
             Console.WriteLine("CODE SESSION RECORDS TABLE:");
+
             var records = new List<List<object>>();
             codingSessionCache.ForEach(session =>
             {
@@ -112,6 +118,7 @@ namespace ConConfig
                 };
                 records.Add(data);
             });
+
             ConsoleTableBuilder
                 .From(records)
                 .ExportAndWriteLine();
@@ -121,15 +128,21 @@ namespace ConConfig
         {
             Console.Clear();
             Console.WriteLine("=> UPDATE");
+
             ShowAllCodingSessionRecords();
+
             if (codingSessionCache == null || codingSessionCache.Count == 0) return;
+
             HashSet<int> ids = codingSessionCache.Select(x => x.Id).ToHashSet<int>();
+
             int id = InputUtils.GetInValidInputId(ids);
             DateTime startTime = InputUtils.GetValidTime();
             DateTime endTime = InputUtils.GetValidTime("end");
+
             CodingSession codingSession = codingSessionCache.Where(session => session.Id == id).ToList()[0];
             codingSession.StartTime = startTime;
             codingSession.EndTime = endTime;
+
             CodingSessionDBHelper.Update(codingSession);
         }
 
@@ -137,11 +150,15 @@ namespace ConConfig
         {
             Console.Clear();
             Console.WriteLine("=> DELETE");
+
             ShowAllCodingSessionRecords();
+
             if (codingSessionCache == null || codingSessionCache.Count == 0) return;
+
             HashSet<int> ids = codingSessionCache.Select(x => x.Id).ToHashSet<int>();
             int id = InputUtils.GetInValidInputId(ids);
             CodingSessionDBHelper.Delete(id);
+
             codingSessionCache = CodingSessionDBHelper.SeleteAll(); // Update the cache after deleting a record
         }
     }
