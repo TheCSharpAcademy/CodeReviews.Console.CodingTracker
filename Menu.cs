@@ -128,6 +128,12 @@ public class ManualSessionMenu : Menu
             DateTime endDateTime = LogicOperations.ConstructDateTime(endTimeInput, endDateInput);
             TimeSpan duration = LogicOperations.CalculateDuration(endDateTime, startDateTime);
 
+            if (duration < TimeSpan.Zero)
+            {
+                UserInput.DisplayError("End date time must more recent than Start date time.","retry");
+                continue;
+            }
+
             UserInterface.SessionConfirm(startDateTime, endDateTime, duration);
 
             switch (OptionsPicker.MenuIndex)

@@ -112,5 +112,11 @@ namespace CodingTracker
             _priorError = true;
             Console.WriteLine(errorMessage);
         }
+
+        public static void DisplayError(string message, string actionMessage = "continue")
+        {
+            Console.WriteLine($"{message} Press any key to {actionMessage}...");
+            Console.ReadKey();
+        }
     }
 }
