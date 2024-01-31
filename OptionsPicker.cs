@@ -10,16 +10,19 @@ public static class OptionsPicker
 {
     public static int MenuIndex { get; private set; }
     private static int currentIndex;
-    private static int lastIndex = 0;
-    private static int lastMenuIndex = 0;
+    private static int lastIndex;
+    private static int lastMenuIndex;
 
     private static int longestStringLength = 0;
     private static int higlightBoxWidth = 0;
 
-    public static void Navigate(string[] menuOptions, int headerHeight)
+    public static void Navigate(string[] menuOptions, int headerHeight, bool escapeOption)
     {
         bool enterPressed = false;
+        bool onlyOneOption = menuOptions.Length == 0;
+        lastMenuIndex = 0;
         MenuIndex = 0;
+        lastIndex = headerHeight; //important when only single-option menu
         currentIndex = MenuIndex + headerHeight; //to count with each menu's header
         longestStringLength = menuOptions.OrderByDescending(s => s.Length).First().Length; //to set the width of higlighted box in a menu
         higlightBoxWidth = longestStringLength + 5;
@@ -65,14 +68,14 @@ public static class OptionsPicker
                 enterPressed = true;
 
             }
-            else if (keypress == ConsoleKey.Escape)
+            else if (keypress == ConsoleKey.Escape && escapeOption)
             {
-                EscapePressed(menuOptions,headerHeight);
+                EscapePressed(menuOptions, headerHeight);
                 MenuIndex = menuOptions.Length - 1;
                 break;
             }
 
-            if (!enterPressed) SwitchHighlight(menuOptions);
+            if (!onlyOneOption && !enterPressed) SwitchHighlight(menuOptions);
 
         } while (!enterPressed);
     }
@@ -103,15 +106,15 @@ public static class OptionsPicker
         Console.WriteLine(string.Format("  {0,-" + higlightBoxWidth + "}", menuOptions[MenuIndex]));
     }
 
-    private static void EscapePressed(string[]menuOptions, int headerHeight)
+    private static void EscapePressed(string[] menuOptions, int headerHeight)
     {
         Console.SetCursorPosition(0, currentIndex);
         Console.ResetColor();
         Console.WriteLine(string.Format("  {0,-" + higlightBoxWidth + "}", menuOptions[MenuIndex]));
 
-         Console.SetCursorPosition(0, headerHeight + menuOptions.Length-1);
+        Console.SetCursorPosition(0, headerHeight + menuOptions.Length - 1);
         Console.BackgroundColor = ConsoleColor.Red;
-        Console.WriteLine(string.Format("  {0,-" + higlightBoxWidth + "}", menuOptions[menuOptions.Length-1]));
+        Console.WriteLine(string.Format("  {0,-" + higlightBoxWidth + "}", menuOptions[menuOptions.Length - 1]));
         Console.ResetColor();
         Thread.Sleep(100);
     }

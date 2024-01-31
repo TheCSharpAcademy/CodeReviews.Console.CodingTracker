@@ -11,5 +11,6 @@ namespace CodingTracker
 
         public static TimeSpan CalculateDuration(DateTime startTime, DateTime endTime) => startTime - endTime;
 
+        public static TimeSpan CalculateBreaks(DateTime startTime, DateTime endTime, TimeSpan duration) => startTime-endTime + duration;
     }
 }

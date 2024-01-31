@@ -2,8 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection.Metadata;
+using System.Runtime.CompilerServices;
 using System.Runtime.Intrinsics.Arm;
-using System.Threading.Tasks;
+using System.Threading;
+using Spectre.Console;
 
 namespace CodingTracker;
 
@@ -57,13 +60,12 @@ public class CodingSessionMenu : Menu
         {
             case 0:
                 MenuManager.NewMenu(new ManualSessionMenu(MenuManager));
-                MenuManager.DisplayCurrentMenu();
                 break;
             case 1:
+                MenuManager.NewMenu(new AutoSessionMenu(MenuManager));
                 break;
             case 2:
                 MenuManager.GoBack();
-                MenuManager.DisplayCurrentMenu();
                 break;
         }
     }
@@ -80,7 +82,6 @@ public class ShowRecordsMenu : Menu
         {
             case 4:
                 MenuManager.GoBack();
-                MenuManager.DisplayCurrentMenu();
                 break;
         }
     }
@@ -96,7 +97,6 @@ public class GoalsMenu : Menu
         {
             case 2:
                 MenuManager.GoBack();
-                MenuManager.DisplayCurrentMenu();
                 break;
         }
     }
@@ -137,6 +137,9 @@ public class ManualSessionMenu : Menu
                     UserInterface.SessionNote();
                     sessionNote = UserInput.InputWithSpecialKeys(MenuManager, false);
                     Console.WriteLine("entry sent to the database"); //ENTRY SENT TO THE DATABASE
+                    Console.ReadKey();
+                    MenuManager.ReturnToMainMenu();
+
                     break;
                 case 1:
                     menuContinue = true;
@@ -144,11 +147,85 @@ public class ManualSessionMenu : Menu
                 case 2:
                     menuContinue = false;
                     MenuManager.GoBack();
-                    MenuManager.DisplayCurrentMenu();
                     break;
             }
         }
     }
+}
 
+public class AutoSessionMenu : Menu
+{
+    private DateTime startDateTime = new();
+    private DateTime endDateTime = new();
+    private TimeSpan duration = new();
+
+    public AutoSessionMenu(MenuManager menuManager) : base(menuManager) { }
+    public override void Display()
+    {
+
+        string sessionNote;
+        bool menuContinue = true;
+
+        while (menuContinue)
+        {
+            UserInterface.SessionInProgress();
+            HandleStopWatch();
+
+            TimeSpan totalBreaks = LogicOperations.CalculateBreaks(startDateTime, endDateTime, duration);
+
+            UserInterface.AutoSessionConfirm(startDateTime, endDateTime, duration, totalBreaks);
+
+            switch (OptionsPicker.MenuIndex)
+            {
+                case 0:
+                    menuContinue = false;
+                    UserInterface.SessionNote();
+                    sessionNote = UserInput.InputWithSpecialKeys(MenuManager, false);
+                    Console.WriteLine("entry sent to the database"); //ENTRY SENT TO THE DATABASE
+                    Console.ReadKey();
+                    MenuManager.ReturnToMainMenu();
+                    break;
+                case 1:
+                    menuContinue = true;
+                    break;
+                case 2:
+                    menuContinue = false;
+                    MenuManager.GoBack();
+                    break;
+            }
+        }
+    }
+    private void HandleStopWatch()
+    {
+        StopwatchTimer stopwatch = new();
+        bool sessionContinue = true;
+        string[] inProgressOption = { "Pause" };
+        string[] pausedOptions = { "Continue", "End" };
+
+        startDateTime = DateTime.Now;
+        stopwatch.Start();
+
+        while (sessionContinue)
+        {
+            Console.SetCursorPosition(0, 4);
+            OptionsPicker.Navigate(inProgressOption, Console.GetCursorPosition().Top, false);
+
+            stopwatch.Pause();
+            Console.SetCursorPosition(0, 4);
+            OptionsPicker.Navigate(pausedOptions, Console.GetCursorPosition().Top, true);
+
+            if (OptionsPicker.MenuIndex == 0)
+            {
+                UserInterface.ConsoleClearLines(4);
+                stopwatch.Resume();
+            }
+            else
+            {
+                sessionContinue = false;
+                endDateTime = DateTime.Now;
+                duration = stopwatch.Duration;
+            }
+        }
+    }
 
 }

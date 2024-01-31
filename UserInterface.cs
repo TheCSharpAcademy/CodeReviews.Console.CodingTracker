@@ -14,7 +14,7 @@ public static class UserInterface
 
         Header("coding tracker");
 
-        OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top);
+        OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top, true);
     }
 
     public static void CodingSessionMenu()
@@ -23,7 +23,7 @@ public static class UserInterface
 
         Header("new coding session");
 
-        OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top);
+        OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top, true);
     }
 
     public static void RecordsMenu()
@@ -32,7 +32,7 @@ public static class UserInterface
 
         Header("show records");
 
-        OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top);
+        OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top, true);
     }
     public static void GoalsMenu()
     {
@@ -40,7 +40,7 @@ public static class UserInterface
 
         Header("goals");
 
-        OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top);
+        OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top, true);
     }
 
     public static void ManualSessionTime(bool isStart)
@@ -73,18 +73,42 @@ public static class UserInterface
     public static void SessionConfirm(DateTime startDateTime, DateTime endDateTime, TimeSpan duration)
     {
         string[] menuOptions = { "Confirm", "Enter again", "Go back" };
-        
+
         Header("new coding session");
         Console.WriteLine($"Start time:\t{startDateTime.ToString("HH:mm")}\t{startDateTime.ToString("yyyy-MM-dd")}");
         Console.WriteLine($"End time:\t{endDateTime.ToString("HH:mm")}\t{endDateTime.ToString("yyyy-MM-dd")}\n");
 
-        if (duration.ToString().Length <= 8)
+        if (duration.Days == 0)
             Console.WriteLine($"Duration:\t{duration:hh\\:mm}");
         else
             Console.WriteLine($"Duration:\t{duration.Days} days, {duration:hh\\:mm}");
-        
-        OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top);
+
+        Console.WriteLine();
+
+        OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top, true);
     }
+
+    public static void AutoSessionConfirm(DateTime startDateTime, DateTime endDateTime, TimeSpan duration, TimeSpan totalBreaks)
+    {
+        string[] menuOptions = { "Confirm", "Start over", "Discard and go back" };
+
+        Header("new coding session");
+        Console.WriteLine($"Start time:\t{startDateTime.ToString("HH:mm")}\t{startDateTime.ToString("yyyy-MM-dd")}");
+        Console.WriteLine($"End time:\t{endDateTime.ToString("HH:mm")}\t{endDateTime.ToString("yyyy-MM-dd")}\n");
+
+        if (totalBreaks.Seconds > 10) //shows breaks only if 10 or more seconds
+            Console.WriteLine($"Total breaks:\t{totalBreaks:hh\\:mm\\:ss}");
+
+        if (duration.Days == 0)
+            Console.WriteLine($"Duration:\t{duration:hh\\:mm}");
+        else
+            Console.WriteLine($"Duration:\t{duration.Days} days, {duration:hh\\:mm}");
+
+        Console.WriteLine();
+
+        OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top, true);
+    }
+
 
     public static void SessionNote()
     {
@@ -92,11 +116,34 @@ public static class UserInterface
         Console.WriteLine("Enter a note (Press Enter to leave blank)): ");
     }
 
+    public static void ManualSessionMenu()
+    {
+        string[] menuOptions = { "START", "Go back" };
+
+        Header("new coding session");
+
+        OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top, true);
+    }
+
+    public static void SessionInProgress()
+    {
+        Header("session in progress");
+    }
+
+
     private static void Header(string headerText)
     {
         Console.Clear();
         Console.WriteLine($"-----{headerText.ToUpper()}-----");
         Console.WriteLine();
+    }
+    public static void ConsoleClearLines(int clearFromLine)
+    {
+        for (int i = Console.WindowHeight; i >= clearFromLine; i--)
+        {
+            Console.SetCursorPosition(0, i);
+            Console.Write(new string(' ', Console.WindowWidth));
+        }
     }
 }
 

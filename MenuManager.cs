@@ -27,17 +27,21 @@ public class MenuManager
     public void NewMenu(Menu menu)
     {
         menuStack.Push(menu);
+        DisplayCurrentMenu();
     }
+    
 
     public void GoBack()
     {
         if (menuStack.Count > 1)
             menuStack.Pop();
+        DisplayCurrentMenu();
     }
 
     public void ReturnToMainMenu()
     {
         while (menuStack.Count > 1)
             menuStack.Pop();
+        DisplayCurrentMenu();
     }
 }

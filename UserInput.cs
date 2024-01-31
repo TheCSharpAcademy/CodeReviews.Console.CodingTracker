@@ -75,7 +75,6 @@ namespace CodingTracker
                     if(!escapeOption) continue;
 
                     menuManager.GoBack();
-                    menuManager.DisplayCurrentMenu();
                 }
 
                 else if (keyPress.Key == ConsoleKey.Enter)
