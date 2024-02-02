@@ -1,4 +1,6 @@
 using System.Data.SQLite;
+using System.Linq.Expressions;
+using System.Security.Cryptography.X509Certificates;
 
 namespace CodingTracker
 {
@@ -12,31 +14,98 @@ namespace CodingTracker
             _fileName = fileName;
             InitializeDatabase();
         }
-        public void InitializeDatabase()
+        private void InitializeDatabase()
         {
             if (!File.Exists(_fileName))
             {
-                System.Console.WriteLine("Database file does not exist. A new database will be created.");
+                Console.WriteLine("Database file does not exist. A new database will be created.");
             }
 
             using (var connection = new SQLiteConnection(_connectionString))
             {
 
-                string commandText = "CREATE TABLE IF NOT EXISTS coding_tracker(id INTEGER PRIMARY KEY AUTOINCREMENT, notes TEXT, date_start TEXT, date_end TEXT)";
+                string commandText = "CREATE TABLE IF NOT EXISTS coding_tracker(id INTEGER PRIMARY KEY AUTOINCREMENT, notes TEXT, date_start TEXT, date_end TEXT, duration TEXT)";
                 SQLiteCommand command = new(commandText, connection);
 
                 try
                 {
                     connection.Open();
                     command.ExecuteNonQuery();
-                    System.Console.WriteLine("Database initialized.");
                 }
                 catch (Exception ex)
                 {
-                    System.Console.WriteLine($"Error: {ex.Message}");
+                    Console.WriteLine($"Error: {ex.Message}");
                 }
-
             }
+        }
+
+        private void ExecuteCommand(string commandText)
+        {
+            try
+            {
+                using (var connection = new SQLiteConnection(_connectionString))
+                {
+                    SQLiteCommand command = new(commandText, connection);
+
+                    connection.Open();
+                    command.ExecuteNonQuery();
+
+                }
+            }
+            catch (SQLiteException ex)
+            {
+                UserInput.DisplayMessage($"SQLite error: {ex.Message}");
+            }
+        }
+        private List<CodingSession> ReadCommand(string commandText)
+        {
+            var codingSessionList = new List<CodingSession>();
+            try
+            {
+                using (var connection = new SQLiteConnection(_connectionString))
+                {
+                    connection.Open();
+
+                    using (var command = new SQLiteCommand(commandText, connection))
+                    {
+                        using (SQLiteDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                CodingSession codingSession = new()
+                                {
+                                    Id = Convert.ToInt32(reader["Id"]),
+                                    StartTime = reader["date_start"] != DBNull.Value ? DateTime.Parse(reader["date_start"].ToString()) : DateTime.MinValue,
+                                    EndTime = reader["date_end"] != DBNull.Value ? DateTime.Parse(reader["date_end"].ToString()) : DateTime.MinValue,
+                                    Duration = reader["duration"] != DBNull.Value ? TimeSpan.Parse(reader["duration"].ToString()) : TimeSpan.MinValue,
+                                    Note = reader["notes"] != DBNull.Value ? reader["notes"].ToString() : ""
+                                };
+                                codingSessionList.Add(codingSession);
+                            }
+
+                            return codingSessionList;
+                        }
+                    }
+                }
+            }
+
+            catch (SQLiteException ex)
+            {
+                UserInput.DisplayMessage($"SQLite error: {ex.Message}");
+                return codingSessionList;
+            }
+        }
+
+        public void Insert(string notes, string dateStart, string dateEnd, string duration)
+        {
+            string commandText = $"INSERT INTO coding_tracker (notes, date_start, date_end, duration) VALUES ('{notes}','{dateStart}','{dateEnd}','{duration}')";
+            ExecuteCommand(commandText);
+        }
+
+        public List<CodingSession> ShowAll()
+        {
+            string commandText = "SELECT * FROM coding_tracker";
+            return ReadCommand(commandText);
         }
     }
 

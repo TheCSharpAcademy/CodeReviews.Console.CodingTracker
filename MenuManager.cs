@@ -7,41 +7,44 @@ namespace CodingTracker;
 
 public class MenuManager
 {
-    private readonly Stack<Menu> menuStack = new Stack<Menu>();
+    private readonly Stack<Menu> _menuStack = new Stack<Menu>();
+    private Database _database;
     
-    public MenuManager()
+    
+    public MenuManager(Database database)
     {
-        menuStack.Push(new MainMenu(this));
+        _database = database;
+        _menuStack.Push(new MainMenu(this,_database));
         DisplayCurrentMenu();
     }
 
     public void DisplayCurrentMenu()
     {
-        if (menuStack.Count > 0)
+        if (_menuStack.Count > 0)
         {
-            Menu currentMenu = menuStack.Peek();
+            Menu currentMenu = _menuStack.Peek();
             currentMenu.Display();
         }
     }
 
     public void NewMenu(Menu menu)
     {
-        menuStack.Push(menu);
+        _menuStack.Push(menu);
         DisplayCurrentMenu();
     }
     
 
     public void GoBack()
     {
-        if (menuStack.Count > 1)
-            menuStack.Pop();
+        if (_menuStack.Count > 1)
+            _menuStack.Pop();
         DisplayCurrentMenu();
     }
 
     public void ReturnToMainMenu()
     {
-        while (menuStack.Count > 1)
-            menuStack.Pop();
+        while (_menuStack.Count > 1)
+            _menuStack.Pop();
         DisplayCurrentMenu();
     }
 }

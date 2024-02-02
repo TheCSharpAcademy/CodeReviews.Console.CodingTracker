@@ -12,14 +12,13 @@ internal class Program
             string fileName = configReader.GetFileNameString();
 
             var database = new Database(connectionString, fileName);
+            var menuManager = new MenuManager(database);
+
         }
         catch (InvalidOperationException ex)
         {
             Console.WriteLine($"Error:{ex.Message}");
-            Environment.Exit(1);   
+            Environment.Exit(1);
         }
-
-        MenuManager menuManager = new MenuManager();
-
     }
 }

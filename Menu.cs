@@ -14,9 +14,11 @@ public abstract class Menu
 {
 
     protected MenuManager MenuManager { get; }
+    protected Database _database;
 
-    protected Menu(MenuManager menuManager)
+    protected Menu(MenuManager menuManager, Database database)
     {
+        _database = database;
         MenuManager = menuManager;
     }
     public abstract void Display();
@@ -24,7 +26,7 @@ public abstract class Menu
 
 public class MainMenu : Menu
 {
-    public MainMenu(MenuManager menuManager) : base(menuManager) { }
+    public MainMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
 
     public override void Display()
     {
@@ -32,13 +34,13 @@ public class MainMenu : Menu
         switch (OptionsPicker.MenuIndex)
         {
             case 0:
-                MenuManager.NewMenu(new CodingSessionMenu(MenuManager));
+                MenuManager.NewMenu(new CodingSessionMenu(MenuManager, _database));
                 break;
             case 1:
-                MenuManager.NewMenu(new ShowRecordsMenu(MenuManager));
+                MenuManager.NewMenu(new ShowRecordsMenu(MenuManager, _database));
                 break;
             case 2:
-                MenuManager.NewMenu(new GoalsMenu(MenuManager));
+                MenuManager.NewMenu(new GoalsMenu(MenuManager, _database));
                 break;
             default:
                 Environment.Exit(0);
@@ -51,7 +53,7 @@ public class MainMenu : Menu
 
 public class CodingSessionMenu : Menu
 {
-    public CodingSessionMenu(MenuManager menuManager) : base(menuManager) { }
+    public CodingSessionMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
     public override void Display()
     {
         UserInterface.CodingSessionMenu();
@@ -59,10 +61,10 @@ public class CodingSessionMenu : Menu
         switch (OptionsPicker.MenuIndex)
         {
             case 0:
-                MenuManager.NewMenu(new ManualSessionMenu(MenuManager));
+                MenuManager.NewMenu(new ManualSessionMenu(MenuManager, _database));
                 break;
             case 1:
-                MenuManager.NewMenu(new AutoSessionMenu(MenuManager));
+                MenuManager.NewMenu(new AutoSessionMenu(MenuManager, _database));
                 break;
             case 2:
                 MenuManager.GoBack();
@@ -73,13 +75,17 @@ public class CodingSessionMenu : Menu
 
 public class ShowRecordsMenu : Menu
 {
-    public ShowRecordsMenu(MenuManager menuManager) : base(menuManager) { }
+    public ShowRecordsMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
     public override void Display()
     {
         UserInterface.RecordsMenu();
 
         switch (OptionsPicker.MenuIndex)
         {
+            case 0:
+                var codingSessionList = _database.ShowAll();
+                UserInterface.RecordsAllMenu(codingSessionList);
+                break;
             case 4:
                 MenuManager.GoBack();
                 break;
@@ -88,7 +94,7 @@ public class ShowRecordsMenu : Menu
 }
 public class GoalsMenu : Menu
 {
-    public GoalsMenu(MenuManager menuManager) : base(menuManager) { }
+    public GoalsMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
     public override void Display()
     {
         UserInterface.GoalsMenu();
@@ -103,7 +109,8 @@ public class GoalsMenu : Menu
 }
 public class ManualSessionMenu : Menu
 {
-    public ManualSessionMenu(MenuManager menuManager) : base(menuManager) { }
+    public ManualSessionMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
+
     public override void Display()
     {
         bool menuContinue = true;
@@ -130,7 +137,7 @@ public class ManualSessionMenu : Menu
 
             if (duration < TimeSpan.Zero)
             {
-                UserInput.DisplayError("End date time must more recent than Start date time.","retry");
+                UserInput.DisplayMessage("End date time must more recent than Start date time.", "retry");
                 continue;
             }
 
@@ -140,12 +147,13 @@ public class ManualSessionMenu : Menu
             {
                 case 0:
                     menuContinue = false;
+
                     UserInterface.SessionNote();
                     sessionNote = UserInput.InputWithSpecialKeys(MenuManager, false);
-                    Console.WriteLine("entry sent to the database"); //ENTRY SENT TO THE DATABASE
-                    Console.ReadKey();
-                    MenuManager.ReturnToMainMenu();
 
+                    _database.Insert(sessionNote, startDateTime.ToString("yyyy-MM-dd HH:mm:ss"), endDateTime.ToString("yyyy-MM-dd HH:mm:ss"), $"{duration:hh\\:mm\\:ss}");
+
+                    MenuManager.ReturnToMainMenu();
                     break;
                 case 1:
                     menuContinue = true;
@@ -165,7 +173,7 @@ public class AutoSessionMenu : Menu
     private DateTime endDateTime = new();
     private TimeSpan duration = new();
 
-    public AutoSessionMenu(MenuManager menuManager) : base(menuManager) { }
+    public AutoSessionMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
     public override void Display()
     {
 
@@ -185,10 +193,12 @@ public class AutoSessionMenu : Menu
             {
                 case 0:
                     menuContinue = false;
+
                     UserInterface.SessionNote();
                     sessionNote = UserInput.InputWithSpecialKeys(MenuManager, false);
-                    Console.WriteLine("entry sent to the database"); //ENTRY SENT TO THE DATABASE
-                    Console.ReadKey();
+
+                    _database.Insert(sessionNote, startDateTime.ToString("yyyy-MM-dd HH:mm:ss"), endDateTime.ToString("yyyy-MM-dd HH:mm:ss"), $"{duration:hh\\:mm\\:ss}");
+
                     MenuManager.ReturnToMainMenu();
                     break;
                 case 1:

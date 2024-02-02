@@ -3,6 +3,7 @@ using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Spectre.Console;
 
 namespace CodingTracker;
 
@@ -34,6 +35,32 @@ public static class UserInterface
 
         OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top, true);
     }
+
+    public static void RecordsAllMenu(List<CodingSession> codingSessionList)
+    {
+        Header("show all records");
+
+        var table = new Table();
+        table.Border(TableBorder.Heavy);
+
+        table.AddColumns("ID", "[green]START[/]", "[red]END[/]", "[yellow]DURATION[/]", "NOTE");
+        
+        foreach (var codingSession in codingSessionList)
+        {
+            table.AddRow(
+                codingSession.Id.ToString(),
+                codingSession.StartTime.ToString("HH:mm:ss MM/dd/yyyy"),
+                codingSession.EndTime.ToString("HH:mm:ss MM/dd/yyyy"),
+                codingSession.Duration.ToString(),
+                codingSession.Note);
+        }
+        AnsiConsole.Write(table);
+        
+        UserInput.DisplayMessage();
+
+
+    }
+
     public static void GoalsMenu()
     {
         string[] menuOptions = { "Set a Goal", "Show Goals", "Go back" };
