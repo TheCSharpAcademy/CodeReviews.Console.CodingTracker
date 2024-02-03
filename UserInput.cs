@@ -11,7 +11,7 @@ namespace CodingTracker
     {
         private static bool _priorError = false;
 
-        public static string TimeInput(MenuManager menuManager)
+        public static string TimeInput(MenuManager menuManager, bool blankOption)
         {
             _priorError = false;
 
@@ -20,6 +20,7 @@ namespace CodingTracker
                 string? userInput = InputWithSpecialKeys(menuManager, true);
 
                 if (userInput == "_escape_") return userInput;
+                else if (userInput == "" && blankOption) return "_noInput_";
 
                 if (userInput != null)
                 {
@@ -29,13 +30,13 @@ namespace CodingTracker
                     }
                     catch
                     {
-                        HandleInputError("\n  Enter a valid time (HH:mm):");
+                        HandleInputError("Enter a valid time (HH:mm):");
                     }
                 }
             } while (true);
         }
 
-        public static string DateInput(MenuManager menuManager, bool startDate)
+        public static string DateInput(MenuManager menuManager, bool blankOption)
         {
             _priorError = false;
 
@@ -44,8 +45,8 @@ namespace CodingTracker
                 string? userInput = InputWithSpecialKeys(menuManager, true);
 
                 if (userInput == "_escape_") return userInput;
-                else if (userInput == "" && startDate) return DateTime.Now.ToString("yyyy-MM-dd");
-                else if (userInput == "" && !startDate) return "_sameAsStart_";
+                else if (userInput == "" && !blankOption) return DateTime.Now.ToString("yyyy-MM-dd");
+                else if (userInput == "" && blankOption) return "_noInput_";
 
                 if (userInput != null)
                 {

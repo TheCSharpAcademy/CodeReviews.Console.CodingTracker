@@ -111,6 +111,11 @@ namespace CodingTracker
             string commandText = $"INSERT INTO coding_tracker (notes, date_start, date_end, duration) VALUES ('{notes}','{dateStart}','{dateEnd}','{duration}')";
             ExecuteCommand(commandText);
         }
+        public void Update(int id, string notes, string dateStart, string dateEnd, string duration)
+        {
+            string commandText = $"UPDATE coding_tracker SET notes = '{notes}', date_start = '{dateStart}', date_end = '{dateEnd}',duration = '{duration}' WHERE Id = {id}";
+            ExecuteCommand(commandText);
+        }
 
         public List<CodingSession> GetAll()
         {

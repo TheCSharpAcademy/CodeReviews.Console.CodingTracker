@@ -62,7 +62,7 @@ public class CodingSessionMenu : Menu
         switch (OptionsPicker.MenuIndex)
         {
             case 0:
-                MenuManager.NewMenu(new ManualSessionMenu(MenuManager, _database));
+                MenuManager.NewMenu(new SetSessionMenu(MenuManager, _database));
                 break;
             case 1:
                 MenuManager.NewMenu(new AutoSessionMenu(MenuManager, _database));
@@ -113,14 +113,80 @@ public class ShowAllRecordsMenu : Menu
     }
 }
 
-public class UpdateMenu : Menu
+public class UpdateMenu : SetSessionMenu
 {
+
+
     public UpdateMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
     public override void Display()
     {
-        var codingSession = UserInput.IdInput(MenuManager,_database);
-
+        var codingSession = UserInput.IdInput(MenuManager, _database);
         UserInterface.UpdateMenu(codingSession);
+
+        bool menuContinue = true;
+        string sessionNote;
+
+        while (menuContinue)
+        {
+            UpdateDateTime(codingSession);
+
+            TimeSpan duration = LogicOperations.CalculateDuration(_endDateTime, _startDateTime);
+
+            if (duration < TimeSpan.Zero)
+            {
+                UserInput.DisplayMessage("End date time must more recent than Start date time.", "retry");
+                continue;
+            }
+
+            UserInterface.SessionConfirm(_startDateTime, _endDateTime, duration);
+
+            switch (OptionsPicker.MenuIndex)
+            {
+                case 0:
+                    menuContinue = false;
+
+                    UserInterface.SessionNote(true);
+                    sessionNote = UserInput.InputWithSpecialKeys(MenuManager, false);
+
+                    _database.Update(codingSession[0].Id, sessionNote, _startDateTime.ToString("yyyy-MM-dd HH:mm:ss"), _endDateTime.ToString("yyyy-MM-dd HH:mm:ss"), $"{duration:hh\\:mm\\:ss}");
+
+                    MenuManager.ReturnToMainMenu();
+                    break;
+                case 1:
+                    menuContinue = true;
+                    break;
+                case 2:
+                    menuContinue = false;
+                    MenuManager.GoBack();
+                    break;
+            }
+        }
+    }
+    public void UpdateDateTime(List<CodingSession> codingSession)
+    {
+        bool update = true;
+
+        UserInterface.SetSessionTime(true,update);
+        _startTimeInput = UserInput.TimeInput(MenuManager,true);
+        if (_startTimeInput == "_noInput_") _startTimeInput = codingSession[0].StartTime.ToString("HH:mm");
+
+
+        UserInterface.SetSessionTime(false,update);
+        _endTimeInput = UserInput.TimeInput(MenuManager,true);
+        if (_endTimeInput == "_noInput_") _endTimeInput = codingSession[0].EndTime.ToString("HH:mm");
+
+
+        UserInterface.SetSessionDate(true, update);
+        _startDateInput = UserInput.DateInput(MenuManager, true);
+        if (_startDateInput == "_noInput_") _startDateInput = codingSession[0].StartTime.ToString("yyyy-MM-dd");
+
+
+        UserInterface.SetSessionDate(false, update);
+        _endDateInput = UserInput.DateInput(MenuManager, true);
+        if (_endDateInput == "_noInput_") _endDateInput = codingSession[0].EndTime.ToString("yyyy-MM-dd");
+
+        _startDateTime = LogicOperations.ConstructDateTime(_startTimeInput, _startDateInput);
+        _endDateTime = LogicOperations.ConstructDateTime(_endTimeInput, _endDateInput);
     }
 }
 
@@ -139,9 +205,16 @@ public class GoalsMenu : Menu
         }
     }
 }
-public class ManualSessionMenu : Menu
+public class SetSessionMenu : Menu
 {
-    public ManualSessionMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
+    protected string _startTimeInput = "";
+    protected string _endTimeInput = "";
+    protected string _startDateInput = "";
+    protected string _endDateInput = "";
+    protected DateTime _startDateTime;
+    protected DateTime _endDateTime;
+
+    public SetSessionMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
 
     public override void Display()
     {
@@ -150,22 +223,9 @@ public class ManualSessionMenu : Menu
 
         while (menuContinue)
         {
-            UserInterface.SetSessionTime(true);
-            string startTimeInput = UserInput.TimeInput(MenuManager);
+            SetDateTime();
 
-            UserInterface.SetSessionTime(false);
-            string endTimeInput = UserInput.TimeInput(MenuManager);
-
-            UserInterface.SetSessionDate(true);
-            string startDateInput = UserInput.DateInput(MenuManager, true);
-
-            UserInterface.SetSessionDate(false);
-            string endDateInput = UserInput.DateInput(MenuManager, false);
-            if (endDateInput == "_sameAsStart_") endDateInput = startDateInput;
-
-            DateTime startDateTime = LogicOperations.ConstructDateTime(startTimeInput, startDateInput);
-            DateTime endDateTime = LogicOperations.ConstructDateTime(endTimeInput, endDateInput);
-            TimeSpan duration = LogicOperations.CalculateDuration(endDateTime, startDateTime);
+            TimeSpan duration = LogicOperations.CalculateDuration(_endDateTime, _startDateTime);
 
             if (duration < TimeSpan.Zero)
             {
@@ -173,7 +233,7 @@ public class ManualSessionMenu : Menu
                 continue;
             }
 
-            UserInterface.SessionConfirm(startDateTime, endDateTime, duration);
+            UserInterface.SessionConfirm(_startDateTime, _endDateTime, duration);
 
             switch (OptionsPicker.MenuIndex)
             {
@@ -183,7 +243,7 @@ public class ManualSessionMenu : Menu
                     UserInterface.SessionNote();
                     sessionNote = UserInput.InputWithSpecialKeys(MenuManager, false);
 
-                    _database.Insert(sessionNote, startDateTime.ToString("yyyy-MM-dd HH:mm:ss"), endDateTime.ToString("yyyy-MM-dd HH:mm:ss"), $"{duration:hh\\:mm\\:ss}");
+                    _database.Insert(sessionNote, _startDateTime.ToString("yyyy-MM-dd HH:mm:ss"), _endDateTime.ToString("yyyy-MM-dd HH:mm:ss"), $"{duration:hh\\:mm\\:ss}");
 
                     MenuManager.ReturnToMainMenu();
                     break;
@@ -196,6 +256,24 @@ public class ManualSessionMenu : Menu
                     break;
             }
         }
+    }
+    public virtual void SetDateTime()
+    {
+        UserInterface.SetSessionTime(true);
+        _startTimeInput = UserInput.TimeInput(MenuManager,false);
+
+        UserInterface.SetSessionTime(false);
+        _endTimeInput = UserInput.TimeInput(MenuManager,false);
+
+        UserInterface.SetSessionDate(true);
+        _startDateInput = UserInput.DateInput(MenuManager, false);
+
+        UserInterface.SetSessionDate(false);
+        _endDateInput = UserInput.DateInput(MenuManager, true);
+        if (_endDateInput == "_noInput_") _endDateInput = _startDateInput;
+
+        _startDateTime = LogicOperations.ConstructDateTime(_startTimeInput, _startDateInput);
+        _endDateTime = LogicOperations.ConstructDateTime(_endTimeInput, _endDateInput);
     }
 }
 

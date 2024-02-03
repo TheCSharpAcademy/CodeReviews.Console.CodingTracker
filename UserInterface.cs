@@ -75,7 +75,7 @@ public static class UserInterface
         OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top, true);
     }
 
-    public static void SetSessionTime(bool isStart)
+    public static void SetSessionTime(bool isStart, bool isUpdate = false)
     {
 
         string sessionTimeLabel = isStart ? "Start" : "End";
@@ -83,11 +83,32 @@ public static class UserInterface
         ConsoleClearLines(GetLockedCursorPosition());
 
         Console.WriteLine($"{sessionTimeLabel} time of your session (HH:mm):");
+
+        if (isUpdate)
+        {
+            string autoTimeEnter = "Enter, if it's the same as original.";
+            int boxWidthModifier = 5;
+
+            Console.BackgroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.WriteLine(string.Format("  {0,-" + (autoTimeEnter.Length + boxWidthModifier) + "}", autoTimeEnter));
+            Console.ResetColor();
+        }
+
     }
-    public static void SetSessionDate(bool isStart)
+    public static void SetSessionDate(bool isStart, bool isUpdate = false)
     {
+        string autoDateEnter;
         string sessionDateLabel = isStart ? "Start" : "End";
-        string autoDateEnter = isStart ? "Enter, if it's today." : "Enter, if it's the same as start date.";
+        if (!isUpdate)
+        {
+            autoDateEnter = isStart ? "Enter, if it's today." : "Enter, if it's the same as start date.";
+        }
+        else
+        {
+            autoDateEnter = "Enter, if it's the same as original.";
+        }
+
         int boxWidthModifier = 5;
 
         ConsoleClearLines(GetLockedCursorPosition());
@@ -104,7 +125,8 @@ public static class UserInterface
     {
         string[] menuOptions = { "Confirm", "Enter again", "Go back" };
 
-        Header("new coding session");
+        ConsoleClearLines(GetLockedCursorPosition());
+
         Console.WriteLine($"Start time:\t{startDateTime.ToString("HH:mm")}\t{startDateTime.ToString("yyyy-MM-dd")}");
         Console.WriteLine($"End time:\t{endDateTime.ToString("HH:mm")}\t{endDateTime.ToString("yyyy-MM-dd")}\n");
 
@@ -140,10 +162,11 @@ public static class UserInterface
     }
 
 
-    public static void SessionNote()
+    public static void SessionNote(bool isUpdate = false)
     {
-        Header("new coding session");
-        Console.WriteLine("Enter a note (Press Enter to leave blank)): ");
+        string enterMessage = isUpdate ? "as original" : "blank"; 
+        ConsoleClearLines(GetLockedCursorPosition());
+        Console.WriteLine($"Enter a note (Press Enter to leave {enterMessage})): ");
     }
 
     public static void ManualSessionMenu()
