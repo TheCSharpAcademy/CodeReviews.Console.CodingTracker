@@ -10,6 +10,13 @@ namespace frockett.CodingTracker.Library
             DateTime startTime = GetDateTime("Enter start time (DD-MM-YYYY HH:mm) || Please use 24-hour clock: ");
             DateTime endTime = GetDateTime("Enter end time (DD-MM-YYYY HH:mm) || Please use 24-hour clock: ");
 
+            if (startTime > endTime)
+            {
+                AnsiConsole.Markup("\n[red]Invalid input. Start time can not be later than end time. Don't get them confused![/]\n\n");
+                startTime = GetDateTime("Enter start time (DD-MM-YYYY HH:mm) || Please use 24-hour clock: ");
+                endTime = GetDateTime("Enter end time (DD-MM-YYYY HH:mm) || Please use 24-hour clock: ");
+            }
+
             return new CodingSession { StartTime = startTime, EndTime = endTime, Duration = endTime - startTime };
         }
 
