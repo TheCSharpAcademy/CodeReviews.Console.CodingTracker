@@ -36,28 +36,34 @@ public static class UserInterface
         OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top, true);
     }
 
-    public static void RecordsAllMenu(List<CodingSession> codingSessionList)
+    public static void RecordsAllMenu(List<CodingSession> codingSessionList, TimeSpan averageDuration,TimeSpan totalDuration)
     {
+        var table = new Table();
+        string[] menuOptions = { "Update", "Delete", "Go back"};
+
         Header("show all records");
 
-        var table = new Table();
         table.Border(TableBorder.Heavy);
 
         table.AddColumns("ID", "[green]START[/]", "[red]END[/]", "[yellow]DURATION[/]", "NOTE");
-        
+
         foreach (var codingSession in codingSessionList)
         {
             table.AddRow(
-                codingSession.Id.ToString(),
-                codingSession.StartTime.ToString("HH:mm:ss MM/dd/yyyy"),
-                codingSession.EndTime.ToString("HH:mm:ss MM/dd/yyyy"),
-                codingSession.Duration.ToString(),
-                codingSession.Note);
+            codingSession.Id.ToString(),
+            codingSession.StartTime.ToString("HH:mm:ss MM/dd/yyyy"),
+            codingSession.EndTime.ToString("HH:mm:ss MM/dd/yyyy"),
+            codingSession.Duration.ToString(),
+            codingSession.Note);
         }
-        AnsiConsole.Write(table);
-        
-        UserInput.DisplayMessage();
 
+        AnsiConsole.Write(table);
+
+        Console.WriteLine($"Average duration: {averageDuration:hh\\:mm\\:ss}");
+        Console.WriteLine($"Total duration: {totalDuration}");
+        Console.WriteLine();
+
+        OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top, true);
 
     }
 
@@ -127,9 +133,9 @@ public static class UserInterface
             Console.WriteLine($"Total breaks:\t{totalBreaks:hh\\:mm\\:ss}");
 
         if (duration.Days == 0)
-            Console.WriteLine($"Duration:\t{duration:hh\\:mm}");
+            Console.WriteLine($"Duration:\t{duration:hh\\:mm\\:ss}");
         else
-            Console.WriteLine($"Duration:\t{duration.Days} days, {duration:hh\\:mm}");
+            Console.WriteLine($"Duration:\t{duration.Days} days, {duration:hh\\:mm\\:ss}");
 
         Console.WriteLine();
 

@@ -72,6 +72,7 @@ namespace CodingTracker
                         {
                             while (reader.Read())
                             {
+                                
                                 CodingSession codingSession = new()
                                 {
                                     Id = Convert.ToInt32(reader["Id"]),
@@ -92,6 +93,16 @@ namespace CodingTracker
             catch (SQLiteException ex)
             {
                 UserInput.DisplayMessage($"SQLite error: {ex.Message}");
+                return codingSessionList;
+            }
+            catch (ArgumentNullException nullEx)
+            {
+                UserInput.DisplayMessage($"Null exception: {nullEx.Message}");
+                return codingSessionList;
+            }
+            catch (Exception e)
+            {
+                UserInput.DisplayMessage($"Exception: {e.Message}");
                 return codingSessionList;
             }
         }

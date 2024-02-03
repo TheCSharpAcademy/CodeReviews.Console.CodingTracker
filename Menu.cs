@@ -84,7 +84,10 @@ public class ShowRecordsMenu : Menu
         {
             case 0:
                 var codingSessionList = _database.ShowAll();
-                UserInterface.RecordsAllMenu(codingSessionList);
+                var averageDuration = LogicOperations.AverageDuration(codingSessionList);
+                var totalDuration = LogicOperations.TotalDuration(codingSessionList);
+
+                UserInterface.RecordsAllMenu(codingSessionList, averageDuration, totalDuration);
                 break;
             case 4:
                 MenuManager.GoBack();

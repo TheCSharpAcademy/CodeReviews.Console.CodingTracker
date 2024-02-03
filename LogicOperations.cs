@@ -11,6 +11,31 @@ namespace CodingTracker
 
         public static TimeSpan CalculateDuration(DateTime startTime, DateTime endTime) => startTime - endTime;
 
-        public static TimeSpan CalculateBreaks(DateTime startTime, DateTime endTime, TimeSpan duration) => startTime-endTime + duration;
+        public static TimeSpan CalculateBreaks(DateTime startTime, DateTime endTime, TimeSpan duration) => startTime - endTime + duration;
+
+        public static TimeSpan AverageDuration(List<CodingSession> list)
+        {
+            TimeSpan total = TimeSpan.Zero;
+
+            foreach (var session in list)
+            {
+                total += session.Duration;
+            }
+
+            long averageTicks = total.Ticks / list.Count; //tick units
+
+            return TimeSpan.FromTicks(averageTicks);
+        }
+        public static TimeSpan TotalDuration(List<CodingSession> list)
+        {
+            TimeSpan total = TimeSpan.Zero;
+
+            foreach (var session in list)
+            {
+                total += session.Duration;
+            }
+
+            return total;
+        }
     }
 }
