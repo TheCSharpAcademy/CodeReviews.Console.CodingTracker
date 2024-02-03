@@ -72,7 +72,6 @@ namespace CodingTracker
                         {
                             while (reader.Read())
                             {
-                                
                                 CodingSession codingSession = new()
                                 {
                                     Id = Convert.ToInt32(reader["Id"]),
@@ -113,9 +112,15 @@ namespace CodingTracker
             ExecuteCommand(commandText);
         }
 
-        public List<CodingSession> ShowAll()
+        public List<CodingSession> GetAll()
         {
             string commandText = "SELECT * FROM coding_tracker";
+            return ReadCommand(commandText);
+        }
+
+        public List<CodingSession> GetByIndex(int index)
+        {
+            string commandText = $"SELECT * FROM coding_tracker WHERE Id = {index}";
             return ReadCommand(commandText);
         }
     }

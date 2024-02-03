@@ -9,6 +9,7 @@ namespace CodingTracker;
 
 public static class UserInterface
 {
+    private static int _currentCursorTopPosition;
     public static void MainMenu()
     {
         string[] menuOptions = { "New Coding Session", "Show Records", "Goals", "Exit" };
@@ -23,48 +24,46 @@ public static class UserInterface
         string[] menuOptions = { "Enter Coding Session manually", "Start a new Coding Session", "Go back" };
 
         Header("new coding session");
+        LockCursorPosition();
 
         OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top, true);
     }
 
     public static void RecordsMenu()
     {
-        string[] menuOptions = { "Show all", "Show filters", "Update a record", "Delete a record", "Go back" };
+        string[] menuOptions = { "Show all", "Filters", "Go back" };
 
         Header("show records");
 
         OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top, true);
     }
 
-    public static void RecordsAllMenu(List<CodingSession> codingSessionList, TimeSpan averageDuration,TimeSpan totalDuration)
+    public static void RecordsAllMenu(List<CodingSession> codingSessionList, TimeSpan averageDuration, TimeSpan totalDuration)
     {
-        var table = new Table();
-        string[] menuOptions = { "Update", "Delete", "Go back"};
+        string[] menuOptions = { "Update", "Delete", "Go back" };
 
         Header("show all records");
 
-        table.Border(TableBorder.Heavy);
-
-        table.AddColumns("ID", "[green]START[/]", "[red]END[/]", "[yellow]DURATION[/]", "NOTE");
-
-        foreach (var codingSession in codingSessionList)
-        {
-            table.AddRow(
-            codingSession.Id.ToString(),
-            codingSession.StartTime.ToString("HH:mm:ss MM/dd/yyyy"),
-            codingSession.EndTime.ToString("HH:mm:ss MM/dd/yyyy"),
-            codingSession.Duration.ToString(),
-            codingSession.Note);
-        }
-
-        AnsiConsole.Write(table);
+        DisplayTable(codingSessionList);
 
         Console.WriteLine($"Average duration: {averageDuration:hh\\:mm\\:ss}");
         Console.WriteLine($"Total duration: {totalDuration}");
         Console.WriteLine();
 
         OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top, true);
+    }
+    public static void UpdateMiniMenu()
+    {
+        ConsoleClearLines(Console.GetCursorPosition().Top - 1);
+        Console.WriteLine("Type ID of a session you want to update: ");
+    }
 
+    public static void UpdateMenu(List<CodingSession> codingSessions)
+    {
+
+        Header($"update a record of id {codingSessions[0].Id}");
+        DisplayTable(codingSessions);
+        LockCursorPosition();
     }
 
     public static void GoalsMenu()
@@ -76,25 +75,23 @@ public static class UserInterface
         OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top, true);
     }
 
-    public static void ManualSessionTime(bool isStart)
+    public static void SetSessionTime(bool isStart)
     {
 
         string sessionTimeLabel = isStart ? "Start" : "End";
 
-        Header("new coding session");
+        ConsoleClearLines(GetLockedCursorPosition());
 
-        Console.SetCursorPosition(2, Console.GetCursorPosition().Top);
         Console.WriteLine($"{sessionTimeLabel} time of your session (HH:mm):");
     }
-    public static void ManualSessionDate(bool isStart)
+    public static void SetSessionDate(bool isStart)
     {
         string sessionDateLabel = isStart ? "Start" : "End";
         string autoDateEnter = isStart ? "Enter, if it's today." : "Enter, if it's the same as start date.";
         int boxWidthModifier = 5;
 
-        Header("new coding session");
+        ConsoleClearLines(GetLockedCursorPosition());
 
-        Console.SetCursorPosition(2, Console.GetCursorPosition().Top);
         Console.WriteLine($"{sessionDateLabel} date of your session (YYYY-MM-DD)(Escape to go back):");
 
         Console.BackgroundColor = ConsoleColor.White;
@@ -154,6 +151,7 @@ public static class UserInterface
         string[] menuOptions = { "START", "Go back" };
 
         Header("new coding session");
+        LockCursorPosition();
 
         OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top, true);
     }
@@ -177,7 +175,48 @@ public static class UserInterface
             Console.SetCursorPosition(0, i);
             Console.Write(new string(' ', Console.WindowWidth));
         }
+        Console.SetCursorPosition(0, Console.GetCursorPosition().Top);
     }
+    public static void ConsoleClearLastLines(int lastLines)
+    {
+        int initialCursorTopPosition = Console.GetCursorPosition().Top - lastLines;
+        Console.SetCursorPosition(0, initialCursorTopPosition);
+
+        for (int i = Console.WindowHeight; i >= initialCursorTopPosition; i--)
+        {
+            Console.SetCursorPosition(0, i);
+            Console.Write(new string(' ', Console.WindowWidth));
+        }
+        Console.SetCursorPosition(0, Console.GetCursorPosition().Top);
+    }
+
+    private static void DisplayTable(List<CodingSession> list)
+    {
+        var table = new Table();
+        table.Border(TableBorder.Heavy);
+
+        table.AddColumns("ID", "[green]START[/]", "[red]END[/]", "[yellow]DURATION[/]", "NOTE");
+
+        foreach (var codingSession in list)
+        {
+            table.AddRow(
+            codingSession.Id.ToString(),
+            codingSession.StartTime.ToString("HH:mm:ss MM/dd/yyyy"),
+            codingSession.EndTime.ToString("HH:mm:ss MM/dd/yyyy"),
+            codingSession.Duration.ToString(),
+            codingSession.Note);
+        }
+
+        AnsiConsole.Write(table);
+
+    }
+
+    private static void LockCursorPosition()
+    {
+        _currentCursorTopPosition = Console.GetCursorPosition().Top;
+    }
+    private static int GetLockedCursorPosition() => _currentCursorTopPosition;
+
 }
 
 

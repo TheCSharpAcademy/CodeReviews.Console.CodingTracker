@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace CodingTracker
 {
@@ -28,7 +29,7 @@ namespace CodingTracker
                     }
                     catch
                     {
-                        HandleInputError(userInput, "\n  Enter a valid time (HH:mm):");
+                        HandleInputError("\n  Enter a valid time (HH:mm):");
                     }
                 }
             } while (true);
@@ -54,10 +55,32 @@ namespace CodingTracker
                     }
                     catch
                     {
-                        HandleInputError(userInput, "\n  Enter a valid date (YYYY-MM-DD):");
+                        HandleInputError("\n  Enter a valid date (YYYY-MM-DD):");
                     }
                 }
             } while (true);
+        }
+
+        public static List<CodingSession> IdInput(MenuManager menuManager, Database database)
+        {
+            _priorError = false;
+            do
+            {
+                string userInput = InputWithSpecialKeys(menuManager, true);
+
+                if (int.TryParse(userInput, out int resultId))
+                {
+                    var codingSession = database.GetByIndex(resultId);
+
+                    if (codingSession.Any())
+                        return codingSession;
+                    else
+                        HandleInputError($"ID '{resultId}' not found, enter a valid ID number:");
+                }
+                else
+                    HandleInputError("Enter a valid ID number:");
+            }
+            while (true);
         }
 
         public static string InputWithSpecialKeys(MenuManager menuManager, bool escapeOption)
@@ -97,18 +120,11 @@ namespace CodingTracker
             } while (true);
 
         }
-        private static void HandleInputError(string userInput, string errorMessage)
+        private static void HandleInputError(string errorMessage)
         {
             if (_priorError)
-            {
-                Console.SetCursorPosition(userInput.Length, Console.GetCursorPosition().Top - 1);
+                UserInterface.ConsoleClearLastLines(2);
 
-                foreach (char character in userInput)
-                {
-                    Console.Write("\b \b");
-                }
-                Console.SetCursorPosition(0, Console.GetCursorPosition().Top - 2);
-            }
             _priorError = true;
             Console.WriteLine(errorMessage);
         }

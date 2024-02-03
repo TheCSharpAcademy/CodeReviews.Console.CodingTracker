@@ -9,12 +9,12 @@ public class MenuManager
 {
     private readonly Stack<Menu> _menuStack = new Stack<Menu>();
     private Database _database;
-    
-    
+
+
     public MenuManager(Database database)
     {
         _database = database;
-        _menuStack.Push(new MainMenu(this,_database));
+        _menuStack.Push(new MainMenu(this, _database));
         DisplayCurrentMenu();
     }
 
@@ -32,7 +32,7 @@ public class MenuManager
         _menuStack.Push(menu);
         DisplayCurrentMenu();
     }
-    
+
 
     public void GoBack()
     {
@@ -47,4 +47,5 @@ public class MenuManager
             _menuStack.Pop();
         DisplayCurrentMenu();
     }
+
 }

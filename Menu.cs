@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Globalization;
 using System.Linq;
 using System.Reflection.Metadata;
@@ -83,11 +84,7 @@ public class ShowRecordsMenu : Menu
         switch (OptionsPicker.MenuIndex)
         {
             case 0:
-                var codingSessionList = _database.ShowAll();
-                var averageDuration = LogicOperations.AverageDuration(codingSessionList);
-                var totalDuration = LogicOperations.TotalDuration(codingSessionList);
-
-                UserInterface.RecordsAllMenu(codingSessionList, averageDuration, totalDuration);
+                MenuManager.NewMenu(new ShowAllRecordsMenu(MenuManager, _database));
                 break;
             case 4:
                 MenuManager.GoBack();
@@ -95,6 +92,38 @@ public class ShowRecordsMenu : Menu
         }
     }
 }
+public class ShowAllRecordsMenu : Menu
+{
+    public ShowAllRecordsMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
+    public override void Display()
+    {
+        var codingSessionList = _database.GetAll();
+        var averageDuration = LogicOperations.AverageDuration(codingSessionList);
+        var totalDuration = LogicOperations.TotalDuration(codingSessionList);
+
+        UserInterface.RecordsAllMenu(codingSessionList, averageDuration, totalDuration);
+
+        switch (OptionsPicker.MenuIndex)
+        {
+            case 0: //Update
+                UserInterface.UpdateMiniMenu();
+                MenuManager.NewMenu(new UpdateMenu(MenuManager, _database));
+                break;
+        }
+    }
+}
+
+public class UpdateMenu : Menu
+{
+    public UpdateMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
+    public override void Display()
+    {
+        var codingSession = UserInput.IdInput(MenuManager,_database);
+
+        UserInterface.UpdateMenu(codingSession);
+    }
+}
+
 public class GoalsMenu : Menu
 {
     public GoalsMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
@@ -121,16 +150,16 @@ public class ManualSessionMenu : Menu
 
         while (menuContinue)
         {
-            UserInterface.ManualSessionTime(true);
+            UserInterface.SetSessionTime(true);
             string startTimeInput = UserInput.TimeInput(MenuManager);
 
-            UserInterface.ManualSessionTime(false);
+            UserInterface.SetSessionTime(false);
             string endTimeInput = UserInput.TimeInput(MenuManager);
 
-            UserInterface.ManualSessionDate(true);
+            UserInterface.SetSessionDate(true);
             string startDateInput = UserInput.DateInput(MenuManager, true);
 
-            UserInterface.ManualSessionDate(false);
+            UserInterface.SetSessionDate(false);
             string endDateInput = UserInput.DateInput(MenuManager, false);
             if (endDateInput == "_sameAsStart_") endDateInput = startDateInput;
 
