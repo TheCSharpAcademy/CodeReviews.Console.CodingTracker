@@ -33,37 +33,59 @@ public static class UserInterface
     {
         string[] menuOptions = { "Show all", "Filters", "Go back" };
 
-        Header("show records");
+        Header("show sessions");
 
         OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top, true);
+    }
+
+    public static void FilterSessionsMenu()
+    {
+        string[] menuOptions = { "By week", "By month", "By year", "Go back" };
+        Header("filters");
+        Console.WriteLine("Choose a filter:");
     }
 
     public static void RecordsAllMenu(List<CodingSession> codingSessionList, TimeSpan averageDuration, TimeSpan totalDuration)
     {
         string[] menuOptions = { "Update", "Delete", "Go back" };
 
-        Header("show all records");
+        Header("show all sessions");
 
         DisplayTable(codingSessionList);
 
         Console.WriteLine($"Average duration: {averageDuration:hh\\:mm\\:ss}");
         Console.WriteLine($"Total duration: {totalDuration}");
         Console.WriteLine();
+        LockCursorPosition();
 
         OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top, true);
     }
     public static void UpdateMiniMenu()
     {
-        ConsoleClearLines(Console.GetCursorPosition().Top - 1);
+        ConsoleClearLines(Console.GetCursorPosition().Top);
         Console.WriteLine("Type ID of a session you want to update: ");
     }
-
+    public static void DeleteMiniMenu()
+    {
+        ConsoleClearLines(GetLockedCursorPosition());
+        Console.WriteLine("Type ID of a session you want to delete: ");
+    }
     public static void UpdateMenu(List<CodingSession> codingSessions)
     {
 
         Header($"update a record of id {codingSessions[0].Id}");
         DisplayTable(codingSessions);
         LockCursorPosition();
+    }
+    public static void DeleteMenu(List<CodingSession> codingSessions)
+    {
+        string[] menuOptions = { "No", "Yes" };
+
+        Header($"delete a session of id {codingSessions[0].Id}");
+        DisplayTable(codingSessions);
+        LockCursorPosition();
+        Console.WriteLine("\n Do you really want to delete this session?");
+        OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top, false);
     }
 
     public static void GoalsMenu()
@@ -164,7 +186,7 @@ public static class UserInterface
 
     public static void SessionNote(bool isUpdate = false)
     {
-        string enterMessage = isUpdate ? "as original" : "blank"; 
+        string enterMessage = isUpdate ? "as original" : "blank";
         ConsoleClearLines(GetLockedCursorPosition());
         Console.WriteLine($"Enter a note (Press Enter to leave {enterMessage})): ");
     }

@@ -116,6 +116,11 @@ namespace CodingTracker
             string commandText = $"UPDATE coding_tracker SET notes = '{notes}', date_start = '{dateStart}', date_end = '{dateEnd}',duration = '{duration}' WHERE Id = {id}";
             ExecuteCommand(commandText);
         }
+        public void Delete(int id)
+        {
+            string commandText = $"DELETE FROM coding_tracker WHERE Id = {id}";
+            ExecuteCommand(commandText);
+        }
 
         public List<CodingSession> GetAll()
         {

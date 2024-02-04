@@ -86,7 +86,10 @@ public class ShowRecordsMenu : Menu
             case 0:
                 MenuManager.NewMenu(new ShowAllRecordsMenu(MenuManager, _database));
                 break;
-            case 4:
+            case 1:
+                MenuManager.NewMenu(new ShowFiltersMenu(MenuManager, _database));
+                break;
+            case 2:
                 MenuManager.GoBack();
                 break;
         }
@@ -109,14 +112,40 @@ public class ShowAllRecordsMenu : Menu
                 UserInterface.UpdateMiniMenu();
                 MenuManager.NewMenu(new UpdateMenu(MenuManager, _database));
                 break;
+            case 1: //Delete
+                UserInterface.DeleteMiniMenu();
+                MenuManager.NewMenu(new DeleteMenu(MenuManager, _database));
+                break;
+            case 2: //GoBack
+                MenuManager.GoBack();
+                break;
         }
     }
 }
 
+public class ShowFiltersMenu : Menu
+{
+    public ShowFiltersMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
+
+    public override void Display()
+    {
+        UserInterface.FilterSessionsMenu();
+        switch (OptionsPicker.MenuIndex)
+        {
+            case 0:
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                MenuManager.GoBack();
+                break;
+        }
+    }
+}
 public class UpdateMenu : SetSessionMenu
 {
-
-
     public UpdateMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
     public override void Display()
     {
@@ -149,7 +178,7 @@ public class UpdateMenu : SetSessionMenu
                     sessionNote = UserInput.InputWithSpecialKeys(MenuManager, false);
 
                     _database.Update(codingSession[0].Id, sessionNote, _startDateTime.ToString("yyyy-MM-dd HH:mm:ss"), _endDateTime.ToString("yyyy-MM-dd HH:mm:ss"), $"{duration:hh\\:mm\\:ss}");
-
+                    UserInput.DisplayMessage("Session updated!", "return to Main Menu");
                     MenuManager.ReturnToMainMenu();
                     break;
                 case 1:
@@ -166,13 +195,13 @@ public class UpdateMenu : SetSessionMenu
     {
         bool update = true;
 
-        UserInterface.SetSessionTime(true,update);
-        _startTimeInput = UserInput.TimeInput(MenuManager,true);
+        UserInterface.SetSessionTime(true, update);
+        _startTimeInput = UserInput.TimeInput(MenuManager, true);
         if (_startTimeInput == "_noInput_") _startTimeInput = codingSession[0].StartTime.ToString("HH:mm");
 
 
-        UserInterface.SetSessionTime(false,update);
-        _endTimeInput = UserInput.TimeInput(MenuManager,true);
+        UserInterface.SetSessionTime(false, update);
+        _endTimeInput = UserInput.TimeInput(MenuManager, true);
         if (_endTimeInput == "_noInput_") _endTimeInput = codingSession[0].EndTime.ToString("HH:mm");
 
 
@@ -187,6 +216,27 @@ public class UpdateMenu : SetSessionMenu
 
         _startDateTime = LogicOperations.ConstructDateTime(_startTimeInput, _startDateInput);
         _endDateTime = LogicOperations.ConstructDateTime(_endTimeInput, _endDateInput);
+    }
+}
+public class DeleteMenu : Menu
+{
+    public DeleteMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
+    public override void Display()
+    {
+        var codingSession = UserInput.IdInput(MenuManager, _database);
+        UserInterface.DeleteMenu(codingSession);
+        if (OptionsPicker.MenuIndex == 1)
+        {
+            _database.Delete(codingSession[0].Id);
+            UserInput.DisplayMessage("Session deleted!", "return to Main Menu");
+            MenuManager.ReturnToMainMenu();
+        }
+        else
+        {
+            MenuManager.GoBack();
+        }
+
+
     }
 }
 
@@ -244,6 +294,7 @@ public class SetSessionMenu : Menu
                     sessionNote = UserInput.InputWithSpecialKeys(MenuManager, false);
 
                     _database.Insert(sessionNote, _startDateTime.ToString("yyyy-MM-dd HH:mm:ss"), _endDateTime.ToString("yyyy-MM-dd HH:mm:ss"), $"{duration:hh\\:mm\\:ss}");
+                    UserInput.DisplayMessage("Session saved!", "return to Main Menu");
 
                     MenuManager.ReturnToMainMenu();
                     break;
@@ -260,10 +311,10 @@ public class SetSessionMenu : Menu
     public virtual void SetDateTime()
     {
         UserInterface.SetSessionTime(true);
-        _startTimeInput = UserInput.TimeInput(MenuManager,false);
+        _startTimeInput = UserInput.TimeInput(MenuManager, false);
 
         UserInterface.SetSessionTime(false);
-        _endTimeInput = UserInput.TimeInput(MenuManager,false);
+        _endTimeInput = UserInput.TimeInput(MenuManager, false);
 
         UserInterface.SetSessionDate(true);
         _startDateInput = UserInput.DateInput(MenuManager, false);
