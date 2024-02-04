@@ -43,6 +43,22 @@ public static class UserInterface
         string[] menuOptions = { "By week", "By month", "By year", "Go back" };
         Header("filters");
         Console.WriteLine("Choose a filter:");
+
+        OptionsPicker.Navigate(menuOptions,Console.GetCursorPosition().Top,true);
+    }
+
+    public static void FilterWeeksMenu(string[] yearsList)
+    {
+        string[] yearsListOptions = new string[yearsList.Length+1];
+
+        yearsList.CopyTo(yearsListOptions,0);
+        yearsListOptions[yearsListOptions.Length-1] = "Go back";
+        
+        Header("show sessions by week");
+
+        Console.WriteLine("Choose a year:");
+
+        OptionsPicker.Navigate(yearsListOptions,Console.GetCursorPosition().Top,true);
     }
 
     public static void RecordsAllMenu(List<CodingSession> codingSessionList, TimeSpan averageDuration, TimeSpan totalDuration)

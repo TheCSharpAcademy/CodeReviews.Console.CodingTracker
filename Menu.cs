@@ -133,6 +133,7 @@ public class ShowFiltersMenu : Menu
         switch (OptionsPicker.MenuIndex)
         {
             case 0:
+                MenuManager.NewMenu(new WeeksMenu(MenuManager, _database));
                 break;
             case 1:
                 break;
@@ -142,6 +143,15 @@ public class ShowFiltersMenu : Menu
                 MenuManager.GoBack();
                 break;
         }
+    }
+}
+public class WeeksMenu : Menu
+{
+    public WeeksMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
+
+    public override void Display()
+    {
+        UserInterface.FilterWeeksMenu(_database.GetDistinctYears());
     }
 }
 public class UpdateMenu : SetSessionMenu
@@ -176,8 +186,14 @@ public class UpdateMenu : SetSessionMenu
 
                     UserInterface.SessionNote(true);
                     sessionNote = UserInput.InputWithSpecialKeys(MenuManager, false);
+                    
+                    int yearNumber = Convert.ToInt32(_startDateTime.ToString("yyyy"));
+                    int monthNumber = Convert.ToInt32(_startDateTime.ToString("MM"));
+                    int weekNumber = LogicOperations.GetWeekNumber(_startDateTime);
 
-                    _database.Update(codingSession[0].Id, sessionNote, _startDateTime.ToString("yyyy-MM-dd HH:mm:ss"), _endDateTime.ToString("yyyy-MM-dd HH:mm:ss"), $"{duration:hh\\:mm\\:ss}");
+                    _database.Update(codingSession[0].Id,sessionNote, _startDateTime.ToString("yyyy-MM-dd HH:mm:ss"), _endDateTime.ToString("yyyy-MM-dd HH:mm:ss"),
+                    $"{duration:hh\\:mm\\:ss}", yearNumber, monthNumber, weekNumber);
+                   
                     UserInput.DisplayMessage("Session updated!", "return to Main Menu");
                     MenuManager.ReturnToMainMenu();
                     break;
@@ -293,7 +309,12 @@ public class SetSessionMenu : Menu
                     UserInterface.SessionNote();
                     sessionNote = UserInput.InputWithSpecialKeys(MenuManager, false);
 
-                    _database.Insert(sessionNote, _startDateTime.ToString("yyyy-MM-dd HH:mm:ss"), _endDateTime.ToString("yyyy-MM-dd HH:mm:ss"), $"{duration:hh\\:mm\\:ss}");
+                    int yearNumber = Convert.ToInt32(_startDateTime.ToString("yyyy"));
+                    int monthNumber = Convert.ToInt32(_startDateTime.ToString("MM"));
+                    int weekNumber = LogicOperations.GetWeekNumber(_startDateTime);
+
+                    _database.Insert(sessionNote, _startDateTime.ToString("yyyy-MM-dd HH:mm:ss"), _endDateTime.ToString("yyyy-MM-dd HH:mm:ss"), $"{duration:hh\\:mm\\:ss}", yearNumber, monthNumber, weekNumber);
+
                     UserInput.DisplayMessage("Session saved!", "return to Main Menu");
 
                     MenuManager.ReturnToMainMenu();
@@ -358,7 +379,11 @@ public class AutoSessionMenu : Menu
                     UserInterface.SessionNote();
                     sessionNote = UserInput.InputWithSpecialKeys(MenuManager, false);
 
-                    _database.Insert(sessionNote, startDateTime.ToString("yyyy-MM-dd HH:mm:ss"), endDateTime.ToString("yyyy-MM-dd HH:mm:ss"), $"{duration:hh\\:mm\\:ss}");
+                    int yearNumber = Convert.ToInt32(startDateTime.ToString("yyyy"));
+                    int monthNumber = Convert.ToInt32(startDateTime.ToString("MM"));
+                    int weekNumber = LogicOperations.GetWeekNumber(startDateTime);
+
+                    _database.Insert(sessionNote, startDateTime.ToString("yyyy-MM-dd HH:mm:ss"), endDateTime.ToString("yyyy-MM-dd HH:mm:ss"), $"{duration:hh\\:mm\\:ss}", yearNumber, monthNumber, weekNumber);
 
                     MenuManager.ReturnToMainMenu();
                     break;

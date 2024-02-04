@@ -1,6 +1,9 @@
 using System.Data.SQLite;
 using System.Linq.Expressions;
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.VisualBasic;
+using Spectre.Console;
+
 
 namespace CodingTracker
 {
@@ -24,7 +27,17 @@ namespace CodingTracker
             using (var connection = new SQLiteConnection(_connectionString))
             {
 
-                string commandText = "CREATE TABLE IF NOT EXISTS coding_tracker(id INTEGER PRIMARY KEY AUTOINCREMENT, notes TEXT, date_start TEXT, date_end TEXT, duration TEXT)";
+                string commandText = @"
+                CREATE TABLE IF NOT EXISTS coding_tracker(
+                    id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                    notes TEXT, 
+                    date_start TEXT, 
+                    date_end TEXT, 
+                    duration TEXT, 
+                    _year INTEGER, 
+                    _month INTEGER, 
+                    _week INTEGER)";
+
                 SQLiteCommand command = new(commandText, connection);
 
                 try
@@ -57,7 +70,7 @@ namespace CodingTracker
                 UserInput.DisplayMessage($"SQLite error: {ex.Message}");
             }
         }
-        private List<CodingSession> ReadCommand(string commandText)
+        private List<CodingSession> ReadRowsCommand(string commandText)
         {
             var codingSessionList = new List<CodingSession>();
             try
@@ -105,15 +118,63 @@ namespace CodingTracker
                 return codingSessionList;
             }
         }
-
-        public void Insert(string notes, string dateStart, string dateEnd, string duration)
+        private List<object> ReadColumnCommand(string commandText)
         {
-            string commandText = $"INSERT INTO coding_tracker (notes, date_start, date_end, duration) VALUES ('{notes}','{dateStart}','{dateEnd}','{duration}')";
+            var columnValuesList = new List<object>();
+            try
+            {
+                using (var connection = new SQLiteConnection(_connectionString))
+                {
+                    connection.Open();
+
+                    using (var command = new SQLiteCommand(commandText, connection))
+                    {
+                        using (SQLiteDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                columnValuesList.Add(reader[0]);
+                            }
+
+                            return columnValuesList;
+                        }
+                    }
+                }
+            }
+
+            catch (SQLiteException ex)
+            {
+                UserInput.DisplayMessage($"SQLite error: {ex.Message}");
+                return columnValuesList;
+            }
+            catch (ArgumentNullException nullEx)
+            {
+                UserInput.DisplayMessage($"Null exception: {nullEx.Message}");
+                return columnValuesList;
+            }
+            catch (Exception e)
+            {
+                UserInput.DisplayMessage($"Exception: {e.Message}");
+                return columnValuesList;
+            }
+        }
+
+        public void Insert(string notes, string dateStart, string dateEnd, string duration, int year, int month, int week)
+        {
+            string commandText = @$"
+            INSERT INTO coding_tracker (notes, date_start, date_end, duration, _year, _month, _week) 
+            VALUES ('{notes}','{dateStart}','{dateEnd}','{duration}',{year},{month},{week})";
+
             ExecuteCommand(commandText);
         }
-        public void Update(int id, string notes, string dateStart, string dateEnd, string duration)
+        public void Update(int id, string notes, string dateStart, string dateEnd, string duration, int year, int month, int week)
         {
-            string commandText = $"UPDATE coding_tracker SET notes = '{notes}', date_start = '{dateStart}', date_end = '{dateEnd}',duration = '{duration}' WHERE Id = {id}";
+            string commandText = @$"
+            UPDATE coding_tracker 
+            SET notes = '{notes}', date_start = '{dateStart}', date_end = '{dateEnd}', 
+            duration = '{duration}', _year = {year}, _month = {month}, _week = {week} 
+            WHERE Id = {id}";
+
             ExecuteCommand(commandText);
         }
         public void Delete(int id)
@@ -125,13 +186,31 @@ namespace CodingTracker
         public List<CodingSession> GetAll()
         {
             string commandText = "SELECT * FROM coding_tracker";
-            return ReadCommand(commandText);
+            return ReadRowsCommand(commandText);
         }
 
         public List<CodingSession> GetByIndex(int index)
         {
             string commandText = $"SELECT * FROM coding_tracker WHERE Id = {index}";
-            return ReadCommand(commandText);
+            return ReadRowsCommand(commandText);
+        }
+
+        public string[] GetDistinctYears()
+        {
+            string commandText = $@"
+            SELECT DISTINCT _year
+            FROM coding_tracker";
+
+            List<object> yearsList = ReadColumnCommand(commandText);
+            string[] yearArray = new string[yearsList.Count];
+
+            for (int i = 0; i < yearsList.Count; i++)
+            {
+                yearArray[i] = yearsList[i].ToString();
+            }
+
+            return yearArray;
+
         }
     }
 
