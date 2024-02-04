@@ -151,7 +151,20 @@ public class WeeksMenu : Menu
 
     public override void Display()
     {
-        UserInterface.FilterWeeksMenu(_database.GetDistinctYears());
+        string userYear;
+        var yearList = _database.GetDistinctYears();
+        UserInterface.PickYearMiniMenu(yearList);
+
+        if (OptionsPicker.MenuIndex == yearList.Length)
+            MenuManager.GoBack();
+        else
+        {
+            userYear = yearList[OptionsPicker.MenuIndex];
+            var monthsList = _database.GetDistinctMonths(userYear);
+            UserInterface.PickMonthMiniMenu(monthsList);//pokračovat, dodělat filtraci, nyní nefunguje Go back z tohodle menu
+
+        }
+
     }
 }
 public class UpdateMenu : SetSessionMenu
@@ -186,14 +199,14 @@ public class UpdateMenu : SetSessionMenu
 
                     UserInterface.SessionNote(true);
                     sessionNote = UserInput.InputWithSpecialKeys(MenuManager, false);
-                    
+
                     int yearNumber = Convert.ToInt32(_startDateTime.ToString("yyyy"));
                     int monthNumber = Convert.ToInt32(_startDateTime.ToString("MM"));
                     int weekNumber = LogicOperations.GetWeekNumber(_startDateTime);
 
-                    _database.Update(codingSession[0].Id,sessionNote, _startDateTime.ToString("yyyy-MM-dd HH:mm:ss"), _endDateTime.ToString("yyyy-MM-dd HH:mm:ss"),
+                    _database.Update(codingSession[0].Id, sessionNote, _startDateTime.ToString("yyyy-MM-dd HH:mm:ss"), _endDateTime.ToString("yyyy-MM-dd HH:mm:ss"),
                     $"{duration:hh\\:mm\\:ss}", yearNumber, monthNumber, weekNumber);
-                   
+
                     UserInput.DisplayMessage("Session updated!", "return to Main Menu");
                     MenuManager.ReturnToMainMenu();
                     break;

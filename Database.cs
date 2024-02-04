@@ -201,16 +201,21 @@ namespace CodingTracker
             SELECT DISTINCT _year
             FROM coding_tracker";
 
-            List<object> yearsList = ReadColumnCommand(commandText);
-            string[] yearArray = new string[yearsList.Count];
+            List<object> yearList = ReadColumnCommand(commandText);
+            
+            return LogicOperations.ToStringArray(yearList);
 
-            for (int i = 0; i < yearsList.Count; i++)
-            {
-                yearArray[i] = yearsList[i].ToString();
-            }
+        }
+        public string[] GetDistinctMonths(string year)
+        {
+            string commandText = $@"
+            SELECT DISTINCT _month
+            FROM coding_tracker
+            WHERE _year = {year}";
 
-            return yearArray;
+            List<object> monthList = ReadColumnCommand(commandText);
 
+            return LogicOperations.MonthsToStringArray(monthList);
         }
     }
 

@@ -47,5 +47,31 @@ namespace CodingTracker
             DayOfWeek firstDayOfWeek = cultureInfo.DateTimeFormat.FirstDayOfWeek;
             return calendar.GetWeekOfYear(date, weekRule, firstDayOfWeek);
         }
+
+        public static string[] ToStringArray(List<object> objectList)
+        {
+            string[] newArray = new string[objectList.Count];
+
+            for (int i = 0; i < objectList.Count; i++)
+            {
+                newArray[i] = objectList[i].ToString();
+            }
+            return newArray;
+        }
+        public static string[] MonthsToStringArray (List<object> objectList)
+        {
+            string[] newArray = new string[objectList.Count];
+
+            for (int i = 0; i < objectList.Count; i++)
+            {
+                string monthString = objectList[i].ToString();
+                int month = int.Parse(monthString);
+                int year = DateTime.Now.Year;
+                
+                var monthDateTime = new DateTime(year,month,1);
+                newArray[i] = monthDateTime.ToString("MMMM");
+            }
+            return newArray;
+        }
     }
 }

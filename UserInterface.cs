@@ -41,24 +41,37 @@ public static class UserInterface
     public static void FilterSessionsMenu()
     {
         string[] menuOptions = { "By week", "By month", "By year", "Go back" };
+
         Header("filters");
+        LockCursorPosition();
         Console.WriteLine("Choose a filter:");
 
-        OptionsPicker.Navigate(menuOptions,Console.GetCursorPosition().Top,true);
+        OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top, true);
     }
 
-    public static void FilterWeeksMenu(string[] yearsList)
+
+    public static void PickYearMiniMenu(string[] yearsList)
     {
-        string[] yearsListOptions = new string[yearsList.Length+1];
+        string[] yearsListOptions = new string[yearsList.Length + 1];
 
-        yearsList.CopyTo(yearsListOptions,0);
-        yearsListOptions[yearsListOptions.Length-1] = "Go back";
-        
-        Header("show sessions by week");
+        yearsList.CopyTo(yearsListOptions, 0);
+        yearsListOptions[^1] = "Go back";
 
+        ConsoleClearLines(GetLockedCursorPosition());
         Console.WriteLine("Choose a year:");
+        OptionsPicker.Navigate(yearsListOptions, Console.GetCursorPosition().Top, true);
+    }
+    public static void PickMonthMiniMenu(string[] monthsList)
+    {
+        string[] monthsListOptions = new string[monthsList.Length + 1];
 
-        OptionsPicker.Navigate(yearsListOptions,Console.GetCursorPosition().Top,true);
+        monthsList.CopyTo(monthsListOptions, 0);
+        monthsListOptions[^1] = "Go back";
+
+        ConsoleClearLines(GetLockedCursorPosition());
+        Console.WriteLine("Choose a month:");
+        OptionsPicker.Navigate(monthsListOptions, Console.GetCursorPosition().Top, true);
+
     }
 
     public static void RecordsAllMenu(List<CodingSession> codingSessionList, TimeSpan averageDuration, TimeSpan totalDuration)
