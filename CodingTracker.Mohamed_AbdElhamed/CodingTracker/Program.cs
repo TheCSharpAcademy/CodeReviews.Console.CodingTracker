@@ -1,9 +1,6 @@
 ﻿using Spectre.Console;
 using CodingTracker;
 using System.Diagnostics;
-using System;
-using System.Globalization;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ConConfig
 {
@@ -93,9 +90,16 @@ namespace ConConfig
         private static void OpenInsertWindow()
         {
             string date = Validations.GetValidatedDate("Please Enter Date in Excat date format (MM/dd/yyyy) : ");
-            string startAt = Validations.GetValidatedTime("Please Enter Time in Excat time format (HH:mm) : ");
-            string endAt = Validations.GetValidatedTime("Please Enter Time in Excat time format (HH:mm) : ");
-            
+            string startAt = Validations.GetValidatedTime("Please Enter Start Time in Excat time format (HH:mm) : ");
+            string endAt = Validations.GetValidatedTime("Please Enter End Time in Excat time format (HH:mm) : ");
+
+            //validate startAt , endAt (start At must be before endAt)
+            while(!Validations.ValidateStartAndEndTime(startAt, endAt))
+            {
+                AnsiConsole.MarkupLine("[red]Start time must be before End time[/]");
+                startAt = Validations.GetValidatedTime("Please Enter Start Time in Excat time format (HH:mm) : ");
+                endAt = Validations.GetValidatedTime("Please Enter End Time in Excat time format (HH:mm) : ");
+            }
             var controller = new CodingSessionController();
             controller.Insert(date , startAt , endAt);
 
@@ -118,6 +122,14 @@ namespace ConConfig
             string date = Validations.GetValidatedDate("Please Enter Date in Excat date format (MM/dd/yyyy) : ");
             string startAt = Validations.GetValidatedTime("Please Enter Time in Excat time format (HH:mm) : ");
             string endAt = Validations.GetValidatedTime("Please Enter Time in Excat time format (HH:mm) : ");
+
+            //validate startAt , endAt (start At must be before endAt)
+            while (!Validations.ValidateStartAndEndTime(startAt, endAt))
+            {
+                AnsiConsole.MarkupLine("[red]Start time must be before End time[/]");
+                startAt = Validations.GetValidatedTime("Please Enter Start Time in Excat time format (HH:mm) : ");
+                endAt = Validations.GetValidatedTime("Please Enter End Time in Excat time format (HH:mm) : ");
+            }
 
             var controller = new CodingSessionController();
 

@@ -1,7 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 using System.Configuration;
 using System.Globalization;
-using System.Reflection.PortableExecutable;
 
 namespace CodingTracker;
 

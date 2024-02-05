@@ -1,6 +1,4 @@
 ﻿using Microsoft.Data.Sqlite;
-using Spectre.Console;
-using SQLitePCL;
 using System.Configuration;
 
 namespace CodingTracker;

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 using Spectre.Console;
 
 namespace CodingTracker
@@ -42,6 +37,14 @@ namespace CodingTracker
                 new TextPrompt<int>(message)
                     .PromptStyle("green")
                     .ValidationErrorMessage("[red]Enter valid integer[/]"));
+        }
+
+        public static bool ValidateStartAndEndTime(string startAt , string endAt)
+        {
+            DateTime start =  DateTime.Parse(startAt);
+            DateTime end =  DateTime.Parse(endAt);
+
+            return start.CompareTo(end) < 0;
         }
     }
 }
