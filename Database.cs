@@ -90,13 +90,13 @@ namespace CodingTracker
                                 {
                                     Id = Convert.ToInt32(reader["Id"]),
 
-                                    StartTime = reader["date_start"] != DBNull.Value ? 
+                                    StartTime = reader["date_start"] != DBNull.Value ?
                                                 DateTime.Parse(reader["date_start"].ToString()) : DateTime.MinValue,
 
-                                    EndTime = reader["date_end"] != DBNull.Value ? 
+                                    EndTime = reader["date_end"] != DBNull.Value ?
                                                 DateTime.Parse(reader["date_end"].ToString()) : DateTime.MinValue,
 
-                                    Duration = reader["duration"] != DBNull.Value ? 
+                                    Duration = reader["duration"] != DBNull.Value ?
                                                 TimeSpan.Parse(reader["duration"].ToString()) : TimeSpan.MinValue,
 
                                     Note = reader["notes"] != DBNull.Value ? reader["notes"].ToString() : ""
@@ -191,9 +191,15 @@ namespace CodingTracker
             ExecuteCommand(commandText);
         }
 
-        public List<CodingSession> GetAll()
+        public List<CodingSession> GetAll(bool orderAsc = true)
         {
-            string commandText = "SELECT * FROM coding_tracker";
+            string order;
+            order = orderAsc ? "ASC" : "DESC";
+
+            string commandText = $@"
+            SELECT * 
+            FROM coding_tracker
+            ORDER BY Id {order}";
             return ReadRowsCommand(commandText);
         }
 
@@ -203,14 +209,18 @@ namespace CodingTracker
             return ReadRowsCommand(commandText)[0];
         }
 
-        public List<CodingSession> GetByWeeks(string year, string month, string week)
+        public List<CodingSession> GetByWeeks(string year, string month, string week, bool orderAsc = true)
         {
+            string order;
+            order = orderAsc ? "ASC" : "DESC";
+
             string commandText = $@"
             SELECT * 
             FROM coding_tracker
             WHERE _year = '{year}'
             AND _month = '{month}'
-            AND _week = '{week}'";
+            AND _week = '{week}'
+            ORDER BY Id {order}";
 
             return ReadRowsCommand(commandText);
         }
@@ -222,7 +232,7 @@ namespace CodingTracker
             FROM coding_tracker";
 
             List<object> yearList = ReadColumnCommand(commandText);
-            
+
             return LogicOperations.ToStringArray(yearList);
 
         }

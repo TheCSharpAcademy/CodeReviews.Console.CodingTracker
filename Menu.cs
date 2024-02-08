@@ -106,19 +106,30 @@ public class ShowAllRecordsMenu : Menu
 
         UserInterface.RecordsAllMenu(codingSessionList, averageDuration, totalDuration);
 
-        switch (OptionsPicker.MenuIndex)
+        while (true)
         {
-            case 0: //Update
-                UserInterface.UpdateMiniMenu();
-                MenuManager.NewMenu(new UpdateMenu(MenuManager, _database, codingSessionList));
-                break;
-            case 1: //Delete
-                UserInterface.DeleteMiniMenu();
-                MenuManager.NewMenu(new DeleteMenu(MenuManager, _database, codingSessionList));
-                break;
-            case 2: //GoBack
-                MenuManager.GoBack();
-                break;
+            switch (OptionsPicker.MenuIndex)
+            {
+                case 0:
+                    codingSessionList = _database.GetAll();
+                    UserInterface.RecordsAllMenu(codingSessionList, averageDuration, totalDuration);
+                    continue;
+                case 1:
+                    codingSessionList = _database.GetAll(false);
+                    UserInterface.RecordsAllMenu(codingSessionList, averageDuration, totalDuration);
+                    continue;
+                case 2: //Update
+                    UserInterface.UpdateMiniMenu();
+                    MenuManager.NewMenu(new UpdateMenu(MenuManager, _database, codingSessionList));
+                    break;
+                case 3: //Delete
+                    UserInterface.DeleteMiniMenu();
+                    MenuManager.NewMenu(new DeleteMenu(MenuManager, _database, codingSessionList));
+                    break;
+                case 4: //GoBack
+                    MenuManager.GoBack();
+                    break;
+            }
         }
     }
 }
@@ -162,20 +173,30 @@ public class WeeksMenu : Menu
 
         UserInterface.FilterByWeeksMenu(codingSessionList, userWeek, userYear, averageDuration, totalDuration);
 
-        switch (OptionsPicker.MenuIndex)
+        while (true)
         {
-            case 0: //Update
-                UserInterface.UpdateMiniMenu();
-                MenuManager.NewMenu(new UpdateMenu(MenuManager, _database, codingSessionList));
-                break;
-            case 1: //Delete
-                UserInterface.DeleteMiniMenu();
-                MenuManager.NewMenu(new DeleteMenu(MenuManager, _database, codingSessionList));
-                break;
-            case 2: //GoBack
-                MenuManager.GoBack();
-                break;
-                //implementovat řazení vzestupně sestupně
+            switch (OptionsPicker.MenuIndex)
+            {
+                case 0: //asc
+                    codingSessionList = _database.GetByWeeks(userYear,userMonth,userWeek);
+                    UserInterface.FilterByWeeksMenu(codingSessionList,userWeek, userYear, averageDuration, totalDuration);
+                    continue;
+                case 1: //desc
+                    codingSessionList = _database.GetByWeeks(userYear,userMonth,userWeek,false);
+                    UserInterface.FilterByWeeksMenu(codingSessionList,userWeek, userYear, averageDuration, totalDuration);
+                    continue;
+                case 2: //Update
+                    UserInterface.UpdateMiniMenu();
+                    MenuManager.NewMenu(new UpdateMenu(MenuManager, _database, codingSessionList));
+                    break;
+                case 3: //Delete
+                    UserInterface.DeleteMiniMenu();
+                    MenuManager.NewMenu(new DeleteMenu(MenuManager, _database, codingSessionList));
+                    break;
+                case 4: //GoBack
+                    MenuManager.GoBack();
+                    break;
+            }
         }
     }
     private string GetUserYear()

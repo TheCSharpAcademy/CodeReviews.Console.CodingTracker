@@ -179,7 +179,7 @@ public static class UserInterface
 
     public static void FilterByWeeksMenu(List<CodingSession> codingSessionList,string userWeek, string userYear, TimeSpan averageDuration, TimeSpan totalDuration)
     {
-        string[] menuOptions = { "Update", "Delete", "Go back" };
+        string[] menuOptions = { "Ascending","Descending","Update", "Delete", "Go back" };
 
 
         Header($"all sessions of the week {userWeek} of {userYear}");
@@ -195,7 +195,7 @@ public static class UserInterface
     }
     public static void RecordsAllMenu(List<CodingSession> codingSessionList, TimeSpan averageDuration, TimeSpan totalDuration)
     {
-        string[] menuOptions = { "Update", "Delete", "Go back" };
+        string[] menuOptions = { "Ascending","Descending","Update", "Delete", "Go back" };
 
         Header("show all sessions");
 
