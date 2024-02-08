@@ -58,13 +58,13 @@ namespace CodingTracker
             }
             return newArray;
         }
-        public static string[] MonthsToStringArray (List<object> objectList)
+        public static string[] MonthsToNamesArray (string[] monthArray)
         {
-            string[] newArray = new string[objectList.Count];
+            string[] newArray = new string[monthArray.Length];
 
-            for (int i = 0; i < objectList.Count; i++)
+            for (int i = 0; i < monthArray.Length; i++)
             {
-                string monthString = objectList[i].ToString();
+                string monthString = monthArray[i];
                 int month = int.Parse(monthString);
                 int year = DateTime.Now.Year;
                 

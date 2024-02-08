@@ -1,4 +1,5 @@
 using System.Data.SQLite;
+using System.Dynamic;
 using System.Linq.Expressions;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.VisualBasic;
@@ -88,9 +89,16 @@ namespace CodingTracker
                                 CodingSession codingSession = new()
                                 {
                                     Id = Convert.ToInt32(reader["Id"]),
-                                    StartTime = reader["date_start"] != DBNull.Value ? DateTime.Parse(reader["date_start"].ToString()) : DateTime.MinValue,
-                                    EndTime = reader["date_end"] != DBNull.Value ? DateTime.Parse(reader["date_end"].ToString()) : DateTime.MinValue,
-                                    Duration = reader["duration"] != DBNull.Value ? TimeSpan.Parse(reader["duration"].ToString()) : TimeSpan.MinValue,
+
+                                    StartTime = reader["date_start"] != DBNull.Value ? 
+                                                DateTime.Parse(reader["date_start"].ToString()) : DateTime.MinValue,
+
+                                    EndTime = reader["date_end"] != DBNull.Value ? 
+                                                DateTime.Parse(reader["date_end"].ToString()) : DateTime.MinValue,
+
+                                    Duration = reader["duration"] != DBNull.Value ? 
+                                                TimeSpan.Parse(reader["duration"].ToString()) : TimeSpan.MinValue,
+
                                     Note = reader["notes"] != DBNull.Value ? reader["notes"].ToString() : ""
                                 };
                                 codingSessionList.Add(codingSession);
@@ -195,6 +203,18 @@ namespace CodingTracker
             return ReadRowsCommand(commandText);
         }
 
+        public List<CodingSession> GetByWeeks(string year, string month, string week)
+        {
+            string commandText = $@"
+            SELECT * 
+            FROM coding_tracker
+            WHERE _year = '{year}'
+            AND _month = '{month}'
+            AND _week = '{week}'";
+
+            return ReadRowsCommand(commandText);
+        }
+
         public string[] GetDistinctYears()
         {
             string commandText = $@"
@@ -211,12 +231,23 @@ namespace CodingTracker
             string commandText = $@"
             SELECT DISTINCT _month
             FROM coding_tracker
-            WHERE _year = {year}";
+            WHERE _year = '{year}'";
 
             List<object> monthList = ReadColumnCommand(commandText);
 
-            return LogicOperations.MonthsToStringArray(monthList);
+            return LogicOperations.ToStringArray(monthList);
+        }
+        public string[] GetDistinctWeeks(string year, string month)
+        {
+            string commandText = $@"
+            SELECT DISTINCT _week
+            FROM coding_tracker
+            WHERE _year = '{year}'
+            AND _month = '{month}'";
+
+            List<object> weekList = ReadColumnCommand(commandText);
+
+            return LogicOperations.ToStringArray(weekList);
         }
     }
-
 }

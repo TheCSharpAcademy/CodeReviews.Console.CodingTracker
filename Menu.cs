@@ -151,20 +151,61 @@ public class WeeksMenu : Menu
 
     public override void Display()
     {
-        string userYear;
-        var yearList = _database.GetDistinctYears();
-        UserInterface.PickYearMiniMenu(yearList);
+        string userYear = GetUserYear();
+        string userMonth = GetUserMonth(userYear);
+        string userWeek = GetUserWeek(userYear, userMonth);
 
-        if (OptionsPicker.MenuIndex == yearList.Length)
-            MenuManager.GoBack();
-        else
+        List<CodingSession> codingSessionList = _database.GetByWeeks(userYear, userMonth, userWeek);
+
+        var averageDuration = LogicOperations.AverageDuration(codingSessionList);
+        var totalDuration = LogicOperations.TotalDuration(codingSessionList);
+
+        UserInterface.FilterByWeeksMenu(codingSessionList,userWeek,userYear,averageDuration,totalDuration);
+
+        switch (OptionsPicker.MenuIndex)
         {
-            userYear = yearList[OptionsPicker.MenuIndex];
-            var monthsList = _database.GetDistinctMonths(userYear);
-            UserInterface.PickMonthMiniMenu(monthsList);//pokračovat, dodělat filtraci, nyní nefunguje Go back z tohodle menu
-
+            case 0: //Update
+                UserInterface.UpdateMiniMenu();
+                MenuManager.NewMenu(new UpdateMenu(MenuManager, _database));
+                break;
+            case 1: //Delete
+                UserInterface.DeleteMiniMenu();
+                MenuManager.NewMenu(new DeleteMenu(MenuManager, _database));
+                break;
+            case 2: //GoBack
+                MenuManager.GoBack();
+                break;
+                //vymyslet jak zajistit aby šly upravit pouze zobrazené sessions
         }
+    }
+    private string GetUserYear()
+    {
+        var yearArray = _database.GetDistinctYears();
+        UserInterface.PickYearMiniMenu(yearArray);
 
+        if (OptionsPicker.MenuIndex == yearArray.Length)
+            MenuManager.GoBack();
+
+        return yearArray[OptionsPicker.MenuIndex];
+    }
+    private string GetUserMonth(string year)
+    {
+        var monthArray = _database.GetDistinctMonths(year);
+        string [] monthNameArray = LogicOperations.MonthsToNamesArray(monthArray);
+        UserInterface.PickMonthMiniMenu(monthNameArray);
+        
+        if (OptionsPicker.MenuIndex == monthArray.Length)
+            MenuManager.GoBack();
+        return monthArray[OptionsPicker.MenuIndex];
+    }
+    private string GetUserWeek(string year, string month)
+    {
+        var weekArray = _database.GetDistinctWeeks(year, month);
+        UserInterface.PickWeekMiniMenu(weekArray);
+
+        if (OptionsPicker.MenuIndex == weekArray.Length)
+            MenuManager.GoBack();
+        return weekArray[OptionsPicker.MenuIndex];
     }
 }
 public class UpdateMenu : SetSessionMenu

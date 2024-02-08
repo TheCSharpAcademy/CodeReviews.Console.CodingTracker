@@ -28,104 +28,6 @@ public static class UserInterface
 
         OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top, true);
     }
-
-    public static void RecordsMenu()
-    {
-        string[] menuOptions = { "Show all", "Filters", "Go back" };
-
-        Header("show sessions");
-
-        OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top, true);
-    }
-
-    public static void FilterSessionsMenu()
-    {
-        string[] menuOptions = { "By week", "By month", "By year", "Go back" };
-
-        Header("filters");
-        LockCursorPosition();
-        Console.WriteLine("Choose a filter:");
-
-        OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top, true);
-    }
-
-
-    public static void PickYearMiniMenu(string[] yearsList)
-    {
-        string[] yearsListOptions = new string[yearsList.Length + 1];
-
-        yearsList.CopyTo(yearsListOptions, 0);
-        yearsListOptions[^1] = "Go back";
-
-        ConsoleClearLines(GetLockedCursorPosition());
-        Console.WriteLine("Choose a year:");
-        OptionsPicker.Navigate(yearsListOptions, Console.GetCursorPosition().Top, true);
-    }
-    public static void PickMonthMiniMenu(string[] monthsList)
-    {
-        string[] monthsListOptions = new string[monthsList.Length + 1];
-
-        monthsList.CopyTo(monthsListOptions, 0);
-        monthsListOptions[^1] = "Go back";
-
-        ConsoleClearLines(GetLockedCursorPosition());
-        Console.WriteLine("Choose a month:");
-        OptionsPicker.Navigate(monthsListOptions, Console.GetCursorPosition().Top, true);
-
-    }
-
-    public static void RecordsAllMenu(List<CodingSession> codingSessionList, TimeSpan averageDuration, TimeSpan totalDuration)
-    {
-        string[] menuOptions = { "Update", "Delete", "Go back" };
-
-        Header("show all sessions");
-
-        DisplayTable(codingSessionList);
-
-        Console.WriteLine($"Average duration: {averageDuration:hh\\:mm\\:ss}");
-        Console.WriteLine($"Total duration: {totalDuration}");
-        Console.WriteLine();
-        LockCursorPosition();
-
-        OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top, true);
-    }
-    public static void UpdateMiniMenu()
-    {
-        ConsoleClearLines(Console.GetCursorPosition().Top);
-        Console.WriteLine("Type ID of a session you want to update: ");
-    }
-    public static void DeleteMiniMenu()
-    {
-        ConsoleClearLines(GetLockedCursorPosition());
-        Console.WriteLine("Type ID of a session you want to delete: ");
-    }
-    public static void UpdateMenu(List<CodingSession> codingSessions)
-    {
-
-        Header($"update a record of id {codingSessions[0].Id}");
-        DisplayTable(codingSessions);
-        LockCursorPosition();
-    }
-    public static void DeleteMenu(List<CodingSession> codingSessions)
-    {
-        string[] menuOptions = { "No", "Yes" };
-
-        Header($"delete a session of id {codingSessions[0].Id}");
-        DisplayTable(codingSessions);
-        LockCursorPosition();
-        Console.WriteLine("\n Do you really want to delete this session?");
-        OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top, false);
-    }
-
-    public static void GoalsMenu()
-    {
-        string[] menuOptions = { "Set a Goal", "Show Goals", "Go back" };
-
-        Header("goals");
-
-        OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top, true);
-    }
-
     public static void SetSessionTime(bool isStart, bool isUpdate = false)
     {
 
@@ -190,6 +92,12 @@ public static class UserInterface
 
         OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top, true);
     }
+    public static void SessionNote(bool isUpdate = false)
+    {
+        string enterMessage = isUpdate ? "as original" : "blank";
+        ConsoleClearLines(GetLockedCursorPosition());
+        Console.WriteLine($"Enter a note (Press Enter to leave {enterMessage})): ");
+    }
 
     public static void AutoSessionConfirm(DateTime startDateTime, DateTime endDateTime, TimeSpan duration, TimeSpan totalBreaks)
     {
@@ -212,27 +120,129 @@ public static class UserInterface
         OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top, true);
     }
 
-
-    public static void SessionNote(bool isUpdate = false)
+    public static void SessionInProgress()
     {
-        string enterMessage = isUpdate ? "as original" : "blank";
-        ConsoleClearLines(GetLockedCursorPosition());
-        Console.WriteLine($"Enter a note (Press Enter to leave {enterMessage})): ");
+        Header("session in progress");
     }
 
-    public static void ManualSessionMenu()
+    public static void RecordsMenu()
     {
-        string[] menuOptions = { "START", "Go back" };
+        string[] menuOptions = { "Show all", "Filters", "Go back" };
 
-        Header("new coding session");
+        Header("show sessions");
+
+        OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top, true);
+    }
+    public static void FilterSessionsMenu()
+    {
+        string[] menuOptions = { "By week", "By month", "By year", "Go back" };
+
+        Header("filters");
+        LockCursorPosition();
+        Console.WriteLine("Choose a filter:");
+
+        OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top, true);
+    }
+    public static void PickYearMiniMenu(string[] yearList)
+    {
+        string[] yearsListOptions = new string[yearList.Length + 1];
+
+        yearList.CopyTo(yearsListOptions, 0);
+        yearsListOptions[^1] = "Go back";
+
+        ConsoleClearLines(GetLockedCursorPosition());
+        Console.WriteLine("Choose a year:");
+        OptionsPicker.Navigate(yearsListOptions, Console.GetCursorPosition().Top, true);
+    }
+    public static void PickMonthMiniMenu(string[] monthList)
+    {
+        string[] monthsListOptions = new string[monthList.Length + 1];
+
+        monthList.CopyTo(monthsListOptions, 0);
+        monthsListOptions[^1] = "Go back";
+
+        ConsoleClearLines(GetLockedCursorPosition());
+        Console.WriteLine("Choose a month:");
+        OptionsPicker.Navigate(monthsListOptions, Console.GetCursorPosition().Top, true);
+    }
+    public static void PickWeekMiniMenu(string[] weekList)
+    {
+        string[] monthsListOptions = new string[weekList.Length + 1];
+
+        weekList.CopyTo(monthsListOptions, 0);
+        monthsListOptions[^1] = "Go back";
+
+        ConsoleClearLines(GetLockedCursorPosition());
+        Console.WriteLine("Choose a week:");
+        OptionsPicker.Navigate(monthsListOptions, Console.GetCursorPosition().Top, true);
+    }
+
+    public static void FilterByWeeksMenu(List<CodingSession> codingSessionList,string userWeek, string userYear, TimeSpan averageDuration, TimeSpan totalDuration)
+    {
+        string[] menuOptions = { "Update", "Delete", "Go back" };
+
+
+        Header($"all sessions of the week {userWeek} of {userYear}");
+
+        DisplayTable(codingSessionList);
+
+        Console.WriteLine($"Average duration: {averageDuration:hh\\:mm\\:ss}");
+        Console.WriteLine($"Total duration: {totalDuration}");
+        Console.WriteLine();
         LockCursorPosition();
 
         OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top, true);
     }
-
-    public static void SessionInProgress()
+    public static void RecordsAllMenu(List<CodingSession> codingSessionList, TimeSpan averageDuration, TimeSpan totalDuration)
     {
-        Header("session in progress");
+        string[] menuOptions = { "Update", "Delete", "Go back" };
+
+        Header("show all sessions");
+
+        DisplayTable(codingSessionList);
+
+        Console.WriteLine($"Average duration: {averageDuration:hh\\:mm\\:ss}");
+        Console.WriteLine($"Total duration: {totalDuration}");
+        Console.WriteLine();
+        LockCursorPosition();
+
+        OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top, true);
+    }
+    public static void UpdateMenu(List<CodingSession> codingSessions)
+    {
+
+        Header($"update a record of id {codingSessions[0].Id}");
+        DisplayTable(codingSessions);
+        LockCursorPosition();
+    }
+    public static void UpdateMiniMenu()
+    {
+        ConsoleClearLines(Console.GetCursorPosition().Top);
+        Console.WriteLine("Type ID of a session you want to update: ");
+    }
+    public static void DeleteMenu(List<CodingSession> codingSessions)
+    {
+        string[] menuOptions = { "No", "Yes" };
+
+        Header($"delete a session of id {codingSessions[0].Id}");
+        DisplayTable(codingSessions);
+        LockCursorPosition();
+        Console.WriteLine("\n Do you really want to delete this session?");
+        OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top, false);
+    }
+    public static void DeleteMiniMenu()
+    {
+        ConsoleClearLines(GetLockedCursorPosition());
+        Console.WriteLine("Type ID of a session you want to delete: ");
+    }
+
+    public static void GoalsMenu()
+    {
+        string[] menuOptions = { "Set a Goal", "Show Goals", "Go back" };
+
+        Header("goals");
+
+        OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top, true);
     }
 
 
@@ -263,7 +273,6 @@ public static class UserInterface
         }
         Console.SetCursorPosition(0, Console.GetCursorPosition().Top);
     }
-
     private static void DisplayTable(List<CodingSession> list)
     {
         var table = new Table();
@@ -282,15 +291,10 @@ public static class UserInterface
         }
 
         AnsiConsole.Write(table);
-
     }
-
     private static void LockCursorPosition()
     {
         _currentCursorTopPosition = Console.GetCursorPosition().Top;
     }
     private static int GetLockedCursorPosition() => _currentCursorTopPosition;
-
 }
-
-
