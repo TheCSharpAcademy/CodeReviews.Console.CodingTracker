@@ -208,10 +208,10 @@ public static class UserInterface
 
         OptionsPicker.Navigate(menuOptions, Console.GetCursorPosition().Top, true);
     }
-    public static void UpdateMenu(List<CodingSession> codingSessions)
+    public static void UpdateMenu(CodingSession codingSessions)
     {
 
-        Header($"update a record of id {codingSessions[0].Id}");
+        Header($"update a record of id {codingSessions.Id}");
         DisplayTable(codingSessions);
         LockCursorPosition();
     }
@@ -220,11 +220,11 @@ public static class UserInterface
         ConsoleClearLines(Console.GetCursorPosition().Top);
         Console.WriteLine("Type ID of a session you want to update: ");
     }
-    public static void DeleteMenu(List<CodingSession> codingSessions)
+    public static void DeleteMenu(CodingSession codingSessions)
     {
         string[] menuOptions = { "No", "Yes" };
 
-        Header($"delete a session of id {codingSessions[0].Id}");
+        Header($"delete a session of id {codingSessions.Id}");
         DisplayTable(codingSessions);
         LockCursorPosition();
         Console.WriteLine("\n Do you really want to delete this session?");
@@ -289,6 +289,22 @@ public static class UserInterface
             codingSession.Duration.ToString(),
             codingSession.Note);
         }
+
+        AnsiConsole.Write(table);
+    }
+    private static void DisplayTable(CodingSession codingSession)
+    {
+        var table = new Table();
+        table.Border(TableBorder.Heavy);
+
+        table.AddColumns("ID", "[green]START[/]", "[red]END[/]", "[yellow]DURATION[/]", "NOTE");
+
+            table.AddRow(
+            codingSession.Id.ToString(),
+            codingSession.StartTime.ToString("HH:mm:ss MM/dd/yyyy"),
+            codingSession.EndTime.ToString("HH:mm:ss MM/dd/yyyy"),
+            codingSession.Duration.ToString(),
+            codingSession.Note);
 
         AnsiConsole.Write(table);
     }

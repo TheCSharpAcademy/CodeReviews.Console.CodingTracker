@@ -197,10 +197,10 @@ namespace CodingTracker
             return ReadRowsCommand(commandText);
         }
 
-        public List<CodingSession> GetByIndex(int index)
+        public CodingSession GetByIndex(int index)
         {
             string commandText = $"SELECT * FROM coding_tracker WHERE Id = {index}";
-            return ReadRowsCommand(commandText);
+            return ReadRowsCommand(commandText)[0];
         }
 
         public List<CodingSession> GetByWeeks(string year, string month, string week)

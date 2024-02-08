@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -62,20 +63,25 @@ namespace CodingTracker
             } while (true);
         }
 
-        public static List<CodingSession> IdInput(MenuManager menuManager, Database database)
+        public static CodingSession IdInput(MenuManager menuManager, Database database, List<CodingSession> codingSessionList)
         {
             _priorError = false;
+            bool idFound = false;
             do
             {
                 string userInput = InputWithSpecialKeys(menuManager, true);
 
                 if (int.TryParse(userInput, out int resultId))
                 {
-                    var codingSession = database.GetByIndex(resultId);
-
-                    if (codingSession.Any())
-                        return codingSession;
-                    else
+                    foreach (var session in codingSessionList)
+                    {
+                        if (session.Id == resultId)
+                        {
+                            idFound = true;
+                            return database.GetByIndex(resultId);
+                        }
+                    }
+                    if (!idFound)
                         HandleInputError($"ID '{resultId}' not found, enter a valid ID number:");
                 }
                 else

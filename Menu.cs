@@ -110,11 +110,11 @@ public class ShowAllRecordsMenu : Menu
         {
             case 0: //Update
                 UserInterface.UpdateMiniMenu();
-                MenuManager.NewMenu(new UpdateMenu(MenuManager, _database));
+                MenuManager.NewMenu(new UpdateMenu(MenuManager, _database, codingSessionList));
                 break;
             case 1: //Delete
                 UserInterface.DeleteMiniMenu();
-                MenuManager.NewMenu(new DeleteMenu(MenuManager, _database));
+                MenuManager.NewMenu(new DeleteMenu(MenuManager, _database, codingSessionList));
                 break;
             case 2: //GoBack
                 MenuManager.GoBack();
@@ -160,22 +160,22 @@ public class WeeksMenu : Menu
         var averageDuration = LogicOperations.AverageDuration(codingSessionList);
         var totalDuration = LogicOperations.TotalDuration(codingSessionList);
 
-        UserInterface.FilterByWeeksMenu(codingSessionList,userWeek,userYear,averageDuration,totalDuration);
+        UserInterface.FilterByWeeksMenu(codingSessionList, userWeek, userYear, averageDuration, totalDuration);
 
         switch (OptionsPicker.MenuIndex)
         {
             case 0: //Update
                 UserInterface.UpdateMiniMenu();
-                MenuManager.NewMenu(new UpdateMenu(MenuManager, _database));
+                MenuManager.NewMenu(new UpdateMenu(MenuManager, _database, codingSessionList));
                 break;
             case 1: //Delete
                 UserInterface.DeleteMiniMenu();
-                MenuManager.NewMenu(new DeleteMenu(MenuManager, _database));
+                MenuManager.NewMenu(new DeleteMenu(MenuManager, _database, codingSessionList));
                 break;
             case 2: //GoBack
                 MenuManager.GoBack();
                 break;
-                //vymyslet jak zajistit aby šly upravit pouze zobrazené sessions
+                //implementovat řazení vzestupně sestupně
         }
     }
     private string GetUserYear()
@@ -191,9 +191,9 @@ public class WeeksMenu : Menu
     private string GetUserMonth(string year)
     {
         var monthArray = _database.GetDistinctMonths(year);
-        string [] monthNameArray = LogicOperations.MonthsToNamesArray(monthArray);
+        string[] monthNameArray = LogicOperations.MonthsToNamesArray(monthArray);
         UserInterface.PickMonthMiniMenu(monthNameArray);
-        
+
         if (OptionsPicker.MenuIndex == monthArray.Length)
             MenuManager.GoBack();
         return monthArray[OptionsPicker.MenuIndex];
@@ -210,10 +210,12 @@ public class WeeksMenu : Menu
 }
 public class UpdateMenu : SetSessionMenu
 {
-    public UpdateMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
+    private List<CodingSession> _codingSessionList;
+
+    public UpdateMenu(MenuManager menuManager, Database database, List<CodingSession> codingSessionList) : base(menuManager, database) { _codingSessionList = codingSessionList; }
     public override void Display()
     {
-        var codingSession = UserInput.IdInput(MenuManager, _database);
+        var codingSession = UserInput.IdInput(MenuManager, _database, _codingSessionList);
         UserInterface.UpdateMenu(codingSession);
 
         bool menuContinue = true;
@@ -245,7 +247,7 @@ public class UpdateMenu : SetSessionMenu
                     int monthNumber = Convert.ToInt32(_startDateTime.ToString("MM"));
                     int weekNumber = LogicOperations.GetWeekNumber(_startDateTime);
 
-                    _database.Update(codingSession[0].Id, sessionNote, _startDateTime.ToString("yyyy-MM-dd HH:mm:ss"), _endDateTime.ToString("yyyy-MM-dd HH:mm:ss"),
+                    _database.Update(codingSession.Id, sessionNote, _startDateTime.ToString("yyyy-MM-dd HH:mm:ss"), _endDateTime.ToString("yyyy-MM-dd HH:mm:ss"),
                     $"{duration:hh\\:mm\\:ss}", yearNumber, monthNumber, weekNumber);
 
                     UserInput.DisplayMessage("Session updated!", "return to Main Menu");
@@ -261,28 +263,28 @@ public class UpdateMenu : SetSessionMenu
             }
         }
     }
-    public void UpdateDateTime(List<CodingSession> codingSession)
+    public void UpdateDateTime(CodingSession codingSession)
     {
         bool update = true;
 
         UserInterface.SetSessionTime(true, update);
         _startTimeInput = UserInput.TimeInput(MenuManager, true);
-        if (_startTimeInput == "_noInput_") _startTimeInput = codingSession[0].StartTime.ToString("HH:mm");
+        if (_startTimeInput == "_noInput_") _startTimeInput = codingSession.StartTime.ToString("HH:mm");
 
 
         UserInterface.SetSessionTime(false, update);
         _endTimeInput = UserInput.TimeInput(MenuManager, true);
-        if (_endTimeInput == "_noInput_") _endTimeInput = codingSession[0].EndTime.ToString("HH:mm");
+        if (_endTimeInput == "_noInput_") _endTimeInput = codingSession.EndTime.ToString("HH:mm");
 
 
         UserInterface.SetSessionDate(true, update);
         _startDateInput = UserInput.DateInput(MenuManager, true);
-        if (_startDateInput == "_noInput_") _startDateInput = codingSession[0].StartTime.ToString("yyyy-MM-dd");
+        if (_startDateInput == "_noInput_") _startDateInput = codingSession.StartTime.ToString("yyyy-MM-dd");
 
 
         UserInterface.SetSessionDate(false, update);
         _endDateInput = UserInput.DateInput(MenuManager, true);
-        if (_endDateInput == "_noInput_") _endDateInput = codingSession[0].EndTime.ToString("yyyy-MM-dd");
+        if (_endDateInput == "_noInput_") _endDateInput = codingSession.EndTime.ToString("yyyy-MM-dd");
 
         _startDateTime = LogicOperations.ConstructDateTime(_startTimeInput, _startDateInput);
         _endDateTime = LogicOperations.ConstructDateTime(_endTimeInput, _endDateInput);
@@ -290,14 +292,15 @@ public class UpdateMenu : SetSessionMenu
 }
 public class DeleteMenu : Menu
 {
-    public DeleteMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
+    private List<CodingSession> _codingSessionList;
+    public DeleteMenu(MenuManager menuManager, Database database, List<CodingSession> codingSessionList) : base(menuManager, database) { _codingSessionList = codingSessionList; }
     public override void Display()
     {
-        var codingSession = UserInput.IdInput(MenuManager, _database);
+        var codingSession = UserInput.IdInput(MenuManager, _database, _codingSessionList);
         UserInterface.DeleteMenu(codingSession);
         if (OptionsPicker.MenuIndex == 1)
         {
-            _database.Delete(codingSession[0].Id);
+            _database.Delete(codingSession.Id);
             UserInput.DisplayMessage("Session deleted!", "return to Main Menu");
             MenuManager.ReturnToMainMenu();
         }
@@ -305,8 +308,6 @@ public class DeleteMenu : Menu
         {
             MenuManager.GoBack();
         }
-
-
     }
 }
 
