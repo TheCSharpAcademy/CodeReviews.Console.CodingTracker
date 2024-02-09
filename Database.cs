@@ -1,17 +1,11 @@
 using System.Data.SQLite;
-using System.Dynamic;
-using System.Linq.Expressions;
-using System.Security.Cryptography.X509Certificates;
-using Microsoft.VisualBasic;
-using Spectre.Console;
-
 
 namespace CodingTracker
 {
     public class Database
     {
-        private string _connectionString;
-        private string _fileName;
+        protected string _connectionString;
+        protected string _fileName;
         public Database(string connectionString, string fileName)
         {
             _connectionString = connectionString;
@@ -52,6 +46,7 @@ namespace CodingTracker
                 }
             }
         }
+
 
         private void ExecuteCommand(string commandText)
         {
@@ -126,7 +121,7 @@ namespace CodingTracker
                 return codingSessionList;
             }
         }
-        private List<object> ReadColumnCommand(string commandText)
+        protected List<object> ReadColumnCommand(string commandText)
         {
             var columnValuesList = new List<object>();
             try
@@ -167,7 +162,7 @@ namespace CodingTracker
             }
         }
 
-        public void Insert(string notes, string dateStart, string dateEnd, string duration, int year, int month, int week)
+        public virtual void Insert(string notes, string dateStart, string dateEnd, string duration, int year, int month, int week)
         {
             string commandText = @$"
             INSERT INTO coding_tracker (notes, date_start, date_end, duration, _year, _month, _week) 
@@ -220,6 +215,33 @@ namespace CodingTracker
             WHERE _year = '{year}'
             AND _month = '{month}'
             AND _week = '{week}'
+            ORDER BY Id {order}";
+
+            return ReadRowsCommand(commandText);
+        }
+        public List<CodingSession> GetByMonths(string year, string month, bool orderAsc = true)
+        {
+            string order;
+            order = orderAsc ? "ASC" : "DESC";
+
+            string commandText = $@"
+            SELECT * 
+            FROM coding_tracker
+            WHERE _year = '{year}'
+            AND _month = '{month}'
+            ORDER BY Id {order}";
+
+            return ReadRowsCommand(commandText);
+        }
+        public List<CodingSession> GetByYears(string year, bool orderAsc = true)
+        {
+            string order;
+            order = orderAsc ? "ASC" : "DESC";
+
+            string commandText = $@"
+            SELECT * 
+            FROM coding_tracker
+            WHERE _year = '{year}'
             ORDER BY Id {order}";
 
             return ReadRowsCommand(commandText);

@@ -16,10 +16,11 @@ public static class OptionsPicker
     private static int longestStringLength = 0;
     private static int higlightBoxWidth = 0;
 
-    public static void Navigate(string[] menuOptions, int headerHeight, bool escapeOption)
+    public static void Navigate(string[] menuOptions, bool escapeOption)
     {
         bool enterPressed = false;
         bool onlyOneOption = menuOptions.Length == 0;
+        int headerHeight = Console.GetCursorPosition().Top;
         lastMenuIndex = 0;
         MenuIndex = 0;
         lastIndex = headerHeight; //important when only single-option menu

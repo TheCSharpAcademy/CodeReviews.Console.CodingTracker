@@ -1,13 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Globalization;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Runtime.CompilerServices;
-using System.Runtime.Intrinsics.Arm;
-using System.Threading;
-using Spectre.Console;
 
 namespace CodingTracker;
 
@@ -16,7 +6,6 @@ public abstract class Menu
 
     protected MenuManager MenuManager { get; }
     protected Database _database;
-
     protected Menu(MenuManager menuManager, Database database)
     {
         _database = database;
@@ -147,8 +136,10 @@ public class ShowFiltersMenu : Menu
                 MenuManager.NewMenu(new WeeksMenu(MenuManager, _database));
                 break;
             case 1:
+                MenuManager.NewMenu(new MonthsMenu(MenuManager, _database));
                 break;
             case 2:
+                MenuManager.NewMenu(new YearsMenu(MenuManager, _database));
                 break;
             case 3:
                 MenuManager.GoBack();
@@ -159,7 +150,6 @@ public class ShowFiltersMenu : Menu
 public class WeeksMenu : Menu
 {
     public WeeksMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
-
     public override void Display()
     {
         string userYear = GetUserYear();
@@ -171,19 +161,19 @@ public class WeeksMenu : Menu
         var averageDuration = LogicOperations.AverageDuration(codingSessionList);
         var totalDuration = LogicOperations.TotalDuration(codingSessionList);
 
-        UserInterface.FilterByWeeksMenu(codingSessionList, userWeek, userYear, averageDuration, totalDuration);
+        UserInterface.FilterByWeeksMenu(codingSessionList, userYear, userWeek, averageDuration, totalDuration);
 
         while (true)
         {
             switch (OptionsPicker.MenuIndex)
             {
                 case 0: //asc
-                    codingSessionList = _database.GetByWeeks(userYear,userMonth,userWeek);
-                    UserInterface.FilterByWeeksMenu(codingSessionList,userWeek, userYear, averageDuration, totalDuration);
+                    codingSessionList = _database.GetByWeeks(userYear, userMonth, userWeek);
+                    UserInterface.FilterByWeeksMenu(codingSessionList, userWeek, userYear, averageDuration, totalDuration);
                     continue;
                 case 1: //desc
-                    codingSessionList = _database.GetByWeeks(userYear,userMonth,userWeek,false);
-                    UserInterface.FilterByWeeksMenu(codingSessionList,userWeek, userYear, averageDuration, totalDuration);
+                    codingSessionList = _database.GetByWeeks(userYear, userMonth, userWeek, false);
+                    UserInterface.FilterByWeeksMenu(codingSessionList, userWeek, userYear, averageDuration, totalDuration);
                     continue;
                 case 2: //Update
                     UserInterface.UpdateMiniMenu();
@@ -199,7 +189,7 @@ public class WeeksMenu : Menu
             }
         }
     }
-    private string GetUserYear()
+    protected string GetUserYear()
     {
         var yearArray = _database.GetDistinctYears();
         UserInterface.PickYearMiniMenu(yearArray);
@@ -209,7 +199,7 @@ public class WeeksMenu : Menu
 
         return yearArray[OptionsPicker.MenuIndex];
     }
-    private string GetUserMonth(string year)
+    protected string GetUserMonth(string year)
     {
         var monthArray = _database.GetDistinctMonths(year);
         string[] monthNameArray = LogicOperations.MonthsToNamesArray(monthArray);
@@ -227,6 +217,89 @@ public class WeeksMenu : Menu
         if (OptionsPicker.MenuIndex == weekArray.Length)
             MenuManager.GoBack();
         return weekArray[OptionsPicker.MenuIndex];
+    }
+}
+public class MonthsMenu : WeeksMenu
+{
+    public MonthsMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
+    public override void Display()
+    {
+        string userYear = GetUserYear();
+        string userMonth = GetUserMonth(userYear);
+
+        List<CodingSession> codingSessionList = _database.GetByMonths(userYear, userMonth);
+
+        var averageDuration = LogicOperations.AverageDuration(codingSessionList);
+        var totalDuration = LogicOperations.TotalDuration(codingSessionList);
+
+        UserInterface.FilterByMonthsMenu(codingSessionList, userYear, userMonth, averageDuration, totalDuration);
+
+        while (true)
+        {
+            switch (OptionsPicker.MenuIndex)
+            {
+                case 0: //asc
+                    codingSessionList = _database.GetByMonths(userYear, userMonth);
+                    UserInterface.FilterByMonthsMenu(codingSessionList, userYear, userMonth, averageDuration, totalDuration);
+                    continue;
+                case 1: //desc
+                    codingSessionList = _database.GetByMonths(userYear, userMonth, false);
+                    UserInterface.FilterByMonthsMenu(codingSessionList, userYear, userMonth, averageDuration, totalDuration);
+                    continue;
+                case 2: //Update
+                    UserInterface.UpdateMiniMenu();
+                    MenuManager.NewMenu(new UpdateMenu(MenuManager, _database, codingSessionList));
+                    break;
+                case 3: //Delete
+                    UserInterface.DeleteMiniMenu();
+                    MenuManager.NewMenu(new DeleteMenu(MenuManager, _database, codingSessionList));
+                    break;
+                case 4: //GoBack
+                    MenuManager.GoBack();
+                    break;
+            }
+        }
+    }
+}
+public class YearsMenu : WeeksMenu
+{
+    public YearsMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
+    public override void Display()
+    {
+        string userYear = GetUserYear();
+
+        List<CodingSession> codingSessionList = _database.GetByYears(userYear);
+
+        var averageDuration = LogicOperations.AverageDuration(codingSessionList);
+        var totalDuration = LogicOperations.TotalDuration(codingSessionList);
+
+        UserInterface.FilterByYearsMenu(codingSessionList, userYear, averageDuration, totalDuration);
+
+        while (true)
+        {
+            switch (OptionsPicker.MenuIndex)
+            {
+                case 0: //asc
+                    codingSessionList = _database.GetByYears(userYear);
+                    UserInterface.FilterByYearsMenu(codingSessionList, userYear, averageDuration, totalDuration);
+                    continue;
+                case 1: //desc
+                    codingSessionList = _database.GetByYears(userYear, false);
+                    UserInterface.FilterByYearsMenu(codingSessionList, userYear, averageDuration, totalDuration);
+                    continue;
+                case 2: //Update
+                    UserInterface.UpdateMiniMenu();
+                    MenuManager.NewMenu(new UpdateMenu(MenuManager, _database, codingSessionList));
+                    break;
+                case 3: //Delete
+                    UserInterface.DeleteMiniMenu();
+                    MenuManager.NewMenu(new DeleteMenu(MenuManager, _database, codingSessionList));
+                    break;
+                case 4: //GoBack
+                    MenuManager.GoBack();
+                    break;
+            }
+        }
     }
 }
 public class UpdateMenu : SetSessionMenu
@@ -341,10 +414,35 @@ public class GoalsMenu : Menu
 
         switch (OptionsPicker.MenuIndex)
         {
+            case 0:
+                MenuManager.NewMenu(new SetGoalMenu(MenuManager, _database));
+                break;
+            case 1:
+                break;
             case 2:
                 MenuManager.GoBack();
                 break;
         }
+    }
+}
+public class SetGoalMenu : Menu
+{
+    public SetGoalMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
+    public override void Display()
+    {
+        UserInterface.SetGoalMenu();
+
+        UserInterface.SetGoalTime();
+        string timeInput = UserInput.TimeInput(MenuManager, false);
+
+        UserInterface.SetGoalDate();
+        string dateInput = UserInput.DateInput(MenuManager, false);
+
+        TimeSpan goalTime = TimeSpan.Parse(timeInput);
+        DateTime untilDate = DateTime.Parse(dateInput);
+
+        Goal newGoal = new(goalTime, untilDate);
+        newGoal.SaveToDatabase();
     }
 }
 public class SetSessionMenu : Menu
@@ -390,6 +488,7 @@ public class SetSessionMenu : Menu
                     int weekNumber = LogicOperations.GetWeekNumber(_startDateTime);
 
                     _database.Insert(sessionNote, _startDateTime.ToString("yyyy-MM-dd HH:mm:ss"), _endDateTime.ToString("yyyy-MM-dd HH:mm:ss"), $"{duration:hh\\:mm\\:ss}", yearNumber, monthNumber, weekNumber);
+                    Goal.UpdateGoals(duration);
 
                     UserInput.DisplayMessage("Session saved!", "return to Main Menu");
 
@@ -460,6 +559,8 @@ public class AutoSessionMenu : Menu
                     int weekNumber = LogicOperations.GetWeekNumber(startDateTime);
 
                     _database.Insert(sessionNote, startDateTime.ToString("yyyy-MM-dd HH:mm:ss"), endDateTime.ToString("yyyy-MM-dd HH:mm:ss"), $"{duration:hh\\:mm\\:ss}", yearNumber, monthNumber, weekNumber);
+                    
+                    Goal.UpdateGoals(duration);
 
                     MenuManager.ReturnToMainMenu();
                     break;
@@ -486,11 +587,11 @@ public class AutoSessionMenu : Menu
         while (sessionContinue)
         {
             Console.SetCursorPosition(0, 4);
-            OptionsPicker.Navigate(inProgressOption, Console.GetCursorPosition().Top, false);
+            OptionsPicker.Navigate(inProgressOption, false);
 
             stopwatch.Pause();
             Console.SetCursorPosition(0, 4);
-            OptionsPicker.Navigate(pausedOptions, Console.GetCursorPosition().Top, true);
+            OptionsPicker.Navigate(pausedOptions, true);
 
             if (OptionsPicker.MenuIndex == 0)
             {

@@ -9,6 +9,8 @@ public class MenuManager
 {
     private readonly Stack<Menu> _menuStack = new Stack<Menu>();
     private Database _database;
+    private GoalsDatabase _goalsDatabase;
+
 
 
     public MenuManager(Database database)
