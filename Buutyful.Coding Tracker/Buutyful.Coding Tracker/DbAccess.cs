@@ -58,17 +58,7 @@ public class DbAccess
                 {
                     try
                     {
-                        Guid id = reader.GetGuid(reader.GetOrdinal("Guid"));
-
-                        //DateTime startAt = DateTime.ParseExact(
-                        // reader.GetString(reader.GetOrdinal("StartAt")),
-                        // "dd/MM/yyyy HH:mm:ss",
-                        // CultureInfo.InvariantCulture);
-
-                        //DateTime endAt = DateTime.ParseExact(
-                        //    reader.GetString(reader.GetOrdinal("EndAt")),
-                        //    "dd/MM/yyyy HH:mm:ss",
-                        //    CultureInfo.InvariantCulture);
+                        Guid id = reader.GetGuid(reader.GetOrdinal("Guid"));                     
 
 
                         string durationString = reader.GetString(reader.GetOrdinal("Duration"));
