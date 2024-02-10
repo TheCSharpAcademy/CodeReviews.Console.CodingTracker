@@ -47,7 +47,11 @@ public class CreateState(StateManager manager) : IState
                 AnsiConsole.MarkupLine("[yellow]Wrong date time format[/]");
                 continue;
             }
-
+            if (start > end)
+            {
+                AnsiConsole.MarkupLine("[yellow]Start was greater than End[/]");
+                continue;
+            }
             toBeSelected = false;
             _stateManager.DbContext.Create(CodingSession.Create(start, end));
             count++;

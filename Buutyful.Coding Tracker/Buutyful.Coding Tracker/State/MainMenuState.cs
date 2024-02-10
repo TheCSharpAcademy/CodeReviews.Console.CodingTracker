@@ -10,14 +10,15 @@ public class MainMenuState(StateManager stateManager) : IState
 
     public ICommand GetCommand()
     {
-        var command = Console.ReadLine()?.ToLower();
+        var command = DisplayOptions().ToLower();
         return MenuSelector(command);
     }
 
     public void Render()
     {
         AnsiConsole.MarkupLine("Track your habits. " +
-            "Select [yellow][[info]][/] for navigation help");
+            "Select [yellow][[info]][/] for navigation help\n");
+
     }
     private ICommand MenuSelector(string? command)
     {
@@ -32,7 +33,17 @@ public class MainMenuState(StateManager stateManager) : IState
             "forward" => new SwitchStateCommand(_manager, _manager.FutureState()),
             "clear" => new ClearCommand(),
             "quit" => new QuitCommand(),
-            _ => new InvalidCommand(command),
+            "menu" => new InvalidCommand(command, "You are already in the main menu"),
+            _ => new InvalidCommand(command, "Please select [info] for navigation help"),
         };
     }
+    private static string DisplayOptions() =>
+      AnsiConsole.Prompt(
+      new SelectionPrompt<string>()
+      .Title("Select command:")
+      .PageSize(10)
+      .MoreChoicesText("[grey]===================[/]")
+      .AddChoices(Enum.GetValues(typeof(Commands))
+      .Cast<Commands>()
+      .Select(o => o.ToString())));
 }
