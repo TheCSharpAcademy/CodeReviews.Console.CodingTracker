@@ -60,20 +60,22 @@ public class DbAccess
                     {
                         Guid id = reader.GetGuid(reader.GetOrdinal("Guid"));
 
-                        DateTime startAt = DateTime.ParseExact(
-                         reader.GetString(reader.GetOrdinal("StartAt")),
-                         "dd/MM/yyyy HH:mm:ss",
-                         CultureInfo.InvariantCulture);
+                        //DateTime startAt = DateTime.ParseExact(
+                        // reader.GetString(reader.GetOrdinal("StartAt")),
+                        // "dd/MM/yyyy HH:mm:ss",
+                        // CultureInfo.InvariantCulture);
 
-                        DateTime endAt = DateTime.ParseExact(
-                            reader.GetString(reader.GetOrdinal("EndAt")),
-                            "dd/MM/yyyy HH:mm:ss",
-                            CultureInfo.InvariantCulture);
+                        //DateTime endAt = DateTime.ParseExact(
+                        //    reader.GetString(reader.GetOrdinal("EndAt")),
+                        //    "dd/MM/yyyy HH:mm:ss",
+                        //    CultureInfo.InvariantCulture);
 
 
                         string durationString = reader.GetString(reader.GetOrdinal("Duration"));
-                        
-                        if (TimeSpan.TryParse(durationString, out var duration))
+
+                        if (DateTime.TryParse(reader.GetString(reader.GetOrdinal("StartAt")), out var startAt) &&
+                        DateTime.TryParse(reader.GetString(reader.GetOrdinal("EndAt")), out var endAt) &&
+                        TimeSpan.TryParse(durationString, out var duration))
                         {
                             sessions.Add(CodingSession.Map(id, startAt, endAt, duration));
                         }
