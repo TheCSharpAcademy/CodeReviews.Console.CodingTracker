@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "frockett.CodingTracker": {
-      "commandName": "Project",
-      "workingDirectory": "C:\\Users\\itscr\\source\\repos\\CodeReviews.Console.CodingTracker\\frockett.CodingTracker\\Library"
-    }
-  }
-}
