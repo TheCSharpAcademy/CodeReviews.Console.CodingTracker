@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodingTracker.Mateusz-Platek", "CodingTracker.Mateusz-Platek\CodingTracker.Mateusz-Platek.csproj", "{2170BE90-ADD6-41DB-A614-6633FCF9D180}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2170BE90-ADD6-41DB-A614-6633FCF9D180}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2170BE90-ADD6-41DB-A614-6633FCF9D180}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2170BE90-ADD6-41DB-A614-6633FCF9D180}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2170BE90-ADD6-41DB-A614-6633FCF9D180}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
