@@ -21,7 +21,7 @@ namespace CodingTracker
 
             using (var connection = new SQLiteConnection(_connectionString))
             {
-
+//rozjet create commandy z appsettings, udělat InitializeDatabase() tím pádem modulární
                 string commandText = @"
                 CREATE TABLE IF NOT EXISTS coding_tracker(
                     id INTEGER PRIMARY KEY AUTOINCREMENT, 
@@ -31,7 +31,8 @@ namespace CodingTracker
                     duration TEXT, 
                     _year INTEGER, 
                     _month INTEGER, 
-                    _week INTEGER)";
+                    _week INTEGER)"
+;
 
                 SQLiteCommand command = new(commandText, connection);
 

@@ -312,6 +312,8 @@ public class UpdateMenu : SetSessionMenu
         var codingSession = UserInput.IdInput(MenuManager, _database, _codingSessionList);
         UserInterface.UpdateMenu(codingSession);
 
+        var originalSessionStart = codingSession.StartTime;
+        var originalDuration = codingSession.Duration;
         bool menuContinue = true;
         string sessionNote;
 
@@ -319,14 +321,14 @@ public class UpdateMenu : SetSessionMenu
         {
             UpdateDateTime(codingSession);
 
-            TimeSpan duration = LogicOperations.CalculateDuration(_endDateTime, _startDateTime);
+            TimeSpan duration = LogicOperations.CalculateDuration(_startDateTime, _endDateTime);
+
 
             if (duration < TimeSpan.Zero)
             {
                 UserInput.DisplayMessage("End date time must more recent than Start date time.", "retry");
                 continue;
             }
-
             UserInterface.SessionConfirm(_startDateTime, _endDateTime, duration);
 
             switch (OptionsPicker.MenuIndex)
@@ -340,6 +342,9 @@ public class UpdateMenu : SetSessionMenu
                     int yearNumber = Convert.ToInt32(_startDateTime.ToString("yyyy"));
                     int monthNumber = Convert.ToInt32(_startDateTime.ToString("MM"));
                     int weekNumber = LogicOperations.GetWeekNumber(_startDateTime);
+
+                    var durationDifference = duration - originalDuration;
+                    Goal.UpdateGoalsAfterUpdate(durationDifference, originalDuration, originalSessionStart, _startDateTime);
 
                     _database.Update(codingSession.Id, sessionNote, _startDateTime.ToString("yyyy-MM-dd HH:mm:ss"), _endDateTime.ToString("yyyy-MM-dd HH:mm:ss"),
                     $"{duration:hh\\:mm\\:ss}", yearNumber, monthNumber, weekNumber);
@@ -363,12 +368,12 @@ public class UpdateMenu : SetSessionMenu
 
         UserInterface.SetSessionTime(true, update);
         _startTimeInput = UserInput.TimeInput(MenuManager, true);
-        if (_startTimeInput == "_noInput_") _startTimeInput = codingSession.StartTime.ToString("HH:mm");
+        if (_startTimeInput == "_noInput_") _startTimeInput = codingSession.StartTime.ToString("HH:mm:ss");
 
 
         UserInterface.SetSessionTime(false, update);
         _endTimeInput = UserInput.TimeInput(MenuManager, true);
-        if (_endTimeInput == "_noInput_") _endTimeInput = codingSession.EndTime.ToString("HH:mm");
+        if (_endTimeInput == "_noInput_") _endTimeInput = codingSession.EndTime.ToString("HH:mm:ss");
 
 
         UserInterface.SetSessionDate(true, update);
@@ -395,6 +400,8 @@ public class DeleteMenu : Menu
         if (OptionsPicker.MenuIndex == 1)
         {
             _database.Delete(codingSession.Id);
+            Goal.UpdateGoalsAfterDelete(codingSession.Duration, codingSession.StartTime);
+
             UserInput.DisplayMessage("Session deleted!", "return to Main Menu");
             MenuManager.ReturnToMainMenu();
         }
@@ -418,6 +425,8 @@ public class GoalsMenu : Menu
                 MenuManager.NewMenu(new SetGoalMenu(MenuManager, _database));
                 break;
             case 1:
+                MenuManager.NewMenu(new ShowGoalsMenu(MenuManager, _database));
+
                 break;
             case 2:
                 MenuManager.GoBack();
@@ -443,6 +452,17 @@ public class SetGoalMenu : Menu
 
         Goal newGoal = new(goalTime, untilDate);
         newGoal.SaveToDatabase();
+        MenuManager.GoBack();
+    }
+}
+public class ShowGoalsMenu : Menu
+{
+    public ShowGoalsMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
+    public override void Display()
+    {
+        Goal.ValidateDatabase();
+        List<Goal> goalsList = Goal.GetAllGoals();
+        UserInterface.DisplayGoals(goalsList);
     }
 }
 public class SetSessionMenu : Menu
@@ -465,7 +485,7 @@ public class SetSessionMenu : Menu
         {
             SetDateTime();
 
-            TimeSpan duration = LogicOperations.CalculateDuration(_endDateTime, _startDateTime);
+            TimeSpan duration = LogicOperations.CalculateDuration(_startDateTime, _endDateTime);
 
             if (duration < TimeSpan.Zero)
             {
@@ -488,7 +508,7 @@ public class SetSessionMenu : Menu
                     int weekNumber = LogicOperations.GetWeekNumber(_startDateTime);
 
                     _database.Insert(sessionNote, _startDateTime.ToString("yyyy-MM-dd HH:mm:ss"), _endDateTime.ToString("yyyy-MM-dd HH:mm:ss"), $"{duration:hh\\:mm\\:ss}", yearNumber, monthNumber, weekNumber);
-                    Goal.UpdateGoals(duration);
+                    Goal.UpdateGoals(duration, _startDateTime);
 
                     UserInput.DisplayMessage("Session saved!", "return to Main Menu");
 
@@ -559,8 +579,8 @@ public class AutoSessionMenu : Menu
                     int weekNumber = LogicOperations.GetWeekNumber(startDateTime);
 
                     _database.Insert(sessionNote, startDateTime.ToString("yyyy-MM-dd HH:mm:ss"), endDateTime.ToString("yyyy-MM-dd HH:mm:ss"), $"{duration:hh\\:mm\\:ss}", yearNumber, monthNumber, weekNumber);
-                    
-                    Goal.UpdateGoals(duration);
+
+                    Goal.UpdateGoals(duration, startDateTime);
 
                     MenuManager.ReturnToMainMenu();
                     break;

@@ -84,9 +84,9 @@ public static class UserInterface
         Console.WriteLine($"End time:\t{endDateTime.ToString("HH:mm")}\t{endDateTime.ToString("yyyy-MM-dd")}\n");
 
         if (duration.Days == 0)
-            Console.WriteLine($"Duration:\t{duration:hh\\:mm}");
+            Console.WriteLine($"Duration:\t{duration:hh\\:mm\\:ss}");
         else
-            Console.WriteLine($"Duration:\t{duration.Days} days, {duration:hh\\:mm}");
+            Console.WriteLine($"Duration:\t{duration.Days} days, {duration:hh\\:mm\\:ss}");
 
         Console.WriteLine();
 
@@ -276,13 +276,11 @@ public static class UserInterface
 
         OptionsPicker.Navigate(menuOptions, true);
     }
-
     public static void SetGoalMenu()
     {
         Header("set a new goal");
         LockCursorPosition();
     }
-
     public static void SetGoalTime()
     {
         ConsoleClearLastLines(GetLockedCursorPosition());
@@ -291,16 +289,23 @@ public static class UserInterface
     public static void SetGoalDate()
     {
         ConsoleClearLastLines(GetLockedCursorPosition());
-        Console.WriteLine("Enter a goal end date (YYYY:MM:dd)");
+        Console.WriteLine("Enter a goal end date (YYYY-MM-dd)");
     }
-public static void GoalReached(int id)
-{
-    Console.Clear();
-    Console.BackgroundColor = ConsoleColor.Green;
-    Console.WriteLine($"\nGoal #{id} reached!\n");
-    Console.ResetColor();
-    UserInput.DisplayMessage();
-}
+    public static void GoalReached(int id)
+    {
+        Console.Clear();
+        Console.BackgroundColor = ConsoleColor.Green;
+        Console.WriteLine($"\nGoal #{id} reached!\n");
+        Console.ResetColor();
+        //UserInput.DisplayMessage();
+    }
+    public static void DisplayGoals(List<Goal> goalsList)
+    {
+        Header("show all goals");
+        DisplayGoalsTable(goalsList);
+        UserInput.DisplayMessage();
+
+    }
     private static void Header(string headerText)
     {
         Console.Clear();
@@ -362,6 +367,64 @@ public static void GoalReached(int id)
         codingSession.Note);
 
         AnsiConsole.Write(table);
+    }
+    private static void DisplayGoalsTable(List<Goal> goalsList)
+    {
+        string goalStatus;
+        string statusBar;
+        int statusBarWidth = 18;
+        var table = new Table();
+        table.Border(TableBorder.Heavy);
+        table.ShowRowSeparators();
+
+        table.AddColumns("ID", "START", "[red]DEAD LINE[/]", "[yellow]CURRENT TIME[/]", "[blue]GOAL TIME[/]", "STATUS");
+        table.AddColumn(new TableColumn("STATUS BAR").Width(statusBarWidth));
+
+        foreach (var goal in goalsList)
+        {
+
+            goalStatus = GetGoalStatus(goal);
+            statusBar = GetFulfillDate(goal, statusBarWidth);
+
+            table.AddRow(goal.Id.ToString(),
+            goal.StartDate.ToString("MM/dd/yyyy"),
+            goal.UntilDate.ToString("MM/dd/yyyy"),
+            $"[yellow] {goal.CurrentTime:hh\\:mm\\:ss} [/]",
+            "[blue]" + goal.GoalTime.ToString() + "[/]",
+            goalStatus,
+            statusBar);
+        }
+        AnsiConsole.Write(table);
+        Console.WriteLine();
+    }
+    private static string GetGoalStatus(Goal goal)
+    {
+        if (goal.Status == "active")
+            return "active";
+        else if (goal.Status == "inactive" && goal.FulfillDate == DateTime.MinValue)
+            return "[red]expired[/]";
+        else if (goal.Status == "inactive" && goal.FulfillDate != DateTime.MinValue)
+            return "[green]finished[/]";
+        else
+            return "error: goal status active but fulfill date set";
+
+    }
+    private static string GetFulfillDate(Goal goal, int width)
+    {
+        if (goal.FulfillDate == DateTime.MinValue)
+        {
+            StatusBar statusBar = new(width, goal.CurrentTime, goal.GoalTime);
+            return statusBar.Display();
+        }
+        else
+        {
+            int dateStringLength = goal.FulfillDate.ToString("MM/dd/yyyy").Length;
+            int leftPad = (width - dateStringLength) / 2;
+            int rightPad = width - dateStringLength - leftPad;
+
+            string paddedString =  new string(' ', leftPad) + $"{goal.FulfillDate:MM/dd/yyyy}" + new string(' ', rightPad);
+            return $"[black on green]{paddedString}[/]";
+        }
     }
     private static void LockCursorPosition()
     {

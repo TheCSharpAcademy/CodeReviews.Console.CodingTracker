@@ -57,7 +57,7 @@ namespace CodingTracker
                     }
                     catch
                     {
-                        HandleInputError("\n  Enter a valid date (YYYY-MM-DD):");
+                        HandleInputError("Enter a valid date (YYYY-MM-DD):");
                     }
                 }
             } while (true);

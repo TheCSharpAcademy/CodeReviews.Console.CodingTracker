@@ -29,8 +29,8 @@ namespace CodingTracker
                     current_time TEXT,
                     start_date TEXT, 
                     until_date TEXT, 
-                    fulfill_date TEXT),
-                    status TEXT";
+                    fulfill_date TEXT,
+                    status TEXT)";
 
                 SQLiteCommand command = new(commandText, connection);
 
@@ -99,7 +99,10 @@ namespace CodingTracker
                                 var untilDate = reader["until_date"] != DBNull.Value ?
                                             DateTime.Parse(reader["until_date"].ToString()) : DateTime.MinValue;
 
-                                Goal goal = new(id, goalTime, currentTime, untilDate, startDate, fulfillDate);
+                                var status = reader["status"] != DBNull.Value ?
+                                            reader["status"].ToString() : "";
+
+                                Goal goal = new(id, goalTime, currentTime, untilDate, startDate, fulfillDate, status);
                                 goalsList.Add(goal);
                             }
 
@@ -148,7 +151,6 @@ namespace CodingTracker
             WHERE id = {id}";
             ExecuteCommand(commandText);
         }
-
         public void UpdateFulfilledDate(int id, string fulfilledDate)
         {
             string commandText = $@"
@@ -158,11 +160,11 @@ namespace CodingTracker
             ExecuteCommand(commandText);
         }
 
-        public void UpdateStatus(int id)
+        public void UpdateStatus(int id, string setKeyword)
         {
             string commandText = $@"
             UPDATE coding_tracker_goals
-            SET status = 'inactive'
+            SET status = '{setKeyword}'
             WHERE id = {id}";
             ExecuteCommand(commandText);
         }

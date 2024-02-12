@@ -16,21 +16,21 @@ namespace CodingTracker
         public string GetConnectionString()
         {
             string? configString = Configuration.GetConnectionString("DefaultConnection");
-            if(string.IsNullOrEmpty(configString))
+            if (string.IsNullOrEmpty(configString))
             {
                 throw new InvalidOperationException("Connection string 'DefaultConnection'is not configured.");
             }
             return configString;
-        } 
+        }
 
-        public string GetFileNameString() 
+        public string GetFileNameString()
         {
             string? configString = Configuration.GetConnectionString("FileName");
-            if(string.IsNullOrEmpty(configString))
+            if (string.IsNullOrEmpty(configString))
             {
                 throw new InvalidOperationException("Connection string 'FileName'is not configured.");
             }
             return configString;
-        } 
+        }
     }
 }
