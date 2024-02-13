@@ -136,8 +136,10 @@ namespace CodingTracker
             Console.WriteLine(errorMessage);
         }
 
-        public static void DisplayMessage(string message = "", string actionMessage = "continue")
+        public static void DisplayMessage(string message = "", string actionMessage = "continue", bool consoleClear = false)
         {
+            if (consoleClear) Console.Clear();
+
             if (message == "")
                 Console.WriteLine($"\nPress any key to {actionMessage}...");
             else

@@ -5,6 +5,8 @@ internal class Program
     private static void Main(string[] args)
     {
         var configReader = new ConfigReader();
+        int consoleHeight = 40;
+        int consoleWidth = 80;
 
         try
         {
@@ -12,6 +14,10 @@ internal class Program
             string fileName = configReader.GetFileNameString();
 
             var database = new Database(connectionString, fileName);
+
+            Console.SetWindowSize(consoleWidth,consoleHeight);
+            //Console.SetBufferSize(consoleWidth,consoleHeight);
+
             var menuManager = new MenuManager(database);
 
         }

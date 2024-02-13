@@ -1,4 +1,3 @@
-
 namespace CodingTracker;
 
 public abstract class Menu
@@ -87,25 +86,49 @@ public class ShowRecordsMenu : Menu
 public class ShowAllRecordsMenu : Menu
 {
     public ShowAllRecordsMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
+    private int _currentScrollingIndex = 0;
+    private int _maxTableRows = 8;
     public override void Display()
     {
         var codingSessionList = _database.GetAll();
+
+        if (LogicOperations.IsListEmpty(codingSessionList))
+        {
+            UserInput.DisplayMessage("No sessions yet.", "to go back", true);
+            MenuManager.GoBack();
+        }
+
         var averageDuration = LogicOperations.AverageDuration(codingSessionList);
         var totalDuration = LogicOperations.TotalDuration(codingSessionList);
 
-        UserInterface.RecordsAllMenu(codingSessionList, averageDuration, totalDuration);
+        UserInterface.RecordsAllMenu(codingSessionList, averageDuration, totalDuration, _maxTableRows);
 
         while (true)
         {
+            if (codingSessionList.Count > _currentScrollingIndex + _maxTableRows)
+            {
+                switch (OptionsPicker.ScrollingIndex)
+                {
+                    case -1:
+                        if (_currentScrollingIndex != 0) _currentScrollingIndex--;
+
+                        UserInterface.RecordsAllMenu(codingSessionList, averageDuration, totalDuration, _maxTableRows, _currentScrollingIndex);
+                        continue;
+                    case 1:
+                        _currentScrollingIndex++;
+                        UserInterface.RecordsAllMenu(codingSessionList, averageDuration, totalDuration, _maxTableRows, _currentScrollingIndex);
+                        continue;
+                } //vyřešit tento přechod, když dojde na maximální index, zaktivuje se následující switch na case 0, který má v sobě continue bloky a to dělá paseku
+            }
             switch (OptionsPicker.MenuIndex)
             {
                 case 0:
                     codingSessionList = _database.GetAll();
-                    UserInterface.RecordsAllMenu(codingSessionList, averageDuration, totalDuration);
+                    UserInterface.RecordsAllMenu(codingSessionList, averageDuration, totalDuration, _maxTableRows);
                     continue;
                 case 1:
                     codingSessionList = _database.GetAll(false);
-                    UserInterface.RecordsAllMenu(codingSessionList, averageDuration, totalDuration);
+                    UserInterface.RecordsAllMenu(codingSessionList, averageDuration, totalDuration, _maxTableRows);
                     continue;
                 case 2: //Update
                     UserInterface.UpdateMiniMenu();
@@ -129,6 +152,14 @@ public class ShowFiltersMenu : Menu
 
     public override void Display()
     {
+        var codingSessionList = _database.GetAll();
+
+        if (LogicOperations.IsListEmpty(codingSessionList))
+        {
+            UserInput.DisplayMessage("No sessions yet.", "to go back", true);
+            MenuManager.GoBack();
+        }
+
         UserInterface.FilterSessionsMenu();
         switch (OptionsPicker.MenuIndex)
         {
@@ -152,6 +183,7 @@ public class WeeksMenu : Menu
     public WeeksMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
     public override void Display()
     {
+        int _maxTableRows = 8;
         string userYear = GetUserYear();
         string userMonth = GetUserMonth(userYear);
         string userWeek = GetUserWeek(userYear, userMonth);
@@ -161,7 +193,7 @@ public class WeeksMenu : Menu
         var averageDuration = LogicOperations.AverageDuration(codingSessionList);
         var totalDuration = LogicOperations.TotalDuration(codingSessionList);
 
-        UserInterface.FilterByWeeksMenu(codingSessionList, userYear, userWeek, averageDuration, totalDuration);
+        UserInterface.FilterByWeeksMenu(codingSessionList, userYear, userWeek, averageDuration, totalDuration, _maxTableRows);
 
         while (true)
         {
@@ -169,11 +201,11 @@ public class WeeksMenu : Menu
             {
                 case 0: //asc
                     codingSessionList = _database.GetByWeeks(userYear, userMonth, userWeek);
-                    UserInterface.FilterByWeeksMenu(codingSessionList, userWeek, userYear, averageDuration, totalDuration);
+                    UserInterface.FilterByWeeksMenu(codingSessionList, userWeek, userYear, averageDuration, totalDuration, _maxTableRows);
                     continue;
                 case 1: //desc
                     codingSessionList = _database.GetByWeeks(userYear, userMonth, userWeek, false);
-                    UserInterface.FilterByWeeksMenu(codingSessionList, userWeek, userYear, averageDuration, totalDuration);
+                    UserInterface.FilterByWeeksMenu(codingSessionList, userWeek, userYear, averageDuration, totalDuration, _maxTableRows);
                     continue;
                 case 2: //Update
                     UserInterface.UpdateMiniMenu();
@@ -224,6 +256,7 @@ public class MonthsMenu : WeeksMenu
     public MonthsMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
     public override void Display()
     {
+        int _maxTableRows = 8;
         string userYear = GetUserYear();
         string userMonth = GetUserMonth(userYear);
 
@@ -232,7 +265,7 @@ public class MonthsMenu : WeeksMenu
         var averageDuration = LogicOperations.AverageDuration(codingSessionList);
         var totalDuration = LogicOperations.TotalDuration(codingSessionList);
 
-        UserInterface.FilterByMonthsMenu(codingSessionList, userYear, userMonth, averageDuration, totalDuration);
+        UserInterface.FilterByMonthsMenu(codingSessionList, userYear, userMonth, averageDuration, totalDuration, _maxTableRows);
 
         while (true)
         {
@@ -240,11 +273,11 @@ public class MonthsMenu : WeeksMenu
             {
                 case 0: //asc
                     codingSessionList = _database.GetByMonths(userYear, userMonth);
-                    UserInterface.FilterByMonthsMenu(codingSessionList, userYear, userMonth, averageDuration, totalDuration);
+                    UserInterface.FilterByMonthsMenu(codingSessionList, userYear, userMonth, averageDuration, totalDuration, _maxTableRows);
                     continue;
                 case 1: //desc
                     codingSessionList = _database.GetByMonths(userYear, userMonth, false);
-                    UserInterface.FilterByMonthsMenu(codingSessionList, userYear, userMonth, averageDuration, totalDuration);
+                    UserInterface.FilterByMonthsMenu(codingSessionList, userYear, userMonth, averageDuration, totalDuration, _maxTableRows);
                     continue;
                 case 2: //Update
                     UserInterface.UpdateMiniMenu();
@@ -266,6 +299,8 @@ public class YearsMenu : WeeksMenu
     public YearsMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
     public override void Display()
     {
+        int _maxTableRows = 8;
+
         string userYear = GetUserYear();
 
         List<CodingSession> codingSessionList = _database.GetByYears(userYear);
@@ -273,7 +308,7 @@ public class YearsMenu : WeeksMenu
         var averageDuration = LogicOperations.AverageDuration(codingSessionList);
         var totalDuration = LogicOperations.TotalDuration(codingSessionList);
 
-        UserInterface.FilterByYearsMenu(codingSessionList, userYear, averageDuration, totalDuration);
+        UserInterface.FilterByYearsMenu(codingSessionList, userYear, averageDuration, totalDuration, _maxTableRows);
 
         while (true)
         {
@@ -281,11 +316,11 @@ public class YearsMenu : WeeksMenu
             {
                 case 0: //asc
                     codingSessionList = _database.GetByYears(userYear);
-                    UserInterface.FilterByYearsMenu(codingSessionList, userYear, averageDuration, totalDuration);
+                    UserInterface.FilterByYearsMenu(codingSessionList, userYear, averageDuration, totalDuration, _maxTableRows);
                     continue;
                 case 1: //desc
                     codingSessionList = _database.GetByYears(userYear, false);
-                    UserInterface.FilterByYearsMenu(codingSessionList, userYear, averageDuration, totalDuration);
+                    UserInterface.FilterByYearsMenu(codingSessionList, userYear, averageDuration, totalDuration, _maxTableRows);
                     continue;
                 case 2: //Update
                     UserInterface.UpdateMiniMenu();
@@ -426,7 +461,6 @@ public class GoalsMenu : Menu
                 break;
             case 1:
                 MenuManager.NewMenu(new ShowGoalsMenu(MenuManager, _database));
-
                 break;
             case 2:
                 MenuManager.GoBack();
@@ -462,7 +496,45 @@ public class ShowGoalsMenu : Menu
     {
         Goal.ValidateDatabase();
         List<Goal> goalsList = Goal.GetAllGoals();
-        UserInterface.DisplayGoals(goalsList);
+
+        if (LogicOperations.IsListEmpty(goalsList))
+        {
+            UserInput.DisplayMessage("No goals yet.", "to go back", true);
+            MenuManager.GoBack();
+        }
+
+        UserInterface.DisplayAllGoals(goalsList);
+
+        switch (OptionsPicker.MenuIndex)
+        {
+            case 0:
+                MenuManager.NewMenu(new ShowActiveGoalsMenu(MenuManager, _database));
+                break;
+            case 1:
+                MenuManager.ReturnToMainMenu();
+                break;
+        }
+
+    }
+}
+public class ShowActiveGoalsMenu : Menu
+{
+    public ShowActiveGoalsMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
+    public override void Display()
+    {
+        List<Goal> activeGoalsList = Goal.GetActiveGoals();
+        UserInterface.DisplayActiveGoals(activeGoalsList);
+
+        switch (OptionsPicker.MenuIndex)
+        {
+            case 0:
+                MenuManager.GoBack();
+                break;
+            case 1:
+                MenuManager.ReturnToMainMenu();
+                break;
+        }
+
     }
 }
 public class SetSessionMenu : Menu

@@ -58,7 +58,7 @@ namespace CodingTracker
             }
             return newArray;
         }
-        public static string[] MonthsToNamesArray (string[] monthArray)
+        public static string[] MonthsToNamesArray(string[] monthArray)
         {
             string[] newArray = new string[monthArray.Length];
 
@@ -67,11 +67,16 @@ namespace CodingTracker
                 string monthString = monthArray[i];
                 int month = int.Parse(monthString);
                 int year = DateTime.Now.Year;
-                
-                var monthDateTime = new DateTime(year,month,1);
+
+                var monthDateTime = new DateTime(year, month, 1);
                 newArray[i] = monthDateTime.ToString("MMMM");
             }
             return newArray;
+        }
+
+        public static bool IsListEmpty<T>(List<T> list)
+        {
+            return list.Count == 0;
         }
     }
 }

@@ -60,7 +60,12 @@ namespace CodingTracker
                 UntilDate.Day,
                 23, 59, 59);
 
-            _goalsDatabase.Insert(GoalTime.ToString(), CurrentTime.ToString(), StartDate.ToString("MM/dd/yyyy HH:mm:ss"), modifiedUntilDay.ToString("MM/dd/yyyy HH:mm:ss"), _unfulfilledKeyword);
+            _goalsDatabase.Insert(
+                GoalTime.ToString(),
+                CurrentTime.ToString(),
+                StartDate.ToString("yyyy-MM-dd HH:mm:ss"), 
+                modifiedUntilDay.ToString("yyyy-MM-dd HH:mm:ss"),
+                _unfulfilledKeyword);
 
             UserInput.DisplayMessage("Goal saved.");
         }
@@ -68,6 +73,11 @@ namespace CodingTracker
         public static List<Goal> GetAllGoals()
         {
             return _goalsDatabase.GetAll();
+        }
+
+        public static List<Goal> GetActiveGoals()
+        {
+            return _goalsDatabase.GetActiveGoals();
         }
 
         public static void ValidateDatabase()
@@ -129,7 +139,7 @@ namespace CodingTracker
 
                         else if (newSessionStart > goal.StartDate && originalSessionStart < goal.StartDate)
                             goal.CurrentTime += originalDuration;
-                            
+
                         else
                                     goal.CurrentTime += durationDifference;
 

@@ -1,6 +1,7 @@
 using System;
 using System.CodeDom;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Spectre.Console;
@@ -104,8 +105,8 @@ public static class UserInterface
         string[] menuOptions = { "Confirm", "Start over", "Discard and go back" };
 
         Header("new coding session");
-        Console.WriteLine($"Start time:\t{startDateTime.ToString("HH:mm")}\t{startDateTime.ToString("yyyy-MM-dd")}");
-        Console.WriteLine($"End time:\t{endDateTime.ToString("HH:mm")}\t{endDateTime.ToString("yyyy-MM-dd")}\n");
+        Console.WriteLine($"Start time:\t{startDateTime.ToString("HH:mm:ss")}\t{startDateTime.ToString("yyyy-MM-dd")}");
+        Console.WriteLine($"End time:\t{endDateTime.ToString("HH:mm:ss")}\t{endDateTime.ToString("yyyy-MM-dd")}\n");
 
         if (totalBreaks.Seconds > 10) //shows breaks only if 10 or more seconds
             Console.WriteLine($"Total breaks:\t{totalBreaks:hh\\:mm\\:ss}");
@@ -177,14 +178,14 @@ public static class UserInterface
         OptionsPicker.Navigate(monthsListOptions, true);
     }
 
-    public static void FilterByWeeksMenu(List<CodingSession> codingSessionList, string userYear, string userWeek, TimeSpan averageDuration, TimeSpan totalDuration)
+    public static void FilterByWeeksMenu(List<CodingSession> codingSessionList, string userYear, string userWeek, TimeSpan averageDuration, TimeSpan totalDuration,int maxRows, int currentIndex = 0)
     {
         string[] menuOptions = { "Ascending", "Descending", "Update", "Delete", "Go back" };
 
 
         Header($"all sessions of the week {userWeek} of {userYear}");
 
-        DisplayTable(codingSessionList);
+        DisplayTable(codingSessionList, currentIndex, maxRows);
 
         Console.WriteLine($"Average duration: {averageDuration:hh\\:mm\\:ss}");
         Console.WriteLine($"Total duration: {totalDuration}");
@@ -193,52 +194,52 @@ public static class UserInterface
 
         OptionsPicker.Navigate(menuOptions, true);
     }
-    public static void FilterByMonthsMenu(List<CodingSession> codingSessionList, string userYear, string userMonth, TimeSpan averageDuration, TimeSpan totalDuration)
+    public static void FilterByMonthsMenu(List<CodingSession> codingSessionList, string userYear, string userMonth, TimeSpan averageDuration, TimeSpan totalDuration, int maxRows, int currentIndex = 0)
     {
         string[] menuOptions = { "Ascending", "Descending", "Update", "Delete", "Go back" };
 
 
         Header($"all sessions of the month {userMonth} of {userYear}");
 
-        DisplayTable(codingSessionList);
+        DisplayTable(codingSessionList, currentIndex, maxRows);
 
         Console.WriteLine($"Average duration: {averageDuration:hh\\:mm\\:ss}");
         Console.WriteLine($"Total duration: {totalDuration}");
         Console.WriteLine();
         LockCursorPosition();
 
-        OptionsPicker.Navigate(menuOptions, true);
+        OptionsPicker.NavigateWithScrolling(menuOptions, true);
     }
-    public static void FilterByYearsMenu(List<CodingSession> codingSessionList, string userYear, TimeSpan averageDuration, TimeSpan totalDuration)
+    public static void FilterByYearsMenu(List<CodingSession> codingSessionList, string userYear, TimeSpan averageDuration, TimeSpan totalDuration, int maxRows, int currentIndex = 0)
     {
         string[] menuOptions = { "Ascending", "Descending", "Update", "Delete", "Go back" };
 
 
         Header($"all sessions of {userYear}");
 
-        DisplayTable(codingSessionList);
+        DisplayTable(codingSessionList, currentIndex, maxRows);
 
         Console.WriteLine($"Average duration: {averageDuration:hh\\:mm\\:ss}");
         Console.WriteLine($"Total duration: {totalDuration}");
         Console.WriteLine();
         LockCursorPosition();
 
-        OptionsPicker.Navigate(menuOptions, true);
+        OptionsPicker.NavigateWithScrolling(menuOptions, true);
     }
-    public static void RecordsAllMenu(List<CodingSession> codingSessionList, TimeSpan averageDuration, TimeSpan totalDuration)
+    public static void RecordsAllMenu(List<CodingSession> codingSessionList, TimeSpan averageDuration, TimeSpan totalDuration, int maxRows, int currentIndex = 0)
     {
         string[] menuOptions = { "Ascending", "Descending", "Update", "Delete", "Go back" };
 
         Header("show all sessions");
 
-        DisplayTable(codingSessionList);
+        DisplayTable(codingSessionList, currentIndex, maxRows);
 
         Console.WriteLine($"Average duration: {averageDuration:hh\\:mm\\:ss}");
         Console.WriteLine($"Total duration: {totalDuration}");
         Console.WriteLine();
         LockCursorPosition();
 
-        OptionsPicker.Navigate(menuOptions, true);
+        OptionsPicker.NavigateWithScrolling(menuOptions, true);
     }
     public static void UpdateMenu(CodingSession codingSessions)
     {
@@ -299,12 +300,23 @@ public static class UserInterface
         Console.ResetColor();
         //UserInput.DisplayMessage();
     }
-    public static void DisplayGoals(List<Goal> goalsList)
+    public static void DisplayAllGoals(List<Goal> goalsList)
     {
+        string[] menuOptions = { "Show active only", "Go back" };
+
         Header("show all goals");
         DisplayGoalsTable(goalsList);
-        UserInput.DisplayMessage();
 
+        OptionsPicker.Navigate(menuOptions, true);
+    }
+    public static void DisplayActiveGoals(List<Goal> goalsList)
+    {
+        string[] menuOptions = { "Show all", "Go back" };
+
+        Header("show active goals");
+        DisplayGoalsTable(goalsList);
+
+        OptionsPicker.Navigate(menuOptions, true);
     }
     private static void Header(string headerText)
     {
@@ -333,22 +345,31 @@ public static class UserInterface
         }
         Console.SetCursorPosition(0, Console.GetCursorPosition().Top);
     }
-    private static void DisplayTable(List<CodingSession> list)
+    private static void DisplayTable(List<CodingSession> list, int scrollingIndex, int maxRows)
     {
         var table = new Table();
         table.Border(TableBorder.Heavy);
 
         table.AddColumns("ID", "[green]START[/]", "[red]END[/]", "[yellow]DURATION[/]", "NOTE");
 
-        foreach (var codingSession in list)
+        for (int i = scrollingIndex; i < list.Count && i < maxRows + scrollingIndex; i++)
         {
             table.AddRow(
-            codingSession.Id.ToString(),
-            codingSession.StartTime.ToString("HH:mm:ss MM/dd/yyyy"),
-            codingSession.EndTime.ToString("HH:mm:ss MM/dd/yyyy"),
-            codingSession.Duration.ToString(),
-            codingSession.Note);
+            list[i].Id.ToString(),
+            list[i].StartTime.ToString("HH:mm:ss yyyy-MM-dd"),
+            list[i].EndTime.ToString("HH:mm:ss yyyy-MM-dd"),
+            list[i].Duration.ToString(),
+            list[i].Note);
         }
+        // foreach (var codingSession in list)
+        // {
+        //     table.AddRow(
+        //     codingSession.Id.ToString(),
+        //     codingSession.StartTime.ToString("HH:mm:ss yyyy-MM-dd"),
+        //     codingSession.EndTime.ToString("HH:mm:ss yyyy-MM-dd"),
+        //     codingSession.Duration.ToString(),
+        //     codingSession.Note);
+        // }
 
         AnsiConsole.Write(table);
     }
@@ -361,8 +382,8 @@ public static class UserInterface
 
         table.AddRow(
         codingSession.Id.ToString(),
-        codingSession.StartTime.ToString("HH:mm:ss MM/dd/yyyy"),
-        codingSession.EndTime.ToString("HH:mm:ss MM/dd/yyyy"),
+        codingSession.StartTime.ToString("HH:mm:ss yyyy-MM-dd"),
+        codingSession.EndTime.ToString("HH:mm:ss yyyy-MM-dd"),
         codingSession.Duration.ToString(),
         codingSession.Note);
 
@@ -387,8 +408,8 @@ public static class UserInterface
             statusBar = GetFulfillDate(goal, statusBarWidth);
 
             table.AddRow(goal.Id.ToString(),
-            goal.StartDate.ToString("MM/dd/yyyy"),
-            goal.UntilDate.ToString("MM/dd/yyyy"),
+            goal.StartDate.ToString("yyyy-MM-dd"),
+            goal.UntilDate.ToString("yyyy-MM-dd"),
             $"[yellow] {goal.CurrentTime:hh\\:mm\\:ss} [/]",
             "[blue]" + goal.GoalTime.ToString() + "[/]",
             goalStatus,
@@ -418,11 +439,11 @@ public static class UserInterface
         }
         else
         {
-            int dateStringLength = goal.FulfillDate.ToString("MM/dd/yyyy").Length;
+            int dateStringLength = goal.FulfillDate.ToString("yyyy-MM-dd").Length;
             int leftPad = (width - dateStringLength) / 2;
             int rightPad = width - dateStringLength - leftPad;
 
-            string paddedString =  new string(' ', leftPad) + $"{goal.FulfillDate:MM/dd/yyyy}" + new string(' ', rightPad);
+            string paddedString = new string(' ', leftPad) + $"{goal.FulfillDate:yyyy-MM-dd}" + new string(' ', rightPad);
             return $"[black on green]{paddedString}[/]";
         }
     }
