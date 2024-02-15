@@ -105,7 +105,7 @@ namespace CodingTracker
                 bool firstIteration = true;
                 for (int i = 0; i < goalsList.Count; i++)
                 {
-                    if (goalsList[i].StartDate < sessionStartTime)
+                    if (goalsList[i].StartDate < sessionStartTime && goalsList[i].UntilDate > sessionStartTime)
                     {
                         if (goalsList[i].UntilDate > DateTime.Now)
                         {

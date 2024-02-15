@@ -190,7 +190,7 @@ public static class UserInterface
 
         DisplayTable(codingSessionList, currentIndex, maxRows);
 
-         Console.WriteLine($"Average duration: {LogicOperations.TimeSpanToString(averageDuration)}");
+        Console.WriteLine($"Average duration: {LogicOperations.TimeSpanToString(averageDuration)}");
         Console.WriteLine($"Total duration: {LogicOperations.TimeSpanToString(totalDuration)}");
         Console.WriteLine();
         LockCursorPosition();
@@ -246,7 +246,7 @@ public static class UserInterface
 
         DisplayTable(codingSessionList, currentIndex, maxRows);
 
-         Console.WriteLine($"Average duration: {LogicOperations.TimeSpanToString(averageDuration)}");
+        Console.WriteLine($"Average duration: {LogicOperations.TimeSpanToString(averageDuration)}");
         Console.WriteLine($"Total duration: {LogicOperations.TimeSpanToString(totalDuration)}");
         Console.WriteLine();
         LockCursorPosition();
@@ -314,7 +314,9 @@ public static class UserInterface
     {
         string[] menuOptions = { "Show active only", "Go back" };
 
-        Header("show all goals");
+        if (goalsList.Count > maxRows)
+            Console.WriteLine("A/Q - scroll down/up"); Header("show all goals");
+
         DisplayGoalsTable(goalsList, scrollingIndex, maxRows);
 
         OptionsPicker.NavigateWithScrolling(menuOptions, true);
@@ -322,6 +324,9 @@ public static class UserInterface
     public static void DisplayActiveGoals(List<Goal> goalsList, int scrollingIndex, int maxRows)
     {
         string[] menuOptions = { "Show all", "Go back" };
+
+        if (goalsList.Count > maxRows)
+            Console.WriteLine("A/Q - scroll down/up"); Header("show all goals");
 
         Header("show active goals");
         DisplayGoalsTable(goalsList, scrollingIndex, maxRows);
@@ -393,12 +398,12 @@ public static class UserInterface
     {
         string goalStatus;
         string statusBar;
-        int statusBarWidth = 18;
+        int statusBarWidth = 12;
         var table = new Table();
         table.Border(TableBorder.Heavy);
         table.ShowRowSeparators();
 
-        table.AddColumns("ID", "START", "[red]DEAD LINE[/]", "[yellow]CURRENT TIME[/]", "[blue]GOAL TIME[/]", "STATUS");
+        table.AddColumns("ID", "START", "[red]DEAD LINE[/]", "[yellow]CUR. TIME[/]", "[blue]GOAL[/]", "STATUS");
         table.AddColumn(new TableColumn("STATUS BAR").Width(statusBarWidth));
 
         for (int i = scrollingIndex; i < goalsList.Count && i < maxRows + scrollingIndex; i++)
@@ -425,7 +430,7 @@ public static class UserInterface
         else if (goal.Status == "inactive" && goal.FulfillDate == DateTime.MinValue)
             return "[red]expired[/]";
         else if (goal.Status == "inactive" && goal.FulfillDate != DateTime.MinValue)
-            return "[green]finished[/]";
+            return "[green]done[/]";
         else
             return "error: goal status active but fulfill date set";
 
