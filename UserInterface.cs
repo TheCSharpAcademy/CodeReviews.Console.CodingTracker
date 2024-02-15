@@ -178,49 +178,58 @@ public static class UserInterface
         OptionsPicker.Navigate(monthsListOptions, true);
     }
 
-    public static void FilterByWeeksMenu(List<CodingSession> codingSessionList, string userYear, string userWeek, TimeSpan averageDuration, TimeSpan totalDuration,int maxRows, int currentIndex = 0)
+    public static void FilterByWeeksMenu(List<CodingSession> codingSessionList, string userYear, string userWeek, TimeSpan averageDuration, TimeSpan totalDuration, int maxRows, int currentIndex)
     {
         string[] menuOptions = { "Ascending", "Descending", "Update", "Delete", "Go back" };
 
 
         Header($"all sessions of the week {userWeek} of {userYear}");
 
+        if (codingSessionList.Count > maxRows)
+            Console.WriteLine("A/Q - scroll down/up");
+
         DisplayTable(codingSessionList, currentIndex, maxRows);
 
-        Console.WriteLine($"Average duration: {averageDuration:hh\\:mm\\:ss}");
-        Console.WriteLine($"Total duration: {totalDuration}");
+         Console.WriteLine($"Average duration: {LogicOperations.TimeSpanToString(averageDuration)}");
+        Console.WriteLine($"Total duration: {LogicOperations.TimeSpanToString(totalDuration)}");
         Console.WriteLine();
         LockCursorPosition();
 
-        OptionsPicker.Navigate(menuOptions, true);
+        OptionsPicker.NavigateWithScrolling(menuOptions, true);
     }
-    public static void FilterByMonthsMenu(List<CodingSession> codingSessionList, string userYear, string userMonth, TimeSpan averageDuration, TimeSpan totalDuration, int maxRows, int currentIndex = 0)
+    public static void FilterByMonthsMenu(List<CodingSession> codingSessionList, string userYear, string userMonth, TimeSpan averageDuration, TimeSpan totalDuration, int maxRows, int currentIndex)
     {
         string[] menuOptions = { "Ascending", "Descending", "Update", "Delete", "Go back" };
 
 
         Header($"all sessions of the month {userMonth} of {userYear}");
 
+        if (codingSessionList.Count > maxRows)
+            Console.WriteLine("A/Q - scroll down/up");
+
         DisplayTable(codingSessionList, currentIndex, maxRows);
 
-        Console.WriteLine($"Average duration: {averageDuration:hh\\:mm\\:ss}");
-        Console.WriteLine($"Total duration: {totalDuration}");
+        Console.WriteLine($"Average duration: {LogicOperations.TimeSpanToString(averageDuration)}");
+        Console.WriteLine($"Total duration: {LogicOperations.TimeSpanToString(totalDuration)}");
         Console.WriteLine();
         LockCursorPosition();
 
         OptionsPicker.NavigateWithScrolling(menuOptions, true);
     }
-    public static void FilterByYearsMenu(List<CodingSession> codingSessionList, string userYear, TimeSpan averageDuration, TimeSpan totalDuration, int maxRows, int currentIndex = 0)
+    public static void FilterByYearsMenu(List<CodingSession> codingSessionList, string userYear, TimeSpan averageDuration, TimeSpan totalDuration, int maxRows, int currentIndex)
     {
         string[] menuOptions = { "Ascending", "Descending", "Update", "Delete", "Go back" };
 
 
         Header($"all sessions of {userYear}");
 
+        if (codingSessionList.Count > maxRows)
+            Console.WriteLine("A/Q - scroll down/up");
+
         DisplayTable(codingSessionList, currentIndex, maxRows);
 
-        Console.WriteLine($"Average duration: {averageDuration:hh\\:mm\\:ss}");
-        Console.WriteLine($"Total duration: {totalDuration}");
+        Console.WriteLine($"Average duration: {LogicOperations.TimeSpanToString(averageDuration)}");
+        Console.WriteLine($"Total duration: {LogicOperations.TimeSpanToString(totalDuration)}");
         Console.WriteLine();
         LockCursorPosition();
 
@@ -232,10 +241,13 @@ public static class UserInterface
 
         Header("show all sessions");
 
+        if (codingSessionList.Count > maxRows)
+            Console.WriteLine("A/Q - scroll down/up");
+
         DisplayTable(codingSessionList, currentIndex, maxRows);
 
-        Console.WriteLine($"Average duration: {averageDuration:hh\\:mm\\:ss}");
-        Console.WriteLine($"Total duration: {totalDuration}");
+         Console.WriteLine($"Average duration: {LogicOperations.TimeSpanToString(averageDuration)}");
+        Console.WriteLine($"Total duration: {LogicOperations.TimeSpanToString(totalDuration)}");
         Console.WriteLine();
         LockCursorPosition();
 
@@ -294,29 +306,27 @@ public static class UserInterface
     }
     public static void GoalReached(int id)
     {
-        Console.Clear();
         Console.BackgroundColor = ConsoleColor.Green;
-        Console.WriteLine($"\nGoal #{id} reached!\n");
+        Console.WriteLine($"Goal #{id} reached!\n");
         Console.ResetColor();
-        //UserInput.DisplayMessage();
     }
-    public static void DisplayAllGoals(List<Goal> goalsList)
+    public static void DisplayAllGoals(List<Goal> goalsList, int scrollingIndex, int maxRows)
     {
         string[] menuOptions = { "Show active only", "Go back" };
 
         Header("show all goals");
-        DisplayGoalsTable(goalsList);
+        DisplayGoalsTable(goalsList, scrollingIndex, maxRows);
 
-        OptionsPicker.Navigate(menuOptions, true);
+        OptionsPicker.NavigateWithScrolling(menuOptions, true);
     }
-    public static void DisplayActiveGoals(List<Goal> goalsList)
+    public static void DisplayActiveGoals(List<Goal> goalsList, int scrollingIndex, int maxRows)
     {
         string[] menuOptions = { "Show all", "Go back" };
 
         Header("show active goals");
-        DisplayGoalsTable(goalsList);
+        DisplayGoalsTable(goalsList, scrollingIndex, maxRows);
 
-        OptionsPicker.Navigate(menuOptions, true);
+        OptionsPicker.NavigateWithScrolling(menuOptions, true);
     }
     private static void Header(string headerText)
     {
@@ -358,19 +368,9 @@ public static class UserInterface
             list[i].Id.ToString(),
             list[i].StartTime.ToString("HH:mm:ss yyyy-MM-dd"),
             list[i].EndTime.ToString("HH:mm:ss yyyy-MM-dd"),
-            list[i].Duration.ToString(),
+            LogicOperations.TimeSpanToString(list[i].Duration),
             list[i].Note);
         }
-        // foreach (var codingSession in list)
-        // {
-        //     table.AddRow(
-        //     codingSession.Id.ToString(),
-        //     codingSession.StartTime.ToString("HH:mm:ss yyyy-MM-dd"),
-        //     codingSession.EndTime.ToString("HH:mm:ss yyyy-MM-dd"),
-        //     codingSession.Duration.ToString(),
-        //     codingSession.Note);
-        // }
-
         AnsiConsole.Write(table);
     }
     private static void DisplayTable(CodingSession codingSession)
@@ -384,12 +384,12 @@ public static class UserInterface
         codingSession.Id.ToString(),
         codingSession.StartTime.ToString("HH:mm:ss yyyy-MM-dd"),
         codingSession.EndTime.ToString("HH:mm:ss yyyy-MM-dd"),
-        codingSession.Duration.ToString(),
+        LogicOperations.TimeSpanToString(codingSession.Duration),
         codingSession.Note);
 
         AnsiConsole.Write(table);
     }
-    private static void DisplayGoalsTable(List<Goal> goalsList)
+    private static void DisplayGoalsTable(List<Goal> goalsList, int scrollingIndex, int maxRows)
     {
         string goalStatus;
         string statusBar;
@@ -401,17 +401,17 @@ public static class UserInterface
         table.AddColumns("ID", "START", "[red]DEAD LINE[/]", "[yellow]CURRENT TIME[/]", "[blue]GOAL TIME[/]", "STATUS");
         table.AddColumn(new TableColumn("STATUS BAR").Width(statusBarWidth));
 
-        foreach (var goal in goalsList)
+        for (int i = scrollingIndex; i < goalsList.Count && i < maxRows + scrollingIndex; i++)
         {
 
-            goalStatus = GetGoalStatus(goal);
-            statusBar = GetFulfillDate(goal, statusBarWidth);
+            goalStatus = GetGoalStatus(goalsList[i]);
+            statusBar = GetFulfillDate(goalsList[i], statusBarWidth);
 
-            table.AddRow(goal.Id.ToString(),
-            goal.StartDate.ToString("yyyy-MM-dd"),
-            goal.UntilDate.ToString("yyyy-MM-dd"),
-            $"[yellow] {goal.CurrentTime:hh\\:mm\\:ss} [/]",
-            "[blue]" + goal.GoalTime.ToString() + "[/]",
+            table.AddRow(goalsList[i].Id.ToString(),
+            goalsList[i].StartDate.ToString("yyyy-MM-dd"),
+            goalsList[i].UntilDate.ToString("yyyy-MM-dd"),
+            $"[yellow] {LogicOperations.TimeSpanToString(goalsList[i].CurrentTime)} [/]",
+            "[blue]" + LogicOperations.TimeSpanToString(goalsList[i].GoalTime) + "[/]",
             goalStatus,
             statusBar);
         }

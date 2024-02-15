@@ -63,7 +63,7 @@ namespace CodingTracker
             _goalsDatabase.Insert(
                 GoalTime.ToString(),
                 CurrentTime.ToString(),
-                StartDate.ToString("yyyy-MM-dd HH:mm:ss"), 
+                StartDate.ToString("yyyy-MM-dd HH:mm:ss"),
                 modifiedUntilDay.ToString("yyyy-MM-dd HH:mm:ss"),
                 _unfulfilledKeyword);
 
@@ -98,28 +98,35 @@ namespace CodingTracker
         }
         public static void UpdateGoals(TimeSpan duration, DateTime sessionStartTime)
         {
-            List<Goal> goalsList = _goalsDatabase.GetActiveGoals();
+            List<Goal> goalsList = _goalsDatabase.GetAll();
+
             if (goalsList.Count != 0)
             {
-                foreach (var goal in goalsList)
+                bool firstIteration = true;
+                for (int i = 0; i < goalsList.Count; i++)
                 {
-                    if (goal.StartDate < sessionStartTime)
+                    if (goalsList[i].StartDate < sessionStartTime)
                     {
-                        if (goal.UntilDate > DateTime.Now)
+                        if (goalsList[i].UntilDate > DateTime.Now)
                         {
-                            goal.CurrentTime += duration;
-                            _goalsDatabase.UpdateCurrentTime(goal.Id, $"{goal.CurrentTime:hh\\:mm\\:ss}");
+                            goalsList[i].CurrentTime += duration;
+                            _goalsDatabase.UpdateCurrentTime(goalsList[i].Id, goalsList[i].CurrentTime.ToString());
 
-                            if (goal.CurrentTime >= goal.GoalTime)
+                            if (goalsList[i].CurrentTime >= goalsList[i].GoalTime && goalsList[i].Status == _activeKeyword)
                             {
-                                _goalsDatabase.UpdateFulfilledDate(goal.Id, DateTime.Now.ToString());
-                                _goalsDatabase.UpdateStatus(goal.Id, _inactiveKeyword);
+                                if(firstIteration)
+                                {
+                                    Console.Clear();
+                                    firstIteration = false;
+                                }
+                                UserInterface.GoalReached(goalsList[i].Id);
 
-                                UserInterface.GoalReached(goal.Id);
+                                _goalsDatabase.UpdateFulfilledDate(goalsList[i].Id, DateTime.Now.ToString());
+                                _goalsDatabase.UpdateStatus(goalsList[i].Id, _inactiveKeyword);
                             }
                         }
                         else
-                            _goalsDatabase.UpdateStatus(goal.Id, _inactiveKeyword);
+                            _goalsDatabase.UpdateStatus(goalsList[i].Id, _inactiveKeyword);
                     }
                 }
             }
@@ -141,9 +148,9 @@ namespace CodingTracker
                             goal.CurrentTime += originalDuration;
 
                         else
-                                    goal.CurrentTime += durationDifference;
+                            goal.CurrentTime += durationDifference;
 
-                        _goalsDatabase.UpdateCurrentTime(goal.Id, $"{goal.CurrentTime:hh\\:mm\\:ss}");
+                        _goalsDatabase.UpdateCurrentTime(goal.Id, goal.CurrentTime.ToString());
 
 
                         if (goal.CurrentTime >= goal.GoalTime) //handles goals that are now fulfilled
@@ -181,7 +188,7 @@ namespace CodingTracker
                     if (goal.StartDate < originalSessionStart && originalSessionStart < goal.UntilDate) //excludes all sessions that started before the goal was set or after it expired
                     {
                         goal.CurrentTime -= duration;
-                        _goalsDatabase.UpdateCurrentTime(goal.Id, $"{goal.CurrentTime:hh\\:mm\\:ss}");
+                        _goalsDatabase.UpdateCurrentTime(goal.Id, goal.CurrentTime.ToString());
 
                         if (goal.CurrentTime >= goal.GoalTime) //handles goals that are still fulfilled
                         {

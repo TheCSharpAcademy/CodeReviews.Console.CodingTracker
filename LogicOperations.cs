@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Globalization;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 
 namespace CodingTracker
@@ -77,6 +78,20 @@ namespace CodingTracker
         public static bool IsListEmpty<T>(List<T> list)
         {
             return list.Count == 0;
+        }
+
+        public static TimeSpan UserStringToTimeSpan(string durationString)
+        {
+            int hours = int.Parse(durationString.Split(':')[0]);
+            int minutes = int.Parse(durationString.Split(':')[1]);
+            return new TimeSpan(hours, minutes, 0);
+        }
+        public static string TimeSpanToString(TimeSpan duration)
+        {
+            int totalHours = (int)duration.TotalHours;
+            int minutes = duration.Minutes;
+            int seconds = duration.Seconds;
+            return $"{totalHours:00}:{minutes:00}:{seconds:00}";
         }
     }
 }

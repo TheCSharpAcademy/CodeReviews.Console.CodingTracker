@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,6 +29,30 @@ namespace CodingTracker
                     try
                     {
                         return DateTime.Parse(userInput).ToString("HH:mm");
+                    }
+                    catch
+                    {
+                        HandleInputError("Enter a valid daytime (HH:mm):");
+                    }
+                }
+            } while (true);
+        }
+        public static string TimeSpanInput(MenuManager menuManager)
+        {
+            _priorError = false;
+
+            do
+            {
+                string? userInput = InputWithSpecialKeys(menuManager, true);
+
+                if (userInput == "_escape_") return userInput;
+
+                if (userInput != null)
+                {
+                    try
+                    {
+                        var duration = LogicOperations.UserStringToTimeSpan(userInput);
+                        return duration.ToString();
                     }
                     catch
                     {

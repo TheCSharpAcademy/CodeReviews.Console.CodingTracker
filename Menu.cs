@@ -86,7 +86,7 @@ public class ShowRecordsMenu : Menu
 public class ShowAllRecordsMenu : Menu
 {
     public ShowAllRecordsMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
-    private int _currentScrollingIndex = 0;
+    private int currentScrollingIndex = 0;
     private int _maxTableRows = 8;
     public override void Display()
     {
@@ -105,29 +105,39 @@ public class ShowAllRecordsMenu : Menu
 
         while (true)
         {
-            if (codingSessionList.Count > _currentScrollingIndex + _maxTableRows)
+            bool scrollingIndexContinues = true;
+
+            while (scrollingIndexContinues)
             {
+
                 switch (OptionsPicker.ScrollingIndex)
                 {
                     case -1:
-                        if (_currentScrollingIndex != 0) _currentScrollingIndex--;
+                        if (currentScrollingIndex != 0) currentScrollingIndex--;
 
-                        UserInterface.RecordsAllMenu(codingSessionList, averageDuration, totalDuration, _maxTableRows, _currentScrollingIndex);
+                        UserInterface.RecordsAllMenu(codingSessionList, averageDuration, totalDuration, _maxTableRows, currentScrollingIndex);
                         continue;
+                    case 0:
+                        break;
                     case 1:
-                        _currentScrollingIndex++;
-                        UserInterface.RecordsAllMenu(codingSessionList, averageDuration, totalDuration, _maxTableRows, _currentScrollingIndex);
+                        if (codingSessionList.Count > currentScrollingIndex + _maxTableRows) currentScrollingIndex++;
+
+                        UserInterface.RecordsAllMenu(codingSessionList, averageDuration, totalDuration, _maxTableRows, currentScrollingIndex);
                         continue;
                 } //vyřešit tento přechod, když dojde na maximální index, zaktivuje se následující switch na case 0, který má v sobě continue bloky a to dělá paseku
+
+                scrollingIndexContinues = false;
             }
             switch (OptionsPicker.MenuIndex)
             {
                 case 0:
                     codingSessionList = _database.GetAll();
+                    currentScrollingIndex = 0;
                     UserInterface.RecordsAllMenu(codingSessionList, averageDuration, totalDuration, _maxTableRows);
                     continue;
                 case 1:
                     codingSessionList = _database.GetAll(false);
+                    currentScrollingIndex = 0;
                     UserInterface.RecordsAllMenu(codingSessionList, averageDuration, totalDuration, _maxTableRows);
                     continue;
                 case 2: //Update
@@ -184,6 +194,7 @@ public class WeeksMenu : Menu
     public override void Display()
     {
         int _maxTableRows = 8;
+        int currentScrollingIndex = 0;
         string userYear = GetUserYear();
         string userMonth = GetUserMonth(userYear);
         string userWeek = GetUserWeek(userYear, userMonth);
@@ -193,19 +204,44 @@ public class WeeksMenu : Menu
         var averageDuration = LogicOperations.AverageDuration(codingSessionList);
         var totalDuration = LogicOperations.TotalDuration(codingSessionList);
 
-        UserInterface.FilterByWeeksMenu(codingSessionList, userYear, userWeek, averageDuration, totalDuration, _maxTableRows);
+        UserInterface.FilterByWeeksMenu(codingSessionList, userYear, userWeek, averageDuration, totalDuration, _maxTableRows, currentScrollingIndex);
 
         while (true)
         {
+            bool scrollingIndexContinues = true;
+
+            while (scrollingIndexContinues)
+            {
+                switch (OptionsPicker.ScrollingIndex)
+                {
+                    case -1:
+                        if (currentScrollingIndex != 0) currentScrollingIndex--;
+
+                        UserInterface.FilterByWeeksMenu(codingSessionList, userYear, userWeek, averageDuration, totalDuration, _maxTableRows, currentScrollingIndex);
+                        continue;
+                    case 0:
+                        break;
+                    case 1:
+                        if (codingSessionList.Count > currentScrollingIndex + _maxTableRows) currentScrollingIndex++;
+
+                        UserInterface.FilterByWeeksMenu(codingSessionList, userYear, userWeek, averageDuration, totalDuration, _maxTableRows, currentScrollingIndex);
+                        continue;
+                }
+
+                scrollingIndexContinues = false;
+            }
+
             switch (OptionsPicker.MenuIndex)
             {
                 case 0: //asc
                     codingSessionList = _database.GetByWeeks(userYear, userMonth, userWeek);
-                    UserInterface.FilterByWeeksMenu(codingSessionList, userWeek, userYear, averageDuration, totalDuration, _maxTableRows);
+                    currentScrollingIndex = 0;
+                    UserInterface.FilterByWeeksMenu(codingSessionList, userYear, userWeek, averageDuration, totalDuration, _maxTableRows, currentScrollingIndex);
                     continue;
                 case 1: //desc
                     codingSessionList = _database.GetByWeeks(userYear, userMonth, userWeek, false);
-                    UserInterface.FilterByWeeksMenu(codingSessionList, userWeek, userYear, averageDuration, totalDuration, _maxTableRows);
+                    currentScrollingIndex = 0;
+                    UserInterface.FilterByWeeksMenu(codingSessionList, userYear, userWeek, averageDuration, totalDuration, _maxTableRows, currentScrollingIndex);
                     continue;
                 case 2: //Update
                     UserInterface.UpdateMiniMenu();
@@ -257,6 +293,7 @@ public class MonthsMenu : WeeksMenu
     public override void Display()
     {
         int _maxTableRows = 8;
+        int currentScrollingIndex = 0;
         string userYear = GetUserYear();
         string userMonth = GetUserMonth(userYear);
 
@@ -265,19 +302,43 @@ public class MonthsMenu : WeeksMenu
         var averageDuration = LogicOperations.AverageDuration(codingSessionList);
         var totalDuration = LogicOperations.TotalDuration(codingSessionList);
 
-        UserInterface.FilterByMonthsMenu(codingSessionList, userYear, userMonth, averageDuration, totalDuration, _maxTableRows);
+        UserInterface.FilterByMonthsMenu(codingSessionList, userYear, userMonth, averageDuration, totalDuration, _maxTableRows, currentScrollingIndex);
 
         while (true)
         {
+            bool scrollingIndexContinues = true;
+
+            while (scrollingIndexContinues)
+            {
+                switch (OptionsPicker.ScrollingIndex)
+                {
+                    case -1:
+                        if (currentScrollingIndex != 0) currentScrollingIndex--;
+
+                        UserInterface.FilterByMonthsMenu(codingSessionList, userYear, userMonth, averageDuration, totalDuration, _maxTableRows, currentScrollingIndex);
+                        continue;
+                    case 0:
+                        break;
+                    case 1:
+                        if (codingSessionList.Count > currentScrollingIndex + _maxTableRows) currentScrollingIndex++;
+
+                        UserInterface.FilterByMonthsMenu(codingSessionList, userYear, userMonth, averageDuration, totalDuration, _maxTableRows, currentScrollingIndex);
+                        continue;
+                }
+
+                scrollingIndexContinues = false;
+            }
             switch (OptionsPicker.MenuIndex)
             {
                 case 0: //asc
                     codingSessionList = _database.GetByMonths(userYear, userMonth);
-                    UserInterface.FilterByMonthsMenu(codingSessionList, userYear, userMonth, averageDuration, totalDuration, _maxTableRows);
+                    currentScrollingIndex = 0;
+                    UserInterface.RecordsAllMenu(codingSessionList, averageDuration, totalDuration, _maxTableRows, currentScrollingIndex);
                     continue;
                 case 1: //desc
                     codingSessionList = _database.GetByMonths(userYear, userMonth, false);
-                    UserInterface.FilterByMonthsMenu(codingSessionList, userYear, userMonth, averageDuration, totalDuration, _maxTableRows);
+                    currentScrollingIndex = 0;
+                    UserInterface.RecordsAllMenu(codingSessionList, averageDuration, totalDuration, _maxTableRows, currentScrollingIndex);
                     continue;
                 case 2: //Update
                     UserInterface.UpdateMiniMenu();
@@ -294,13 +355,14 @@ public class MonthsMenu : WeeksMenu
         }
     }
 }
+
 public class YearsMenu : WeeksMenu
 {
     public YearsMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
     public override void Display()
     {
         int _maxTableRows = 8;
-
+        int currentScrollingIndex = 0;
         string userYear = GetUserYear();
 
         List<CodingSession> codingSessionList = _database.GetByYears(userYear);
@@ -308,19 +370,43 @@ public class YearsMenu : WeeksMenu
         var averageDuration = LogicOperations.AverageDuration(codingSessionList);
         var totalDuration = LogicOperations.TotalDuration(codingSessionList);
 
-        UserInterface.FilterByYearsMenu(codingSessionList, userYear, averageDuration, totalDuration, _maxTableRows);
+        UserInterface.FilterByYearsMenu(codingSessionList, userYear, averageDuration, totalDuration, _maxTableRows, currentScrollingIndex);
 
         while (true)
         {
+            bool scrollingIndexContinues = true;
+
+            while (scrollingIndexContinues)
+            {
+                switch (OptionsPicker.ScrollingIndex)
+                {
+                    case -1:
+                        if (currentScrollingIndex != 0) currentScrollingIndex--;
+
+                        UserInterface.FilterByYearsMenu(codingSessionList, userYear, averageDuration, totalDuration, _maxTableRows, currentScrollingIndex);
+                        continue;
+                    case 0:
+                        break;
+                    case 1:
+                        if (codingSessionList.Count > currentScrollingIndex + _maxTableRows) currentScrollingIndex++;
+
+                        UserInterface.FilterByYearsMenu(codingSessionList, userYear, averageDuration, totalDuration, _maxTableRows, currentScrollingIndex);
+                        continue;
+                }
+
+                scrollingIndexContinues = false;
+            }
             switch (OptionsPicker.MenuIndex)
             {
                 case 0: //asc
                     codingSessionList = _database.GetByYears(userYear);
-                    UserInterface.FilterByYearsMenu(codingSessionList, userYear, averageDuration, totalDuration, _maxTableRows);
+                    currentScrollingIndex = 0;
+                    UserInterface.FilterByYearsMenu(codingSessionList, userYear, averageDuration, totalDuration, _maxTableRows, currentScrollingIndex);
                     continue;
                 case 1: //desc
                     codingSessionList = _database.GetByYears(userYear, false);
-                    UserInterface.FilterByYearsMenu(codingSessionList, userYear, averageDuration, totalDuration, _maxTableRows);
+                    currentScrollingIndex = 0;
+                    UserInterface.FilterByYearsMenu(codingSessionList, userYear, averageDuration, totalDuration, _maxTableRows, currentScrollingIndex);
                     continue;
                 case 2: //Update
                     UserInterface.UpdateMiniMenu();
@@ -476,7 +562,7 @@ public class SetGoalMenu : Menu
         UserInterface.SetGoalMenu();
 
         UserInterface.SetGoalTime();
-        string timeInput = UserInput.TimeInput(MenuManager, false);
+        string timeInput = UserInput.TimeSpanInput(MenuManager);
 
         UserInterface.SetGoalDate();
         string dateInput = UserInput.DateInput(MenuManager, false);
@@ -494,6 +580,8 @@ public class ShowGoalsMenu : Menu
     public ShowGoalsMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
     public override void Display()
     {
+        int currentScrollingIndex = 0;
+        int maxTableRows = 5;
         Goal.ValidateDatabase();
         List<Goal> goalsList = Goal.GetAllGoals();
 
@@ -503,8 +591,30 @@ public class ShowGoalsMenu : Menu
             MenuManager.GoBack();
         }
 
-        UserInterface.DisplayAllGoals(goalsList);
+        UserInterface.DisplayAllGoals(goalsList, currentScrollingIndex, maxTableRows);
 
+        bool scrollingIndexContinues = true;
+
+        while (scrollingIndexContinues)
+        {
+            switch (OptionsPicker.ScrollingIndex)
+            {
+                case -1:
+                    if (currentScrollingIndex != 0) currentScrollingIndex--;
+
+                    UserInterface.DisplayAllGoals(goalsList, currentScrollingIndex, maxTableRows);
+                    continue;
+                case 0:
+                    break;
+                case 1:
+                    if (goalsList.Count > currentScrollingIndex + maxTableRows) currentScrollingIndex++;
+
+                    UserInterface.DisplayAllGoals(goalsList, currentScrollingIndex, maxTableRows);
+                    continue;
+            }
+
+            scrollingIndexContinues = false;
+        }
         switch (OptionsPicker.MenuIndex)
         {
             case 0:
@@ -522,9 +632,33 @@ public class ShowActiveGoalsMenu : Menu
     public ShowActiveGoalsMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
     public override void Display()
     {
+        int currentScrollingIndex = 0;
+        int maxTableRows = 5;
         List<Goal> activeGoalsList = Goal.GetActiveGoals();
-        UserInterface.DisplayActiveGoals(activeGoalsList);
+        UserInterface.DisplayActiveGoals(activeGoalsList, currentScrollingIndex, maxTableRows);
 
+        bool scrollingIndexContinues = true;
+
+        while (scrollingIndexContinues)
+        {
+            switch (OptionsPicker.ScrollingIndex)
+            {
+                case -1:
+                    if (currentScrollingIndex != 0) currentScrollingIndex--;
+
+                    UserInterface.DisplayActiveGoals(activeGoalsList, currentScrollingIndex, maxTableRows);
+                    continue;
+                case 0:
+                    break;
+                case 1:
+                    if (activeGoalsList.Count > currentScrollingIndex + maxTableRows) currentScrollingIndex++;
+
+                    UserInterface.DisplayActiveGoals(activeGoalsList, currentScrollingIndex, maxTableRows);
+                    continue;
+            }
+
+            scrollingIndexContinues = false;
+        }
         switch (OptionsPicker.MenuIndex)
         {
             case 0:
@@ -579,7 +713,7 @@ public class SetSessionMenu : Menu
                     int monthNumber = Convert.ToInt32(_startDateTime.ToString("MM"));
                     int weekNumber = LogicOperations.GetWeekNumber(_startDateTime);
 
-                    _database.Insert(sessionNote, _startDateTime.ToString("yyyy-MM-dd HH:mm:ss"), _endDateTime.ToString("yyyy-MM-dd HH:mm:ss"), $"{duration:hh\\:mm\\:ss}", yearNumber, monthNumber, weekNumber);
+                    _database.Insert(sessionNote, _startDateTime.ToString("yyyy-MM-dd HH:mm:ss"), _endDateTime.ToString("yyyy-MM-dd HH:mm:ss"), duration.ToString(), yearNumber, monthNumber, weekNumber);
                     Goal.UpdateGoals(duration, _startDateTime);
 
                     UserInput.DisplayMessage("Session saved!", "return to Main Menu");
@@ -650,7 +784,7 @@ public class AutoSessionMenu : Menu
                     int monthNumber = Convert.ToInt32(startDateTime.ToString("MM"));
                     int weekNumber = LogicOperations.GetWeekNumber(startDateTime);
 
-                    _database.Insert(sessionNote, startDateTime.ToString("yyyy-MM-dd HH:mm:ss"), endDateTime.ToString("yyyy-MM-dd HH:mm:ss"), $"{duration:hh\\:mm\\:ss}", yearNumber, monthNumber, weekNumber);
+                    _database.Insert(sessionNote, startDateTime.ToString("yyyy-MM-dd HH:mm:ss"), endDateTime.ToString("yyyy-MM-dd HH:mm:ss"), duration.ToString(), yearNumber, monthNumber, weekNumber);
 
                     Goal.UpdateGoals(duration, startDateTime);
 
