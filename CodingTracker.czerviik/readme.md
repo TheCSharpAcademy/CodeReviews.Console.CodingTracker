@@ -1,9 +1,3 @@
-[
-    "# Head",
-    "## Item",
-    "### Detail"
-]
-
 # ConsoleCodingTracker
 
 ## Introduction
@@ -86,6 +80,7 @@ a status bar of their progress in each goal
 ![image](https://github.com/czerviik/CodeReviews.Console.CodingTracker/assets/137193704/be58d5fc-e1a0-4973-8ebb-ed9ed00e00ff>)
 
 ## Challenges
+
 * I tried to make a more solid menu handling than just number of loops
 and checks so I implemented a MenuManager class that handles menu objects
 in a stack. Calling that stack through the methods was found
