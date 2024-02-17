@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CodingTracker": {
+      "commandName": "Project",
+      "workingDirectory": "C:\\Users\\Archimedes\\Documents\\8. CSharp\\CSharpAcademy_Console.CodingTracker\\CodingTracker"
+    }
+  }
+}

@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <RootNamespace>CodingTracker.MartinL_no</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.10" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
+    <PackageReference Include="ConsoleTableExt" Version="3.2.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="DAL\" />
+    <None Remove="Controllers\" />
+    <None Remove="UserInterface\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DAL\" />
+    <Folder Include="Controllers\" />
+    <Folder Include="UserInterface\" />
+  </ItemGroup>
+</Project>

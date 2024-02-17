@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34031.279
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodingTracker.Forser", "CodingTracker.Forser.csproj", "{CE7443F5-A451-42C9-BC2E-0D2CC57CA1FB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CE7443F5-A451-42C9-BC2E-0D2CC57CA1FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE7443F5-A451-42C9-BC2E-0D2CC57CA1FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE7443F5-A451-42C9-BC2E-0D2CC57CA1FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE7443F5-A451-42C9-BC2E-0D2CC57CA1FB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {52067C6D-2DCE-4F78-9C38-31A9F94C4F77}
+	EndGlobalSection
+EndGlobal

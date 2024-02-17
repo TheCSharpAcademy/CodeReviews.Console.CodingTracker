@@ -1,0 +1,20 @@
+﻿Configuration File
+-Database path
+-Connection string
+
+Model
+-CodingSession - ID, StartTime, EndTime, Duration
+
+
+View
+-Menu Display 
+-Display All Entries - ConsoleTableExt
+-Display New Entry Info
+-Display Delete Entry Info
+-Display Update Entry Info
+
+
+Controller
+-Select Option 
+-UserInput - Enter StartTime and EndTime
+-InputValidation 
