@@ -1,0 +1,10 @@
+try catch bloky, pozjišťovat, kde všude je dát
+začistit
+
+//když se upraví starttime tak, že se ocitne v aktivním gólu, změna se projeví až po druhém updatu sessiony, s tím si zatím moc nevím rady
+//pořešit, když je currentTime v goals záporný - nesmí být
+//sjednotit všechny časové formáty
+//možná ukládat hezčí hodnoty do goals database (na funkčnost ale zdá se nemá vliv)
+//pořešit jak se chová volání do databáze, když nejsou žádné sessions 
+//skrolování ve výsledcích databáze
+
