@@ -1,9 +1,3 @@
-using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using Spectre.Console;
 
 namespace CodingTracker;
@@ -11,10 +5,10 @@ namespace CodingTracker;
 public static class UserInterface
 {
     private static int _currentCursorTopPosition;
+
     public static void MainMenu()
     {
         string[] menuOptions = { "New Coding Session", "Show Records", "Goals", "Exit" };
-
         Header("coding tracker");
 
         OptionsPicker.Navigate(menuOptions, true);
@@ -23,15 +17,15 @@ public static class UserInterface
     public static void CodingSessionMenu()
     {
         string[] menuOptions = { "Enter Coding Session manually", "Start a new Coding Session", "Go back" };
-
         Header("new coding session");
+
         LockCursorPosition();
 
         OptionsPicker.Navigate(menuOptions, true);
     }
+
     public static void SetSessionTime(bool isStart, bool isUpdate = false)
     {
-
         string sessionTimeLabel = isStart ? "Start" : "End";
 
         ConsoleClearLines(GetLockedCursorPosition());
@@ -48,12 +42,13 @@ public static class UserInterface
             Console.WriteLine(string.Format("  {0,-" + (autoTimeEnter.Length + boxWidthModifier) + "}", autoTimeEnter));
             Console.ResetColor();
         }
-
     }
+
     public static void SetSessionDate(bool isStart, bool isUpdate = false)
     {
         string autoDateEnter;
         string sessionDateLabel = isStart ? "Start" : "End";
+
         if (!isUpdate)
         {
             autoDateEnter = isStart ? "Enter, if it's today." : "Enter, if it's the same as start date.";
@@ -73,8 +68,8 @@ public static class UserInterface
         Console.ForegroundColor = ConsoleColor.Black;
         Console.WriteLine(string.Format("  {0,-" + (autoDateEnter.Length + boxWidthModifier) + "}", autoDateEnter));
         Console.ResetColor();
-
     }
+
     public static void SessionConfirm(DateTime startDateTime, DateTime endDateTime, TimeSpan duration)
     {
         string[] menuOptions = { "Confirm", "Enter again", "Go back" };
@@ -93,6 +88,7 @@ public static class UserInterface
 
         OptionsPicker.Navigate(menuOptions, true);
     }
+
     public static void SessionNote(bool isUpdate = false)
     {
         string enterMessage = isUpdate ? "as original" : "blank";
@@ -129,21 +125,22 @@ public static class UserInterface
     public static void RecordsMenu()
     {
         string[] menuOptions = { "Show all", "Filters", "Go back" };
-
         Header("show sessions");
 
         OptionsPicker.Navigate(menuOptions, true);
     }
+
     public static void FilterSessionsMenu()
     {
         string[] menuOptions = { "By week", "By month", "By year", "Go back" };
-
         Header("filters");
+
         LockCursorPosition();
         Console.WriteLine("Choose a filter:");
 
         OptionsPicker.Navigate(menuOptions, true);
     }
+
     public static void PickYearMiniMenu(string[] yearList)
     {
         string[] yearsListOptions = new string[yearList.Length + 1];
@@ -153,8 +150,10 @@ public static class UserInterface
 
         ConsoleClearLines(GetLockedCursorPosition());
         Console.WriteLine("Choose a year:");
+
         OptionsPicker.Navigate(yearsListOptions, true);
     }
+
     public static void PickMonthMiniMenu(string[] monthList)
     {
         string[] monthsListOptions = new string[monthList.Length + 1];
@@ -164,8 +163,10 @@ public static class UserInterface
 
         ConsoleClearLines(GetLockedCursorPosition());
         Console.WriteLine("Choose a month:");
+
         OptionsPicker.Navigate(monthsListOptions, true);
     }
+
     public static void PickWeekMiniMenu(string[] weekList)
     {
         string[] monthsListOptions = new string[weekList.Length + 1];
@@ -175,14 +176,13 @@ public static class UserInterface
 
         ConsoleClearLines(GetLockedCursorPosition());
         Console.WriteLine("Choose a week:");
+
         OptionsPicker.Navigate(monthsListOptions, true);
     }
 
     public static void FilterByWeeksMenu(List<CodingSession> codingSessionList, string userYear, string userWeek, TimeSpan averageDuration, TimeSpan totalDuration, int maxRows, int currentIndex)
     {
         string[] menuOptions = { "Ascending", "Descending", "Update", "Delete", "Go back" };
-
-
         Header($"all sessions of the week {userWeek} of {userYear}");
 
         if (codingSessionList.Count > maxRows)
@@ -197,11 +197,10 @@ public static class UserInterface
 
         OptionsPicker.NavigateWithScrolling(menuOptions, true);
     }
+
     public static void FilterByMonthsMenu(List<CodingSession> codingSessionList, string userYear, string userMonth, TimeSpan averageDuration, TimeSpan totalDuration, int maxRows, int currentIndex)
     {
         string[] menuOptions = { "Ascending", "Descending", "Update", "Delete", "Go back" };
-
-
         Header($"all sessions of the month {userMonth} of {userYear}");
 
         if (codingSessionList.Count > maxRows)
@@ -216,11 +215,10 @@ public static class UserInterface
 
         OptionsPicker.NavigateWithScrolling(menuOptions, true);
     }
+
     public static void FilterByYearsMenu(List<CodingSession> codingSessionList, string userYear, TimeSpan averageDuration, TimeSpan totalDuration, int maxRows, int currentIndex)
     {
         string[] menuOptions = { "Ascending", "Descending", "Update", "Delete", "Go back" };
-
-
         Header($"all sessions of {userYear}");
 
         if (codingSessionList.Count > maxRows)
@@ -235,10 +233,10 @@ public static class UserInterface
 
         OptionsPicker.NavigateWithScrolling(menuOptions, true);
     }
+
     public static void RecordsAllMenu(List<CodingSession> codingSessionList, TimeSpan averageDuration, TimeSpan totalDuration, int maxRows, int currentIndex = 0)
     {
         string[] menuOptions = { "Ascending", "Descending", "Update", "Delete", "Go back" };
-
         Header("show all sessions");
 
         if (codingSessionList.Count > maxRows)
@@ -253,28 +251,33 @@ public static class UserInterface
 
         OptionsPicker.NavigateWithScrolling(menuOptions, true);
     }
+
     public static void UpdateMenu(CodingSession codingSessions)
     {
-
         Header($"update a record of id {codingSessions.Id}");
+
         DisplayTable(codingSessions);
         LockCursorPosition();
     }
+
     public static void UpdateMiniMenu()
     {
         ConsoleClearLines(Console.GetCursorPosition().Top);
         Console.WriteLine("Type ID of a session you want to update: ");
     }
+
     public static void DeleteMenu(CodingSession codingSessions)
     {
         string[] menuOptions = { "No", "Yes" };
-
         Header($"delete a session of id {codingSessions.Id}");
+
         DisplayTable(codingSessions);
         LockCursorPosition();
         Console.WriteLine("\n Do you really want to delete this session?");
+
         OptionsPicker.Navigate(menuOptions, false);
     }
+
     public static void DeleteMiniMenu()
     {
         ConsoleClearLines(GetLockedCursorPosition());
@@ -284,32 +287,36 @@ public static class UserInterface
     public static void GoalsMenu()
     {
         string[] menuOptions = { "Set a Goal", "Show Goals", "Go back" };
-
         Header("goals");
 
         OptionsPicker.Navigate(menuOptions, true);
     }
+
     public static void SetGoalMenu()
     {
         Header("set a new goal");
         LockCursorPosition();
     }
+
     public static void SetGoalTime()
     {
         ConsoleClearLastLines(GetLockedCursorPosition());
         Console.WriteLine("Enter a goal time (HH:mm)");
     }
+
     public static void SetGoalDate()
     {
         ConsoleClearLastLines(GetLockedCursorPosition());
         Console.WriteLine("Enter a goal end date (YYYY-MM-dd)");
     }
+
     public static void GoalReached(int id)
     {
         Console.BackgroundColor = ConsoleColor.Green;
         Console.WriteLine($"Goal #{id} reached!\n");
         Console.ResetColor();
     }
+
     public static void DisplayAllGoals(List<Goal> goalsList, int scrollingIndex, int maxRows)
     {
         string[] menuOptions = { "Show active only", "Go back" };
@@ -321,6 +328,7 @@ public static class UserInterface
 
         OptionsPicker.NavigateWithScrolling(menuOptions, true);
     }
+
     public static void DisplayActiveGoals(List<Goal> goalsList, int scrollingIndex, int maxRows)
     {
         string[] menuOptions = { "Show all", "Go back" };
@@ -333,12 +341,14 @@ public static class UserInterface
 
         OptionsPicker.NavigateWithScrolling(menuOptions, true);
     }
+
     private static void Header(string headerText)
     {
         Console.Clear();
         Console.WriteLine($"-----{headerText.ToUpper()}-----");
         Console.WriteLine();
     }
+
     public static void ConsoleClearLines(int clearFromLine)
     {
         for (int i = Console.WindowHeight; i >= clearFromLine; i--)
@@ -348,6 +358,7 @@ public static class UserInterface
         }
         Console.SetCursorPosition(0, Console.GetCursorPosition().Top);
     }
+
     public static void ConsoleClearLastLines(int lastLines)
     {
         int initialCursorTopPosition = Console.GetCursorPosition().Top - lastLines;
@@ -360,6 +371,7 @@ public static class UserInterface
         }
         Console.SetCursorPosition(0, Console.GetCursorPosition().Top);
     }
+
     private static void DisplayTable(List<CodingSession> list, int scrollingIndex, int maxRows)
     {
         var table = new Table();
@@ -378,6 +390,7 @@ public static class UserInterface
         }
         AnsiConsole.Write(table);
     }
+
     private static void DisplayTable(CodingSession codingSession)
     {
         var table = new Table();
@@ -394,6 +407,7 @@ public static class UserInterface
 
         AnsiConsole.Write(table);
     }
+
     private static void DisplayGoalsTable(List<Goal> goalsList, int scrollingIndex, int maxRows)
     {
         string goalStatus;
@@ -423,6 +437,7 @@ public static class UserInterface
         AnsiConsole.Write(table);
         Console.WriteLine();
     }
+
     private static string GetGoalStatus(Goal goal)
     {
         if (goal.Status == "active")
@@ -452,9 +467,11 @@ public static class UserInterface
             return $"[black on green]{paddedString}[/]";
         }
     }
+
     private static void LockCursorPosition()
     {
         _currentCursorTopPosition = Console.GetCursorPosition().Top;
     }
+    
     private static int GetLockedCursorPosition() => _currentCursorTopPosition;
 }

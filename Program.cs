@@ -1,5 +1,4 @@
-﻿
-namespace CodingTracker;
+﻿namespace CodingTracker;
 internal class Program
 {
     private static void Main(string[] args)
@@ -16,10 +15,8 @@ internal class Program
             var database = new Database(connectionString, fileName);
 
             Console.SetWindowSize(consoleWidth,consoleHeight);
-            //Console.SetBufferSize(consoleWidth,consoleHeight);
 
             var menuManager = new MenuManager(database);
-
         }
         catch (InvalidOperationException ex)
         {

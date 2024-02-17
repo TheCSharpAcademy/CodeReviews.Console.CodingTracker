@@ -2,7 +2,6 @@ namespace CodingTracker;
 
 public abstract class Menu
 {
-
     protected MenuManager MenuManager { get; }
     protected Database _database;
     protected Menu(MenuManager menuManager, Database database)
@@ -36,7 +35,6 @@ public class MainMenu : Menu
                 break;
         }
         MenuManager.DisplayCurrentMenu();
-
     }
 }
 
@@ -83,11 +81,12 @@ public class ShowRecordsMenu : Menu
         }
     }
 }
+
 public class ShowAllRecordsMenu : Menu
 {
     public ShowAllRecordsMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
     private int currentScrollingIndex = 0;
-    private int _maxTableRows = 8;
+    private readonly int _maxTableRows = 8;
     public override void Display()
     {
         var codingSessionList = _database.GetAll();
@@ -97,7 +96,6 @@ public class ShowAllRecordsMenu : Menu
             UserInput.DisplayMessage("No sessions yet.", "to go back", true);
             MenuManager.GoBack();
         }
-
         var averageDuration = LogicOperations.AverageDuration(codingSessionList);
         var totalDuration = LogicOperations.TotalDuration(codingSessionList);
 
@@ -109,25 +107,22 @@ public class ShowAllRecordsMenu : Menu
 
             while (scrollingIndexContinues)
             {
-
                 switch (OptionsPicker.ScrollingIndex)
                 {
                     case -1:
                         if (currentScrollingIndex != 0) currentScrollingIndex--;
-
                         UserInterface.RecordsAllMenu(codingSessionList, averageDuration, totalDuration, _maxTableRows, currentScrollingIndex);
                         continue;
                     case 0:
                         break;
                     case 1:
                         if (codingSessionList.Count > currentScrollingIndex + _maxTableRows) currentScrollingIndex++;
-
                         UserInterface.RecordsAllMenu(codingSessionList, averageDuration, totalDuration, _maxTableRows, currentScrollingIndex);
                         continue;
-                } //vyřešit tento přechod, když dojde na maximální index, zaktivuje se následující switch na case 0, který má v sobě continue bloky a to dělá paseku
-
+                }
                 scrollingIndexContinues = false;
             }
+
             switch (OptionsPicker.MenuIndex)
             {
                 case 0:
@@ -140,15 +135,15 @@ public class ShowAllRecordsMenu : Menu
                     currentScrollingIndex = 0;
                     UserInterface.RecordsAllMenu(codingSessionList, averageDuration, totalDuration, _maxTableRows);
                     continue;
-                case 2: //Update
+                case 2:
                     UserInterface.UpdateMiniMenu();
                     MenuManager.NewMenu(new UpdateMenu(MenuManager, _database, codingSessionList));
                     break;
-                case 3: //Delete
+                case 3:
                     UserInterface.DeleteMiniMenu();
                     MenuManager.NewMenu(new DeleteMenu(MenuManager, _database, codingSessionList));
                     break;
-                case 4: //GoBack
+                case 4:
                     MenuManager.GoBack();
                     break;
             }
@@ -188,6 +183,7 @@ public class ShowFiltersMenu : Menu
         }
     }
 }
+
 public class WeeksMenu : Menu
 {
     public WeeksMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
@@ -216,18 +212,15 @@ public class WeeksMenu : Menu
                 {
                     case -1:
                         if (currentScrollingIndex != 0) currentScrollingIndex--;
-
                         UserInterface.FilterByWeeksMenu(codingSessionList, userYear, userWeek, averageDuration, totalDuration, _maxTableRows, currentScrollingIndex);
                         continue;
                     case 0:
                         break;
                     case 1:
                         if (codingSessionList.Count > currentScrollingIndex + _maxTableRows) currentScrollingIndex++;
-
                         UserInterface.FilterByWeeksMenu(codingSessionList, userYear, userWeek, averageDuration, totalDuration, _maxTableRows, currentScrollingIndex);
                         continue;
                 }
-
                 scrollingIndexContinues = false;
             }
 
@@ -257,6 +250,7 @@ public class WeeksMenu : Menu
             }
         }
     }
+
     protected string GetUserYear()
     {
         var yearArray = _database.GetDistinctYears();
@@ -267,6 +261,7 @@ public class WeeksMenu : Menu
 
         return yearArray[OptionsPicker.MenuIndex];
     }
+
     protected string GetUserMonth(string year)
     {
         var monthArray = _database.GetDistinctMonths(year);
@@ -275,6 +270,7 @@ public class WeeksMenu : Menu
 
         if (OptionsPicker.MenuIndex == monthArray.Length)
             MenuManager.GoBack();
+
         return monthArray[OptionsPicker.MenuIndex];
     }
     private string GetUserWeek(string year, string month)
@@ -284,9 +280,11 @@ public class WeeksMenu : Menu
 
         if (OptionsPicker.MenuIndex == weekArray.Length)
             MenuManager.GoBack();
+
         return weekArray[OptionsPicker.MenuIndex];
     }
 }
+
 public class MonthsMenu : WeeksMenu
 {
     public MonthsMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
@@ -314,20 +312,18 @@ public class MonthsMenu : WeeksMenu
                 {
                     case -1:
                         if (currentScrollingIndex != 0) currentScrollingIndex--;
-
                         UserInterface.FilterByMonthsMenu(codingSessionList, userYear, userMonth, averageDuration, totalDuration, _maxTableRows, currentScrollingIndex);
                         continue;
                     case 0:
                         break;
                     case 1:
                         if (codingSessionList.Count > currentScrollingIndex + _maxTableRows) currentScrollingIndex++;
-
                         UserInterface.FilterByMonthsMenu(codingSessionList, userYear, userMonth, averageDuration, totalDuration, _maxTableRows, currentScrollingIndex);
                         continue;
                 }
-
                 scrollingIndexContinues = false;
             }
+
             switch (OptionsPicker.MenuIndex)
             {
                 case 0: //asc
@@ -382,20 +378,18 @@ public class YearsMenu : WeeksMenu
                 {
                     case -1:
                         if (currentScrollingIndex != 0) currentScrollingIndex--;
-
                         UserInterface.FilterByYearsMenu(codingSessionList, userYear, averageDuration, totalDuration, _maxTableRows, currentScrollingIndex);
                         continue;
                     case 0:
                         break;
                     case 1:
                         if (codingSessionList.Count > currentScrollingIndex + _maxTableRows) currentScrollingIndex++;
-
                         UserInterface.FilterByYearsMenu(codingSessionList, userYear, averageDuration, totalDuration, _maxTableRows, currentScrollingIndex);
                         continue;
                 }
-
                 scrollingIndexContinues = false;
             }
+
             switch (OptionsPicker.MenuIndex)
             {
                 case 0: //asc
@@ -423,10 +417,10 @@ public class YearsMenu : WeeksMenu
         }
     }
 }
+
 public class UpdateMenu : SetSessionMenu
 {
     private List<CodingSession> _codingSessionList;
-
     public UpdateMenu(MenuManager menuManager, Database database, List<CodingSession> codingSessionList) : base(menuManager, database) { _codingSessionList = codingSessionList; }
     public override void Display()
     {
@@ -441,9 +435,7 @@ public class UpdateMenu : SetSessionMenu
         while (menuContinue)
         {
             UpdateDateTime(codingSession);
-
             TimeSpan duration = LogicOperations.CalculateDuration(_startDateTime, _endDateTime);
-
 
             if (duration < TimeSpan.Zero)
             {
@@ -491,16 +483,13 @@ public class UpdateMenu : SetSessionMenu
         _startTimeInput = UserInput.TimeInput(MenuManager, true);
         if (_startTimeInput == "_noInput_") _startTimeInput = codingSession.StartTime.ToString("HH:mm:ss");
 
-
         UserInterface.SetSessionTime(false, update);
         _endTimeInput = UserInput.TimeInput(MenuManager, true);
         if (_endTimeInput == "_noInput_") _endTimeInput = codingSession.EndTime.ToString("HH:mm:ss");
 
-
         UserInterface.SetSessionDate(true, update);
         _startDateInput = UserInput.DateInput(MenuManager, true);
         if (_startDateInput == "_noInput_") _startDateInput = codingSession.StartTime.ToString("yyyy-MM-dd");
-
 
         UserInterface.SetSessionDate(false, update);
         _endDateInput = UserInput.DateInput(MenuManager, true);
@@ -510,6 +499,7 @@ public class UpdateMenu : SetSessionMenu
         _endDateTime = LogicOperations.ConstructDateTime(_endTimeInput, _endDateInput);
     }
 }
+
 public class DeleteMenu : Menu
 {
     private List<CodingSession> _codingSessionList;
@@ -527,9 +517,7 @@ public class DeleteMenu : Menu
             MenuManager.ReturnToMainMenu();
         }
         else
-        {
             MenuManager.GoBack();
-        }
     }
 }
 
@@ -554,6 +542,7 @@ public class GoalsMenu : Menu
         }
     }
 }
+
 public class SetGoalMenu : Menu
 {
     public SetGoalMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
@@ -575,6 +564,7 @@ public class SetGoalMenu : Menu
         MenuManager.GoBack();
     }
 }
+
 public class ShowGoalsMenu : Menu
 {
     public ShowGoalsMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
@@ -601,20 +591,18 @@ public class ShowGoalsMenu : Menu
             {
                 case -1:
                     if (currentScrollingIndex != 0) currentScrollingIndex--;
-
                     UserInterface.DisplayAllGoals(goalsList, currentScrollingIndex, maxTableRows);
                     continue;
                 case 0:
                     break;
                 case 1:
                     if (goalsList.Count > currentScrollingIndex + maxTableRows) currentScrollingIndex++;
-
                     UserInterface.DisplayAllGoals(goalsList, currentScrollingIndex, maxTableRows);
                     continue;
             }
-
             scrollingIndexContinues = false;
         }
+
         switch (OptionsPicker.MenuIndex)
         {
             case 0:
@@ -624,9 +612,9 @@ public class ShowGoalsMenu : Menu
                 MenuManager.ReturnToMainMenu();
                 break;
         }
-
     }
 }
+
 public class ShowActiveGoalsMenu : Menu
 {
     public ShowActiveGoalsMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
@@ -645,20 +633,18 @@ public class ShowActiveGoalsMenu : Menu
             {
                 case -1:
                     if (currentScrollingIndex != 0) currentScrollingIndex--;
-
                     UserInterface.DisplayActiveGoals(activeGoalsList, currentScrollingIndex, maxTableRows);
                     continue;
                 case 0:
                     break;
                 case 1:
                     if (activeGoalsList.Count > currentScrollingIndex + maxTableRows) currentScrollingIndex++;
-
                     UserInterface.DisplayActiveGoals(activeGoalsList, currentScrollingIndex, maxTableRows);
                     continue;
             }
-
             scrollingIndexContinues = false;
         }
+
         switch (OptionsPicker.MenuIndex)
         {
             case 0:
@@ -668,9 +654,9 @@ public class ShowActiveGoalsMenu : Menu
                 MenuManager.ReturnToMainMenu();
                 break;
         }
-
     }
 }
+
 public class SetSessionMenu : Menu
 {
     protected string _startTimeInput = "";
@@ -730,6 +716,7 @@ public class SetSessionMenu : Menu
             }
         }
     }
+
     public virtual void SetDateTime()
     {
         UserInterface.SetSessionTime(true);
@@ -759,7 +746,6 @@ public class AutoSessionMenu : Menu
     public AutoSessionMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
     public override void Display()
     {
-
         string sessionNote;
         bool menuContinue = true;
 
@@ -800,6 +786,7 @@ public class AutoSessionMenu : Menu
             }
         }
     }
+
     private void HandleStopWatch()
     {
         StopwatchTimer stopwatch = new();
@@ -832,5 +819,4 @@ public class AutoSessionMenu : Menu
             }
         }
     }
-
 }

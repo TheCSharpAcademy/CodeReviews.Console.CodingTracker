@@ -1,17 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace CodingTracker;
 
 public class MenuManager
 {
     private readonly Stack<Menu> _menuStack = new Stack<Menu>();
     private Database _database;
-    private GoalsDatabase _goalsDatabase;
-
-
 
     public MenuManager(Database database)
     {
@@ -35,7 +27,6 @@ public class MenuManager
         DisplayCurrentMenu();
     }
 
-
     public void GoBack()
     {
         if (_menuStack.Count > 1)
@@ -49,5 +40,4 @@ public class MenuManager
             _menuStack.Pop();
         DisplayCurrentMenu();
     }
-
 }

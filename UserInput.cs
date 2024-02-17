@@ -1,176 +1,170 @@
-using System;
-using System.Collections.Generic;
-using System.Data.SQLite;
-using System.Globalization;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Transactions;
 
-namespace CodingTracker
+namespace CodingTracker;
+
+public static class UserInput
 {
-    public static class UserInput
+    private static bool _priorError = false;
+
+    public static string TimeInput(MenuManager menuManager, bool blankOption)
     {
-        private static bool _priorError = false;
+        _priorError = false;
 
-        public static string TimeInput(MenuManager menuManager, bool blankOption)
+#nullable enable
+        do
         {
-            _priorError = false;
+            string? userInput = InputWithSpecialKeys(menuManager, true);
 
-            do
+            if (userInput == "_escape_") return userInput;
+            else if (userInput == "" && blankOption) return "_noInput_";
+
+            if (userInput != null)
             {
-                string? userInput = InputWithSpecialKeys(menuManager, true);
-
-                if (userInput == "_escape_") return userInput;
-                else if (userInput == "" && blankOption) return "_noInput_";
-
-                if (userInput != null)
+                try
                 {
-                    try
-                    {
-                        return DateTime.Parse(userInput).ToString("HH:mm");
-                    }
-                    catch
-                    {
-                        HandleInputError("Enter a valid daytime (HH:mm):");
-                    }
+                    return DateTime.Parse(userInput).ToString("HH:mm");
                 }
-            } while (true);
-        }
-        public static string TimeSpanInput(MenuManager menuManager)
-        {
-            _priorError = false;
-
-            do
-            {
-                string? userInput = InputWithSpecialKeys(menuManager, true);
-
-                if (userInput == "_escape_") return userInput;
-
-                if (userInput != null)
+                catch
                 {
-                    try
-                    {
-                        var duration = LogicOperations.UserStringToTimeSpan(userInput);
-                        return duration.ToString();
-                    }
-                    catch
-                    {
-                        HandleInputError("Enter a valid time (HH:mm):");
-                    }
+                    HandleInputError("Enter a valid daytime (HH:mm):");
                 }
-            } while (true);
-        }
-
-        public static string DateInput(MenuManager menuManager, bool blankOption)
-        {
-            _priorError = false;
-
-            do
-            {
-                string? userInput = InputWithSpecialKeys(menuManager, true);
-
-                if (userInput == "_escape_") return userInput;
-                else if (userInput == "" && !blankOption) return DateTime.Now.ToString("yyyy-MM-dd");
-                else if (userInput == "" && blankOption) return "_noInput_";
-
-                if (userInput != null)
-                {
-                    try
-                    {
-                        return DateTime.Parse(userInput).ToString("yyyy-MM-dd");
-                    }
-                    catch
-                    {
-                        HandleInputError("Enter a valid date (YYYY-MM-DD):");
-                    }
-                }
-            } while (true);
-        }
-
-        public static CodingSession IdInput(MenuManager menuManager, Database database, List<CodingSession> codingSessionList)
-        {
-            _priorError = false;
-            bool idFound = false;
-            do
-            {
-                string userInput = InputWithSpecialKeys(menuManager, true);
-
-                if (int.TryParse(userInput, out int resultId))
-                {
-                    foreach (var session in codingSessionList)
-                    {
-                        if (session.Id == resultId)
-                        {
-                            idFound = true;
-                            return database.GetByIndex(resultId);
-                        }
-                    }
-                    if (!idFound)
-                        HandleInputError($"ID '{resultId}' not found, enter a valid ID number:");
-                }
-                else
-                    HandleInputError("Enter a valid ID number:");
             }
-            while (true);
-        }
+        } while (true);
+    }
 
-        public static string InputWithSpecialKeys(MenuManager menuManager, bool escapeOption)
+    public static string TimeSpanInput(MenuManager menuManager)
+    {
+        _priorError = false;
+
+        do
         {
-            StringBuilder userInput = new StringBuilder();
-            ConsoleKeyInfo keyPress;
+            string? userInput = InputWithSpecialKeys(menuManager, true);
 
-            do
+            if (userInput == "_escape_") return userInput;
+
+            if (userInput != null)
             {
-                keyPress = Console.ReadKey(true);
-
-
-                if (keyPress.Key == ConsoleKey.Escape)
+                try
                 {
-                    if (!escapeOption) continue;
-
-                    menuManager.GoBack();
+                    var duration = LogicOperations.UserStringToTimeSpan(userInput);
+                    return duration.ToString();
                 }
-
-                else if (keyPress.Key == ConsoleKey.Enter)
+                catch
                 {
-                    Console.Write("\n");
-                    return userInput.ToString();
+                    HandleInputError("Enter a valid time (HH:mm):");
                 }
+            }
+        } while (true);
+    }
 
-                else if (keyPress.Key == ConsoleKey.Backspace && userInput.Length > 0)
-                {
-                    Console.Write("\b \b");
-                    userInput.Length--;
-                }
+    public static string DateInput(MenuManager menuManager, bool blankOption)
+    {
+        _priorError = false;
 
-                else if (!char.IsControl(keyPress.KeyChar))
-                {
-                    Console.Write(keyPress.KeyChar);
-                    userInput.Append(keyPress.KeyChar);
-                }
-            } while (true);
-
-        }
-        private static void HandleInputError(string errorMessage)
+        do
         {
-            if (_priorError)
-                UserInterface.ConsoleClearLastLines(2);
+            string? userInput = InputWithSpecialKeys(menuManager, true);
 
-            _priorError = true;
-            Console.WriteLine(errorMessage);
-        }
+            if (userInput == "_escape_") return userInput;
+            else if (userInput == "" && !blankOption) return DateTime.Now.ToString("yyyy-MM-dd");
+            else if (userInput == "" && blankOption) return "_noInput_";
 
-        public static void DisplayMessage(string message = "", string actionMessage = "continue", bool consoleClear = false)
+            if (userInput != null)
+            {
+                try
+                {
+                    return DateTime.Parse(userInput).ToString("yyyy-MM-dd");
+                }
+                catch
+                {
+                    HandleInputError("Enter a valid date (YYYY-MM-DD):");
+                }
+            }
+        } while (true);
+    }
+
+    public static CodingSession IdInput(MenuManager menuManager, Database database, List<CodingSession> codingSessionList)
+    {
+        _priorError = false;
+        bool idFound = false;
+
+        do
         {
-            if (consoleClear) Console.Clear();
+            string userInput = InputWithSpecialKeys(menuManager, true);
 
-            if (message == "")
-                Console.WriteLine($"\nPress any key to {actionMessage}...");
+            if (int.TryParse(userInput, out int resultId))
+            {
+                foreach (var session in codingSessionList)
+                {
+                    if (session.Id == resultId)
+                    {
+                        idFound = true;
+                        return database.GetByIndex(resultId);
+                    }
+                }
+                if (!idFound)
+                    HandleInputError($"ID '{resultId}' not found, enter a valid ID number:");
+            }
             else
-                Console.WriteLine($"\n{message} Press any key to {actionMessage}...");
-
-            Console.ReadKey();
+                HandleInputError("Enter a valid ID number:");
         }
+        while (true);
+    }
+
+    public static string InputWithSpecialKeys(MenuManager menuManager, bool escapeOption)
+    {
+        StringBuilder userInput = new StringBuilder();
+        ConsoleKeyInfo keyPress;
+
+        do
+        {
+            keyPress = Console.ReadKey(true);
+
+            if (keyPress.Key == ConsoleKey.Escape)
+            {
+                if (!escapeOption) continue;
+
+                menuManager.GoBack();
+            }
+
+            else if (keyPress.Key == ConsoleKey.Enter)
+            {
+                Console.Write("\n");
+                return userInput.ToString();
+            }
+
+            else if (keyPress.Key == ConsoleKey.Backspace && userInput.Length > 0)
+            {
+                Console.Write("\b \b");
+                userInput.Length--;
+            }
+
+            else if (!char.IsControl(keyPress.KeyChar))
+            {
+                Console.Write(keyPress.KeyChar);
+                userInput.Append(keyPress.KeyChar);
+            }
+        } while (true);
+
+    }
+    private static void HandleInputError(string errorMessage)
+    {
+        if (_priorError)
+            UserInterface.ConsoleClearLastLines(2);
+
+        _priorError = true;
+        Console.WriteLine(errorMessage);
+    }
+
+    public static void DisplayMessage(string message = "", string actionMessage = "continue", bool consoleClear = false)
+    {
+        if (consoleClear) Console.Clear();
+
+        if (message == "")
+            Console.WriteLine($"\nPress any key to {actionMessage}...");
+        else
+            Console.WriteLine($"\n{message} Press any key to {actionMessage}...");
+
+        Console.ReadKey();
     }
 }

@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.VisualBasic;
-
 namespace CodingTracker;
 
 public static class OptionsPicker
@@ -13,9 +7,9 @@ public static class OptionsPicker
     private static int currentIndex;
     private static int lastIndex;
     private static int lastMenuIndex;
-
-    private static int longestStringLength = 0;
-    private static int higlightBoxWidth = 0;
+    private static int longestStringLength;
+    private static int higlightBoxWidth;
+    private static readonly int higlightBoxMargins = 5;
 
     public static void Navigate(string[] menuOptions, bool escapeOption, bool scrollingEnabled = false)
     {
@@ -26,19 +20,15 @@ public static class OptionsPicker
         MenuIndex = 0;
         lastIndex = headerHeight; //important when only single-option menu
         currentIndex = MenuIndex + headerHeight; //to count with each menu's header
-        longestStringLength = menuOptions.OrderByDescending(s => s.Length).First().Length; //to set the width of higlighted box in a menu
-        higlightBoxWidth = longestStringLength + 5;
+        longestStringLength = menuOptions.OrderByDescending(s => s.Length).First().Length;
+        higlightBoxWidth = longestStringLength + higlightBoxMargins;
 
         for (int i = 0; i < menuOptions.Length; i++)
         {
             if (MenuIndex == i)
-            {
                 HighlightOption();
-            }
             else
-            {
                 Console.ResetColor();
-            }
 
             Console.WriteLine(string.Format("  {0,-" + higlightBoxWidth + "}", menuOptions[i]));
             Console.ResetColor();
@@ -68,7 +58,6 @@ public static class OptionsPicker
             {
                 EnterPressed(menuOptions);
                 enterPressed = true;
-
             }
             else if (keypress == ConsoleKey.Escape && escapeOption)
             {
@@ -76,11 +65,13 @@ public static class OptionsPicker
                 MenuIndex = menuOptions.Length - 1;
                 break;
             }
-
-            if (!onlyOneOption && !enterPressed) SwitchHighlight(menuOptions);
-
+            if (!onlyOneOption && !enterPressed)
+            {
+                SwitchHighlight(menuOptions);
+            }
         } while (!enterPressed);
     }
+    
     public static void NavigateWithScrolling(string[] menuOptions, bool escapeOption)
     {
         bool enterPressed = false;
@@ -133,7 +124,6 @@ public static class OptionsPicker
             {
                 EnterPressed(menuOptions);
                 enterPressed = true;
-
             }
             else if (keypress == ConsoleKey.Escape && escapeOption)
             {
@@ -152,11 +142,13 @@ public static class OptionsPicker
                 ScrollingIndex--;
                 break;
             }
-
-            if (!onlyOneOption && !enterPressed) SwitchHighlight(menuOptions);
-
+            if (!onlyOneOption && !enterPressed)
+            {
+                SwitchHighlight(menuOptions);
+            }
         } while (!enterPressed);
     }
+
     private static void EnterPressed(string[] menuOptions)
     {
         Console.SetCursorPosition(0, currentIndex);
@@ -164,8 +156,8 @@ public static class OptionsPicker
         Console.WriteLine(string.Format("  {0,-" + higlightBoxWidth + "}", menuOptions[MenuIndex]));
         Console.ResetColor();
         Thread.Sleep(100);
-
     }
+
     private static void HighlightOption()
     {
         Console.BackgroundColor = ConsoleColor.White;
@@ -192,8 +184,8 @@ public static class OptionsPicker
         Console.SetCursorPosition(0, headerHeight + menuOptions.Length - 1);
         Console.BackgroundColor = ConsoleColor.Red;
         Console.WriteLine(string.Format("  {0,-" + higlightBoxWidth + "}", menuOptions[menuOptions.Length - 1]));
+        
         Console.ResetColor();
         Thread.Sleep(100);
     }
 }
-
