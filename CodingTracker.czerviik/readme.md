@@ -52,8 +52,8 @@ Developed using C# and SQLite.
 - When user adds, updates or deletes a coding session, the goal (even when previously finished) updates it's progress accordingly
 - Users can display goals in a scrollable table, which includes a status bar of their progress in each goal
 
-- Goals table
-- ![image](https://github.com/czerviik/CodeReviews.Console.CodingTracker/assets/137193704/be58d5fc-e1a0-4973-8ebb-ed9ed00e00ff">)
+### Goals table
+	- ![image](https://github.com/czerviik/CodeReviews.Console.CodingTracker/assets/137193704/be58d5fc-e1a0-4973-8ebb-ed9ed00e00ff">)
 
 ## Challenges
 	
