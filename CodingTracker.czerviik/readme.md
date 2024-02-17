@@ -24,54 +24,52 @@ Developed using C# and SQLite.
 
 * SQLite database connection
 
-	- The program uses a SQLite db connection to store and read information. 
+	- The program uses a SQLite db connection to store and read information.
+	- The program uses two tables, one for Coding sessions other one for Goals
 	- If no database exists, or the correct table does not exist they will be created on program start.
 
-* A console based UI where users can navigate by key presses
- 
- 	- ![image](https://user-images.githubusercontent.com/15159720/141688100-ec6130da-33d6-4a30-ad3c-1d7f546da58a.png)
+* A console based UI where users can choose options by arrow keys, go back with escape button.
 
-* CRUD DB functions
+ 	- ![image](https://github.com/czerviik/CodeReviews.Console.CodingTracker/assets/137193704/b7c90135-42b4-45ee-8f86-9dfd92646122">)
 
-	- From the main menu users can Create, Read, Update or Delete entries for whichever date they want, entered in mm-DD-yyyy format. Duplicate days will not be inputted. 
-	- Time and Dates inputted are checked to make sure they are in the correct and realistic format. 
+* Displaying tables using the Spectre library, scrolling tables functionality
 
-* Basic Reports of Cumulative hours
+	- ![image](https://github.com/czerviik/CodeReviews.Console.CodingTracker/assets/137193704/1cf462a4-16a2-42f6-a811-c602da86fcbf">)
+  
+* Coding sessions functions:
+	- Users can add a Coding session manually or by using a stopwatch
+ 	- When entering manual time and date, user can use a fastforward method to automatically set the date as "today", or set the end date of the session the same as the start date
+  	- Manually entered times and dates are checked and ask for correction if wrong 	
+ 	- When using stopwatch, user can pause it, if the break is longer than 10s, it is not counted in the session's final duration
+   	- User is asked for confirmation and a note (optional) after each session
+    	- From the displayed table users can sort (asc, desc), update or delete entries
+        - User can filter coding sessions by years, months and weeks
+      	- The Coding session table is scrollable when there are more than 8 entries
 
-	- ![image](https://user-images.githubusercontent.com/15159720/141688399-9a4697d3-a143-4ed6-bad0-038268ddacaf.png)
+* Goals functions:
+	- Users can set up multiple active goals
+	- When user adds, updates or deletes a coding session, the goal (even when previously finished) updates it's progress accordingly
+ 	- Users can display goals in a scrollable table, which includes a status bar of their progress in each goal
 
-* Reporting and other data output uses ConsoleTableExt library to output in a more pleasant way
-
-	- ![image](https://user-images.githubusercontent.com/15159720/141688462-e5dc465c-f188-4ac9-a166-397653c53c41.png)
-	- [GitHub for ConsoleTableExt Library](https://github.com/minhhungit/ConsoleTableExt)
+* Goals table
+	- ![image](https://github.com/czerviik/CodeReviews.Console.CodingTracker/assets/137193704/be58d5fc-e1a0-4973-8ebb-ed9ed00e00ff">)
 
 # Challenges
 	
-- It was my first time using C#, Visual Studio or SQLite. I had to learn each of these technologies from the beginning in order to complete this project. 
-- DateTime was a hurdle to get over. I had to learn how to parse into and from DateTime into either more storable or human readable formats. I also had to learn how to subtract or add time together for reporting functionality. 
-- There was also a globalization issue with DateTime. My mentor from Australia had an issue inputting Dates in the format my program wanted. Resulting in him never being able to input a date. I was able to resolve this with adding a Culture argument to the DateTime parse.
-- Spaghetti code was a big issue at the beggining. I had just functions everywhere. After the first couple days of the project I decided to start from scratch and started to implement classes instead. This helped clean up the code to make it more readable and changeable.
-- SQLite. Even though I mentioned it above, it is worth mentioning again by itself. I had not used SQLite before and had never used C# to interact with it. I had to learn how to create commands to do all the CRUD operations and how to execute those commands. I also had to learn some SQL to use the proper SQL commands to SELECT, UPDATE, INSERT or DELETE along with modifiers to SELECT or DELETE only the desired rows. The reports also heavily relied on correct SQL statements. 
-	
+- I tried to make a more solid menu handling than just number of loops and checks so I implemented a MenuManager class that handles menu objects in a stack. Calling that stack through the methods was found an effective way of handling multiple menu screens. As it was a new feature for me, it took some time to get used to it.
+- One of the biggest challenge was my approach to make a "graphical" UI inside a console app, I inplemented OptionsPicker class that handles options with arrows, and other special keys. At first this approach seemed to be solid but as the program grew, I have to redesign the class multiple times so it works in all cases properly.
+- Another challenge was to inplement a UserInput method that will take key strokes and write them to the screen, but also take escape key as a "back" function while typing.
+- Another great challenge was to design a correctly working logic that updates the goals progress and status when user changes or deletes a past coding session. When I finally made it work it was a brutal spaghetti, so I had to refactor several methods to actually make it understandable
+- At first I struggled with implementing the correct table scrolling behavior as the program was already in almost finalized state, but it turned out to be working correctly at the end.
+- The biggest issue was with resizing the console window. My UI is strongly index based (depending on console size), so when the console window is too small, or is resized, the UI starts to do weird things. I tried to lock the window dimensions, or to check for dimensions change and handle it, but I learned that this functionality isn't fully working on UNIX based systems, so I left it as I am not aiming for console applications in the future
+- Here and there I learned some new syntax features and rules that I previously didn't understand or use
+- I also scratched a surface of multithreading, the Coding session clock runs at separate thread so you can pause it, continue, etc.
+- I again messed up with the repository, accidentally commited to "master" instead of "main". At the project's finish it led to big confusion and troubles. I had to delete folder, restructuralize, etc. It was really bad. 
+
 # Lessons Learned
-- Create a basic map of what some of the objects in the program should be and some of their basic methods before starting to code. I think this would help in not making spaghetti code from the beginning.
-- Do it the right way the first time. There were several instances where I just wanted to see if something would work so I did it in a quick way in which I knew it would need to be fixed or cleaned up later. 9 times out of 10 later never came. This piled onto itself and caused the spaghetti code to get worse. 
-- Have a testing grounds readily set up. This way small things can be tested seperately from the within the app. This can speed up creation. For example, I was learning how to parse and use DateTime. A testing ground just to check parseing from and to DateTime could help speed up coding, since I would not need to compile this application each change/test and go through the UI. 
-- Always create a new git branch for each issue or feature that is currently being worked on. This helps me stay focused on that single issue or feature so that I can merge that branch. And there is always satisfaction with switching back to main and merging the branch. 
-- Seperate user input from other methods. At first I made methods that would be called, take user input within the method then alter that data within the same method. This made my code less re-usable. I should seperate these two things, I can have a method first get the user input and validate it, then send it to another method as an argument to do any alteration or display needed. This means I could reuse the second method even if I am not getting user input first, or the first method if I want user input but not take it along the same route. 
-
-# Areas to Improve
-- I want to learn more about using the text editor portion of Visual Studio. I am use to Visual Studio code, and in VScode I know how to make multiple cursors, select all of a specific string or select the next occurence. There were many times in Visual Studio where utilizing this sort of functionality would have been very beneficial, but I did not know how to do it, or if it is even possible. 
-- Learn more about code snippets. I currently only know the code snipping for Console.WriteLine();. I should learn more, as this did spead up my coding. I should look to see if there is one for Console.ReadLine(); at the very least. 
-- single responsibility. I did improve at this along the way, but I still have some work to do on it. I think I could have made my methods a little better so they only had a single use. 
-- Method overloading and out arguments. I did start utilizing these during the end of this project. But I should work to see where they can be used more in my next project as hey helped me to clean up my code a bit and the out arguments helped me a lot in the logic of telling if a user input was in a correct format or not.
-
-
-# Resources Used
-- The help and advice of my mentor [Cappuccinocodes](https://github.com/cappuccinocodes)
-- [Mosh C# for beginners youtube video](https://www.youtube.com/watch?v=gfkTfcpWqAY&list=PLTjRvDozrdlz3_FPXwb6lX_HoGXa09Yef)
-- [Zetcode to get the basics of SQLite with C#](https://zetcode.com/csharp/sqlite/)
-- [MS docs for setting up SQLite with C#](https://docs.microsoft.com/en-us/dotnet/standard/data/sqlite/?tabs=netcore-cli)
-- [MS docs for DateTime](https://docs.microsoft.com/en-us/dotnet/api/system.datetime?view=net-5.0)
-- CodeCademy C# course to get some basic practice with C# variables, methods and classes.
-- Various StackOverflow articles
+- It's a very good idea to do some basic architect work before start. I made my in app.diagrams.net and it saved a lot of investigations and aimless try-fail attempts.
+- Next time I will not so try-hard with the UI, it's not that important for me in console apps.
+- The refactorization helps to read and understand the code even for me as an author.
+- Try-catch blocks very important as soon as possible.
+- Next time I will try to use more external libraries than trying to code most of the functions on my own.
+- Should learn more about multithreading, it came out useful.
