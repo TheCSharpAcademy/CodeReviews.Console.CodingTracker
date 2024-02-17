@@ -36,7 +36,10 @@ public static class OptionsPicker
 
         do
         {
-            while (!Console.KeyAvailable) { };
+            while (!Console.KeyAvailable)
+            {
+                Thread.Sleep(5);
+            }
 
             var keypress = Console.ReadKey(false).Key;
 
@@ -71,7 +74,7 @@ public static class OptionsPicker
             }
         } while (!enterPressed);
     }
-    
+
     public static void NavigateWithScrolling(string[] menuOptions, bool escapeOption)
     {
         bool enterPressed = false;
@@ -102,7 +105,10 @@ public static class OptionsPicker
 
         do
         {
-            while (!Console.KeyAvailable) { };
+            while (!Console.KeyAvailable)
+            {
+                Thread.Sleep(5);
+            }
 
             var keypress = Console.ReadKey(false).Key;
 
@@ -184,7 +190,7 @@ public static class OptionsPicker
         Console.SetCursorPosition(0, headerHeight + menuOptions.Length - 1);
         Console.BackgroundColor = ConsoleColor.Red;
         Console.WriteLine(string.Format("  {0,-" + higlightBoxWidth + "}", menuOptions[menuOptions.Length - 1]));
-        
+
         Console.ResetColor();
         Thread.Sleep(100);
     }

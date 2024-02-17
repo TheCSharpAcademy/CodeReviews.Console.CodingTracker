@@ -17,6 +17,7 @@ internal class Program
             Console.SetWindowSize(consoleWidth,consoleHeight);
 
             var menuManager = new MenuManager(database);
+            menuManager.Close();
         }
         catch (InvalidOperationException ex)
         {

@@ -40,4 +40,9 @@ public class MenuManager
             _menuStack.Pop();
         DisplayCurrentMenu();
     }
+    
+    public void Close()
+    {
+        Environment.Exit(0);
+    }
 }

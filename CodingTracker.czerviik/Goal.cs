@@ -13,7 +13,7 @@ public class Goal
     private static readonly string _activeKeyword = "active";
     private static readonly string _inactiveKeyword = "inactive";
     private static readonly GoalsDatabase _goalsDatabase;
-    private static bool _consoleCleared = false;
+    private static bool _consoleCleared;
 
     static Goal()
     {
@@ -88,8 +88,6 @@ public class Goal
         foreach (var goal in goalsList)
         {
             bool goalUnfulfilled = goal.UntilDate > DateTime.Now;
-            bool goalFulfilled = goal.CurrentTime >= goal.GoalTime;
-            bool goalActive = goal.Status == _activeKeyword;
 
             if (IsSessionWithinGoal(goal, sessionStartTime))
             {

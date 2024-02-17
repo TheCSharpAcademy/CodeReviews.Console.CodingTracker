@@ -85,7 +85,7 @@ public class ShowRecordsMenu : Menu
 public class ShowAllRecordsMenu : Menu
 {
     public ShowAllRecordsMenu(MenuManager menuManager, Database database) : base(menuManager, database) { }
-    private int currentScrollingIndex = 0;
+    private int currentScrollingIndex;
     private readonly int _maxTableRows = 8;
     public override void Display()
     {
