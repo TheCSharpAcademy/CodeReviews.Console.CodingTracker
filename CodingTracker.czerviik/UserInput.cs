@@ -4,7 +4,7 @@ namespace CodingTracker;
 
 public static class UserInput
 {
-    private static bool _priorError = false;
+    private static bool _priorError;
 
     public static string TimeInput(MenuManager menuManager, bool blankOption)
     {
