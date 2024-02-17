@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disablse</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Spectre.Console" Version="0.48.0"/>
+    <PackageReference Include="SQLite" Version="3.13.0"/>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0"/>
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="8.0.0"/>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0"/>
+    <PackageReference Include="System.Data.SQLite" Version="1.0.118"/>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>
