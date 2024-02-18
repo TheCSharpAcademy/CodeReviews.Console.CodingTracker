@@ -4,7 +4,7 @@ using Dapper;
 
 namespace CodingTracker
 {
-    internal class CRUD_Operations
+    internal class Crud_Operations
     {
         readonly static string connectionString = ConfigurationManager.ConnectionStrings["CodeTracker"].ConnectionString;
         readonly SQLiteConnection connection = new(connectionString);
