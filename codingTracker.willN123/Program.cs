@@ -4,7 +4,7 @@ class Program
 {
     private static void Main()
     {
-        Crud_Operations crud = new();
+        CrudOperations crud = new();
         InputValidation valid = new();
         CodeOperations code = new();
         SpectreDisplay spec = new();

@@ -21,11 +21,11 @@
 
     Lets you add a new session to the database.
     1.  Input the date of the session you want to add.
-	    Needs to be in format: dd-mm-yy. (ex. 01-02-21 for 1st Feb 2021)
+        Needs to be in format: dd-mm-yy. (ex. 01-02-21 for 1st Feb 2021)
 
     2.  Input the starting time in 24hour time with the format: hhmm. (ex. 1030 for ten thirty am)
 	    Input ending time in the same way as starting time.
-	    The maximum time a session can be is 23:59 (but you probably shouldn't code for that long anyway :) )
+        The maximum time a session can be is 23:59 (but you probably shouldn't code for that long anyway :) )
 	    Can go over to the next day, but the date will be the date when you started the session.
 
     3.  You will then be shown the details of the session you want to add, and be prompted to keep or discard.
