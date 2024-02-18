@@ -23,8 +23,8 @@ namespace CodingTracker
 
             var menuSelection = AnsiConsole.Prompt(new SelectionPrompt<string>()
                 .Title("Select a menu option with the [aqua]arrow keys[/], then press [aqua]Enter[/].")
-                .AddChoices(["View", "Add", "Update", "Delete", "Exit"])   );
-                //.HighlightStyle(Color.Aqua));
+                .AddChoices(["View", "Add", "Update", "Delete", "Exit"])
+                .HighlightStyle(Color.Aqua));
 
             return menuSelection;
         }
