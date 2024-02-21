@@ -10,6 +10,19 @@
                .ToString(@"hh\:mm");
         }
 
+        public bool CompareTime(string start, string end)
+        {
+            var startTime = ConvertToTime(ConvertHours(start), ConvertMinutes(start));
+            var endTime = ConvertToTime(ConvertHours(end), ConvertMinutes(end));
+            if(startTime < endTime)
+            {
+                return true;
+            }
+
+            Console.WriteLine("Invalid Input. Start time must be before end time.");
+            return false;
+        }
+
         public static TimeSpan CalculateTotal(TimeOnly start, TimeOnly end)
         {
             return end - start;

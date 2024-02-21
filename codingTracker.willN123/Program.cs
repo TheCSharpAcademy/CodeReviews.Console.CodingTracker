@@ -56,6 +56,10 @@ class Program
 
         void AddScreen(string id = "")
         {
+            string validEnd = "";
+            string validStart = "";
+            string validDate = "";
+
             while (!valid.ValidDateInput(input = spec.DatePrompt()))
             {
                 if (input == "0")
@@ -65,29 +69,32 @@ class Program
 
                 spec.InvalidEntry();
             }
-            string validDate = input;
+            validDate = input;
 
-            while (!valid.ValidTimeInput(input = spec.StartTimePrompt()))
+            do
             {
-                if (input == "0")
+                while (!valid.ValidTimeInput(input = spec.StartTimePrompt()))
                 {
-                    return;
+                    if (input == "0")
+                    {
+                        return;
+                    }
+
+                    spec.InvalidEntry();
                 }
+                validStart = $"{input[..2]}:{input.Substring(2, 2)}";
 
-                spec.InvalidEntry();
-            }
-            string validStart = $"{input[..2]}:{input.Substring(2, 2)}";
-
-            while (!valid.ValidTimeInput(input = spec.EndTimePrompt()))
-            {
-                if (input == "0")
+                while (!valid.ValidTimeInput(input = spec.EndTimePrompt()))
                 {
-                    return;
-                }
+                    if (input == "0")
+                    {
+                        return;
+                    }
 
-                spec.InvalidEntry();
-            }
-            string validEnd = $"{input[..2]}:{input.Substring(2, 2)}";
+                    spec.InvalidEntry();
+                }
+                validEnd = $"{input[..2]}:{input.Substring(2, 2)}";
+            }while (!code.CompareTime(validStart, validEnd));
 
             string total = code.GetTotalTime(validStart, validEnd);
 
