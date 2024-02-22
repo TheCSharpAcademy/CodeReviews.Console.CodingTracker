@@ -30,17 +30,23 @@ It provides a command-line application for tracking your coding sessions, managi
 	- View a list of all goals.
 	- Track progress towards achieving goals.
 - Track Coding Sessions:
-	- Start, stop, and record coding sessions with accurate duration measurement.
+	- Start, stop, and record coding sessions.
 	- Delete specific sessions if needed.
 	- Generate reports to analyze monthly and yearly coding activity.
 
 ## Examples
-- Main Menu
-- Yearly Report
-- Coding Sessions
-- Goals
-- Goal Progress
+- Main Menu  
+  ![image](https://github.com/Dejmenek/CodeReviews.Console.CodingTracker/assets/83865666/6d465966-dc5d-4575-89d5-938518e0e4ab)
+- Yearly Report  
+  ![image](https://github.com/Dejmenek/CodeReviews.Console.CodingTracker/assets/83865666/f01e34b9-0253-4d6d-86ff-8e863be2dd72)
+- Coding Sessions  
+  ![image](https://github.com/Dejmenek/CodeReviews.Console.CodingTracker/assets/83865666/122c7724-a45e-4db6-9415-305562744aca)
+- Goals  
+  ![image](https://github.com/Dejmenek/CodeReviews.Console.CodingTracker/assets/83865666/2ea122bf-30e6-4cc1-9882-e3c187bd4168)
+- Goal Progress  
+  ![image](https://github.com/Dejmenek/CodeReviews.Console.CodingTracker/assets/83865666/38ce6ee0-c2da-4cd8-a88c-98a95be8652b)
 
+  
 ## Requirements
 - [x] To show the data on the console, you should use the "Spectre.Console" library.
 - [x] You're required to have separate classes in different files (ex. UserInput.cs, Validation.cs, CodingController.cs)
