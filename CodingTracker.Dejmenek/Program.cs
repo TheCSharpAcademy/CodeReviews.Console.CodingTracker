@@ -141,7 +141,7 @@ internal class Program
 
                 case MenuOptions.ShowGoalProgress:
                     var goalProgressInformations = goalController.GetGoalProgress();
-                    AnsiConsole.MarkupLine($"You've coded for {goalProgressInformations.ElementAt(0).durationSum} minutes towards you goal of {goalProgressInformations.ElementAt(0).targetDuration} minutes");
+                    AnsiConsole.MarkupLine($"You've coded for {goalProgressInformations.ElementAt(0).durationSum} minutes towards your goal of {goalProgressInformations.ElementAt(0).targetDuration} minutes");
                     break;
 
                 case MenuOptions.Exit:
