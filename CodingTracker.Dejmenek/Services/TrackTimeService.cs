@@ -36,6 +36,11 @@ namespace CodingTracker.Dejmenek.Services
             _timer.Stop();
         }
 
+        public void Reset()
+        {
+            _timer.Reset();
+        }
+
         public TimeSpan GetElapsedTime()
         {
             return _timer.Elapsed;

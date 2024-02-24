@@ -30,6 +30,7 @@ namespace CodingTracker.Dejmenek.Controllers
             _endDateTime = DateTime.Now;
 
             int duration = _trackTimeService.GetElapsedTimeInMinutes();
+            _trackTimeService.Reset();
 
             _codingSessionRepository.AddCodingSession(_startDateTime.ToString("yyyy-MM-dd HH:mm"), _endDateTime.ToString("yyyy-MM-dd HH:mm"), duration);
         }
