@@ -127,6 +127,13 @@ internal class UserInput
             {
                 case UpdatingSelection.UpdateStartTime:
                     var newStart = Helpers.GetDateTimeInput("Please insert new start date and time (format: dd-MM-yy H:mm):");
+
+                    while (!Helpers.ValidateDateTime(newStart, coding.EndTime.ToString("dd-MM-yy H:mm")))
+                    {
+                        AnsiConsole.MarkupLine("\n[red]Invalid input! Start time can't be after end time![/]\n");
+                        newStart = Helpers.GetDateTimeInput("Please insert a valid start date and time (format: dd-MM-yy H:mm): ");
+                    }
+
                     coding.StartTime = DateTime.ParseExact(newStart, "dd-MM-yy H:mm", new CultureInfo("en-US"));
                     break;
                 case UpdatingSelection.UpdateEndTime:
