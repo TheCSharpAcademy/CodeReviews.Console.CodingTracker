@@ -148,6 +148,13 @@ internal class Program
                     exit = true;
                     break;
             }
+            ClearConsole();
         }
+    }
+
+    private static void ClearConsole()
+    {
+        Thread.Sleep(4000);
+        Console.Clear();
     }
 }
