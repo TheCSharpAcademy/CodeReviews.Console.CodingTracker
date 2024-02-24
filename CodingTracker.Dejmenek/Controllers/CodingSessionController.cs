@@ -1,6 +1,7 @@
 ﻿using CodingTracker.Dejmenek.DataAccess.Repositories;
 using CodingTracker.Dejmenek.Models;
 using CodingTracker.Dejmenek.Services;
+using Spectre.Console;
 
 namespace CodingTracker.Dejmenek.Controllers
 {
@@ -42,6 +43,29 @@ namespace CodingTracker.Dejmenek.Controllers
             _codingSessionRepository.DeleteCodingSession(id);
         }
 
+        public void AddCodingSession()
+        {
+            string startDateTime = _userInteractionService.GetDateTime();
+            string endDateTime = _userInteractionService.GetDateTime();
+
+            _startDateTime = DateTime.Parse(startDateTime);
+            _endDateTime = DateTime.Parse(endDateTime);
+
+            while (!Validation.IsChronologicalOrder(_startDateTime, _endDateTime))
+            {
+                AnsiConsole.MarkupLine("The ending time should always be after the starting time. Try again.");
+                startDateTime = _userInteractionService.GetDateTime();
+                endDateTime = _userInteractionService.GetDateTime();
+
+                _startDateTime = DateTime.Parse(startDateTime);
+                _endDateTime = DateTime.Parse(endDateTime);
+            }
+
+            int duration = CalculateDuration();
+
+            _codingSessionRepository.AddCodingSession(startDateTime, endDateTime, duration);
+        }
+
         public List<CodingSession> GetAllCodingSessions()
         {
             return _codingSessionRepository.GetAllCodingSessions();
@@ -55,6 +79,12 @@ namespace CodingTracker.Dejmenek.Controllers
         public IEnumerable<(string year, string month, int durationSum)> GetMonthlyCodingSessionReport()
         {
             return _codingSessionRepository.GetMonthlyCodingSessionReport();
+        }
+
+        private int CalculateDuration()
+        {
+            TimeSpan ts = _endDateTime - _startDateTime;
+            return (int)ts.TotalMinutes;
         }
     }
 }

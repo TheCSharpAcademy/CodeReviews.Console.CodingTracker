@@ -3,6 +3,7 @@
     public enum MenuOptions
     {
         NewCodingSession,
+        AddCodingSession,
         DeleteCodingSession,
         ListCodingSessions,
         GenerateMonthlyCodingSessionsReport,

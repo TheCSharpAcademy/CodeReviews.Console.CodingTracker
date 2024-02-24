@@ -25,6 +25,7 @@ internal class Program
         {
             var userOption = AnsiConsole.Prompt(new SelectionPrompt<MenuOptions>().Title("What would you like to do?").AddChoices(
                 MenuOptions.NewCodingSession,
+                MenuOptions.AddCodingSession,
                 MenuOptions.DeleteCodingSession,
                 MenuOptions.ListCodingSessions,
                 MenuOptions.GenerateMonthlyCodingSessionsReport,
@@ -52,6 +53,10 @@ internal class Program
                     timerThread.Join();
 
                     codingSessionController.EndSession();
+                    break;
+
+                case MenuOptions.AddCodingSession:
+                    codingSessionController.AddCodingSession();
                     break;
 
                 case MenuOptions.DeleteCodingSession:
