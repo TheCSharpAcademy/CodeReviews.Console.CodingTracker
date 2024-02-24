@@ -1,6 +1,7 @@
 ﻿using CodingTracker.Dejmenek.DataAccess.Repositories;
 using CodingTracker.Dejmenek.Models;
 using CodingTracker.Dejmenek.Services;
+using Spectre.Console;
 
 namespace CodingTracker.Dejmenek.Controllers
 {
@@ -22,6 +23,7 @@ namespace CodingTracker.Dejmenek.Controllers
 
             while (!Validation.IsChronologicalOrder(DateTime.Parse(startDate), DateTime.Parse(endDate)))
             {
+                AnsiConsole.MarkupLine("The ending time should always be after the starting time. Try again.");
                 startDate = _userInteractionService.GetDate();
                 endDate = _userInteractionService.GetDate();
             }
