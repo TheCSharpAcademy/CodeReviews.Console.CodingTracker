@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CodingTracker": {
+      "commandName": "Project",
+      "workingDirectory": "C:\\Users\\Joshua\\Documents\\CSharp\\GitHub Repositories\\Console.CodingTracker"
+    }
+  }
+}
