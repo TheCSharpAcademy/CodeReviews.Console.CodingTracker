@@ -74,6 +74,7 @@ internal class Program
                     }
 
                     AnsiConsole.Write(sessionsTable);
+                    ClearConsole();
                     break;
 
                 case MenuOptions.GenerateMonthlyCodingSessionsReport:
@@ -91,6 +92,7 @@ internal class Program
                     }
 
                     AnsiConsole.Write(monthlyReportTable);
+                    ClearConsole();
                     break;
 
                 case MenuOptions.GenerateYearlyCodingSessionsReport:
@@ -107,6 +109,7 @@ internal class Program
                     }
 
                     AnsiConsole.Write(yearlyReportTable);
+                    ClearConsole();
                     break;
 
                 case MenuOptions.SetGoal:
@@ -137,6 +140,7 @@ internal class Program
                     }
 
                     AnsiConsole.Write(goalsTable);
+                    ClearConsole();
                     break;
 
                 case MenuOptions.ShowGoalProgress:
@@ -148,7 +152,6 @@ internal class Program
                     exit = true;
                     break;
             }
-            ClearConsole();
         }
     }
 
