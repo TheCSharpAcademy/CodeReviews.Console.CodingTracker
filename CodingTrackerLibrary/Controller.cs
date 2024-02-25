@@ -6,11 +6,11 @@ namespace CodingTracker
     
     public class Controller
     {
-        public static void CreateDatabase()
+        public static void CreateDatabase(string connectionString)
         {
             try
             {
-                using (var conn = new SQLiteConnection("Data Source=database.db; Version = 3;"))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
                     string createTableQuery = "CREATE TABLE IF NOT EXISTS records ( Id INTEGER PRIMARY KEY AUTOINCREMENT, DateStart TEXT, DateEnd TEXT, Duration TEXT )";
@@ -21,11 +21,11 @@ namespace CodingTracker
             catch (Exception ex) { Console.WriteLine($"Error: {ex.Message}"); }
         }
 
-        public static void InsertData(Record CodingRecord)
+        public static void InsertData(Record CodingRecord, string connectionString)
         {
             try
             {
-                using (var conn = new SQLiteConnection("Data Source=database.db;"))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
                     string insertQuery = "INSERT INTO records (DateStart, DateEnd, Duration) VALUES(@DateStart, @DateEnd, @Duration)";
@@ -35,11 +35,11 @@ namespace CodingTracker
             catch (SQLiteException ex) { Console.WriteLine($"SQLiteException Error: {ex.Message}"); }
             catch (Exception ex) { Console.WriteLine($"Error: {ex.Message}"); }
         }
-        public static IEnumerable<dynamic> ReadData()
+        public static IEnumerable<dynamic> ReadData(string connectionString)
         {
             try
             {
-                using (var conn = new SQLiteConnection("Data Source=database.db;"))
+                using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
                     string selectQuery = "SELECT * FROM records";

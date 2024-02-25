@@ -1,5 +1,6 @@
 ﻿using CodingTracker;
 using Spectre.Console;
+using System.Configuration;
 
 class Program
 {
@@ -9,6 +10,22 @@ class Program
         string startDate;
         string endDate;
         Record newRecord;
+
+        // config
+        string? connectionString = ConfigurationManager.AppSettings["connectionString"];
+        string? databasePath = ConfigurationManager.AppSettings["databasePath"];
+        
+        if (connectionString == null || databasePath == null)
+        {
+            connectionString = "Data Source=database.db; Version = 3;";
+        }
+        else
+        {
+            connectionString = "Data Source=" + databasePath + connectionString;
+        }
+
+        Controller.CreateDatabase(connectionString);
+
         do
         {
             // 
@@ -51,7 +68,7 @@ class Program
                     endDate = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
                     
                     newRecord = Input.NewRecord(startDate, endDate);
-                    Controller.InsertData(newRecord);
+                    Controller.InsertData(newRecord, connectionString);
                     
                     break;
                 case "Manually Register Session":
@@ -77,7 +94,7 @@ class Program
                             newRecord = Input.NewRecord(startDate, endDate);
                             if (newRecord != null)
                             {
-                                Controller.InsertData(newRecord);
+                                Controller.InsertData(newRecord, connectionString);
                                 isValid = true;
                                 continue;
                             }
@@ -100,10 +117,9 @@ class Program
                     AnsiConsole.Clear();
                     title = new Rule("[red]Session History[/]").Centered();
                     AnsiConsole.Write(title);
-                    var records = Controller.ReadData();
+                    var records = Controller.ReadData(connectionString);
                     var table = new Table();
                     table.Border(TableBorder.Rounded);
-                    table.Title("[red]Session History[/]");
                     table.AddColumn("Start Date").Centered();
                     table.AddColumn("End Date").Centered();
                     table.AddColumn("Duration (minutes)").Centered();
@@ -116,12 +132,8 @@ class Program
                         }
                     }
                     AnsiConsole.Write(table);
-                    if (AnsiConsole.Confirm("Return to main menu? "))
-                    {
-                        AnsiConsole.MarkupLine("Returning to main menu...");
-                        Thread.Sleep(3000);
-                        break;
-                    }
+                    AnsiConsole.Write("Press any key to return to menu.");
+                    Console.ReadKey();
 
                     break;
                 case "Exit":
