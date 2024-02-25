@@ -1,10 +1,5 @@
 ﻿using Dapper;
-using System.Data;
-using System.Data.SqlClient;
 using System.Data.SQLite;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-
 
 namespace CodingTracker
 {

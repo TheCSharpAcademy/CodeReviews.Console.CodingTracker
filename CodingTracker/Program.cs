@@ -50,7 +50,7 @@ class Program
                     
                     endDate = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
                     
-                    CodingRecord = Add.NewRecord(startDate, endDate);
+                    CodingRecord = Input.ParseData(startDate, endDate);
                     Controller.InsertData(CodingRecord);
                     
                     break;
@@ -74,7 +74,7 @@ class Program
                             startDate = AnsiConsole.Ask<string>("Please enter the start date [green]dd/MM/yyyy HH:mm[/]:");
                             endDate = AnsiConsole.Ask<string>("Please enter the end date [green]dd/MM/yyyy HH:mm[/]:");
 
-                            CodingRecord = Add.NewRecord(startDate, endDate);
+                            CodingRecord = Input.ParseData(startDate, endDate);
                             if (CodingRecord != null)
                             {
                                 Controller.InsertData(CodingRecord);
@@ -89,11 +89,14 @@ class Program
                             Thread.Sleep(3000);
                             break;
                         }
+
                     } while (!isValid);
                     
                     break;
 
                 case "View Session History":
+
+                    // Table
                     AnsiConsole.Clear();
                     title = new Rule("[red]Session History[/]").Centered();
                     AnsiConsole.Write(title);
@@ -105,13 +108,16 @@ class Program
                     table.AddColumn("End Date").Centered();
                     table.AddColumn("Duration (minutes)").Centered();
 
+                    
                     foreach (var record in records)
                     {
                         table.AddRow($"{record.DateStart}", $"{record.DateEnd}", $"{record.Duration}");
                     }
+                    
                     AnsiConsole.Write(table);
                     AnsiConsole.Write("Press any key to continue.");
                     Console.ReadKey();
+                    
                     break;
                 case "Exit":
                     exit = true;

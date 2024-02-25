@@ -1,8 +1,8 @@
 ﻿namespace CodingTracker
 {
-    public class Add
+    public class Input
     {
-        public static Record NewRecord(string dateStart, string dateEnd)
+        public static Record ParseData(string dateStart, string dateEnd)
         {
             if (Validation.CheckInsert(dateStart, dateEnd))
             {
