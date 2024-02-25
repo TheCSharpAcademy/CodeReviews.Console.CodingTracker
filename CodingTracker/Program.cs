@@ -8,12 +8,12 @@ class Program
         bool exit = false;
         string startDate;
         string endDate;
-        Record CodingRecord;
+        Record newRecord;
         do
         {
-            // menu
+            // 
             AnsiConsole.Clear();
-            var title = new Rule("[red]Coding Tracker[/]").Centered(); // Conflict with System.Data had to include namespace
+            var title = new Rule("[red]Coding Tracker[/]").Centered();
             AnsiConsole.Write(title);
             var option = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
@@ -50,8 +50,8 @@ class Program
                     
                     endDate = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
                     
-                    CodingRecord = Input.ParseData(startDate, endDate);
-                    Controller.InsertData(CodingRecord);
+                    newRecord = Input.NewRecord(startDate, endDate);
+                    Controller.InsertData(newRecord);
                     
                     break;
                 case "Manually Register Session":
@@ -74,10 +74,10 @@ class Program
                             startDate = AnsiConsole.Ask<string>("Please enter the start date [green]dd/MM/yyyy HH:mm[/]:");
                             endDate = AnsiConsole.Ask<string>("Please enter the end date [green]dd/MM/yyyy HH:mm[/]:");
 
-                            CodingRecord = Input.ParseData(startDate, endDate);
-                            if (CodingRecord != null)
+                            newRecord = Input.NewRecord(startDate, endDate);
+                            if (newRecord != null)
                             {
-                                Controller.InsertData(CodingRecord);
+                                Controller.InsertData(newRecord);
                                 isValid = true;
                                 continue;
                             }
@@ -108,16 +108,21 @@ class Program
                     table.AddColumn("End Date").Centered();
                     table.AddColumn("Duration (minutes)").Centered();
 
-                    
-                    foreach (var record in records)
+                    if (records != null)
                     {
-                        table.AddRow($"{record.DateStart}", $"{record.DateEnd}", $"{record.Duration}");
+                        foreach (var record in records)
+                        {
+                            table.AddRow($"{record.DateStart}", $"{record.DateEnd}", $"{record.Duration}");
+                        }
                     }
-                    
                     AnsiConsole.Write(table);
-                    AnsiConsole.Write("Press any key to continue.");
-                    Console.ReadKey();
-                    
+                    if (AnsiConsole.Confirm("Return to main menu? "))
+                    {
+                        AnsiConsole.MarkupLine("Returning to main menu...");
+                        Thread.Sleep(3000);
+                        break;
+                    }
+
                     break;
                 case "Exit":
                     exit = true;
