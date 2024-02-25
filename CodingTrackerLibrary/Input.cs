@@ -2,9 +2,10 @@
 {
     public class Input
     {
+        // Converts string to DateTime to calculate duration, returns an new instance of Model.Record.
         public static Record NewRecord(string dateStart, string dateEnd)
         {
-            if (Validation.CheckInsert(dateStart, dateEnd))
+            if (Validation.StringToDateTime(dateStart, dateEnd))
             {
                 try
                 {
