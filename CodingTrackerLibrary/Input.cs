@@ -10,7 +10,6 @@
                 try
                 {
                     DateTime startDate = DateTime.ParseExact(dateStart, "dd/MM/yyyy HH:mm", System.Globalization.CultureInfo.InvariantCulture);
-                    DateTime endDate = DateTime.ParseExact(dateEnd, "dd/MM/yyyy HH:mm", System.Globalization.CultureInfo.InvariantCulture);
 
                     // (DateTime endDate - DateTime startDate) -> Total Minutes -> DataTime to String conversion
                     string duration = DateTime.ParseExact(dateEnd, "dd/MM/yyyy HH:mm", System.Globalization.CultureInfo.InvariantCulture).Subtract(startDate).TotalMinutes.ToString();
