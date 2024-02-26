@@ -9,16 +9,16 @@
             {
                 try
                 {
-                    DateTime startDate = DateTime.ParseExact(dateStart, "dd/MM/yyyy HH:mm", System.Globalization.CultureInfo.InvariantCulture);
+                    DateTime startDate = DateTime.ParseExact(dateStart, "dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
 
-                    // (DateTime endDate - DateTime startDate) -> Total Minutes -> DataTime to String conversion
-                    string duration = DateTime.ParseExact(dateEnd, "dd/MM/yyyy HH:mm", System.Globalization.CultureInfo.InvariantCulture).Subtract(startDate).TotalMinutes.ToString();
+                    // (DateTime endDate - DateTime startDate) -> Total Minutes -> Parse TimeSpan.TotalMinutes -> Decimal
+                    decimal duration = Decimal.Parse(DateTime.ParseExact(dateEnd, "dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture).Subtract(startDate).TotalMinutes.ToString());
 
                     var Record = new Record
                     {
                         DateStart = dateStart,
                         DateEnd = dateEnd,
-                        Duration = duration,
+                        Duration = $"{duration:N0}",
                     };
                     return Record;
                 }

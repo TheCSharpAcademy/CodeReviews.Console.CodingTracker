@@ -3,7 +3,7 @@ using System.Data.SQLite;
 
 namespace CodingTracker
 {
-    
+
     public class Controller
     {
         public static void CreateDatabase(string connectionString)
@@ -35,7 +35,8 @@ namespace CodingTracker
             catch (SQLiteException ex) { Console.WriteLine($"SQLiteException Error: {ex.Message}"); }
             catch (Exception ex) { Console.WriteLine($"Error: {ex.Message}"); }
         }
-        public static IEnumerable<dynamic> ReadData(string connectionString)
+
+        public static List<Record> ReadData(string connectionString)
         {
             try
             {
@@ -43,7 +44,7 @@ namespace CodingTracker
                 {
                     conn.Open();
                     string selectQuery = "SELECT * FROM records";
-                    var records = conn.Query(selectQuery);
+                    var records = conn.Query<Record>(selectQuery).ToList();
                     return records;
                 }
             }
