@@ -65,7 +65,7 @@ class Program
 
     static void StartSession(string connectionString)
     {
-        string startDate = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+        string startDate = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss");
         string option;
 
         do
@@ -83,7 +83,7 @@ class Program
                 }));
         } while (option != "Confirm");
 
-        string endDate = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+        string endDate = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss");
 
         Record newRecord = Input.NewRecord(startDate, endDate);
         Controller.InsertData(newRecord, connectionString);
@@ -112,8 +112,8 @@ class Program
 
             else
             {
-                startDate = AnsiConsole.Ask<string>("Please enter the start date [green]dd/MM/yyyy HH:mm:ss[/]:");
-                endDate = AnsiConsole.Ask<string>("Please enter the end date [green]dd/MM/yyyy HH:mm:ss[/]:");
+                startDate = AnsiConsole.Ask<string>("Please enter the start date [green]dd-MM-yyyy HH:mm:ss[/]:");
+                endDate = AnsiConsole.Ask<string>("Please enter the end date [green]dd-MM-yyyy HH:mm:ss[/]:");
                 if (Validation.StringToDateTime(startDate, endDate))
                 {
                     newRecord = Input.NewRecord(startDate, endDate);
