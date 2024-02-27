@@ -114,13 +114,15 @@ class Program
             {
                 startDate = AnsiConsole.Ask<string>("Please enter the start date [green]dd/MM/yyyy HH:mm:ss[/]:");
                 endDate = AnsiConsole.Ask<string>("Please enter the end date [green]dd/MM/yyyy HH:mm:ss[/]:");
-
-                newRecord = Input.NewRecord(startDate, endDate);
-                if (newRecord != null)
+                if (Validation.StringToDateTime(startDate, endDate))
                 {
-                    Controller.InsertData(newRecord, connectionString);
-                    isValid = true;
-                    continue;
+                    newRecord = Input.NewRecord(startDate, endDate);
+                    if (newRecord != null)
+                    {
+                        Controller.InsertData(newRecord, connectionString);
+                        isValid = true;
+                        continue;
+                    }
                 }
             }
 
