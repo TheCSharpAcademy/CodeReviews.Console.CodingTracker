@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CodingTracker
+
+namespace CodingTracker.Helpers
 {
-    internal class Enums 
+    internal class Enums
     {
         public enum MenuChoices
         {

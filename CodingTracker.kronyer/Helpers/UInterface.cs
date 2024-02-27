@@ -1,11 +1,8 @@
-﻿using Spectre.Console;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static CodingTracker.Enums;
+﻿using CodingTracker.Helpers;
+using CodingTracker.Models;
+using Spectre.Console;
+using CodingTracker.Data;
+using static CodingTracker.Helpers.Enums;
 
 namespace CodingTracker;
 
@@ -81,7 +78,7 @@ internal class UInterface
     
         foreach (var record in records)
         {
-            table.AddRow(record.Id.ToString(), record.DateStart.ToString(), record.DateEnd.ToString(), $"{record.Duration.TotalHours} hours {record.Duration.TotalMicroseconds%60} minutes");
+            table.AddRow(record.Id.ToString(), record.DateStart.ToString(), record.DateEnd.ToString(), $"{record.Duration.TotalHours} hours {record.Duration.TotalMinutes%60} minutes");
         }
 
         AnsiConsole.Write(table);

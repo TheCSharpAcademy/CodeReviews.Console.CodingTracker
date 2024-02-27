@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CodingTracker
+﻿namespace CodingTracker.Models
 {
-    internal class CodingRecord
+    public class CodingRecord
     {
         public int Id { get; set; }
         public DateTime DateStart { get; set; }

@@ -1,10 +1,11 @@
-﻿using Dapper;
+﻿using CodingTracker.Models;
+using Dapper;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Configuration;
 
-namespace CodingTracker;
+namespace CodingTracker.Data;
 
-internal class DataAccess
+public class DataAccess
 {
     private string ConnectionString;
 
@@ -25,7 +26,7 @@ internal class DataAccess
             string createTableQuery = @"CREATE TABLE IF NOT EXISTS records (Id INTEGER PRIMARY KEY AUTOINCREMENT, DateStart TEXT NOT NULL, DateEnd TEXT NOT NULL)";
 
             connection.Execute(createTableQuery);
-        
+
         }
     }
 
@@ -35,7 +36,7 @@ internal class DataAccess
         {
             connection.Open();
             string insertQuery = @"INSERT INTO records (DateStart, DateEnd) VALUES (@DateStart, @DateEnd)";
-            connection.Execute(insertQuery, new {record.DateStart, record.DateEnd});
+            connection.Execute(insertQuery, new { record.DateStart, record.DateEnd });
         }
     }
 
@@ -61,7 +62,7 @@ internal class DataAccess
         {
             string insertQuery = @"INSERT INTO records (DateStart, DateEnd) VALUES (@DateStart, @DateEnd)";
 
-            connection.Execute(insertQuery, records.Select(record => new {record.DateStart, record.DateEnd}));
+            connection.Execute(insertQuery, records.Select(record => new { record.DateStart, record.DateEnd }));
         }
     }
 
@@ -72,7 +73,7 @@ internal class DataAccess
             connection.Open();
             string updateQuery = @"UPDATE records SET DateStart = @DateStart, DateEnd = @DateEnd WHERE Id = @Id";
 
-            connection.Execute(updateQuery, new {updated.DateStart, updated.DateEnd, updated.Id});
+            connection.Execute(updateQuery, new { updated.DateStart, updated.DateEnd, updated.Id });
         }
     }
 
@@ -82,7 +83,7 @@ internal class DataAccess
         {
             connection.Open();
             string deleteQuery = "DELETE FROM records WHERE Id = @Id";
-            int rowsAffected = connection.Execute(deleteQuery, new { Id = recordId});
+            int rowsAffected = connection.Execute(deleteQuery, new { Id = recordId });
 
             return rowsAffected;
         }

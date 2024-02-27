@@ -1,4 +1,8 @@
-﻿namespace CodingTracker;
+﻿
+using CodingTracker.Data;
+
+
+namespace CodingTracker;
 
 public class CodingTracker
 {
