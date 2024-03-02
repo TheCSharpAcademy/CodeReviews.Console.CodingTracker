@@ -27,6 +27,7 @@ public class CodingController
 
     public static void Session()
     {
+        AnsiConsole.Clear();
         var startTime = Validation.GetDateInput("Please insert the date and time for your start time:",
             "(Format dd-mm-yy HH:mm)", "Or type 0 to return to the main menu");
         var endTime = Validation.GetDateInput("Please insert the date and time for your end time:",
@@ -48,11 +49,33 @@ public class CodingController
 
     public static void GetAllSessions()
     {
+        AnsiConsole.Clear();
+        using var connection = new SqliteConnection(ConnectionString);
+        var command = "SELECT * FROM coding_tracker";
+        var codingSessions = connection.Query<CodingSession>(command);
 
+        TableCreation(codingSessions);
     }
 
     public static void TableCreation(IEnumerable<CodingSession> sessions)
     {
+        AnsiConsole.Clear();
+        var table = new Table();
 
+        table.Title(new TableTitle("[blue]Coding Sessions[/]"));
+
+        table.AddColumn(new TableColumn("[#FFA500]Id[/]").Centered());
+        table.AddColumn(new TableColumn("[#104E1D]Start Time[/]").Centered());
+        table.AddColumn(new TableColumn("[red]End Time[/]").Centered());
+        table.AddColumn(new TableColumn("[#8F00FF]Duration[/]").Centered());
+
+        foreach (var session in sessions)
+        {
+
+            table.AddRow($"[#3EB489]{session.Id}[/]", $"[#3EB489]{session.StartTime}[/]", $"[#3EB489]{session.EndTime}[/]", $"[#3EB489]{session.Duration}[/]");
+        }
+
+
+        AnsiConsole.Write(table);
     }
 }

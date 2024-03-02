@@ -4,7 +4,7 @@ namespace codingTracker.Fennikko.Models
 {
     public class CodingSession
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
 
         public string? StartTime { get; set; }
 
