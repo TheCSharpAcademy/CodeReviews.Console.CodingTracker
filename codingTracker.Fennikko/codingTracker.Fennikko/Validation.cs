@@ -14,11 +14,11 @@ public class Validation
 
         if (dateInput == "0") UserInput.GetUserInput();
 
-        while (!DateTime.TryParseExact(dateInput,"dd-MM-yy HH:mm",new CultureInfo("en-US"),DateTimeStyles.None, out _))
+        while (!DateTime.TryParseExact(dateInput,"dd-MM-yy HH:mm:ss",new CultureInfo("en-US"),DateTimeStyles.None, out _))
         {
             dateInput = AnsiConsole.Prompt(
                 new TextPrompt<string>(
-                        $"[red]Invalid format. Use the following: [/][green](Format dd-mm-yy HH:mm)[/] Or type 0 to return to main menu: ")
+                        $"[red]Invalid format. Use the following: [/][green](Format dd-mm-yy HH:mm:ss)[/] Or type 0 to return to main menu: ")
                     .PromptStyle("blue")
                     .AllowEmpty());
             if(dateInput == "0") UserInput.GetUserInput();

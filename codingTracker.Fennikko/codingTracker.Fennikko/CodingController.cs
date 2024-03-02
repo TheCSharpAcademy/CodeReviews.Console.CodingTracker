@@ -26,26 +26,56 @@ public class CodingController
             """);
     }
 
-    public static void Session()
+    public static void ManualSession()
     {
         AnsiConsole.Clear();
-        var startTime = Validation.GetDateInput("Please insert the date and time for your start time:",
-            "(Format dd-mm-yy HH:mm)", "Or type 0 to return to the main menu");
-        var endTime = Validation.GetDateInput("Please insert the date and time for your end time:",
-            "(Format dd-mm-yy HH:mm)", "Or type 0 to return to the main menu");
-        var startDateTime = DateTime.ParseExact(startTime, "dd-MM-yy HH:mm", new CultureInfo("en-US"));
-        var endDateTime = DateTime.ParseExact(endTime, "dd-MM-yy HH:mm", new CultureInfo("en-US"));
+        var startTime = Validation.GetDateInput("Enter your start time:",
+            "(Format dd-mm-yy HH:mm:ss)", "Or type 0 to return to the main menu");
+        var endTime = Validation.GetDateInput("Enter your end time:",
+            "(Format dd-mm-yy HH:mm:ss)", "Or type 0 to return to the main menu");
+        var startDateTime = DateTime.ParseExact(startTime, "dd-MM-yy HH:mm:ss", new CultureInfo("en-US"));
+        var endDateTime = DateTime.ParseExact(endTime, "dd-MM-yy HH:mm:ss", new CultureInfo("en-US"));
         while (startDateTime > endDateTime)
         {
             startTime = Validation.GetDateInput("Start time is after end time, please enter valid start time:",
                 "(Format dd-mm-yy HH:mm)", "Or type 0 to return to main menu");
-            startDateTime = DateTime.ParseExact(startTime, "dd-MM-yy HH:mm", new CultureInfo("en-US"));
+            startDateTime = DateTime.ParseExact(startTime, "dd-MM-yy HH:mm:ss", new CultureInfo("en-US"));
         }
         using var connection = new SqliteConnection(ConnectionString);
         var command = "INSERT INTO coding_tracker (StartTime, EndTime, Duration) VALUES (@StartTime, @EndTime, @Duration)";
         var session = new CodingSession { StartTime = startTime, EndTime = endTime };
         var sessionCreation = connection.Execute(command, session);
         AnsiConsole.Write(new Markup($"[green]{sessionCreation}[/] session added"));
+        Thread.Sleep(3000);
+        AnsiConsole.Clear();
+    }
+
+    public static void AutoSession()
+    {
+        var startTime = DateTime.Now.ToString("dd-MM-yy HH:mm:ss", new CultureInfo("en-US"));
+        AnsiConsole.Clear();
+        string autoSession;
+        do
+        {
+            autoSession = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("[blue]Session in progress, select End Session to stop session...[/]")
+                    .PageSize(10)
+                    .AddChoices(new[]
+                    {
+                        "End Session"
+                    }));
+        } while (autoSession != "End Session");
+
+        var endTime = DateTime.Now.ToString("dd-MM-yy HH:mm:ss", new CultureInfo("en-US"));
+        using var connection = new SqliteConnection(ConnectionString);
+        var command = "INSERT INTO coding_tracker (StartTime, EndTime, Duration) VALUES (@StartTime, @EndTime, @Duration)";
+        var session = new CodingSession { StartTime = startTime, EndTime = endTime };
+        var sessionCreation = connection.Execute(command, session);
+        AnsiConsole.Write(new Markup($"[green]{sessionCreation}[/] session added"));
+        Thread.Sleep(3000);
+        AnsiConsole.Clear();
+
     }
 
     public static void GetAllSessions()
@@ -79,4 +109,5 @@ public class CodingController
 
         AnsiConsole.Write(table);
     }
+
 }

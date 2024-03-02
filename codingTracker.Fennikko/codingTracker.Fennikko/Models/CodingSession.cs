@@ -15,18 +15,21 @@ namespace codingTracker.Fennikko.Models
 
         public static string GetDuration(string startTime, string endTime)
         {
-            var startDateTime = DateTime.ParseExact(startTime, "dd-MM-yy HH:mm", new CultureInfo("en-US"));
-            var endDateTime = DateTime.ParseExact(endTime, "dd-MM-yy HH:mm", new CultureInfo("en-US"));
+            var startDateTime = DateTime.ParseExact(startTime, "dd-MM-yy HH:mm:ss", new CultureInfo("en-US"));
+            var endDateTime = DateTime.ParseExact(endTime, "dd-MM-yy HH:mm:ss", new CultureInfo("en-US"));
 
             var differenceOfDates = endDateTime.Subtract(startDateTime);
             string stringDifference;
 
-            switch (differenceOfDates.TotalHours)
+            switch (differenceOfDates.TotalMinutes)
             {
-                case < 1:
+                case <= 1:
+                    stringDifference = Convert.ToString($"{differenceOfDates.TotalSeconds:##.00} seconds");
+                    break;
+                case >=1 and <= 59:
                     stringDifference = Convert.ToString($"{differenceOfDates.TotalMinutes:##.00} minutes");
                     break;
-                case >= 1 and <= 24:
+                case >= 60 and <=1440 :
                     stringDifference = Convert.ToString($"{differenceOfDates.TotalHours:##.00} hours");
                     break;
                 default:

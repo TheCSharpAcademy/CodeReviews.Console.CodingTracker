@@ -17,15 +17,19 @@ public class UserInput
                     .PageSize(10)
                     .AddChoices(new[]
                     {
-                        "Manual Session", "Get Session History", "Exit"
+                        "Manual Session", "Get Session History", "Auto Session",
+                        "Exit"
                     }));
             switch (functionSelect)
             {
                 case "Manual Session":
-                    CodingController.Session();
+                    CodingController.ManualSession();
                     break;
                 case "Get Session History":
                     CodingController.GetAllSessions();
+                    break;
+                case "Auto Session":
+                    CodingController.AutoSession();
                     break;
                 case "Exit":
                     appRunning = false;
