@@ -17,7 +17,7 @@ public class UserInput
                     .PageSize(10)
                     .AddChoices(new[]
                     {
-                        "Manual Session", "Get Session History", "Auto Session",
+                        "Auto Session", "Manual Session", "Get Session History",
                         "Exit"
                     }));
             switch (functionSelect)
