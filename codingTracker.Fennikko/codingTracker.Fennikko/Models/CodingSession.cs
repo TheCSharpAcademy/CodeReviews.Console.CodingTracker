@@ -10,8 +10,7 @@ namespace codingTracker.Fennikko.Models
 
         public string? EndTime { get; set;}
 
-        public string Duration {get{return GetDuration(StartTime,EndTime);}}
-
+        public string Duration => GetDuration(StartTime!,EndTime!);
 
 
         public static string GetDuration(string startTime, string endTime)

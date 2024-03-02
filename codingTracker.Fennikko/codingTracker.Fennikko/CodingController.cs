@@ -1,10 +1,11 @@
 ﻿using System.Configuration;
-using System.Data.Common;
 using System.Globalization;
 using codingTracker.Fennikko.Models;
 using Dapper;
 using Microsoft.Data.Sqlite;
 using Spectre.Console;
+
+namespace codingTracker.Fennikko;
 
 public class CodingController
 {
@@ -21,7 +22,7 @@ public class CodingController
                  StartTime TEXT,
                  EndTime TEXT,
                  Duration TEXT
-                 )               
+                 )
             """);
     }
 

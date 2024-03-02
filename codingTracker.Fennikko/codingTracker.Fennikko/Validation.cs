@@ -1,6 +1,8 @@
 ﻿using System.Globalization;
 using Spectre.Console;
 
+namespace codingTracker.Fennikko;
+
 public class Validation
 {
     public static string GetDateInput(string message1, string message2, string message3)
