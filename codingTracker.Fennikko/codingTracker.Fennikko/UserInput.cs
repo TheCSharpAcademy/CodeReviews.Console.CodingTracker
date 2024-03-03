@@ -18,7 +18,7 @@ public class UserInput
                     .AddChoices(new[]
                     {
                         "Auto Session", "Manual Session", "Get Session History",
-                        "Exit"
+                        "Get Session History By Filter","Exit"
                     }));
             switch (functionSelect)
             {
@@ -30,6 +30,9 @@ public class UserInput
                     break;
                 case "Auto Session":
                     CodingController.AutoSession();
+                    break;
+                case "Get Session History By Filter":
+                    CodingController.GetSessionFilterType();
                     break;
                 case "Exit":
                     appRunning = false;

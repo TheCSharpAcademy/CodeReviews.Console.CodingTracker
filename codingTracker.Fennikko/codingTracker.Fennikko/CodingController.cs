@@ -88,6 +88,120 @@ public class CodingController
         TableCreation(codingSessions);
     }
 
+    public static void GetSessionByFilterType(string period,string stringFilterAmount)
+    {
+        AnsiConsole.Clear();
+        var timeNow = DateTime.Now;
+        string? timeType = null;
+        var filterAmount = Convert.ToInt32(stringFilterAmount);
+        var filteredCodingSessions = new List<CodingSession>();
+        using var connection = new SqliteConnection(ConnectionString);
+        var command = "SELECT * FROM coding_tracker";
+        var codingSessions = connection.Query<CodingSession>(command);
+
+        if (period.Contains("Days"))
+            timeType = "Days";
+        else if (period.Contains("Weeks"))
+            timeType = "Weeks";
+        else if (period.Contains("Months"))
+            timeType = "Months";
+        else if (period.Contains("Years"))
+            timeType = "Years";
+
+        foreach (var session in codingSessions)
+        {
+            switch (timeType)
+            {
+                case "Days":
+
+                    if (DateTime.ParseExact(session.StartTime!, "dd-MM-yy HH:mm:ss", new CultureInfo("en-US")) >= timeNow.AddDays(-filterAmount))
+                    {
+                        filteredCodingSessions.Add(session);
+                    }
+                    break;
+                case "Weeks":
+                    if (DateTime.ParseExact(session.StartTime!, "dd-MM-yy HH:mm:ss", new CultureInfo("en-US")) >= timeNow.AddDays(-filterAmount * 7))
+                    {
+                        filteredCodingSessions.Add(session);
+                    }
+                    break;
+                case "Months":
+                    if (DateTime.ParseExact(session.StartTime!, "dd-MM-yy HH:mm:ss", new CultureInfo("en-US")) >= timeNow.AddMonths(-filterAmount))
+                    {
+                        filteredCodingSessions.Add(session);
+                    }
+                    break;
+                case "Years":
+                    if (DateTime.ParseExact(session.StartTime!, "dd-MM-yy HH:mm:ss", new CultureInfo("en-US")) >= timeNow.AddYears(-filterAmount))
+                    {
+                        filteredCodingSessions.Add(session);
+                    }
+                    break;
+            }
+            
+        }
+        TableCreation(filteredCodingSessions);
+    }
+
+    public static void GetSessionFilterType()
+    {
+        AnsiConsole.Clear();
+        var filterRunning = true;
+        do
+        {
+            var filter = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("Select a [blue]coding session[/] filter")
+                    .PageSize(10)
+                    .AddChoices(new[]
+                    {
+                        "Days", "Weeks", "Months", 
+                        "Years", "Exit"
+                    }));
+            string filterTime;
+            switch (filter)
+            {
+                case "Days":
+                    filterTime = FilterTime(filter);
+                    GetSessionByFilterType(filter,filterTime);
+                    break;
+                case "Weeks":
+                    filterTime = FilterTime(filter);
+                    GetSessionByFilterType(filter,filterTime);
+                    break;
+                case "Months":
+                    filterTime = FilterTime(filter);
+                    GetSessionByFilterType(filter,filterTime);
+                    break;
+                case "Years":
+                    filterTime = FilterTime(filter);
+                    GetSessionByFilterType(filter,filterTime);
+                    break;
+                case "Exit":
+                    filterRunning = false;
+                    break;
+            }
+        } while (filterRunning);
+    }
+
+    public static string FilterTime(string filterType)
+    {
+        var timePeriod = AnsiConsole.Prompt(
+            new TextPrompt<string>($"How many [green]{filterType} [/]would you like to see? Or type 0 to return to main menu")
+                .PromptStyle("blue")
+                .AllowEmpty());
+        if(timePeriod == "0") UserInput.GetUserInput();
+        while (string.IsNullOrWhiteSpace(timePeriod))
+        {
+            timePeriod = AnsiConsole.Prompt(
+                new TextPrompt<string>($"[red]Invalid entry.[/] How many [green]{filterType} [/]would you like to see? Or type 0 to return to main menu")
+                    .PromptStyle("blue")
+                    .AllowEmpty());
+            if(timePeriod == "0") UserInput.GetUserInput();
+        }
+        return timePeriod;
+    }
+
     public static void TableCreation(IEnumerable<CodingSession> sessions)
     {
         AnsiConsole.Clear();
