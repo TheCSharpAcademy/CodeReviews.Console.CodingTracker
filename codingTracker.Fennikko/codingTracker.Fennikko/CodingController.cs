@@ -224,7 +224,7 @@ public class CodingController
         }
 
         var averageArray = averageListBuilder.ToArray();
-        var average = Math.Round(averageArray.AsQueryable().Average());
+        var average = Math.Round(averageArray.AsQueryable().Average(), 2);
         var averageTime = "";
 
         switch (average)
