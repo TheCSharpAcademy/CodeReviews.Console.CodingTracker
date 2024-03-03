@@ -12,8 +12,9 @@ namespace codingTracker.Fennikko.Models
 
         public string Duration => GetDuration(StartTime!,EndTime!);
 
+        public double AverageMinutes => GetDurationMinutes(StartTime!, EndTime!);
 
-        public static string GetDuration(string startTime, string endTime)
+        public string GetDuration(string startTime, string endTime)
         {
             var startDateTime = DateTime.ParseExact(startTime, "dd-MM-yy HH:mm:ss", new CultureInfo("en-US"));
             var endDateTime = DateTime.ParseExact(endTime, "dd-MM-yy HH:mm:ss", new CultureInfo("en-US"));
@@ -37,6 +38,16 @@ namespace codingTracker.Fennikko.Models
                     break;
             }
             return stringDifference;
+        }
+
+        public double GetDurationMinutes(string startTime, string endTime)
+        {
+            var startDateTime = DateTime.ParseExact(startTime, "dd-MM-yy HH:mm:ss", new CultureInfo("en-US"));
+            var endDateTime = DateTime.ParseExact(endTime, "dd-MM-yy HH:mm:ss", new CultureInfo("en-US"));
+
+            var differenceOfDates = endDateTime.Subtract(startDateTime).TotalMinutes;
+
+            return differenceOfDates;
         }
     }
 }

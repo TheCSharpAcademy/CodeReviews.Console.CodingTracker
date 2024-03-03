@@ -214,12 +214,30 @@ public class CodingController
         table.AddColumn(new TableColumn("[red]End Time[/]").Centered());
         table.AddColumn(new TableColumn("[#8F00FF]Duration[/]").Centered());
 
+        var averageListBuilder = new List<double>();
+
         foreach (var session in sessions)
         {
 
             table.AddRow($"[#3EB489]{session.Id}[/]", $"[#3EB489]{session.StartTime}[/]", $"[#3EB489]{session.EndTime}[/]", $"[#3EB489]{session.Duration}[/]");
+            averageListBuilder.Add(session.AverageMinutes);
         }
 
+        var averageArray = averageListBuilder.ToArray();
+        var average = Math.Round(averageArray.AsQueryable().Average());
+        var averageTime = "";
+
+        switch (average)
+        {
+            case <= 59 and < 60:
+                averageTime = Convert.ToString(average, new CultureInfo("en-US")) + " minutes";
+                break;
+            case >= 60:
+                averageTime = Convert.ToString(average, new CultureInfo("en-US")) + " hours";
+                break;
+        }
+
+        table.Caption(new TableTitle($"[#87CEEB]Average coding session: {averageTime}[/]"));
 
         AnsiConsole.Write(table);
     }
