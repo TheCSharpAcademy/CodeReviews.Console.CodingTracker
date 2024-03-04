@@ -1,7 +1,7 @@
-﻿using CodingTracker.Helpers;
+﻿using CodingTracker.Data;
+using CodingTracker.Helpers;
 using CodingTracker.Models;
 using Spectre.Console;
-using CodingTracker.Data;
 using static CodingTracker.Helpers.Enums;
 
 namespace CodingTracker;
@@ -12,7 +12,7 @@ internal class UInterface
     public static void MainMenu()
     {
         var dataAcess = new DataAccess();
-        
+
         bool isRunning = true;
         while (isRunning)
         {
@@ -44,6 +44,44 @@ internal class UInterface
     }
 
 
+    public static void UpdateHabit()
+    {
+        var dataAccess = new DataAccess();
+        dataAccess.GetHabits();
+    }
+    private static void DeleteHabit()
+    {
+       var dataAccess = new DataAccess();
+
+        dataAccess.GetHabits();
+
+        var id = GetNumber("Please type the id");
+
+        
+        dataAccess.RemoveHabit(id);
+    }
+
+    public static void AddHabit()
+    {
+        var dataAccess = new DataAccess();
+        //isso aqui tem que virar um GetHabitInput()
+        var name = AnsiConsole.Ask<string>("Habit's name:");
+        while (string.IsNullOrEmpty(name))
+        {
+            name = AnsiConsole.Ask<string>("Habit's name can't be empty...");
+        }
+
+        var unit = AnsiConsole.Ask<string>("What's the unit of measurement?");
+        while (string.IsNullOrEmpty(unit))
+        {
+            unit = AnsiConsole.Ask<string>("Can't be empty...");
+        }
+
+
+        dataAccess.InsertHabit(name, unit);
+
+    }
+
     public static void DeleteRecord()
     {
         var dataAcess = new DataAccess();
@@ -52,7 +90,7 @@ internal class UInterface
 
         var id = GetNumber("Enter the id you want to delete");
 
-        if(!AnsiConsole.Confirm("Are you sure?"))
+        if (!AnsiConsole.Confirm("Are you sure?"))
         {
             return;
         }
@@ -69,20 +107,38 @@ internal class UInterface
     public static void ViewRecords(IEnumerable<CodingRecord> records)
     {
         Console.Clear();
-        
+
         var table = new Table();
         table.AddColumn("Id");
         table.AddColumn("Start Date");
         table.AddColumn("End Date");
         table.AddColumn("Duration");
-    
+
         foreach (var record in records)
         {
-            table.AddRow(record.Id.ToString(), record.DateStart.ToString(), record.DateEnd.ToString(), $"{record.Duration.TotalHours} hours {record.Duration.TotalMinutes%60} minutes");
+            table.AddRow(record.Id.ToString(), record.DateStart.ToString(), record.DateEnd.ToString(), $"{record.Duration.TotalHours} hours {record.Duration.TotalMinutes % 60} minutes");
         }
 
         AnsiConsole.Write(table);
-    
+
+    }
+
+    public static void ViewRecords(List<CodingRecord> records)
+    {
+        Console.Clear();
+
+        var table = new Table();
+        table.AddColumn("Id");
+        table.AddColumn("Start Date");
+        table.AddColumn("End Date");
+        table.AddColumn("Duration");
+
+        foreach (var record in records)
+        {
+            table.AddRow(record.Id.ToString(), record.DateStart.ToString(), record.DateEnd.ToString(), $"{record.Duration.TotalHours} hours {record.Duration.TotalMinutes % 60} minutes");
+        }
+
+        AnsiConsole.Write(table);
     }
 
     public static void UpdateRecords()

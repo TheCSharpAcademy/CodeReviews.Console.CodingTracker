@@ -8,6 +8,15 @@ namespace CodingTracker.Helpers
     {
         public enum MenuChoices
         {
+            [Display(Name = "Add Habit")]
+            AddHabit,
+
+            [Display(Name = "Delete Habit")]
+            DeleteHabit,
+
+            [Display(Name = "Update Habit")]
+            UpdateHabit,
+
             [Display(Name = "Add Record")]
             AddRecord,
 
