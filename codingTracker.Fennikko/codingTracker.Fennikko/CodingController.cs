@@ -143,6 +143,84 @@ public class CodingController
         TableCreation(filteredCodingSessions);
     }
 
+    public static void DeleteSession()
+    {
+        AnsiConsole.Clear();
+        var idSelection = Convert.ToInt32(GetSessionId("Please type the", "Id",
+            "Of the record you want to delete. Or type 0 to go back to the main menu"));
+        using var connection = new SqliteConnection(ConnectionString);
+        var command = $"DELETE from coding_tracker WHERE Id = {idSelection}";
+        var sesionDeletion = connection.Execute(command);
+        if (sesionDeletion == 0)
+        {
+            AnsiConsole.Write(new Markup($"Record with Id [red]{idSelection}[/] doesn't exist. Please try again"));
+            Thread.Sleep(4000);
+            DeleteSession();
+        }
+        AnsiConsole.Write(new Markup($"[red]{sesionDeletion}[/] session deleted"));
+        Thread.Sleep(3000);
+        AnsiConsole.Clear();
+    }
+
+    public static void UpdateSession()
+    {
+        AnsiConsole.Clear();
+        var idSelection = Convert.ToInt32(GetSessionId("Please type the", "Id",
+            "Of the record you want to update. Or type 0 to go back to the main menu"));
+        using var connection = new SqliteConnection(ConnectionString);
+        var checkCommand = $"SELECT * FROM coding_tracker WHERE Id = '{idSelection}'";
+        var sessionValidation = connection.Query<CodingSession>(checkCommand);
+        if (!sessionValidation.Any())
+        {
+            AnsiConsole.Write(new Markup($"Record with Id [red]{idSelection}[/] doesn't exist. Please try again"));
+            Thread.Sleep(3000);
+            UpdateSession();
+        }
+
+        var startTime = Validation.GetDateInput("Enter your start time:",
+            "(Format dd-mm-yy HH:mm:ss)", "Or type 0 to return to the main menu");
+        var endTime = Validation.GetDateInput("Enter your end time:",
+            "(Format dd-mm-yy HH:mm:ss)", "Or type 0 to return to the main menu");
+        var startDateTime = DateTime.ParseExact(startTime, "dd-MM-yy HH:mm:ss", new CultureInfo("en-US"));
+        var endDateTime = DateTime.ParseExact(endTime, "dd-MM-yy HH:mm:ss", new CultureInfo("en-US"));
+        while (startDateTime > endDateTime)
+        {
+            startTime = Validation.GetDateInput("Start time is after end time, please enter valid start time:",
+                "(Format dd-mm-yy HH:mm)", "Or type 0 to return to main menu");
+            startDateTime = DateTime.ParseExact(startTime, "dd-MM-yy HH:mm:ss", new CultureInfo("en-US"));
+        }
+        var session = new CodingSession { StartTime = startTime, EndTime = endTime, Id = idSelection};
+        var updateCommand = "UPDATE coding_tracker SET StartTime = @StartTime, EndTime = @EndTime, Duration = @Duration WHERE Id = @Id";
+        var sessionCreation = connection.Execute(updateCommand,session);
+        AnsiConsole.Write(new Markup($"[green]{sessionCreation}[/] session updated"));
+        Thread.Sleep(3000);
+        AnsiConsole.Clear();
+
+    }
+
+    public static string GetSessionId(string? message1, string? message2, string message3)
+    {
+        AnsiConsole.Clear();
+        GetAllSessions();
+        var idSelect = AnsiConsole.Prompt(
+            new TextPrompt<string>($"{message1} [green]{message2}[/] {message3}: ")
+                .PromptStyle("blue")
+                .AllowEmpty());
+        if(idSelect == "0") UserInput.GetUserInput();
+
+        while (!int.TryParse(idSelect, out _))
+        {
+            idSelect = AnsiConsole.Prompt(
+                new TextPrompt<string>(
+                        "[red]Invalid entry. Please enter a[/] [green]number[/] or type 0 to go back to the main menu")
+                    .PromptStyle("blue")
+                    .AllowEmpty());
+            if (idSelect == "0") UserInput.GetUserInput();
+        }
+
+        return idSelect;
+    }
+
     public static void GetSessionFilterType()
     {
         AnsiConsole.Clear();
