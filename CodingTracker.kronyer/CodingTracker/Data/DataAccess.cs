@@ -39,59 +39,8 @@ public class DataAccess
         }
     }
 
-    public void GetHabits()
-    {
-        List<Habit> habits = new();
-
-        using (var connection = new SqliteConnection(connectionString))
-        {
-            connection.Open ();
-            var tableCmd = connection.CreateCommand();
-            tableCmd.CommandText = "SELECT * FROM Habits";
-
-            using (SqliteDataReader reader = tableCmd.ExecuteReader())
-            {
-                if (reader.HasRows)
-                {
-                    while(reader.Read())
-                    {
-                        try
-                        {
-                            habits.Add(new Habit(reader.GetInt32(0), reader.GetString(1), reader.GetString(2)));
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                        }
-                        
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("No rows found");
-                }
-            }
-        }
-        //ViewRecords(habits);
-    }
-    public void InsertHabit(string name, string unit)
-    {
-        using (var connection = new SqliteConnection(connectionString))
-        {
-            connection.Open();
-            string insertQuery = $"INSERT INTO habits (Name, MeasurementUnit) VALUES('{name}', '{unit}')";
-            connection.Execute(insertQuery);    
-        }
-    }
-    public void RemoveHabit(int id)
-    {
-        using (var connection = new SqliteConnection(connectionString))
-        {
-            connection.Open();
-            string removeQuery = $@"DELETE FROM habits WHERE Id = {id}";
-            connection.Execute(removeQuery);
-        }
-    }
+    
+   
     public void InsertRecord(CodingRecord record)
     {
         using (var connection = new SqliteConnection(connectionString))

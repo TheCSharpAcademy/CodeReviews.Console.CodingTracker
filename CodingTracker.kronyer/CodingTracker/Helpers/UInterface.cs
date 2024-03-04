@@ -44,43 +44,6 @@ internal class UInterface
     }
 
 
-    public static void UpdateHabit()
-    {
-        var dataAccess = new DataAccess();
-        dataAccess.GetHabits();
-    }
-    private static void DeleteHabit()
-    {
-       var dataAccess = new DataAccess();
-
-        dataAccess.GetHabits();
-
-        var id = GetNumber("Please type the id");
-
-        
-        dataAccess.RemoveHabit(id);
-    }
-
-    public static void AddHabit()
-    {
-        var dataAccess = new DataAccess();
-        //isso aqui tem que virar um GetHabitInput()
-        var name = AnsiConsole.Ask<string>("Habit's name:");
-        while (string.IsNullOrEmpty(name))
-        {
-            name = AnsiConsole.Ask<string>("Habit's name can't be empty...");
-        }
-
-        var unit = AnsiConsole.Ask<string>("What's the unit of measurement?");
-        while (string.IsNullOrEmpty(unit))
-        {
-            unit = AnsiConsole.Ask<string>("Can't be empty...");
-        }
-
-
-        dataAccess.InsertHabit(name, unit);
-
-    }
 
     public static void DeleteRecord()
     {
@@ -123,23 +86,7 @@ internal class UInterface
 
     }
 
-    public static void ViewRecords(List<CodingRecord> records)
-    {
-        Console.Clear();
-
-        var table = new Table();
-        table.AddColumn("Id");
-        table.AddColumn("Start Date");
-        table.AddColumn("End Date");
-        table.AddColumn("Duration");
-
-        foreach (var record in records)
-        {
-            table.AddRow(record.Id.ToString(), record.DateStart.ToString(), record.DateEnd.ToString(), $"{record.Duration.TotalHours} hours {record.Duration.TotalMinutes % 60} minutes");
-        }
-
-        AnsiConsole.Write(table);
-    }
+    
 
     public static void UpdateRecords()
     {
@@ -175,7 +122,7 @@ internal class UInterface
         CodingRecord record = new CodingRecord();
 
         var dateInputs = GetDateInputs();
-        record.DateStart = dateInputs[0]; // isso é, a posição 0 do array retornado
+        record.DateStart = dateInputs[0]; 
         record.DateEnd = dateInputs[1];
 
         var dataAcess = new DataAccess();
