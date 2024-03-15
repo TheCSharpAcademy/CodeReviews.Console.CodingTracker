@@ -1,7 +1,4 @@
-﻿using System;
-using System.Data;
-using System.Globalization;
-
+﻿using System.Data;
 using Microsoft.VisualBasic.FileIO;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Spectre.Console;
@@ -16,7 +13,7 @@ namespace HabitTracker_obitom67
         static void Main()
         {
             UserInput.ContinueRunning = true;
-            DBHandling.tableHandling();
+            DBHandling.TableHandling();
             while (UserInput.ContinueRunning)
             {
                 UserInput.AskUser();

@@ -1,6 +1,6 @@
 ﻿using HabitTracker_obitom67;
 using System;
-using System.Collections.Generic;
+
 using System.Globalization;
 using Microsoft.Data.Sqlite;
 using System.Configuration;
@@ -16,7 +16,7 @@ namespace CodingTracker.obitom67
     {
         
 
-        public static void tableHandling()
+        public static void TableHandling()
         {
             string connectionString = ConfigurationManager.AppSettings.Get("key1");
             using (var connection = new SqliteConnection(connectionString))
