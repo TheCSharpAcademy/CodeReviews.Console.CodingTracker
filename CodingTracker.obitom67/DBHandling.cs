@@ -1,9 +1,8 @@
-﻿using HabitTracker_obitom67;
+﻿global using System.Configuration;
+using HabitTracker_obitom67;
 using System;
-
 using System.Globalization;
 using Microsoft.Data.Sqlite;
-using System.Configuration;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Spectre.Console;
