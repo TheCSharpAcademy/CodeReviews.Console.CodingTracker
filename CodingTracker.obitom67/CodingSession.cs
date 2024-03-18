@@ -12,14 +12,14 @@ namespace CodingTracker.obitom67
 
         public DateTime EndTime { get; set; }
 
-        public TimeSpan Duration { get; set; }
+        public string Duration { get; set; }
         public int Quantity { get; set; }
 
 
-        public TimeSpan GetDuration(DateTime startTime, DateTime endTime)
+        public string GetDuration(DateTime startTime, DateTime endTime)
         {
             TimeSpan duration = endTime.Subtract(startTime);
-            return duration;
+            return duration.ToString();
         }
 
         public bool CheckDates(DateTime startTime, DateTime endTime)

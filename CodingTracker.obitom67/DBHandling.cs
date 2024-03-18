@@ -110,24 +110,16 @@ namespace CodingTracker.obitom67
         {
             string connectionString = ConfigurationManager.AppSettings.Get("key1");
             var sql = $"SELECT * FROM CodingSessions";
-            List<CodingSession> sessionsList = new List<CodingSession>();
+            
+            //List<CodingSession> sessionsList = new List<CodingSession>();
             using (var connection = new SqliteConnection(connectionString))
             {
-                var reader = connection.ExecuteReader(sql);
-
-                while (reader.Read())
-                {
-                    CodingSession session = new CodingSession();
-                    session.Id = reader.GetInt32(0);
-                    session.StartTime = DateTime.Parse(reader.GetString(1));
-                    session.EndTime = DateTime.Parse(reader.GetString(2));
-                    session.Duration = TimeSpan.Parse(reader.GetString(3));
-                    sessionsList.Add(session);
-                }
-                reader.Close();
                 
+                var sessionsList = connection.Query<CodingSession>(sql).ToList();
+                
+                UserInput.ShowList(sessionsList);
             }
-            UserInput.ShowList(sessionsList);
+            
 
             
 
