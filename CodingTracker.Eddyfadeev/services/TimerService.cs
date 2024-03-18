@@ -99,7 +99,14 @@ internal class TimerService
     {
         var stringBuilder = new StringBuilder();
 
-        stringBuilder.Append($"Date of the session: {_codingSession!.StartTime:dd-MM-yyyy}\n");
+        if (_codingSession is null)
+        {
+            stringBuilder.Append("No sessions found. Please start a new session.");
+
+            return stringBuilder.ToString();
+        }
+
+        stringBuilder.Append($"Date of the session: {_codingSession.StartTime:dd-MM-yyyy}\n");
         stringBuilder.Append($"This session was going from {_codingSession.StartTime:HH:mm:ss} to {_codingSession.EndTime:HH:mm:ss}\n");
         stringBuilder.Append("Total time spent: ");
         
@@ -113,9 +120,7 @@ internal class TimerService
                              + (_codingSession.Duration.Minutes == 1 ? "minute " : "minutes"));
         stringBuilder.Append("\nGreat job! Keep up the good work!");
         
-        var summaryText = stringBuilder.ToString();
-        
-        return summaryText;
+        return stringBuilder.ToString();
     }
 
     private void SavePrompt()

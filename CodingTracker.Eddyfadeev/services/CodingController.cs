@@ -106,7 +106,7 @@ internal class CodingController(DatabaseService databaseService)
         
         try
         {
-            PrepareRecords();
+            AnsiConsole.Write(PrepareRecords().summaryForRender);
             
             id = userInput.GetIdInput();
             session = sessions.Single(x => x.Id == id);
