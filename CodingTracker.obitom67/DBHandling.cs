@@ -18,19 +18,14 @@ namespace CodingTracker.obitom67
             string connectionString = ConfigurationManager.AppSettings.Get("key1");
             using (var connection = new SqliteConnection(connectionString))
             {
-                connection.Open();
-
-                var tableCMD = connection.CreateCommand();
-                tableCMD.CommandText =
-                    @"CREATE TABLE IF NOT EXISTS CodingSessions (
+                string sql = @"CREATE TABLE IF NOT EXISTS CodingSessions (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
                         StartTime TEXT,
                         EndTime TEXT,
                         Duration TEXT
                         )";
-
-                tableCMD.ExecuteNonQuery();
-                connection.Close();
+                connection.Execute(sql);
+                
             }
         }
 
