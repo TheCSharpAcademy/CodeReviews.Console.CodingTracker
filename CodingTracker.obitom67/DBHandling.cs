@@ -110,8 +110,6 @@ namespace CodingTracker.obitom67
         {
             string connectionString = ConfigurationManager.AppSettings.Get("key1");
             var sql = $"SELECT * FROM CodingSessions";
-            
-            //List<CodingSession> sessionsList = new List<CodingSession>();
             using (var connection = new SqliteConnection(connectionString))
             {
                 
