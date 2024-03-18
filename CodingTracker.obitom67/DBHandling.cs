@@ -4,9 +4,7 @@ using System;
 using System.Globalization;
 using Microsoft.Data.Sqlite;
 using Dapper;
-using Microsoft.Data.SqlClient;
 using Spectre.Console;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 namespace CodingTracker.obitom67
