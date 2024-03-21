@@ -90,7 +90,6 @@ class Program
                         break;
                     }
 
-
                     if (sessionController.UpdateSession(currentSession))
                     {
                         AnsiConsole.Markup($"\n[green]Session updated.[/] Press enter to return to menu...\n");

@@ -31,7 +31,7 @@ public class SessionController
         ";
 
         using var connection = new SQLiteConnection(_connectionString);
-        int result = connection.Execute(sql, parameters);
+        connection.Execute(sql, parameters);
 
         return GetSessionIdByStartTime(session.StartTime);
     }
