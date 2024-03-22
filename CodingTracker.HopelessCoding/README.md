@@ -3,8 +3,8 @@
 This is a one of the C# Academy projects. This console app is for tracking daily
 coding time. The application allows users to enter their start and end times of
 the coding session and application will calculate length of that session. Users
-can perform various operations on the logged data. Below are the requirements, 
-features, user manual, areas for improvement, and additional challenges of 
+can perform various operations on the logged data. Below are the requirements,
+features, user manual, areas for improvement, and additional challenges of
 the application.
 
 ## Requirements
@@ -39,14 +39,14 @@ the application.
   - Date and time must be entered in format YYYY-MM-DD HH:mm.
   - Duplicate start times cannot be entered unless updating an existing record.
 - **ID check**: Verify if the entered ID exists in the database before
-  performing operations. 
+  performing operations.
   
 ## User Manual
 
 ### Menu Navigation
 
 - Users navigate the Main Menu by selecting options using arrow keys and
-  confirming their selection by pressing Enter 
+  confirming their selection by pressing Enter
   ![CodeMenu](https://github.com/HopelessCoding/learning/assets/161690352/08399f8e-ef48-4fa1-9f12-8a3ea03d509a)
 
 ### Menu Options
@@ -67,6 +67,7 @@ the application.
 - **0 - Close Application**: Terminates the application
 
 ### Reports Menu Options
+
 - Users navigate the Reports Menu by selecting options using arrow keys and
   confirming their selection by pressing Enter  
 ![ReportsCodeMenu](https://github.com/HopelessCoding/learning/assets/161690352/4a2cf916-1b25-411c-a603-c2a1be010834)
@@ -82,7 +83,7 @@ the application.
   various areas of improvement identified in the previous project were now done better.
 - **Code Structure**: The code has a mostly nice well-organized structure, and
   I'm happy at the results this time (There is probably still room for improvements).
-- **Return to Main Menu**: It would be nice to add clear funtionality which
+- **Return to Main Menu**: It would be nice to add clear functionality which
   would return user back to main menu when they have already selected a command.
   - Now the user is returned back to the main menu by pressing Enter or entering
     a faulty value
