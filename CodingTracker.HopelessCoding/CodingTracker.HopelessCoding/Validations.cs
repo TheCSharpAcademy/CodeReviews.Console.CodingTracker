@@ -38,8 +38,6 @@ internal class Validations
     {
         string currentDateTime = DateTime.Now.ToString(@"yyyy-MM-dd HH\:mm");
 
-        DateTime dateTime;
-
         while (true)
         {
             Console.Write($"Please enter the {timing} date and time (YYYY-MM-DD hh:mm format) or press Enter to use current date and time: ");
@@ -75,4 +73,3 @@ internal class Validations
         return endTime;
     }
 }
-
