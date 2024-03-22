@@ -18,9 +18,9 @@ the application.
 - [x] Include a configuration file containing the database path and connection strings
 - [x] Implement a "CodingSession" class in a separate file, which contains the
       properties of a coding session: Id, StartTime, EndTime, Duration.
-- [x] The application should calculate the duration of a coding session based on the
-      Start and End times
-      using a separate "CalculateDuration" method; users should not enter it manually.
+- [x] The application should calculate the duration of a coding session based
+      on the Start and End times using a separate "CalculateDuration" method;
+      users should not enter it manually.
 - [x] User should be able to manually input the start and end times
 - [x] Use Dapper ORM for the data access instead of ADO.NET
 - [x] When reading from the database, retrieve data into a List of Coding
@@ -31,12 +31,11 @@ the application.
 - **SQLite database connection**: The application connects to a SQLite database
   to store and read data.
   - App.config file contains the configuration for that.
-- **Spectre.Console -library utilization**: Used for menu selections, displaying record
-  data to users, and enhancing console presentation with colors.
+- **Spectre.Console -library utilization**: Used for menu selections, displaying
+  record data to users, and enhancing console presentation with colors.
 - **New Database Creation**: If the database or table doesn't exist, the application
   creates them when it starts.
-- **User input checks**:
-  - Date and time must be entered in format YYYY-MM-DD HH:mm.
+- **Time check**: Date and time must be entered in format YYYY-MM-DD HH:mm.
   - Duplicate start times cannot be entered unless updating an existing record.
 - **ID check**: Verify if the entered ID exists in the database before
   performing operations.
@@ -59,7 +58,8 @@ the application.
 - **V - View All Records**: List all record from the database  
   ![CodeView](https://github.com/HopelessCoding/learning/assets/161690352/5b025667-ea95-4054-92c7-2ce2df3dc6a4)
 - **U - Update Record**: Updates an existing record by entering its ID
-  - User should enter a valid start time or leave it empty to use current date and time
+  - User should enter a valid start time or leave it empty to use current date
+    and time
   - If start time already exists program writes a message and returns to main menu
   - User should enter a valid end time (can already exist)
 - **R - Show Reports**: Opens reports menu
@@ -87,12 +87,12 @@ the application.
   would return user back to main menu when they have already selected a command.
   - Now the user is returned back to the main menu by pressing Enter or entering
     a faulty value
-- **Spectre.Console -library**: This documentation is not very good in all areas and learning to
-  use its full potential requires time and testing.
+- **Spectre.Console -library**: This documentation is not very good in all areas
+  and learning to use its full potential requires time and testing.
   - Mostly makes just things to look nice so not focusing to it too much now
   - May further explore and utilize this feature (maybe in future C# Academy projects)
-- **SQL**: It offers very wide range of funtionalities and possibilites. Learning to
-   use those efficiently will require time.
+- **SQL**: It offers very wide range of funtionalities and possibilites.
+  Learning to use those efficiently will require time.
 
 ## Additional challenges for future
 
@@ -102,5 +102,6 @@ the application.
       the session as it happens.
 - [ ] Let the users filter their coding records per period (weeks, days, years) and/or
       order ascending or descending.
-- [ ] Create the ability to set coding goals and show how far the users are from reaching
-      their goal, along with how many hours a day they would have to code to reach their goal.
+- [ ] Create the ability to set coding goals and show how far the users are from
+      reaching their goal, along with how many hours a day they would have to
+      code to reach their goal.
