@@ -2,7 +2,6 @@
 using Microsoft.Data.Sqlite;
 using Dapper;
 using System.Configuration;
-using System.Collections.Specialized;
 
 namespace CodingTracker.JaegerByte
 {
@@ -176,7 +175,7 @@ namespace CodingTracker.JaegerByte
                     new Text(item.StartTime.ToString("g")),
                     new Text(item.EndTime.ToString("g")),
                     new Text(item.Duration.ToString("hh\\:mm")),
-                }); ;
+                });
             }
             return grid;
         }
