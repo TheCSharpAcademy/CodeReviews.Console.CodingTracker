@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "GetTeched.Console.CodingTracker": {
+      "commandName": "Project",
+      "workingDirectory": "E:\\C# Dev\\GetTeched\\CodeReviews.Console.CodingTracker\\GetTeched.Console.CodingTracker"
+    }
+  }
+}
