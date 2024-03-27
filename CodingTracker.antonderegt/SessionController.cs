@@ -31,41 +31,9 @@ public class SessionController
         ";
 
         using var connection = new SQLiteConnection(_connectionString);
-        connection.Execute(sql, parameters);
+        int numberOfRowsAffected = connection.Execute(sql, parameters);
 
-        return GetSessionIdByStartTime(session.StartTime);
-    }
-
-    public int GetSessionIdByStartTime(DateTime startTime)
-    {
-        var parameters = new { startTime };
-
-        string sql =
-        @"
-            SELECT Id 
-            FROM CodingTracker 
-            WHERE StartTime = @startTime;
-        ";
-
-        using var connection = new SQLiteConnection(_connectionString);
-
-        return connection.QuerySingle<int>(sql, parameters);
-    }
-
-    public CodingSession GetCurrentOrNewSession()
-    {
-        var parameters = new { MinDateTime = DateTime.MinValue };
-        string sql =
-        @"
-            SELECT *
-            FROM CodingTracker
-            WHERE EndTime = @MinDateTime;
-        ";
-
-        using var connection = new SQLiteConnection(_connectionString);
-        var session = connection.QueryFirstOrDefault<CodingSession>(sql, parameters);
-
-        return session ?? new CodingSession();
+        return numberOfRowsAffected;
     }
 
     public bool UpdateSession(CodingSession session)

@@ -20,7 +20,7 @@ class Program
             return;
         }
 
-        CodingSession currentSession = sessionController.GetCurrentOrNewSession();
+        CodingSession currentSession = new();
 
         bool keepRunning = true;
         while (keepRunning)
@@ -29,14 +29,13 @@ class Program
             switch (action)
             {
                 case ActionType.StartSession:
-                    if (currentSession.Id > 0)
+                    if (currentSession.StartTime != DateTime.MinValue)
                     {
                         AnsiConsole.Markup("[green]Session already started.[/][blue] Enjoy[/]");
                         break;
                     }
 
                     currentSession.StartTime = UserInput.PromptDateTime("start");
-                    currentSession.Id = sessionController.CreateSession(currentSession);
                     AnsiConsole.Markup($"\n[green]Session started at {currentSession.StartTime}.[/][blue] Enjoy[/]");
                     break;
                 case ActionType.EndSession:
@@ -57,9 +56,9 @@ class Program
                         break;
                     }
 
-                    if (sessionController.UpdateSession(currentSession))
+                    if (sessionController.CreateSession(currentSession) > 0)
                     {
-                        currentSession = sessionController.GetCurrentOrNewSession();
+                        currentSession = new();
                         AnsiConsole.Markup($"\n[green]Session ended at {endTime}.[/][blue] Well done![/]");
                     }
                     else
@@ -75,14 +74,16 @@ class Program
                         AnsiConsole.Markup("\n[red]Failed to read id[/]. Press enter to return to menu...");
                         break;
                     }
-                    currentSession.Id = id;
-
-                    currentSession.StartTime = UserInput.PromptDateTime("start");
+                    CodingSession sessionToEdit = new()
+                    {
+                        Id = id,
+                        StartTime = UserInput.PromptDateTime("start")
+                    };
 
                     DateTime newEndTime = UserInput.PromptDateTime("end");
-                    if (Validate.EndTimeIsAfterStartTime(currentSession, newEndTime))
+                    if (Validate.EndTimeIsAfterStartTime(sessionToEdit, newEndTime))
                     {
-                        currentSession.EndTime = newEndTime;
+                        sessionToEdit.EndTime = newEndTime;
                     }
                     else
                     {
@@ -90,7 +91,7 @@ class Program
                         break;
                     }
 
-                    if (sessionController.UpdateSession(currentSession))
+                    if (sessionController.UpdateSession(sessionToEdit))
                     {
                         AnsiConsole.Markup($"\n[green]Session updated.[/] Press enter to return to menu...\n");
                     }
