@@ -1,7 +1,6 @@
 ﻿using CodingTracker;
 
-using System.Configuration;
-string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString")!;
+string connectionString = System.Configuration.ConfigurationManager.AppSettings.Get("ConnectionString")!;
 DatabaseManager databaseManager = new();
 
 CodingController codingController = new();
