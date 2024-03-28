@@ -1,5 +1,4 @@
 ﻿using Microsoft.Data.Sqlite;
-using System.Configuration;
 using Dapper;
 using Spectre.Console;
 using System.Globalization;
@@ -9,7 +8,7 @@ namespace CodingTracker;
 
 public class CodingController
 {
-    readonly string connectionString = ConfigurationManager.AppSettings.Get("connectionString")!;
+    readonly string connectionString = System.Configuration.ConfigurationManager.AppSettings.Get("connectionString")!;
     readonly private Stopwatch stopwatch;
     private TimeSpan pausedTime;
     bool timerIsPaused;

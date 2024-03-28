@@ -1,22 +1,26 @@
 ﻿using Microsoft.Data.Sqlite;
 using Dapper;
 
-namespace CodingTracker;
-
-public class DatabaseManager
+namespace CodingTracker
 {
-    internal void CreateTable(string connectionString)
+    public class DatabaseManager
     {
-        using var connection = new SqliteConnection(connectionString);
+        internal void CreateTable(string connectionString)
         {
-                connection.Open();
-                string sql =
-                    @"CREATE TABLE IF NOT EXISTS coding (
-                            Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                            Date TEXT,
-                            Duration TEXT
-                        )";
-                connection.Execute(sql);
+            using var connection = new SqliteConnection(connectionString);
+            connection.Open();
+            CreateCodingTable(connection);
+        }
+
+        private void CreateCodingTable(SqliteConnection connection)
+        {
+            string sql =
+                @"CREATE TABLE IF NOT EXISTS coding (
+                        Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        Date TEXT,
+                        Duration TEXT
+                    )";
+            connection.Execute(sql);
         }
     }
 }
