@@ -23,12 +23,13 @@
  * ------------------------------------------------------------TODO--------------------------------------------------------------------------------------------------------
  * Creating a Configuration File
  */
-using Spectre.Console;
-namespace coding_tracker;
-class Program
-{
-    static void Main(string[] args)
-    {
-        AnsiConsole.Markup("[underline red]Hello[/] World!");
-    }
-}
+using System.Configuration;
+using System.Collections.Specialized;
+using coding_tracker;
+
+string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString")!;
+DatabaseManager databaseManager = new();
+UserInput userInput = new();
+
+databaseManager.SqlInitialize(connectionString);
+userInput.MainMenu();
