@@ -37,18 +37,16 @@ public class UserInput
             switch (crudActions)
             {
                 case "View Sessions":
-                    AnsiConsole.Write(new Markup("[bold red]Not Implemented yet.[/]"));
-                    AnsiConsole.WriteLine("\n\nPress any key to return to the Main Menu.");
+                    SessionController.ViewAllSessions();
                     Console.ReadLine();
                     AnsiConsole.Clear();
                     break;
                 case "Enter New Sessions":
-                    SessionController.AddNewEntry();
+                    SessionController.AddNewManualEntry();
                     Console.ReadLine();
                     break;
                 case "Update Session":
-                    AnsiConsole.Write(new Markup("[bold red]Not Implemented yet.[/]"));
-                    AnsiConsole.WriteLine("\n\nPress any key to return to the Main Menu.");
+                    UpdateSelection();
                     Console.ReadLine();
                     AnsiConsole.Clear();
                     break;
@@ -65,38 +63,25 @@ public class UserInput
             }
         } while (!endApplication);
     }
-
-    internal string[] GetSessionInput()
+    internal string[] ManualSessionInput()
     {
-        List<string> type = new() { "Start", "End"};
+        string[] sessionType = new string[] { "Start", "End" };
         string[] dateTime = new string[3];
-
-        string dateInput = "";
-        string timeInput = "";
+        string userinput = "";
         bool validDateTime = false;
 
-        for (int i = 0; i < type.Count; i++)
-        { 
-            while(!validDateTime)
-            {
-                dateInput = AnsiConsole.Ask<string>($"Please enter the {type[i]} Date of your session [green]DD-MM-YY[/]");
-                validDateTime = validation.DateValidation(dateInput, type[i]);           
-            }
-
-            validDateTime = false;
-            AnsiConsole.Clear();
-
+        for(int i = 0;i < sessionType.Length;i++)
+        {
             while (!validDateTime)
             {
-                timeInput = AnsiConsole.Ask<string>($"Please enter the Time {type[i]} of your session using a 24 hour format [green]hh:mm[/]");
-                validDateTime = validation.TimeValidation(timeInput, type[i]);
+                userinput = AnsiConsole.Ask<string>($"Please enter the {sessionType[i]} date and time of your coding session. Format:[green]DD-MM-YY HH:MM[/]");
+                validDateTime = validation.DateTimeValidation(userinput);
             }
             validDateTime = false;
-            dateTime[i] = $"{dateInput} {timeInput}";
+            dateTime[i] = userinput;
         }
         dateTime[2] = Duration(dateTime[0], dateTime[1]);
         return dateTime;
-
     }
 
     internal string Duration(string sessionStart, string sessionEnd)
@@ -106,5 +91,19 @@ public class UserInput
 
         TimeSpan duration = endTime.Subtract(startTime);
         return duration.TotalMinutes.ToString();
+    }
+
+    internal void UpdateSelection()
+    {
+        SessionController.ViewAllSessions();
+        string[] allData = SessionController.SelectionViewSessions();
+        var updateId = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+            .Title("Please select the operation with the arrow keys")
+            .PageSize(5)
+            .MoreChoicesText("[grey](Move up and down to reveal more entries)[/]")
+            .AddChoices(allData.Reverse()));
+
+        SessionController.UpdateSession(updateId);
     }
 }

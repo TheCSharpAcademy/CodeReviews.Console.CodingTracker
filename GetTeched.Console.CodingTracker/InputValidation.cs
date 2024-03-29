@@ -31,4 +31,33 @@ public class InputValidation
         }
         return true;
     }
+
+    internal bool DateTimeValidation(string userTimeInput)
+    {
+        List<string> userInput = userTimeInput.Split(' ').ToList();
+        while (!DateTime.TryParseExact(userTimeInput, "dd-MM-yy HH:mm", new CultureInfo("en-UK"), DateTimeStyles.None, out _))
+        {
+            AnsiConsole.Clear();
+            if (userInput.Count > 1)
+            {
+                if (!DateTime.TryParseExact(userInput[0], "dd-MM-yy", new CultureInfo("en-UK"), DateTimeStyles.None, out _))
+                {
+                    AnsiConsole.Write(new Markup("\n[Red]Invalid date entered. Please try again.[/]\n\n"));
+                    return false;
+                }
+                else if (!DateTime.TryParseExact(userInput[1], "HH:mm", new CultureInfo("en-UK"), DateTimeStyles.None, out _))
+                {
+                    AnsiConsole.Write(new Markup("\n[Red]Invalid time entered. Please try again.[/]\n\n"));
+                    return false;
+                }
+            }
+            else
+            {
+                AnsiConsole.Write(new Markup("\n[red]Invalid entry made. Please try again.[/]\n\n"));
+                return false;
+            }
+            
+        }
+        return true;
+    }
 }
