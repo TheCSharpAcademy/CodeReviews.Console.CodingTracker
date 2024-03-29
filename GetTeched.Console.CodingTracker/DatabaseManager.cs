@@ -11,7 +11,7 @@ internal class DatabaseManager
         {
             connection.Open();
             string sqlQuery =
-                @"CREATE TABLE IF NOT EXISTS coding_time (
+                @"CREATE TABLE IF NOT EXISTS Coding_Session (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 StartTime TEXT,
                 EndTime TEXT,

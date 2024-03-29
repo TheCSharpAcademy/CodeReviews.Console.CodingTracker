@@ -29,7 +29,9 @@ using coding_tracker;
 
 string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString")!;
 DatabaseManager databaseManager = new();
-UserInput userInput = new();
+SessionController sessionController = new();
+UserInput userInput = new(sessionController);
+sessionController.UserInput = userInput;
 
 databaseManager.SqlInitialize(connectionString);
 userInput.MainMenu();
