@@ -95,15 +95,32 @@ public class UserInput
 
     internal void UpdateSelection()
     {
-        SessionController.ViewAllSessions();
-        string[] allData = SessionController.SelectionViewSessions();
-        var updateId = AnsiConsole.Prompt(
-            new SelectionPrompt<string>()
-            .Title("Please select the operation with the arrow keys")
-            .PageSize(5)
-            .MoreChoicesText("[grey](Move up and down to reveal more entries)[/]")
-            .AddChoices(allData.Reverse()));
+        int[] sessionIds = SessionController.GetIds();
+        bool entryValid = false;
+        int idSelection = 0;
 
-        SessionController.UpdateSession(updateId);
+
+        while (!entryValid)
+        {
+            SessionController.ViewAllSessions();
+            idSelection = AnsiConsole.Ask<int>("Please type the Id number you would like to edit.");
+            AnsiConsole.Clear();
+            entryValid = validation.SessionIdInRange(sessionIds, idSelection);
+            
+        }
+
+        SessionController.UpdateSession(idSelection);
+        
+
+
+        //Possible use if under certain number of entries
+        //var updateId = AnsiConsole.Prompt(
+        //    new SelectionPrompt<string>()
+        //    .Title("Please select the operation with the arrow keys")
+        //    .PageSize(10)
+        //    .MoreChoicesText("[grey](Move up and down to reveal more entries)[/]")
+        //    .AddChoices(allData.Reverse()));
+
+        //SessionController.UpdateSession(updateId);
     }
 }

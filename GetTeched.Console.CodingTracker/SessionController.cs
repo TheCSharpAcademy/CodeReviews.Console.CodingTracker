@@ -65,9 +65,9 @@ public class SessionController
         
     }
 
-    internal string[] SelectionViewSessions()
+    internal int[] GetIds()
     {
-        List<string> rowData = new();
+        List<int> rowData = new();
         using (var connection = new SqliteConnection(connectionString))
         {
             connection.Open();
@@ -76,8 +76,7 @@ public class SessionController
 
             foreach (var codingSession in codingSessions)
             {
-                rowData.Add(Convert.ToString(codingSession.Id));
-
+                rowData.Add(Convert.ToInt32(codingSession.Id));
             }
         }
         return rowData.ToArray();
@@ -85,10 +84,10 @@ public class SessionController
 
     }
 
-    internal void UpdateSession(string idSelection)
+    internal void UpdateSession(int idSelection)
     {
         string[] sessionTime = UserInput.ManualSessionInput();
-        int id = Convert.ToInt32(idSelection);
+        int id = idSelection;
         string startTime = sessionTime[0];
         string endTime = sessionTime[1];
         string duration = sessionTime[2];
