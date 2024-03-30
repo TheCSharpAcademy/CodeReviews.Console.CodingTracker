@@ -1,8 +1,6 @@
 using System.Configuration;
-using ConsoleTableExt;
 using Dapper;
 using Microsoft.Data.Sqlite;
-using SQLitePCL;
 
 namespace CodingTracker
 {
@@ -175,7 +173,7 @@ namespace CodingTracker
                 Console.ReadLine();
             }
             if (tableData.Count > 0)
-                tableVisualisation.ShowFilterTable(filterData);
+                tableVisualisation.FilteredTable(filterData);
         }
 
         internal string[] Report()

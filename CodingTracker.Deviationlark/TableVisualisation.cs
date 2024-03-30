@@ -38,7 +38,7 @@ namespace CodingTracker
             AnsiConsole.Write(table);
         }
 
-        internal void ShowFilterTable(List<CodingSession> tableData)
+        internal void FilteredTable(List<CodingSession> tableData)
         {
             foreach (var element in tableData)
             {
