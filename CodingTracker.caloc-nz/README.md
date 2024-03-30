@@ -60,16 +60,16 @@ I took a bit of a long winded way to write this project. I followed the
 VSCode.](https://youtu.be/tvrfIMiG3-s?si=hNIiJe8F2qEh3dqQ), which got me to a  
 working app, but did not include Spectre.Console and Dapper.  
 
-The tuturial helped me understand the basics and the strucutre of the code  
+The tutorial helped me understand the basics and the structure of the code  
 for the CodingTracker app. Once I had a running app I researched and changed  
 the code to support Dapper.  
 
 After the Dapper changes, I changed the code to support Spectre.Console.
 
-I have been through a few itterations of the code to optimise the code and  
-make it more readable with a combination of the Visual Studo 2022 messages  
+I have been through a few iterations of the code to optimise the code and  
+make it more readable with a combination of the Visual Studio 2022 messages  
 and Codacy identify and resolve issues.  I didn't just make changes to the  
-code without understanding exaclty what the recommended changes mean or do,  
+code without understanding exactly what the recommended changes mean or do,  
 and where I still didn't understand the changes I left unchanged.
 
 The project is in a working state and I believe meets all the project  
