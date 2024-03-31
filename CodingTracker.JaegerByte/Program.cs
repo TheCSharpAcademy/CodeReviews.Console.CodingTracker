@@ -1,6 +1,7 @@
 ﻿using Spectre.Console;
 using Microsoft.Data.Sqlite;
 using Dapper;
+using System.Configuration;
 
 namespace CodingTracker.JaegerByte
 {
@@ -8,7 +9,7 @@ namespace CodingTracker.JaegerByte
     internal class Program
     {
         static Validation validationHandler = new Validation();
-        static string connectionString = System.Configuration.ConfigurationManager.AppSettings.Get("ConnectionString");
+        static string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
 
         static void Main()
         {
