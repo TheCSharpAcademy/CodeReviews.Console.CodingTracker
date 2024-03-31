@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-
 namespace CodingTracker.JaegerByte
 {
     internal class Validation
@@ -9,9 +8,9 @@ namespace CodingTracker.JaegerByte
             DateTime start;
             DateTime end;
 
-            if (DateTime.TryParseExact(startTime, "HH:mm", new CultureInfo("de-DE"), DateTimeStyles.None, out start))
+            if (DateTime.TryParseExact(startTime, "dd-MM-yyyy HH:mm", new CultureInfo("de-DE"), DateTimeStyles.None, out start))
             {
-                if (DateTime.TryParseExact(endTime, "HH:mm", new CultureInfo("de-DE"), DateTimeStyles.None, out end))
+                if (DateTime.TryParseExact(endTime, "dd-MM-yyyy HH:mm", new CultureInfo("de-DE"), DateTimeStyles.None, out end))
                 {
                     if (end>start)
                     {
