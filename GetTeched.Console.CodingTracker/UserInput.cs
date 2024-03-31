@@ -1,6 +1,7 @@
 ﻿using Spectre.Console;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -19,6 +20,7 @@ public class UserInput
     }
 
     static InputValidation validation = new();
+    static RandomSeed randomSeed = new();
     internal void MainMenu()
     {
         bool endApplication = false;
@@ -31,7 +33,7 @@ public class UserInput
             .AddChoices(new[]
             {
                 "View Sessions", "Enter New Sessions",
-                "Update Session", "Delete Sessions", "Exit Application"
+                "Update Session", "Delete Sessions", "Exit Application","Random Seed Database"
             }));
 
             switch (crudActions)
@@ -42,17 +44,15 @@ public class UserInput
                     AnsiConsole.Clear();
                     break;
                 case "Enter New Sessions":
-                    SessionController.AddNewManualEntry();
-                    Console.ReadLine();
+                    SessionTrackingType();
                     break;
                 case "Update Session":
-                    UpdateSelection();
+                    UpdateSession();
                     Console.ReadLine();
                     AnsiConsole.Clear();
                     break;
                 case "Delete Sessions":
-                    AnsiConsole.Write(new Markup("[bold red]Not Implemented yet.[/]"));
-                    AnsiConsole.WriteLine("\n\nPress any key to return to the Main Menu.");
+                    DeleteSession();
                     Console.ReadLine();
                     AnsiConsole.Clear();
                     break;
@@ -60,8 +60,44 @@ public class UserInput
                     endApplication = true;
                     Environment.Exit(0);
                     break;
+                case "Random Seed Database":
+                    randomSeed.GenerateRandomData();
+                    break;
             }
         } while (!endApplication);
+    }
+    internal void SessionTrackingType()
+    {
+        var trackingType = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+            .Title("Please select the operation with the arrow keys")
+            .PageSize(10)
+            .AddChoices(new[]
+            {
+                "Stopwatch Session", "Manual Session Entry", "Back to Main Menu"
+            }));
+
+        switch (trackingType)
+        {
+            case "Stopwatch Session":
+                StopwatchSessionInput();
+                break;
+            case "Manual Session Entry":
+                SessionController.AddNewManualSession();
+                break;
+            case "Back to Main Menu":
+                break;
+        }
+    }
+    internal void StopwatchSessionInput()
+    {
+
+        if(!AnsiConsole.Confirm("Start stopwatch now?"))
+        {
+            AnsiConsole.MarkupLine("Returning to Menu");
+        }
+        AnsiConsole.Clear();
+        SessionController.SessionStopwatch();
     }
     internal string[] ManualSessionInput()
     {
@@ -86,14 +122,14 @@ public class UserInput
 
     internal string Duration(string sessionStart, string sessionEnd)
     {
-        DateTime startTime = DateTime.ParseExact(sessionStart, "dd-MM-yy HH:mm", new CultureInfo("en-UK"));
-        DateTime endTime = DateTime.ParseExact(sessionEnd, "dd-MM-yy HH:mm", new CultureInfo("en-UK"));
+        DateTime startTime = DateTime.ParseExact(sessionStart, "dd-MM-yy HH:mm:ss", new CultureInfo("en-GB"));
+        DateTime endTime = DateTime.ParseExact(sessionEnd, "dd-MM-yy HH:mm:ss", new CultureInfo("en-GB"));
 
         TimeSpan duration = endTime.Subtract(startTime);
-        return duration.TotalMinutes.ToString();
+        return duration.TotalSeconds.ToString();
     }
 
-    internal void UpdateSelection()
+    internal void UpdateSession()
     {
         int[] sessionIds = SessionController.GetIds();
         bool entryValid = false;
@@ -122,5 +158,21 @@ public class UserInput
         //    .AddChoices(allData.Reverse()));
 
         //SessionController.UpdateSession(updateId);
+    }
+
+    internal void DeleteSession()
+    {
+        int[] sessionIds = SessionController.GetIds();
+        bool entryValid = false;
+        int idSelection = 0;
+
+        while (!entryValid)
+        {
+            SessionController.ViewAllSessions();
+            idSelection = AnsiConsole.Ask<int>("Please type the Id number you would like to delete.");
+            AnsiConsole.Clear();
+            entryValid = validation.SessionIdInRange(sessionIds,idSelection);
+        }
+        SessionController.DeleteSession(idSelection);
     }
 }

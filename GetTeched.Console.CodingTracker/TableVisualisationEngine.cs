@@ -29,4 +29,14 @@ public class TableVisualisationEngine
 
         AnsiConsole.Write(table);
     }
+
+    internal void StopwatchTable()
+    {
+        var table = new Table()
+            .Border(TableBorder.DoubleEdge)
+            .Caption("[red]Press F to stop[/]");
+        table.AddColumn("[green]Stopwatch Elapsed Time[/]");
+        table.AddColumn("             ");
+        AnsiConsole.Write(table);
+    }
 }

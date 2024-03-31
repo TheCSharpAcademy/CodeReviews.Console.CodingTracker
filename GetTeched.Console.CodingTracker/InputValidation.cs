@@ -65,10 +65,10 @@ public class InputValidation
     {
         if (sessionIds.Contains(idSelection))
         {
-            AnsiConsole.Write(new Markup($"\n[red]This id {idSelection} was found.[/]\n"));
+            AnsiConsole.Write(new Markup($"\n[red]ID: {idSelection} was found.[/]\n"));
             return true;
         }
-        AnsiConsole.Write(new Markup($"[red]This id {idSelection} was not found. Press any key to try again.[/]\n\n"));
+        AnsiConsole.Write(new Markup($"[red]ID:{idSelection} was not found. Press any key to try again.[/]\n\n"));
         Console.ReadLine();
         return false;
         
