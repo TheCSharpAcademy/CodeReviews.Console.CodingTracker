@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Spectre.Console;
 using System.Diagnostics;
 using System.Globalization;
+using System.Collections;
 
 namespace coding_tracker;
 
@@ -65,12 +66,34 @@ public class SessionController
                 rowData.Add(Convert.ToString(codingSession.Id));
                 rowData.Add(codingSession.StartTime);
                 rowData.Add(codingSession.EndTime);
-                rowData.Add(codingSession.Duration);
+                rowData.Add(SecondsConversion(codingSession.Duration));
             }
             tableGeneration.TableGeneration(columnHeaders, rowData);
         }
 
         
+    }
+
+    internal string SecondsConversion(string secondsDuration)
+    {
+        int totalseconds = Convert.ToInt32(secondsDuration);
+        int seconds = totalseconds % 60;
+        int minutes = (totalseconds % 3600) / 60;
+        int hours = totalseconds / 3600;
+        string totalDuration = "";
+
+        if(hours > 0)
+        {
+            return totalDuration = String.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
+        }
+        else if (minutes > 0)
+        {
+            return totalDuration = String.Format("00:{0:00}:{1:00}", minutes, seconds);
+        }
+        else
+        {
+            return totalDuration = String.Format("00:00:{0:00}", seconds);
+        }
     }
 
     internal int[] GetIds()
@@ -166,6 +189,27 @@ public class SessionController
     {
         DateTime timeStam = DateTime.Now;
         return timeStam.ToString("dd-MM-yy HH:mm:ss");
+    }
+
+    internal void GetWeekNumber()
+    {
+        using(var connection = new SQLiteConnection(connectionString))
+        {
+            connection.Open();
+            string sqlQuery = @"SELECT StartTime, strftime('%W', StartTime) AS WeekNumber FROM Coding_Session";
+            var codingSessions = connection.Query(sqlQuery);
+
+            List<string> rowData = new();
+
+            foreach (var codingSession in codingSessions)
+            {
+                rowData.Add(codingSession.WeekNumber);
+
+            }
+
+
+            tableGeneration.WeekGenerator(rowData);
+        }
     }
 
     

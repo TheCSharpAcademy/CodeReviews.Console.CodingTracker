@@ -24,7 +24,7 @@ public class TableVisualisationEngine
 
         for(int i = 0; i < rows.Length; i += 4)
         {
-            table.AddRow(rows[i], rows[i + 1], rows[i + 2], $"{rows[i + 3]} minutes");
+            table.AddRow(rows[i], rows[i + 1], rows[i + 2], $"{rows[i + 3]}");
         }
 
         AnsiConsole.Write(table);
@@ -37,6 +37,21 @@ public class TableVisualisationEngine
             .Caption("[red]Press F to stop[/]");
         table.AddColumn("[green]Stopwatch Elapsed Time[/]");
         table.AddColumn("             ");
+        AnsiConsole.Write(table);
+    }
+
+    internal void WeekGenerator(List<string> rowData)
+    {
+        var table = new Table()
+            .Border(TableBorder.DoubleEdge);
+        string[] rows = rowData.ToArray();
+
+        table.AddColumn("WeekNumber");
+        for (int i = 0; i < rowData.Count - 1; i += 4)
+        {
+            table.AddRow(rowData[i]);
+        }
+
         AnsiConsole.Write(table);
     }
 }

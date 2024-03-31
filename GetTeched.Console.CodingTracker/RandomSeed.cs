@@ -38,7 +38,7 @@ internal class RandomSeed
         loggedDays = random.Next(30, 260);
         
 
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < loggedDays; i++)
         {
             day = random.Next(1, 28);
             month = random.Next(1, 12);
@@ -46,7 +46,7 @@ internal class RandomSeed
             minutes = random.Next(0, 59);
             seconds = random.Next(0, 59);
 
-            startDate = $"{day.ToString("00")}-{month.ToString("00")}-{year} {hours.ToString("00")}:{minutes.ToString("00")}:{seconds.ToString("00")}";
+            startDate = String.Format("{0:00}-{1:00}-{2:00} {3:00}:{4:00}:{5:00}",day, month, year, hours, minutes, seconds);
 
             if (hours >= 20)
             {
@@ -57,12 +57,11 @@ internal class RandomSeed
             }
             else
             {
-                hours = hours + random.Next(0, 3);
+                hours = hours + random.Next(1, 3);
                 minutes = random.Next(0, 59);
                 seconds = random.Next(0, 59);
             }
-
-            endDate = $"{day.ToString("00")}-{month.ToString("00")}-{year} {hours.ToString("00")}:{minutes.ToString("00")}:{seconds.ToString("00")}";
+            endDate = String.Format("{0:00}-{1:00}-{2:00} {3:00}:{4:00}:{5:00}", day, month, year, hours, minutes, seconds);
 
             duration = Duration(startDate, endDate);
 

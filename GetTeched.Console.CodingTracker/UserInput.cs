@@ -32,8 +32,9 @@ public class UserInput
             .PageSize(10)
             .AddChoices(new[]
             {
-                "View Sessions", "Enter New Sessions",
-                "Update Session", "Delete Sessions", "Exit Application","Random Seed Database"
+                "View Sessions", "Enter New Sessions", "Reports",
+                "Update Session", "Delete Sessions", "Exit Application",
+                "Random Seed Database"
             }));
 
             switch (crudActions)
@@ -46,14 +47,15 @@ public class UserInput
                 case "Enter New Sessions":
                     SessionTrackingType();
                     break;
+                case "Reports":
+                    SessionController.GetWeekNumber();
+                    break;
                 case "Update Session":
                     UpdateSession();
-                    Console.ReadLine();
                     AnsiConsole.Clear();
                     break;
                 case "Delete Sessions":
                     DeleteSession();
-                    Console.ReadLine();
                     AnsiConsole.Clear();
                     break;
                 case "Exit Application":
@@ -112,6 +114,7 @@ public class UserInput
             {
                 userinput = AnsiConsole.Ask<string>($"Please enter the {sessionType[i]} date and time of your coding session. Format:[green]DD-MM-YY HH:MM[/]");
                 validDateTime = validation.DateTimeValidation(userinput);
+                userinput = userinput += ":00";
             }
             validDateTime = false;
             dateTime[i] = userinput;
