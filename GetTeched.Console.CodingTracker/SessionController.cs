@@ -19,6 +19,7 @@ public class SessionController
     public UserInput UserInput { get; set; }
 
     static int id = 0;
+    static string date = "";
     static string startTime = "";
     static string endTime = "";
     static string duration = "";
@@ -28,7 +29,7 @@ public class SessionController
         Id = id,
         StartTime = startTime,
         EndTime = endTime,
-        Duration = duration
+        Duration = duration,
     };
 
 
@@ -55,15 +56,16 @@ public class SessionController
         using (var connection = new  SqliteConnection(connectionString))
         {
             connection.Open();
-            string sqlQuery = "SELECT * FROM Coding_Session";
+            string sqlQuery = "SELECT Id, strftime('%d-%m-%Y',StartTime) AS Date, strftime('%H:%M:%S',StartTime) AS StartTime, strftime('%H:%M:%S',EndTime) AS EndTime, Duration FROM Coding_Session";
             var codingSessions = connection.Query(sqlQuery);
 
-            List<string> columnHeaders = new List<string>() { "Id","Start Time","End Time","Duration"};
+            List<string> columnHeaders = new List<string>() { "Id","Date","Start Time","End Time","Duration"};
             List<string> rowData = new();
 
             foreach (var codingSession in codingSessions)
             {
                 rowData.Add(Convert.ToString(codingSession.Id));
+                rowData.Add(codingSession.Date);
                 rowData.Add(codingSession.StartTime);
                 rowData.Add(codingSession.EndTime);
                 rowData.Add(SecondsConversion(codingSession.Duration));
@@ -188,22 +190,24 @@ public class SessionController
     internal string GetTimeStamp()
     {
         DateTime timeStam = DateTime.Now;
-        return timeStam.ToString("dd-MM-yy HH:mm:ss");
+        return timeStam.ToString("yyyy-MM-dd HH:mm:ss");
     }
 
-    internal void GetWeekNumber()
+    internal void WeeklyCodingSessions()
     {
         using(var connection = new SQLiteConnection(connectionString))
         {
             connection.Open();
-            string sqlQuery = @"SELECT StartTime, strftime('%W', StartTime) AS WeekNumber FROM Coding_Session";
+            string sqlQuery = @"SELECT strftime('%W', StartTime) AS WeekNumber, SUM(Duration) AS Duration From Coding_Session GROUP BY strftime('%W', StartTime)";
             var codingSessions = connection.Query(sqlQuery);
 
             List<string> rowData = new();
 
             foreach (var codingSession in codingSessions)
             {
+                string parsedTime = SecondsConversion(Convert.ToString(codingSession.Duration));
                 rowData.Add(codingSession.WeekNumber);
+                rowData.Add(parsedTime);
 
             }
 

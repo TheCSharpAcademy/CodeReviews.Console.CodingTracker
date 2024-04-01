@@ -15,4 +15,6 @@ public class CodingSession
     public string Duration { get; set; }
     [NotMapped]
     public string WeekNumber { get; set; }
+    [NotMapped]
+    public string Date { get; set; }
 }

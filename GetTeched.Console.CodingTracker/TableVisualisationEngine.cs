@@ -22,9 +22,9 @@ public class TableVisualisationEngine
             table.AddColumn($"[yellow]{columns[i]}[/]");
         }
 
-        for(int i = 0; i < rows.Length; i += 4)
+        for(int i = 0; i < rows.Length; i += 5)
         {
-            table.AddRow(rows[i], rows[i + 1], rows[i + 2], $"{rows[i + 3]}");
+            table.AddRow(rows[i], rows[i + 1], rows[i + 2], rows[i + 3], rows[i + 4]);
         }
 
         AnsiConsole.Write(table);
@@ -47,9 +47,10 @@ public class TableVisualisationEngine
         string[] rows = rowData.ToArray();
 
         table.AddColumn("WeekNumber");
-        for (int i = 0; i < rowData.Count - 1; i += 4)
+        table.AddColumn("Duration");
+        for (int i = 0; i < rowData.Count - 1; i += 2)
         {
-            table.AddRow(rowData[i]);
+            table.AddRow(rowData[i], rowData[i + 1]);
         }
 
         AnsiConsole.Write(table);

@@ -46,7 +46,8 @@ internal class RandomSeed
             minutes = random.Next(0, 59);
             seconds = random.Next(0, 59);
 
-            startDate = String.Format("{0:00}-{1:00}-{2:00} {3:00}:{4:00}:{5:00}",day, month, year, hours, minutes, seconds);
+            startDate = String.Format("{0:00}-{1:00}-{2:00} {3:00}:{4:00}:{5:00}", day, month, year, hours, minutes, seconds);
+            DateTime parseStartDate = DateTime.Parse(startDate);
 
             if (hours >= 20)
             {
@@ -62,10 +63,10 @@ internal class RandomSeed
                 seconds = random.Next(0, 59);
             }
             endDate = String.Format("{0:00}-{1:00}-{2:00} {3:00}:{4:00}:{5:00}", day, month, year, hours, minutes, seconds);
-
+            DateTime parseEndDate = DateTime.Parse(endDate);
             duration = Duration(startDate, endDate);
-
-            RandomSeedAdd(startDate, endDate, duration);
+       
+            RandomSeedAdd(parseStartDate.ToString("yyyy-MM-dd HH:mm:ss"), parseEndDate.ToString("yyyy-MM-dd HH:mm:ss"), duration);
 
         }
     }

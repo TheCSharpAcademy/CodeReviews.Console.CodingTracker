@@ -73,4 +73,10 @@ public class InputValidation
         return false;
         
     }
+
+    internal string DateTimeParse(string userInput)
+    {
+        DateTime pareInput = DateTime.Parse(userInput);
+        return pareInput.ToString("yyyy-MM-dd HH:mm:ss");
+    }
 }

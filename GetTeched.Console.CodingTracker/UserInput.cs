@@ -48,7 +48,7 @@ public class UserInput
                     SessionTrackingType();
                     break;
                 case "Reports":
-                    SessionController.GetWeekNumber();
+                    SessionController.WeeklyCodingSessions();
                     break;
                 case "Update Session":
                     UpdateSession();
@@ -114,7 +114,7 @@ public class UserInput
             {
                 userinput = AnsiConsole.Ask<string>($"Please enter the {sessionType[i]} date and time of your coding session. Format:[green]DD-MM-YY HH:MM[/]");
                 validDateTime = validation.DateTimeValidation(userinput);
-                userinput = userinput += ":00";
+                userinput = validation.DateTimeParse(userinput);
             }
             validDateTime = false;
             dateTime[i] = userinput;
@@ -125,8 +125,8 @@ public class UserInput
 
     internal string Duration(string sessionStart, string sessionEnd)
     {
-        DateTime startTime = DateTime.ParseExact(sessionStart, "dd-MM-yy HH:mm:ss", new CultureInfo("en-GB"));
-        DateTime endTime = DateTime.ParseExact(sessionEnd, "dd-MM-yy HH:mm:ss", new CultureInfo("en-GB"));
+        DateTime startTime = DateTime.ParseExact(sessionStart, "yyyy-MM-dd HH:mm:ss", new CultureInfo("en-GB"));
+        DateTime endTime = DateTime.ParseExact(sessionEnd, "yyyy-MM-dd HH:mm:ss", new CultureInfo("en-GB"));
 
         TimeSpan duration = endTime.Subtract(startTime);
         return duration.TotalSeconds.ToString();
