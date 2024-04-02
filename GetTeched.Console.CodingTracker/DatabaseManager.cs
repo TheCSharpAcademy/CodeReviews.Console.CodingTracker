@@ -13,6 +13,7 @@ internal class DatabaseManager
             string sqlQuery =
                 @"CREATE TABLE IF NOT EXISTS Coding_Session (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                Date TEXT,
                 StartTime TEXT,
                 EndTime TEXT,
                 Duration TEXT)";

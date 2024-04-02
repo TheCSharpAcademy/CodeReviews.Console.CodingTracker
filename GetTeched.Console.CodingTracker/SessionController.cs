@@ -18,62 +18,96 @@ public class SessionController
 {
     public UserInput UserInput { get; set; }
 
-    static int id = 0;
-    static string date = "";
-    static string startTime = "";
-    static string endTime = "";
-    static string duration = "";
-
-    CodingSession session = new()
-    {
-        Id = id,
-        StartTime = startTime,
-        EndTime = endTime,
-        Duration = duration,
-    };
-
+    CodingSession session = new();
 
     readonly string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString")!;
     TableVisualisationEngine tableGeneration = new();
+    static InputValidation validation = new();
+
+    internal List<CodingSession> ViewAllSessions()
+    {
+        using(var connection = new SQLiteConnection(connectionString))
+        {
+            connection.Open();
+            //string sqlQuery = "SELECT * FROM Coding_Session";
+            string sqlQuery = "SELECT strftime('%d-%m-%Y', Date) AS FormattedDate, strftime('%H:%M:%S', StartTime) AS FormattedStartTime, strftime('%H:%M:%S', EndTime) AS FormattedEndTime, * FROM Coding_Session";
+            var tableData = connection.Query<CodingSession>(sqlQuery).ToList();
+
+            if (tableData.Any())
+            {
+                AnsiConsole.Clear();
+                TableVisualisationEngine.ShowTable(tableData);
+            }
+        }
+        return new List<CodingSession>();
+    }
+
     internal void AddNewManualSession()
     {
-        string[] sessionTime = UserInput.ManualSessionInput();
 
-        session.StartTime = sessionTime[0];
-        session.EndTime = sessionTime[1];
-        session.Duration = sessionTime[2];
+        session.StartTime = GetDateInput("Start");
+        session.Date = InputValidation.DateTimeParse(session.StartTime,true, false);
+        session.EndTime = GetDateInput("End");
+        session.Duration = validation.Duration(session.StartTime, session.EndTime);
+        
+        using (var connection = new SQLiteConnection(connectionString))
+        {
+            connection.Open();
+            string sqlQuery = "INSERT INTO Coding_Session (Date, StartTime, EndTime, Duration) VALUES (@Date, @StartTime, @EndTime, @Duration)";
+            connection.Execute(sqlQuery, new {session.Date, session.StartTime, session.EndTime, session.Duration });
+        }
+    }
+
+    internal string GetDateInput(string dateType)
+    {
+        string? userInput = "";
+        bool validDate = false;
+
+        while(!validDate)
+        {
+            userInput = AnsiConsole.Ask<string>($"Please enter the {dateType} date and time of your coding session. Format:[green]DD-MM-YY HH:MM[/]");
+            validDate = validation.DateTimeValidation(userInput);
+        }
+        return InputValidation.DateTimeParse(userInput);
+    }
+    internal void SessionStopwatch()
+    {
+        if (!AnsiConsole.Confirm("Start stopwatch now?"))
+        {
+            AnsiConsole.MarkupLine("Returning to Menu");
+            Thread.Sleep(1000);
+            AnsiConsole.Clear();
+            return;
+        }
+        AnsiConsole.Clear();
+
+        Stopwatch stopwatch = new();
+        stopwatch.Start();
+        session.StartTime = validation.GetTimeStamp();
+        session.Date = InputValidation.DateTimeParse(session.StartTime, true, false);
+        tableGeneration.StopwatchTable();
+        while (true)
+        {
+            TimeSpan timeSpan = TimeSpan.FromSeconds(Convert.ToInt32(stopwatch.Elapsed.TotalSeconds));
+            Console.SetCursorPosition(30, 1);
+            AnsiConsole.Markup($"[teal]{timeSpan.ToString("c")}[/]");
+            Console.WriteLine("\r");
+            if (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.F) break;
+
+        }
+        session.EndTime = validation.GetTimeStamp();
+        int timer = Convert.ToInt32(stopwatch.Elapsed.TotalSeconds);
+        session.Duration = timer.ToString();
+
+        AnsiConsole.Clear();
 
         using (var connection = new SQLiteConnection(connectionString))
         {
             connection.Open();
-            string sqlQuery = "INSERT INTO Coding_Session (StartTime, EndTime, Duration) VALUES (@StartTime, @EndTime, @Duration)";
-            connection.Execute(sqlQuery, new {session.StartTime, session.EndTime, session.Duration});
-        }
-    }
-
-    internal void ViewAllSessions()
-    {
-        using (var connection = new  SqliteConnection(connectionString))
-        {
-            connection.Open();
-            string sqlQuery = "SELECT Id, strftime('%d-%m-%Y',StartTime) AS Date, strftime('%H:%M:%S',StartTime) AS StartTime, strftime('%H:%M:%S',EndTime) AS EndTime, Duration FROM Coding_Session";
-            var codingSessions = connection.Query(sqlQuery);
-
-            List<string> columnHeaders = new List<string>() { "Id","Date","Start Time","End Time","Duration"};
-            List<string> rowData = new();
-
-            foreach (var codingSession in codingSessions)
-            {
-                rowData.Add(Convert.ToString(codingSession.Id));
-                rowData.Add(codingSession.Date);
-                rowData.Add(codingSession.StartTime);
-                rowData.Add(codingSession.EndTime);
-                rowData.Add(SecondsConversion(codingSession.Duration));
-            }
-            tableGeneration.TableGeneration(columnHeaders, rowData);
+            string sqlQuery = "INSERT INTO Coding_Session (Date, StartTime, EndTime, Duration) VALUES (@Date, @StartTime, @EndTime, @Duration)";
+            connection.Execute(sqlQuery, new { session.Date, session.StartTime, session.EndTime, session.Duration });
         }
 
-        
     }
 
     internal string SecondsConversion(string secondsDuration)
@@ -86,15 +120,15 @@ public class SessionController
 
         if(hours > 0)
         {
-            return totalDuration = String.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
+            return totalDuration = String.Format("{0:00}h {1:00}m {2:00}s", hours, minutes, seconds);
         }
         else if (minutes > 0)
         {
-            return totalDuration = String.Format("00:{0:00}:{1:00}", minutes, seconds);
+            return totalDuration = String.Format("00h {0:00}m {1:00}s", minutes, seconds);
         }
         else
         {
-            return totalDuration = String.Format("00:00:{0:00}", seconds);
+            return totalDuration = String.Format("00h 00m {0:00}s", seconds);
         }
     }
 
@@ -117,31 +151,57 @@ public class SessionController
 
     }
 
-    internal void UpdateSession(int idSelection)
+    internal void UpdateSession()
     {
-        string[] sessionTime = UserInput.ManualSessionInput();
-        session.Id = idSelection;
-        session.StartTime = sessionTime[0];
-        session.EndTime = sessionTime[1];
-        session.Duration = sessionTime[2];
 
+        int[] sessionIds = GetIds();
+        bool entryValid = false;
+        int idSelection = 0;
+
+        while (!entryValid)
+        {
+            ViewAllSessions();
+            idSelection = AnsiConsole.Ask<int>("Please type the Id number you would like to edit.");
+            AnsiConsole.Clear();
+            entryValid = validation.SessionIdInRange(sessionIds, idSelection); 
+        }
+
+        session.Id = idSelection;
+        session.StartTime = GetDateInput("Start");
+        session.Date = InputValidation.DateTimeParse(session.StartTime, true, false);
+        session.EndTime = GetDateInput("End");
+        session.Duration = validation.Duration(session.StartTime, session.EndTime);
 
         using (var connection = new SqliteConnection(connectionString))
         {
             connection.Open();
             string sqlQuery = 
                 @"UPDATE Coding_Session SET
+                Date = @Date,
                 StartTime = @StartTime,
                 EndTime = @EndTime,
                 Duration = @Duration
                 Where Id = @Id";
 
-            connection.Execute(sqlQuery, new {session.Id, session.StartTime, session.EndTime, session.Duration });
+            connection.Execute(sqlQuery, new {session.Id, session.Date, session.StartTime, session.EndTime, session.Duration });
         }
     }
 
-    internal void DeleteSession(int idSelection)
+    internal void DeleteSession()
     {
+
+        int[] sessionIds = GetIds();
+        bool entryValid = false;
+        int idSelection = 0;
+
+        while (!entryValid)
+        {
+            ViewAllSessions();
+            idSelection = AnsiConsole.Ask<int>("Please type the Id number you would like to delete.");
+            AnsiConsole.Clear();
+            entryValid = validation.SessionIdInRange(sessionIds, idSelection);
+        }
+
         session.Id = idSelection;
 
         using(var connection = new SqliteConnection(connectionString))
@@ -151,46 +211,6 @@ public class SessionController
 
             connection.Execute(sqlQuery, new {session.Id});
         }
-    }
-
-    internal void SessionStopwatch()
-    {
-        string[] dateTime = new string[3];
-        Stopwatch stopwatch = new();
-        stopwatch.Start();
-        dateTime[0] = GetTimeStamp();
-        tableGeneration.StopwatchTable();
-        while (true)
-        {
-            TimeSpan timeSpan = TimeSpan.FromSeconds(Convert.ToInt32(stopwatch.Elapsed.TotalSeconds));
-            Console.SetCursorPosition(30, 1);
-            AnsiConsole.Markup($"[teal]{timeSpan.ToString("c")}[/]");
-            Console.WriteLine("\r");
-            if (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.F) break;
-
-        }
-        dateTime[1] = GetTimeStamp();
-        int timer = Convert.ToInt32(stopwatch.Elapsed.TotalSeconds);
-        dateTime[2] = timer.ToString();
-
-        session.StartTime = dateTime[0];
-        session.EndTime = dateTime[1];
-        session.Duration = dateTime[2];
-        AnsiConsole.Clear();
-
-        using (var connection = new SQLiteConnection(connectionString))
-        {
-            connection.Open();
-            string sqlQuery = "INSERT INTO Coding_Session (StartTime, EndTime, Duration) VALUES (@StartTime, @EndTime, @Duration)";
-            connection.Execute(sqlQuery, new { session.StartTime, session.EndTime, session.Duration });
-        }
-
-    }
-
-    internal string GetTimeStamp()
-    {
-        DateTime timeStam = DateTime.Now;
-        return timeStam.ToString("yyyy-MM-dd HH:mm:ss");
     }
 
     internal void WeeklyCodingSessions()

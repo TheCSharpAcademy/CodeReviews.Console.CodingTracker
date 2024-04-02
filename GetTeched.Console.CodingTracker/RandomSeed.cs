@@ -16,18 +16,7 @@ internal class RandomSeed
 {
     readonly string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString")!;
 
-    static int id = 0;
-    static string startTime = "";
-    static string endTime = "";
-    static string duration = "";
-
-    CodingSession session = new()
-    {
-        Id = id,
-        StartTime = startTime,
-        EndTime = endTime,
-        Duration = duration
-    };
+    CodingSession session = new();
 
     internal void GenerateRandomData()
     {
@@ -35,7 +24,7 @@ internal class RandomSeed
 
         int loggedDays; int day; int month; int year = 23; int hours; int minutes; int seconds; string startDate; string endDate; string duration;
 
-        loggedDays = random.Next(30, 260);
+        loggedDays = random.Next(30, 50);//(30, 260);
         
 
         for (int i = 0; i < loggedDays; i++)
@@ -66,7 +55,7 @@ internal class RandomSeed
             DateTime parseEndDate = DateTime.Parse(endDate);
             duration = Duration(startDate, endDate);
        
-            RandomSeedAdd(parseStartDate.ToString("yyyy-MM-dd HH:mm:ss"), parseEndDate.ToString("yyyy-MM-dd HH:mm:ss"), duration);
+            RandomSeedAdd(parseStartDate.ToString("yyyy-MM-dd"), parseStartDate.ToString("yyyy-MM-dd HH:mm:ss"), parseEndDate.ToString("yyyy-MM-dd HH:mm:ss"), duration);
 
         }
     }
@@ -80,8 +69,9 @@ internal class RandomSeed
         return duration.TotalSeconds.ToString();
     }
 
-    internal void RandomSeedAdd(string startDate, string endDate, string duration)
+    internal void RandomSeedAdd(string date, string startDate, string endDate, string duration)
     {
+        session.Date = date;
         session.StartTime = startDate;
         session.EndTime = endDate;
         session.Duration = duration;
@@ -89,8 +79,8 @@ internal class RandomSeed
         using (var connection = new SQLiteConnection(connectionString))
         {
             connection.Open();
-            string sqlQuery = "INSERT INTO Coding_Session (StartTime, EndTime, Duration) VALUES (@StartTime, @EndTime, @Duration)";
-            connection.Execute(sqlQuery, new { session.StartTime, session.EndTime, session.Duration });
+            string sqlQuery = "INSERT INTO Coding_Session (Date, StartTime, EndTime, Duration) VALUES (@Date, @StartTime, @EndTime, @Duration)";
+            connection.Execute(sqlQuery, new {session.Date, session.StartTime, session.EndTime, session.Duration });
         }
     }
 }
