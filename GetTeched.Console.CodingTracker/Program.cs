@@ -27,6 +27,8 @@ using System.Configuration;
 using System.Collections.Specialized;
 using coding_tracker;
 
+
+
 string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString")!;
 DatabaseManager databaseManager = new();
 SessionController sessionController = new();

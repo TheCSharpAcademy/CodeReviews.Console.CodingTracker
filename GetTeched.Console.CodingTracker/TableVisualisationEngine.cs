@@ -1,10 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using Spectre.Console;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Spectre.Console;
 
 namespace coding_tracker;
 
@@ -17,6 +11,11 @@ public class TableVisualisationEngine
         DisplayData(tableData);
     }
 
+    internal static void ReportDisplay(List<SessionController> reportData)
+    {
+        DisplayData(reportData);
+    }
+
     private static void DisplayData<T>(List<T> data) where T : class
     {
         var table = new Table()
@@ -24,7 +23,7 @@ public class TableVisualisationEngine
             .Title("[teal]All Coding Sessions[/]");
         var properties = typeof(T).GetProperties();
 
-        foreach( var property in properties)
+        foreach (var property in properties)
         {
             table.AddColumn(new TableColumn($"[yellow]{property.Name}[/]"));
         }
@@ -32,24 +31,24 @@ public class TableVisualisationEngine
         foreach (var item in data)
         {
             var row = new List<string>();
-            foreach( var property in properties)
+            foreach (var property in properties)
             {
                 var value = property.GetValue(item);
-                //switch (property.Name)
-                //{
-                //    case "Date":
-                //        value = InputValidation.DateTimeParse(value.ToString(), true, false);
-                //        break;
-                //    case "StartTime":
-                //        value = InputValidation.DateTimeParse(value.ToString(), false, true);
-                //        break;
-                //    case "EndTime":
-                //        value = InputValidation.DateTimeParse(value.ToString(), false, true);
-                //        break;
-                //    case "Duration":
-                //        value = InputValidation.SecondsConversion(value.ToString());
-                //        break;
-                //}
+                switch (property.Name)
+                {
+                    case "Date":
+                        value = InputValidation.DateTimeParse(value.ToString(), true, false);
+                        break;
+                    case "StartTime":
+                        value = InputValidation.DateTimeParse(value.ToString(), false, true);
+                        break;
+                    case "EndTime":
+                        value = InputValidation.DateTimeParse(value.ToString(), false, true);
+                        break;
+                    case "Duration":
+                        value = InputValidation.SecondsConversion(value.ToString());
+                        break;
+                }
                 row.Add(value?.ToString() ?? string.Empty);
             }
             table.AddRow(row.ToArray());
@@ -95,11 +94,11 @@ public class TableVisualisationEngine
 
         table.AddColumn("WeekNumber");
         table.AddColumn("Duration");
-        
+
         for (int i = 0; i < rowData.Count - 1; i += 2)
         {
             table.AddRow(rowData[i], rowData[i + 1]);
-        }        
+        }
         AnsiConsole.Write(table);
     }
 }

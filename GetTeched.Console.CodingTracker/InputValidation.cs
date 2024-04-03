@@ -1,43 +1,57 @@
 ﻿using Spectre.Console;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace coding_tracker;
 
 public class InputValidation
 {
-    internal bool DateTimeValidation(string userTimeInput)
+    internal bool TimeValidation(string userTimeInput)
     {
-        List<string> userInput = userTimeInput.Split(' ').ToList();
-        while (!DateTime.TryParseExact(userTimeInput, "dd-MM-yy HH:mm", new CultureInfo("en-UK"), DateTimeStyles.None, out _))
+        if (!DateTime.TryParseExact(userTimeInput, "HH:mm:ss", new CultureInfo("en-UK"), DateTimeStyles.None, out _))
         {
-            AnsiConsole.Clear();
-            if (userInput.Count > 1)
-            {
-                if (!DateTime.TryParseExact(userInput[0], "dd-MM-yy", new CultureInfo("en-UK"), DateTimeStyles.None, out _))
-                {
-                    AnsiConsole.Write(new Markup("\n[Red]Invalid date entered. Please try again.[/]\n\n"));
-                    return false;
-                }
-                else if (!DateTime.TryParseExact(userInput[1], "HH:mm", new CultureInfo("en-UK"), DateTimeStyles.None, out _))
-                {
-                    AnsiConsole.Write(new Markup("\n[Red]Invalid time entered. Please try again.[/]\n\n"));
-                    return false;
-                }
-            }
-            else
-            {
-                AnsiConsole.Write(new Markup("\n[red]Invalid entry made. Please try again.[/]\n\n"));
-                return false;
-            }
-            
+            AnsiConsole.Write(new Markup("\n[Red]Invalid time entered. Please try again.[/]\n\n"));
+            return false;
         }
         return true;
     }
+
+    internal bool DateValidation(string userDateInput)
+    {
+        if (!DateTime.TryParseExact(userDateInput, "dd-MM-yy", new CultureInfo("en-UK"), DateTimeStyles.None, out _))
+        {
+            AnsiConsole.Write(new Markup("\n[Red]Invalid date entered. Please try again.[/]\n\n"));
+            return false;
+        }
+        return true;
+    }
+    //internal bool DateTimeValidation(string userTimeInput)
+    //{
+    //    List<string> userInput = userTimeInput.Split(' ').ToList();
+    //    while (!DateTime.TryParseExact(userTimeInput, "dd-MM-yy HH:mm", new CultureInfo("en-UK"), DateTimeStyles.None, out _))
+    //    {
+    //        AnsiConsole.Clear();
+    //        if (userInput.Count > 1)
+    //        {
+    //            if (!DateTime.TryParseExact(userInput[0], "dd-MM-yy", new CultureInfo("en-UK"), DateTimeStyles.None, out _))
+    //            {
+    //                AnsiConsole.Write(new Markup("\n[Red]Invalid date entered. Please try again.[/]\n\n"));
+    //                return false;
+    //            }
+    //            else if (!DateTime.TryParseExact(userInput[1], "HH:mm", new CultureInfo("en-UK"), DateTimeStyles.None, out _))
+    //            {
+    //                AnsiConsole.Write(new Markup("\n[Red]Invalid time entered. Please try again.[/]\n\n"));
+    //                return false;
+    //            }
+    //        }
+    //        else
+    //        {
+    //            AnsiConsole.Write(new Markup("\n[red]Invalid entry made. Please try again.[/]\n\n"));
+    //            return false;
+    //        }
+
+    //    }
+    //    return true;
+    //}
 
     internal string Duration(string sessionStart, string sessionEnd)
     {
@@ -58,10 +72,10 @@ public class InputValidation
         AnsiConsole.Write(new Markup($"[red]ID:{idSelection} was not found. Press any key to try again.[/]\n\n"));
         Console.ReadLine();
         return false;
-        
+
     }
 
-    internal static string DateTimeParse(string userInput, bool showDate = true, bool showTime = true)
+    internal static string DateTimeParse(string userInput, bool showDate = false, bool showTime = false)
     {
         DateTime parseInput = DateTime.Parse(userInput);
 
@@ -73,7 +87,7 @@ public class InputValidation
         {
             return parseInput.ToString("HH:mm:ss");
         }
-        
+
         return parseInput.ToString("yyyy-MM-dd HH:mm:ss");
     }
 

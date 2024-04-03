@@ -1,11 +1,4 @@
 ﻿using Spectre.Console;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace coding_tracker;
 
@@ -34,7 +27,7 @@ public class UserInput
             {
                 "View Sessions", "Enter New Sessions", "Reports",
                 "Update Session", "Delete Sessions", "Exit Application",
-                "Random Seed Database"
+                "Random Seed Database", "Testing Print"
             }));
 
             switch (crudActions)
@@ -48,7 +41,7 @@ public class UserInput
                     SessionTrackingType();
                     break;
                 case "Reports":
-                    SessionController.WeeklyCodingSessions();
+                    ReportSelection();
                     break;
                 case "Update Session":
                     SessionController.UpdateSession();
@@ -64,6 +57,9 @@ public class UserInput
                     break;
                 case "Random Seed Database":
                     randomSeed.GenerateRandomData();
+                    break;
+                case "Testing Print":
+                    TestingPrint();
                     break;
             }
         } while (!endApplication);
@@ -91,4 +87,83 @@ public class UserInput
                 break;
         }
     }
+
+    internal void ReportSelection()
+    {
+        var reportType = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+            .Title("Please select the report with the arrow keys")
+            .PageSize(10)
+            .AddChoices(new[]
+            {
+                "Date Range Report","Prior vs Current Week", "YTD Sessions",
+                "Return To Main Menu"
+            }));
+
+        switch (reportType)
+        {
+            case "Date Range Report":
+                SessionController.GetDateRange();
+                break;
+            case "Prior vs Current Week":
+                SessionController.WeeklyCodingSessions();
+                break;
+            case "YTD Sessions":
+                break;
+            case "Return To Main Menu":
+                break;
+        }
+    }
+
+    internal void Sorting()
+    {
+        var sortType = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+            .Title("Please select the sorting method with arrow keys")
+            .PageSize(10)
+            .AddChoices(new[]
+            {
+                "Duration Ascending", "Duration Descending", "Date Ascending",
+                "Date Descending"
+            }));
+    }
+
+    internal void TestingPrint()
+    {
+        SessionController.GetTimeInput("start");
+        //var runningProcessByName = Process.GetProcessesByName("Microsoft Visual Studio 2022");
+        //if (runningProcessByName.Length < 1)
+        //{
+        //    stopwatch.Stop();
+        //}
+        //else
+        //{
+        //    stopwatch.Start();
+        //}
+
+        //Console.WriteLine(ApplicationIsActivated());
+
+    }
+
+    //public static bool ApplicationIsActivated()
+    //{
+    //    var activatedHandle = GetForegroundWindow();
+    //    if (activatedHandle == IntPtr.Zero)
+    //    {
+    //        return false;       // No window is currently activated
+    //    }
+
+    //    var procId = Process.GetCurrentProcess().Id;
+    //    int activeProcId;
+    //    GetWindowThreadProcessId(activatedHandle, out activeProcId);
+
+    //    return activeProcId == procId;
+    //}
+
+
+    //[DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+    //private static extern IntPtr GetForegroundWindow();
+
+    //[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    //private static extern int GetWindowThreadProcessId(IntPtr handle, out int processId);
 }

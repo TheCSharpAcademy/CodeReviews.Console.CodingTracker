@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
+﻿using Dapper;
 using Microsoft.Data.Sqlite;
-using Dapper;
-using System.Data.SQLite;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Spectre.Console;
+using System.Configuration;
+using System.Data.SQLite;
 using System.Diagnostics;
-using System.Globalization;
-using System.Collections;
 
 namespace coding_tracker;
 
@@ -26,11 +19,11 @@ public class SessionController
 
     internal List<CodingSession> ViewAllSessions()
     {
-        using(var connection = new SQLiteConnection(connectionString))
+        using (var connection = new SQLiteConnection(connectionString))
         {
             connection.Open();
-            //string sqlQuery = "SELECT * FROM Coding_Session";
-            string sqlQuery = "SELECT strftime('%d-%m-%Y', Date) AS FormattedDate, strftime('%H:%M:%S', StartTime) AS FormattedStartTime, strftime('%H:%M:%S', EndTime) AS FormattedEndTime, * FROM Coding_Session";
+            string sqlQuery = "SELECT * FROM Coding_Session";
+            //string sqlQuery = "SELECT strftime('%d-%m-%Y', Date) AS FormattedDate, strftime('%H:%M:%S', StartTime) AS FormattedStartTime, strftime('%H:%M:%S', EndTime) AS FormattedEndTime, * FROM Coding_Session";
             var tableData = connection.Query<CodingSession>(sqlQuery).ToList();
 
             if (tableData.Any())
@@ -44,18 +37,35 @@ public class SessionController
 
     internal void AddNewManualSession()
     {
+        string startDateTime;
+        string endDateTime;
 
-        session.StartTime = GetDateInput("Start");
-        session.Date = InputValidation.DateTimeParse(session.StartTime,true, false);
-        session.EndTime = GetDateInput("End");
+        startDateTime = $"{GetDateInput("Start")} {GetTimeInput("Start")}";
+        session.StartTime = InputValidation.DateTimeParse(startDateTime);
+        endDateTime = $"{GetDateInput("End")} {GetTimeInput("End")}";
+        session.EndTime = InputValidation.DateTimeParse(endDateTime);
+        session.Date = InputValidation.DateTimeParse(session.StartTime, true);
         session.Duration = validation.Duration(session.StartTime, session.EndTime);
-        
+
         using (var connection = new SQLiteConnection(connectionString))
         {
             connection.Open();
             string sqlQuery = "INSERT INTO Coding_Session (Date, StartTime, EndTime, Duration) VALUES (@Date, @StartTime, @EndTime, @Duration)";
-            connection.Execute(sqlQuery, new {session.Date, session.StartTime, session.EndTime, session.Duration });
+            connection.Execute(sqlQuery, new { session.Date, session.StartTime, session.EndTime, session.Duration });
         }
+    }
+
+    internal string GetTimeInput(string dateType)
+    {
+        string? userInput = "";
+        bool validTime = false;
+
+        while (!validTime)
+        {
+            userInput = AnsiConsole.Ask<string>($"Please enter the {dateType} time of your coding session. Format:[green]HH:MM:SS[/]");
+            validTime = validation.TimeValidation(userInput);
+        }
+        return userInput;
     }
 
     internal string GetDateInput(string dateType)
@@ -63,12 +73,12 @@ public class SessionController
         string? userInput = "";
         bool validDate = false;
 
-        while(!validDate)
+        while (!validDate)
         {
-            userInput = AnsiConsole.Ask<string>($"Please enter the {dateType} date and time of your coding session. Format:[green]DD-MM-YY HH:MM[/]");
-            validDate = validation.DateTimeValidation(userInput);
+            userInput = AnsiConsole.Ask<string>($"Please enter the {dateType} date and time of your coding session. Format:[green]DD-MM-YY[/]");
+            validDate = validation.DateValidation(userInput);
         }
-        return InputValidation.DateTimeParse(userInput);
+        return userInput;
     }
     internal void SessionStopwatch()
     {
@@ -88,6 +98,7 @@ public class SessionController
         tableGeneration.StopwatchTable();
         while (true)
         {
+
             TimeSpan timeSpan = TimeSpan.FromSeconds(Convert.ToInt32(stopwatch.Elapsed.TotalSeconds));
             Console.SetCursorPosition(30, 1);
             AnsiConsole.Markup($"[teal]{timeSpan.ToString("c")}[/]");
@@ -118,7 +129,7 @@ public class SessionController
         int hours = totalseconds / 3600;
         string totalDuration = "";
 
-        if(hours > 0)
+        if (hours > 0)
         {
             return totalDuration = String.Format("{0:00}h {1:00}m {2:00}s", hours, minutes, seconds);
         }
@@ -157,25 +168,29 @@ public class SessionController
         int[] sessionIds = GetIds();
         bool entryValid = false;
         int idSelection = 0;
+        string startDateTime;
+        string endDateTime;
 
         while (!entryValid)
         {
             ViewAllSessions();
             idSelection = AnsiConsole.Ask<int>("Please type the Id number you would like to edit.");
             AnsiConsole.Clear();
-            entryValid = validation.SessionIdInRange(sessionIds, idSelection); 
+            entryValid = validation.SessionIdInRange(sessionIds, idSelection);
         }
 
         session.Id = idSelection;
-        session.StartTime = GetDateInput("Start");
+        startDateTime = $"{GetDateInput("Start")} {GetTimeInput("Start")}";
+        session.StartTime = InputValidation.DateTimeParse(startDateTime);
+        endDateTime = $"{GetDateInput("End")} {GetTimeInput("End")}";
+        session.EndTime = InputValidation.DateTimeParse(endDateTime);
         session.Date = InputValidation.DateTimeParse(session.StartTime, true, false);
-        session.EndTime = GetDateInput("End");
         session.Duration = validation.Duration(session.StartTime, session.EndTime);
 
         using (var connection = new SqliteConnection(connectionString))
         {
             connection.Open();
-            string sqlQuery = 
+            string sqlQuery =
                 @"UPDATE Coding_Session SET
                 Date = @Date,
                 StartTime = @StartTime,
@@ -183,7 +198,7 @@ public class SessionController
                 Duration = @Duration
                 Where Id = @Id";
 
-            connection.Execute(sqlQuery, new {session.Id, session.Date, session.StartTime, session.EndTime, session.Duration });
+            connection.Execute(sqlQuery, new { session.Id, session.Date, session.StartTime, session.EndTime, session.Duration });
         }
     }
 
@@ -204,18 +219,18 @@ public class SessionController
 
         session.Id = idSelection;
 
-        using(var connection = new SqliteConnection(connectionString))
+        using (var connection = new SqliteConnection(connectionString))
         {
             connection.Open();
             string sqlQuery = @"DELETE FROM Coding_Session WHERE Id = @Id";
 
-            connection.Execute(sqlQuery, new {session.Id});
+            connection.Execute(sqlQuery, new { session.Id });
         }
     }
 
     internal void WeeklyCodingSessions()
     {
-        using(var connection = new SQLiteConnection(connectionString))
+        using (var connection = new SQLiteConnection(connectionString))
         {
             connection.Open();
             string sqlQuery = @"SELECT strftime('%W', StartTime) AS WeekNumber, SUM(Duration) AS Duration From Coding_Session GROUP BY strftime('%W', StartTime)";
@@ -236,6 +251,25 @@ public class SessionController
         }
     }
 
-    
-    
+    internal void GetDateRange()
+    {
+        string startDate = InputValidation.DateTimeParse(GetDateInput("Start"), true);
+        string endDate = InputValidation.DateTimeParse(GetDateInput("End"), true);
+        var reportData = DateRangeReport(startDate, endDate);
+
+        TableVisualisationEngine.ShowTable(reportData);
+    }
+
+    internal List<CodingSession> DateRangeReport(string startDate, string endDate)
+    {
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            connection.Open();
+            string sqlQuery = @"SELECT * FROM Coding_Session WHERE Date BETWEEN @StartDate AND @EndDate";
+            return connection.Query<CodingSession>(sqlQuery, new { StartDate = startDate, EndDate = endDate }).ToList();
+        }
+    }
+
+
+
 }

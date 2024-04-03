@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Dapper;
 using System.Configuration;
-using Dapper;
 using System.Data.SQLite;
-using Microsoft.Data.Sqlite;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Collections.Specialized.BitVector32;
 using System.Globalization;
 
 namespace coding_tracker;
@@ -25,7 +18,7 @@ internal class RandomSeed
         int loggedDays; int day; int month; int year = 23; int hours; int minutes; int seconds; string startDate; string endDate; string duration;
 
         loggedDays = random.Next(30, 50);//(30, 260);
-        
+
 
         for (int i = 0; i < loggedDays; i++)
         {
@@ -40,7 +33,7 @@ internal class RandomSeed
 
             if (hours >= 20)
             {
-                day = day + 1; 
+                day = day + 1;
                 hours = random.Next(0, 23);
                 minutes = random.Next(0, 59);
                 seconds = random.Next(0, 59);
@@ -54,7 +47,7 @@ internal class RandomSeed
             endDate = String.Format("{0:00}-{1:00}-{2:00} {3:00}:{4:00}:{5:00}", day, month, year, hours, minutes, seconds);
             DateTime parseEndDate = DateTime.Parse(endDate);
             duration = Duration(startDate, endDate);
-       
+
             RandomSeedAdd(parseStartDate.ToString("yyyy-MM-dd"), parseStartDate.ToString("yyyy-MM-dd HH:mm:ss"), parseEndDate.ToString("yyyy-MM-dd HH:mm:ss"), duration);
 
         }
@@ -80,7 +73,7 @@ internal class RandomSeed
         {
             connection.Open();
             string sqlQuery = "INSERT INTO Coding_Session (Date, StartTime, EndTime, Duration) VALUES (@Date, @StartTime, @EndTime, @Duration)";
-            connection.Execute(sqlQuery, new {session.Date, session.StartTime, session.EndTime, session.Duration });
+            connection.Execute(sqlQuery, new { session.Date, session.StartTime, session.EndTime, session.Duration });
         }
     }
 }
