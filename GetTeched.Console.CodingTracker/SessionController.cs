@@ -254,38 +254,73 @@ public class SessionController
 
     internal void GetYearToDateRange()
     {
+        string sortType; string sortRange;
+        string[] sorting = new string[2];
         DateTime inputDate = DateTime.Now;
         string endDate = InputValidation.DateTimeParse(inputDate.ToString());
         string startDate = InputValidation.DateTimeParse(inputDate.AddDays(-365).ToString());
         var reportData = DateRangeReport(startDate, endDate);
-        TableVisualisationEngine.ShowTable(reportData);
+        while(true)
+        {
+            TableVisualisationEngine.ReportDisplay(reportData);
+            sorting = UserInput.Sorting();  
+            sortRange = sorting[0];
+            sortType = sorting[1];
+            if (sortRange == null || sortType == null) break;
+
+            reportData = DateRangeReport(startDate, endDate, sortRange, sortType);
+        }
+        
+
     }
 
     internal void GetBiweeklyRange()
     {
+        string sortType; string sortRange;
+        string[] sorting = new string[2];
         DateTime inputDate = DateTime.Now;
         string endDate = InputValidation.DateTimeParse(inputDate.AddDays(6).ToString());
         string startDate = InputValidation.DateTimeParse(inputDate.AddDays(-14).ToString());
         var reportData = DateRangeReport(startDate, endDate);
 
-        TableVisualisationEngine.ShowTable(reportData);
+        while (true)
+        {
+            TableVisualisationEngine.ReportDisplay(reportData);
+            sorting = UserInput.Sorting();
+            sortRange = sorting[0];
+            sortType = sorting[1];
+            if (sortRange == null || sortType == null) break;
+
+            reportData = DateRangeReport(startDate, endDate, sortRange, sortType);
+        }
     }
 
     internal void GetDateRange()
     {
+        string sortType; string sortRange;
+        string[] sorting = new string[2];
         string startDate = InputValidation.DateTimeParse(GetDateInput("Start"), true);
         string endDate = InputValidation.DateTimeParse(GetDateInput("End"), true);
         var reportData = DateRangeReport(startDate, endDate);
 
-        TableVisualisationEngine.ShowTable(reportData);
+        while (true)
+        {
+            TableVisualisationEngine.ReportDisplay(reportData);
+            sorting = UserInput.Sorting();
+            sortRange = sorting[0];
+            sortType = sorting[1];
+            if (sortRange == null || sortType == null) break;
+
+            reportData = DateRangeReport(startDate, endDate, sortRange, sortType);
+        }
     }
 
-    internal List<CodingSession> DateRangeReport(string startDate, string endDate)
+    internal List<CodingSession> DateRangeReport(string startDate, string endDate, string sortRange = "Date", string sortType = "ASC")
     {
         using (var connection = new SqliteConnection(connectionString))
         {
             connection.Open();
-            string sqlQuery = @"SELECT * FROM Coding_Session WHERE Date BETWEEN @StartDate AND @EndDate";
+            string sqlQuery = @$"SELECT * FROM Coding_Session WHERE Date BETWEEN @StartDate AND @EndDate ORDER BY {sortRange} {sortType}";
             return connection.Query<CodingSession>(sqlQuery, new { StartDate = startDate, EndDate = endDate }).ToList();
         }
     }

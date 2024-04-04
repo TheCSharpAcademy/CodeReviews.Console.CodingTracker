@@ -11,7 +11,7 @@ public class TableVisualisationEngine
         DisplayData(tableData);
     }
 
-    internal static void ReportDisplay(List<SessionController> reportData)
+    internal static void ReportDisplay(List<CodingSession> reportData)
     {
         DisplayData(reportData);
     }

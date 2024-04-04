@@ -1,4 +1,5 @@
 ﻿using Spectre.Console;
+using System.Reflection.Metadata.Ecma335;
 
 namespace coding_tracker;
 
@@ -96,7 +97,7 @@ public class UserInput
             .PageSize(10)
             .AddChoices(new[]
             {
-                "Date Range Report","Prior vs Current Week", "YTD Sessions",
+                "Date Range Report","Biweekly Report", "12 Month Report",
                 "Return To Main Menu"
             }));
 
@@ -108,7 +109,7 @@ public class UserInput
             case "Biweekly Report":
                 SessionController.GetBiweeklyRange();
                 break;
-            case "YTD Sessions":
+            case "12 Month Report":
                 SessionController.GetYearToDateRange();
                 break;
             case "Return To Main Menu":
@@ -116,8 +117,9 @@ public class UserInput
         }
     }
 
-    internal void Sorting()
+    internal string[] Sorting()
     {
+        string[] sortingTypes = new string[2];
         var sortType = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
             .Title("Please select the sorting method with arrow keys")
@@ -125,8 +127,31 @@ public class UserInput
             .AddChoices(new[]
             {
                 "Duration Ascending", "Duration Descending", "Date Ascending",
-                "Date Descending"
+                "Date Descending", "Return to Main Menu"
             }));
+
+        switch (sortType)
+        {
+            case "Duration Ascending":
+                sortingTypes[0] = "Duration";
+                sortingTypes[1] = "ASC";
+                break;
+            case "Duration Descending":
+                sortingTypes[0] = "Duration";
+                sortingTypes[1] = "DESC";
+                break;
+            case "Date Ascending":
+                sortingTypes[0] = "Date";
+                sortingTypes[1] = "ASC";
+                break;
+            case "Date Descending":
+                sortingTypes[0] = "Date";
+                sortingTypes[1] = "DESC";
+                break;
+            case "Return to Main Menu":
+                break;
+        }
+        return sortingTypes;
     }
 
     internal void TestingPrint()
