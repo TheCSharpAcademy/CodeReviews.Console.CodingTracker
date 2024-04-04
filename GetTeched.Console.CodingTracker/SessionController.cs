@@ -4,6 +4,7 @@ using Spectre.Console;
 using System.Configuration;
 using System.Data.SQLite;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace coding_tracker;
 
@@ -249,6 +250,25 @@ public class SessionController
 
             tableGeneration.WeekGenerator(rowData);
         }
+    }
+
+    internal void GetYearToDateRange()
+    {
+        DateTime inputDate = DateTime.Now;
+        string endDate = InputValidation.DateTimeParse(inputDate.ToString());
+        string startDate = InputValidation.DateTimeParse(inputDate.AddDays(-365).ToString());
+        var reportData = DateRangeReport(startDate, endDate);
+        TableVisualisationEngine.ShowTable(reportData);
+    }
+
+    internal void GetBiweeklyRange()
+    {
+        DateTime inputDate = DateTime.Now;
+        string endDate = InputValidation.DateTimeParse(inputDate.AddDays(6).ToString());
+        string startDate = InputValidation.DateTimeParse(inputDate.AddDays(-14).ToString());
+        var reportData = DateRangeReport(startDate, endDate);
+
+        TableVisualisationEngine.ShowTable(reportData);
     }
 
     internal void GetDateRange()

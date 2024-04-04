@@ -105,10 +105,11 @@ public class UserInput
             case "Date Range Report":
                 SessionController.GetDateRange();
                 break;
-            case "Prior vs Current Week":
-                SessionController.WeeklyCodingSessions();
+            case "Biweekly Report":
+                SessionController.GetBiweeklyRange();
                 break;
             case "YTD Sessions":
+                SessionController.GetYearToDateRange();
                 break;
             case "Return To Main Menu":
                 break;
@@ -130,7 +131,7 @@ public class UserInput
 
     internal void TestingPrint()
     {
-        SessionController.GetTimeInput("start");
+        
         //var runningProcessByName = Process.GetProcessesByName("Microsoft Visual Studio 2022");
         //if (runningProcessByName.Length < 1)
         //{

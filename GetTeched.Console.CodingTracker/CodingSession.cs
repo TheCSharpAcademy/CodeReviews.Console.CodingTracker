@@ -19,9 +19,7 @@ public class CodingSession
     
 }
 
-//public class OtherCodingSession 
-//{
-//    public string FormattedDate { get; set; }
-//    public string FormattedStartTime { get; set; }
-//    public string FormattedEndTime { get; set;}
-//}
+public class WeeklyReporting
+{
+    public string WeekNumber { get; set; }
+}
