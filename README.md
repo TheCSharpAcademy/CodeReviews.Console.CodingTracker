@@ -38,5 +38,5 @@ Further to this I need to start applying Object Oriented Programming Concepts to
 - [Separation of concerns](https://en.wikipedia.org/wiki/Separation_of_concerns)
 - [Spectre Console](https://spectreconsole.net)
 - [MSFT Configuration Manager](https://learn.microsoft.com/en-us/troubleshoot/developer/visualstudio/csharp/language-compilers/store-custom-information-config-file)
-- [Rider Build configutations](https://www.jetbrains.com/help/rider/Build_Configurations.html)
+- [Rider Build configurations](https://www.jetbrains.com/help/rider/Build_Configurations.html)
 - [Dapper Tutorial](https://www.jetbrains.com/help/rider/Build_Configurations.html)
