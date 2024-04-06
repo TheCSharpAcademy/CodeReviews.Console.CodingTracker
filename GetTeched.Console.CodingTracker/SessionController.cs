@@ -24,7 +24,6 @@ public class SessionController
         {
             connection.Open();
             string sqlQuery = "SELECT * FROM Coding_Session";
-            //string sqlQuery = "SELECT strftime('%d-%m-%Y', Date) AS FormattedDate, strftime('%H:%M:%S', StartTime) AS FormattedStartTime, strftime('%H:%M:%S', EndTime) AS FormattedEndTime, * FROM Coding_Session";
             var tableData = connection.Query<CodingSession>(sqlQuery).ToList();
 
             if (tableData.Any())
@@ -76,7 +75,7 @@ public class SessionController
 
         while (!validDate)
         {
-            userInput = AnsiConsole.Ask<string>($"Please enter the {dateType} date and time of your coding session. Format:[green]DD-MM-YY[/]");
+            userInput = AnsiConsole.Ask<string>($"Please enter the {dateType} date of your coding session. Format:[green]DD-MM-YY[/]");
             validDate = validation.DateValidation(userInput);
         }
         return userInput;
@@ -257,13 +256,16 @@ public class SessionController
         string sortType; string sortRange;
         string[] sorting = new string[2];
         DateTime inputDate = DateTime.Now;
-        string endDate = InputValidation.DateTimeParse(inputDate.ToString());
-        string startDate = InputValidation.DateTimeParse(inputDate.AddDays(-365).ToString());
+        string endDate = InputValidation.DateTimeParse(inputDate.ToString(), true);
+        string startDate = InputValidation.DateTimeParse(inputDate.AddDays(-365).ToString(), true);
         var reportData = DateRangeReport(startDate, endDate);
         while(true)
         {
+
             TableVisualisationEngine.ReportDisplay(reportData);
-            sorting = UserInput.Sorting();  
+            tableGeneration.TotalTable(DurationRangeReport(startDate, endDate));
+            sorting = UserInput.Sorting();
+            AnsiConsole.Clear();
             sortRange = sorting[0];
             sortType = sorting[1];
             if (sortRange == null || sortType == null) break;
@@ -279,18 +281,20 @@ public class SessionController
         string sortType; string sortRange;
         string[] sorting = new string[2];
         DateTime inputDate = DateTime.Now;
-        string endDate = InputValidation.DateTimeParse(inputDate.AddDays(6).ToString());
-        string startDate = InputValidation.DateTimeParse(inputDate.AddDays(-14).ToString());
+        string endDate = InputValidation.DateTimeParse(inputDate.AddDays(6).ToString(), true);
+        string startDate = InputValidation.DateTimeParse(inputDate.AddDays(-14).ToString(), true);
         var reportData = DateRangeReport(startDate, endDate);
 
         while (true)
         {
             TableVisualisationEngine.ReportDisplay(reportData);
+            tableGeneration.TotalTable(DurationRangeReport(startDate, endDate));
             sorting = UserInput.Sorting();
+            AnsiConsole.Clear();
             sortRange = sorting[0];
             sortType = sorting[1];
             if (sortRange == null || sortType == null) break;
-
+            
             reportData = DateRangeReport(startDate, endDate, sortRange, sortType);
         }
     }
@@ -306,7 +310,9 @@ public class SessionController
         while (true)
         {
             TableVisualisationEngine.ReportDisplay(reportData);
+            tableGeneration.TotalTable(DurationRangeReport(startDate, endDate));
             sorting = UserInput.Sorting();
+            AnsiConsole.Clear();
             sortRange = sorting[0];
             sortType = sorting[1];
             if (sortRange == null || sortType == null) break;
@@ -325,6 +331,140 @@ public class SessionController
         }
     }
 
+    internal string[] DurationRangeReport(string startDate, string endDate)
+    {
+        string[] durationCalculations = new string[2];
+        using(var connection = new SQLiteConnection(connectionString))
+        {
+            connection.Open();
+            string sqlQuery = @"SELECT Duration FROM Coding_Session WHERE Date BETWEEN @StartDate AND @EndDate";
+            var duration = connection.Query<int>(sqlQuery, new {StartDate = startDate, EndDate = endDate}).ToList();
 
+            int totalTime = 0;
+            double averageTime;
+            foreach (int row in duration)
+            {
+               totalTime += row;
+            }
+            averageTime = duration.Average();
+            durationCalculations[0] = SecondsConversion(totalTime.ToString());
+            durationCalculations[1] = SecondsConversion(Convert.ToInt32(averageTime).ToString());
+            return durationCalculations;
+        }
+    }
 
+    internal bool CodingGoalCreated()
+    {
+        using(var connection = new SQLiteConnection(connectionString))
+        {
+            connection.Open();
+            string sqlQuery = "SELECT * FROM Coding_Goal";
+            var codingGoal = connection.Query<CurrentCodingGoal>(sqlQuery).ToList();
+            if (codingGoal.Count == 0) return true;
+        }
+        return false;
+    }
+
+    internal void CodingGoalInsert()
+    {
+        string goalDate = GetDateInput("Goal End");
+        int hours = AnsiConsole.Ask<int>($"Please enter the amount of hours you want to achieve by the end of your goal");
+        int completed = 0;
+
+        using (var connection = new SQLiteConnection(connectionString))
+        {
+            connection.Open();
+            string sqlQuery = @"INSERT INTO Coding_Goal (Date, Hours, Completed) VALUES (@Date, @Hours, @Completed)";
+            connection.Query<CurrentCodingGoal>(sqlQuery, new {Date = goalDate, Hours = hours, Completed = completed });
+        }
+    }
+
+    internal void CodingGoalReview()
+    {
+        
+        string goalDate;
+        int goalHours;
+        int totalHours;
+
+        using(var connection = new SQLiteConnection(connectionString))
+        {
+            connection.Open();
+            string sqlGoal = "SELECT Date FROM Coding_Goal LIMIT 1";
+            string sqlSession = "SELECT SUM(Duration) FROM Coding_Session";
+            string sqlTotal = "SELECT SUM(Hours) FROM Coding_Goal";
+            goalDate = connection.QueryFirstOrDefault<string>(sqlGoal);
+            goalHours = connection.QueryFirstOrDefault<int>(sqlTotal);
+            totalHours = connection.ExecuteScalar<int>(sqlSession) / 3600;
+        }
+
+        int numberOfDays = validation.DaysRemaining(DateTime.Parse(goalDate));
+        int remainingHours = goalHours - totalHours;
+        int hoursPerDay = remainingHours / numberOfDays;
+
+        if(remainingHours > 0 && numberOfDays >= 0)
+        {
+            tableGeneration.GoalBreakDown(remainingHours, totalHours, numberOfDays, hoursPerDay);
+        }
+        else if(remainingHours > 0 && numberOfDays < 0)
+        {
+            AnsiConsole.Clear();
+            AnsiConsole.Write(new FigletText("Oh No!!!\n").Color(Color.Red));
+            AnsiConsole.Write(new FigletText("You Missed Your Goal :(").Color(Color.Red));
+            AnsiConsole.Write(new FigletText("Press Any Key To Set New Goal").Color(Color.Green));
+            Console.ReadLine();
+            TransferGoal();
+        }
+        else if (remainingHours <=0 && numberOfDays >= 0)
+        {
+            UpdateGoal();
+            AnsiConsole.Clear();
+            AnsiConsole.Write(new FigletText("Well done!!!\n").Color(Color.Gold1));
+            AnsiConsole.Write(new FigletText("You Reached Your Goal!!").Color(Color.Gold1));
+            AnsiConsole.Write(new FigletText("Press Any Key To Set New Goal").Color(Color.Green));
+            Console.ReadLine();
+            TransferGoal();
+        }
+
+    }
+
+    internal void UpdateGoal()
+    {
+        using(var connection = new SqliteConnection(connectionString))
+        {
+            connection.Open();
+            string sqlQuery = "UPDATE Coding_Goal SET Completed = 1 ";
+            connection.Execute(sqlQuery);
+        }
+    }
+
+    internal void TransferGoal()
+    {
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            connection.Open();
+            string sqlQuery = "INSERT INTO ALL_Coding_Goals (Date, Hours, Completed) SELECT Date, Hours, Completed FROM Coding_Goal";
+            string sqlDeleteQuery = "DELETE FROM Coding_Goal";
+            connection.Execute(sqlQuery);
+            connection.Execute(sqlDeleteQuery);
+        }
+        AnsiConsole.Clear();
+        CodingGoalInsert();
+    }
+
+    internal List<CodingGoal> ViewCodingGoals()
+    {
+        using (var connection = new SQLiteConnection(connectionString))
+        {
+            connection.Open();
+            string sqlQuery = "SELECT * FROM All_Coding_Goals";
+            var tableData = connection.Query<CodingGoal>(sqlQuery).ToList();
+
+            if (tableData.Any())
+            {
+                AnsiConsole.Clear();
+                TableVisualisationEngine.ShowTable(tableData);
+            }
+        }
+        return new List<CodingGoal>();
+    }
 }

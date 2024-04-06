@@ -15,6 +15,16 @@ public class UserInput
 
     static InputValidation validation = new();
     static RandomSeed randomSeed = new();
+    internal void GoalMenu()
+    {
+        if(SessionController.CodingGoalCreated() == true)
+        {
+            SessionController.CodingGoalInsert();
+        }
+        SessionController.CodingGoalReview();
+        return;
+    }
+
     internal void MainMenu()
     {
         bool endApplication = false;
@@ -26,9 +36,9 @@ public class UserInput
             .PageSize(10)
             .AddChoices(new[]
             {
-                "View Sessions", "Enter New Sessions", "Reports",
+                "View Sessions", "View Current Goal", "Enter New Sessions", "Reports",
                 "Update Session", "Delete Sessions", "Exit Application",
-                "Random Seed Database", "Testing Print"
+                "Random Seed Database"
             }));
 
             switch (crudActions)
@@ -37,6 +47,9 @@ public class UserInput
                     SessionController.ViewAllSessions();
                     Console.ReadLine();
                     AnsiConsole.Clear();
+                    break;
+                case "View Current Goal":
+                    SessionController.CodingGoalReview();
                     break;
                 case "Enter New Sessions":
                     SessionTrackingType();
@@ -58,9 +71,6 @@ public class UserInput
                     break;
                 case "Random Seed Database":
                     randomSeed.GenerateRandomData();
-                    break;
-                case "Testing Print":
-                    TestingPrint();
                     break;
             }
         } while (!endApplication);
@@ -97,12 +107,15 @@ public class UserInput
             .PageSize(10)
             .AddChoices(new[]
             {
-                "Date Range Report","Biweekly Report", "12 Month Report",
+                "View Coding Goals","Date Range Report","Biweekly Report", "12 Month Report",
                 "Return To Main Menu"
             }));
 
         switch (reportType)
         {
+            case "View Coding Goals":
+                SessionController.ViewCodingGoals();      
+                break;
             case "Date Range Report":
                 SessionController.GetDateRange();
                 break;
@@ -116,7 +129,6 @@ public class UserInput
                 break;
         }
     }
-
     internal string[] Sorting()
     {
         string[] sortingTypes = new string[2];
@@ -153,43 +165,4 @@ public class UserInput
         }
         return sortingTypes;
     }
-
-    internal void TestingPrint()
-    {
-        
-        //var runningProcessByName = Process.GetProcessesByName("Microsoft Visual Studio 2022");
-        //if (runningProcessByName.Length < 1)
-        //{
-        //    stopwatch.Stop();
-        //}
-        //else
-        //{
-        //    stopwatch.Start();
-        //}
-
-        //Console.WriteLine(ApplicationIsActivated());
-
-    }
-
-    //public static bool ApplicationIsActivated()
-    //{
-    //    var activatedHandle = GetForegroundWindow();
-    //    if (activatedHandle == IntPtr.Zero)
-    //    {
-    //        return false;       // No window is currently activated
-    //    }
-
-    //    var procId = Process.GetCurrentProcess().Id;
-    //    int activeProcId;
-    //    GetWindowThreadProcessId(activatedHandle, out activeProcId);
-
-    //    return activeProcId == procId;
-    //}
-
-
-    //[DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
-    //private static extern IntPtr GetForegroundWindow();
-
-    //[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-    //private static extern int GetWindowThreadProcessId(IntPtr handle, out int processId);
 }

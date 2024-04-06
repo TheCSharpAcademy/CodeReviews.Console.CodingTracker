@@ -118,4 +118,15 @@ public class InputValidation
             return totalDuration = String.Format("00h 00m {0:00}s", seconds);
         }
     }
+
+    internal int DaysRemaining(DateTime goalDate)
+    {
+        DateTime dateTime = DateTime.Today;
+        DateTime daysLeft = goalDate.AddYears(dateTime.Year - goalDate.Year);
+        //if (daysLeft < dateTime)
+        //    daysLeft = daysLeft.AddYears(1);
+
+        int numberOfDays = (daysLeft - dateTime).Days;
+        return numberOfDays;
+    }
 }

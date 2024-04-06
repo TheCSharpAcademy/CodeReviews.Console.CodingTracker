@@ -38,6 +38,7 @@ public class TableVisualisationEngine
                 {
                     case "Date":
                         value = InputValidation.DateTimeParse(value.ToString(), true, false);
+                        
                         break;
                     case "StartTime":
                         value = InputValidation.DateTimeParse(value.ToString(), false, true);
@@ -47,6 +48,13 @@ public class TableVisualisationEngine
                         break;
                     case "Duration":
                         value = InputValidation.SecondsConversion(value.ToString());
+                        break;
+                    case "Completed":
+                        if (Convert.ToInt32(value) == 0)
+                        {
+                            value = "[red]FAILED[/]";
+                        }
+                        else value = "[green]PASSED[/]";
                         break;
                 }
                 row.Add(value?.ToString() ?? string.Empty);
@@ -85,6 +93,17 @@ public class TableVisualisationEngine
         AnsiConsole.Write(table);
     }
 
+    internal void TotalTable(string[] value)
+    {
+        var table = new Table()
+            .Border(TableBorder.DoubleEdge);
+        table.AddColumn("[green]Total Duration[/]");
+        table.AddColumn(value[0]);
+        table.AddColumn("[green]Average Duration[/]");
+        table.AddColumn(value[1]);
+        AnsiConsole.Write(table);
+    }
+
     internal void WeekGenerator(List<string> rowData)
     {
         var table = new Table()
@@ -100,5 +119,25 @@ public class TableVisualisationEngine
             table.AddRow(rowData[i], rowData[i + 1]);
         }
         AnsiConsole.Write(table);
+    }
+
+    internal void GoalBreakDown(int hoursRemaining, int hoursCompleted, int daysRemaining, int hoursPerDay)
+    {
+        var table = new Table()
+            .Border(TableBorder.DoubleEdge);
+        table.AddColumn("Days Remaining");
+        table.AddColumn("Hours Per Day");
+        table.AddRow(daysRemaining.ToString(), hoursPerDay.ToString());
+        AnsiConsole.Write(table);
+        AnsiConsole.Write("\n");
+        AnsiConsole.Write(new BreakdownChart()
+            .Width(60)
+            .AddItem("Hours Completed", hoursCompleted, Color.Green)
+            .AddItem("Hours to Reach Goal", hoursRemaining, Color.Red));
+
+        AnsiConsole.Write(new Markup("\n[red]Press any key to return to Main Menu[/]"));
+        Console.ReadLine();
+        AnsiConsole.Clear();
+
     }
 }

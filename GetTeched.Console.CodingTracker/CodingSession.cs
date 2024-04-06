@@ -19,7 +19,18 @@ public class CodingSession
     
 }
 
-public class WeeklyReporting
+public class CurrentCodingGoal
 {
-    public string WeekNumber { get; set; }
+    public int Id { get; set; }
+    public string Date { get; set; }
+    public int Hours { get; set; }
+    public int Completed { get; set; }
+}
+
+public class CodingGoal
+{
+    public int Id { get; set; }
+    public string Date { get; set; }
+    public int Hours { get; set; }
+    public int Completed { get; set; }
 }
