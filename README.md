@@ -40,3 +40,4 @@ Further to this I need to start applying Object Oriented Programming Concepts to
 - [MSFT Configuration Manager](https://learn.microsoft.com/en-us/troubleshoot/developer/visualstudio/csharp/language-compilers/store-custom-information-config-file)
 - [Rider Build configurations](https://www.jetbrains.com/help/rider/Build_Configurations.html)
 - [Dapper Tutorial](https://www.jetbrains.com/help/rider/Build_Configurations.html)
+- [SQL Injection](https://www.w3schools.com/sql/sql_injection.asp)
