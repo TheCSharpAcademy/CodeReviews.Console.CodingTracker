@@ -38,19 +38,17 @@ Developed using C# and SQLite.
 
 * **Code Tracking with Stopwatch**
     - User can enable stopwatch tracking under enter new session menu 
-
-![image](https://github.com/GetTeched/CodeReviews.Console.CodingTracker/assets/1556111/b1e2d279-49c3-4874-8cd1-8dc27790cfc8)
     - After user starts the stopwatch it will begin tracking and user can only stop it with a key press (F) 
     
 ![image](https://github.com/GetTeched/CodeReviews.Console.CodingTracker/assets/1556111/7c5969b5-8742-4d17-ae98-e6e0c6a44b30)
 
 ---
-* **Reporting** 
-
 ![image](https://github.com/GetTeched/CodeReviews.Console.CodingTracker/assets/1556111/060d2263-127e-49a1-b9bd-3e8e690dd2d7)
-    - **View Coding Goals:**
 
-![image](https://github.com/GetTeched/CodeReviews.Console.CodingTracker/assets/1556111/50210fb4-50c2-4195-8ef4-0082646ec78f)
+* **Reporting**
+    - **View Coding Goals:**
+    ![image](https://github.com/GetTeched/CodeReviews.Console.CodingTracker/assets/1556111/50210fb4-50c2-4195-8ef4-0082646ec78f)
+    
         - View all previous goals that have been recorded
     - **View By Date Range:**
         - Display all users coding sessions based on entered date range.
@@ -58,7 +56,6 @@ Developed using C# and SQLite.
         - Display all user coding sessions in the past two weeks.
     - **View by 12 Month Range:**
         - Display users coding session for the past 12 months.
-
  ![image](https://github.com/GetTeched/CodeReviews.Console.CodingTracker/assets/1556111/693ca9d8-ca5b-49d7-886e-cde2abad65c5)
     - **Report Sorting:**
         - User can sort data by duration of hours or by date 
