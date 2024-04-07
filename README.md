@@ -24,6 +24,7 @@ Developed using C# and SQLite.
 
 ## Features
 * A Console based UI where the user can track their coding sessions
+
 ![image](https://github.com/GetTeched/CodeReviews.Console.CodingTracker/assets/1556111/0ddb6bf1-c0de-4470-a97c-36acd6a52c06)
 
 * **SQLite Database**
@@ -36,29 +37,42 @@ Developed using C# and SQLite.
     - Date validation to ensure that dates are correctly formatted
 
 * **Code Tracking with Stopwatch**
-    - User can enable stopwatch tracking under enter new session menu ![image](https://github.com/GetTeched/CodeReviews.Console.CodingTracker/assets/1556111/b1e2d279-49c3-4874-8cd1-8dc27790cfc8)
-    - After user starts the stopwatch it will begin tracking and user can only stop it with a key press (F) ![image](https://github.com/GetTeched/CodeReviews.Console.CodingTracker/assets/1556111/7c5969b5-8742-4d17-ae98-e6e0c6a44b30)
+    - User can enable stopwatch tracking under enter new session menu 
 
-* **Reporting** ![image](https://github.com/GetTeched/CodeReviews.Console.CodingTracker/assets/1556111/060d2263-127e-49a1-b9bd-3e8e690dd2d7)
+![image](https://github.com/GetTeched/CodeReviews.Console.CodingTracker/assets/1556111/b1e2d279-49c3-4874-8cd1-8dc27790cfc8)
+    - After user starts the stopwatch it will begin tracking and user can only stop it with a key press (F) 
+    
+![image](https://github.com/GetTeched/CodeReviews.Console.CodingTracker/assets/1556111/7c5969b5-8742-4d17-ae98-e6e0c6a44b30)
+
+---
+* **Reporting** 
+
+![image](https://github.com/GetTeched/CodeReviews.Console.CodingTracker/assets/1556111/060d2263-127e-49a1-b9bd-3e8e690dd2d7)
     - **View Coding Goals:**
-        - View all previous goals that have been recorded ![image](https://github.com/GetTeched/CodeReviews.Console.CodingTracker/assets/1556111/50210fb4-50c2-4195-8ef4-0082646ec78f)
+
+![image](https://github.com/GetTeched/CodeReviews.Console.CodingTracker/assets/1556111/50210fb4-50c2-4195-8ef4-0082646ec78f)
+        - View all previous goals that have been recorded
     - **View By Date Range:**
         - Display all users coding sessions based on entered date range.
     - **View By Biweekly Range:**
         - Display all user coding sessions in the past two weeks.
     - **View by 12 Month Range:**
         - Display users coding session for the past 12 months.
-        ![image](https://github.com/GetTeched/CodeReviews.Console.CodingTracker/assets/1556111/693ca9d8-ca5b-49d7-886e-cde2abad65c5)
+
+ ![image](https://github.com/GetTeched/CodeReviews.Console.CodingTracker/assets/1556111/693ca9d8-ca5b-49d7-886e-cde2abad65c5)
     - **Report Sorting:**
-        - User can sort data by duration of hours or by date ![image](https://github.com/GetTeched/CodeReviews.Console.CodingTracker/assets/1556111/441ab7d7-147e-4afa-9487-bc59581fd2bf)
+        - User can sort data by duration of hours or by date 
+        ![image](https://github.com/GetTeched/CodeReviews.Console.CodingTracker/assets/1556111/441ab7d7-147e-4afa-9487-bc59581fd2bf)
     - **Total and Average Hours Spent**
-        - Each report will display the current range total and average hours spent coding. ![image](https://github.com/GetTeched/CodeReviews.Console.CodingTracker/assets/1556111/cf70479a-4092-4466-b5f1-674a854fb410)
+        - Each report will display the current range total and average hours spent coding. 
+ ![image](https://github.com/GetTeched/CodeReviews.Console.CodingTracker/assets/1556111/cf70479a-4092-4466-b5f1-674a854fb410)
 * **Other Reporting**
     - **Current Goal:**
         - After setting a goal day the user will be shown their currnt goal on startup
         - days remaining and how many hours to achieve their goal
         - Hours already completed vs Hours remaining
-        ![image](https://github.com/GetTeched/CodeReviews.Console.CodingTracker/assets/1556111/253063fc-cf10-4e7a-a279-9dd4f0bb5620)
+        
+![image](https://github.com/GetTeched/CodeReviews.Console.CodingTracker/assets/1556111/253063fc-cf10-4e7a-a279-9dd4f0bb5620)
 
 ## Installation
 When launching your coding tracker please ensure to set the following in the Program.cs
