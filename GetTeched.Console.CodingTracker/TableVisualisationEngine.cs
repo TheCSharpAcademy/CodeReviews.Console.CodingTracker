@@ -95,8 +95,6 @@ public class TableVisualisationEngine
         var table = new Table()
             .Border(TableBorder.DoubleEdge)
             .ShowFooters();
-        string[] rows = rowData.ToArray();
-
         table.AddColumn("WeekNumber");
         table.AddColumn("Duration");
 
