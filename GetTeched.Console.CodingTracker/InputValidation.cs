@@ -24,40 +24,11 @@ public class InputValidation
         }
         return true;
     }
-    //internal bool DateTimeValidation(string userTimeInput)
-    //{
-    //    List<string> userInput = userTimeInput.Split(' ').ToList();
-    //    while (!DateTime.TryParseExact(userTimeInput, "dd-MM-yy HH:mm", new CultureInfo("en-UK"), DateTimeStyles.None, out _))
-    //    {
-    //        AnsiConsole.Clear();
-    //        if (userInput.Count > 1)
-    //        {
-    //            if (!DateTime.TryParseExact(userInput[0], "dd-MM-yy", new CultureInfo("en-UK"), DateTimeStyles.None, out _))
-    //            {
-    //                AnsiConsole.Write(new Markup("\n[Red]Invalid date entered. Please try again.[/]\n\n"));
-    //                return false;
-    //            }
-    //            else if (!DateTime.TryParseExact(userInput[1], "HH:mm", new CultureInfo("en-UK"), DateTimeStyles.None, out _))
-    //            {
-    //                AnsiConsole.Write(new Markup("\n[Red]Invalid time entered. Please try again.[/]\n\n"));
-    //                return false;
-    //            }
-    //        }
-    //        else
-    //        {
-    //            AnsiConsole.Write(new Markup("\n[red]Invalid entry made. Please try again.[/]\n\n"));
-    //            return false;
-    //        }
-
-    //    }
-    //    return true;
-    //}
 
     internal string Duration(string sessionStart, string sessionEnd)
     {
         DateTime startTime = DateTime.ParseExact(sessionStart, "yyyy-MM-dd HH:mm:ss", new CultureInfo("en-GB"));
         DateTime endTime = DateTime.ParseExact(sessionEnd, "yyyy-MM-dd HH:mm:ss", new CultureInfo("en-GB"));
-
         TimeSpan duration = endTime.Subtract(startTime);
         return duration.TotalSeconds.ToString();
     }
@@ -72,7 +43,6 @@ public class InputValidation
         AnsiConsole.Write(new Markup($"[red]ID:{idSelection} was not found. Press any key to try again.[/]\n\n"));
         Console.ReadLine();
         return false;
-
     }
 
     internal static string DateTimeParse(string userInput, bool showDate = false, bool showTime = false)
@@ -87,7 +57,6 @@ public class InputValidation
         {
             return parseInput.ToString("HH:mm:ss");
         }
-
         return parseInput.ToString("yyyy-MM-dd HH:mm:ss");
     }
 
@@ -123,9 +92,6 @@ public class InputValidation
     {
         DateTime dateTime = DateTime.Today;
         DateTime daysLeft = goalDate.AddYears(dateTime.Year - goalDate.Year);
-        //if (daysLeft < dateTime)
-        //    daysLeft = daysLeft.AddYears(1);
-
         int numberOfDays = (daysLeft - dateTime).Days;
         return numberOfDays;
     }

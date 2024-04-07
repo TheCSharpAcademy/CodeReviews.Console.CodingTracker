@@ -1,5 +1,4 @@
 ﻿using Spectre.Console;
-using System.Reflection.Metadata.Ecma335;
 
 namespace coding_tracker;
 
@@ -7,38 +6,52 @@ public class UserInput
 {
     public SessionController SessionController { get; set; }
 
+
     public UserInput(SessionController sessionController)
     {
         SessionController = sessionController;
         sessionController.UserInput = this;
     }
+    internal void Testing(bool testMode)
+    {
+        if (testMode)
+        {
+            if (SessionController.GetIds().Length == 0)
+            {
+                RandomSeed randomSeed = new();
+                randomSeed.GenerateRandomData();
+            }
 
-    static InputValidation validation = new();
-    static RandomSeed randomSeed = new();
+        }
+    }
     internal void GoalMenu()
     {
-        if(SessionController.CodingGoalCreated() == true)
+        if (SessionController.CodingGoalCreated() == true)
         {
+            AnsiConsole.Write(new FigletText("No Coding Goal Found").Color(Color.Teal));
+            AnsiConsole.Write(new Markup("\n[red]Press any key to enter a coding goal[/]"));
+            Console.ReadLine();
             SessionController.CodingGoalInsert();
         }
         SessionController.CodingGoalReview();
         return;
     }
-
     internal void MainMenu()
     {
         bool endApplication = false;
         do
         {
+            AnsiConsole.Clear();
+            AnsiConsole.Write(new FigletText("Coding Tracker").Color(Color.Teal));
+
             var crudActions = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
-            .Title("Please select the operation with the arrow keys")
+            .Title("\n Please select the operation with the arrow keys")
             .PageSize(10)
             .AddChoices(new[]
             {
                 "View Sessions", "View Current Goal", "Enter New Sessions", "Reports",
-                "Update Session", "Delete Sessions", "Exit Application",
-                "Random Seed Database"
+                "Update Session", "Delete Sessions", "Exit Application"
             }));
 
             switch (crudActions)
@@ -46,7 +59,6 @@ public class UserInput
                 case "View Sessions":
                     SessionController.ViewAllSessions();
                     Console.ReadLine();
-                    AnsiConsole.Clear();
                     break;
                 case "View Current Goal":
                     SessionController.CodingGoalReview();
@@ -69,9 +81,6 @@ public class UserInput
                     endApplication = true;
                     Environment.Exit(0);
                     break;
-                case "Random Seed Database":
-                    randomSeed.GenerateRandomData();
-                    break;
             }
         } while (!endApplication);
     }
@@ -79,7 +88,7 @@ public class UserInput
     {
         var trackingType = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
-            .Title("Please select the operation with the arrow keys")
+            .Title("\nPlease select the operation with the arrow keys")
             .PageSize(10)
             .AddChoices(new[]
             {
@@ -103,7 +112,7 @@ public class UserInput
     {
         var reportType = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
-            .Title("Please select the report with the arrow keys")
+            .Title("\nPlease select the report with the arrow keys")
             .PageSize(10)
             .AddChoices(new[]
             {
@@ -114,7 +123,8 @@ public class UserInput
         switch (reportType)
         {
             case "View Coding Goals":
-                SessionController.ViewCodingGoals();      
+                SessionController.ViewCodingGoals();
+                Console.ReadLine();
                 break;
             case "Date Range Report":
                 SessionController.GetDateRange();

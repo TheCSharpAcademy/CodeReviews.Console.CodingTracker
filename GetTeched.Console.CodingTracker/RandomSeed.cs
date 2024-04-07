@@ -10,6 +10,7 @@ internal class RandomSeed
     readonly string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString")!;
 
     CodingSession session = new();
+    CodingGoal goal = new();
 
     internal void GenerateRandomData()
     {
@@ -17,7 +18,7 @@ internal class RandomSeed
 
         int loggedDays; int day; int month; int year = 23; int hours; int minutes; int seconds; string startDate; string endDate; string duration;
 
-        loggedDays = random.Next(30, 50);//(30, 260);
+        loggedDays = random.Next(30, 260);
 
 
         for (int i = 0; i < loggedDays; i++)
@@ -51,6 +52,18 @@ internal class RandomSeed
             RandomSeedAdd(parseStartDate.ToString("yyyy-MM-dd"), parseStartDate.ToString("yyyy-MM-dd HH:mm:ss"), parseEndDate.ToString("yyyy-MM-dd HH:mm:ss"), duration);
 
         }
+
+        for (int i = 0; i < 30; i++)
+        {
+            day = random.Next(1, 28);
+            month = random.Next(1, 12);
+            hours = random.Next(30, 300);
+            int completed = random.Next(0, 1);
+            startDate = String.Format("{0:00}-{1:00}-{2:00}", day, month, year);
+            DateTime parseStartDate = DateTime.Parse(startDate);
+
+            RandomSeedGoalAdd(parseStartDate.ToString("yyyy-MM-dd"), hours, completed);
+        }
     }
 
     internal string Duration(string sessionStart, string sessionEnd)
@@ -75,5 +88,20 @@ internal class RandomSeed
             string sqlQuery = "INSERT INTO Coding_Session (Date, StartTime, EndTime, Duration) VALUES (@Date, @StartTime, @EndTime, @Duration)";
             connection.Execute(sqlQuery, new { session.Date, session.StartTime, session.EndTime, session.Duration });
         }
+    }
+
+    internal void RandomSeedGoalAdd(string date, int hours, int completed)
+    {
+        goal.Date = date;
+        goal.Hours = hours;
+        goal.Completed = completed;
+
+        using (var connection = new SQLiteConnection(connectionString))
+        {
+            connection.Open();
+            string sqlQuery = "INSERT INTO ALL_Coding_Goals (Date, Hours, Completed) VALUES (@Date, @Hours, @Completed)";
+            connection.Execute(sqlQuery, new { goal.Date, goal.Hours, goal.Completed });
+        }
+
     }
 }

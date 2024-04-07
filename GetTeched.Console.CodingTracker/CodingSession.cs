@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace coding_tracker;
+﻿namespace coding_tracker;
 
 public class CodingSession
 {
@@ -14,9 +7,6 @@ public class CodingSession
     public string StartTime { get; set; }
     public string EndTime { get; set; }
     public string Duration { get; set; }
-    //[NotMapped]
-    //public string WeekNumber { get; set; }
-    
 }
 
 public class CurrentCodingGoal
@@ -25,6 +15,7 @@ public class CurrentCodingGoal
     public string Date { get; set; }
     public int Hours { get; set; }
     public int Completed { get; set; }
+    public string Datestamp { get; set; }
 }
 
 public class CodingGoal

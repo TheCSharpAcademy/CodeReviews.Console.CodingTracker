@@ -6,21 +6,26 @@ public class TableVisualisationEngine
 {
     InputValidation validation = new();
 
-    internal static void ShowTable<T>(List<T> tableData) where T : class
+    internal static void ShowTable<T>(List<T> tableData, bool showCaption = true) where T : class
     {
-        DisplayData(tableData);
+        DisplayData(tableData, showCaption);
     }
 
-    internal static void ReportDisplay(List<CodingSession> reportData)
+    internal static void ReportDisplay(List<CodingSession> reportData, bool showCaption = true)
     {
-        DisplayData(reportData);
+        DisplayData(reportData, showCaption);
     }
 
-    private static void DisplayData<T>(List<T> data) where T : class
+    private static void DisplayData<T>(List<T> data, bool showCaption = true) where T : class
     {
         var table = new Table()
             .Border(TableBorder.Double)
             .Title("[teal]All Coding Sessions[/]");
+
+        if (showCaption)
+        {
+            table.Caption("[red]Press any key to return to Main Menu[/]");
+        }
         var properties = typeof(T).GetProperties();
 
         foreach (var property in properties)
@@ -38,7 +43,7 @@ public class TableVisualisationEngine
                 {
                     case "Date":
                         value = InputValidation.DateTimeParse(value.ToString(), true, false);
-                        
+
                         break;
                     case "StartTime":
                         value = InputValidation.DateTimeParse(value.ToString(), false, true);
@@ -63,25 +68,6 @@ public class TableVisualisationEngine
         }
         AnsiConsole.Write(table);
     }
-    //internal void TableGeneration(List<string> columnHeaders, List<string> rowData)
-    //{
-    //    var table = new Table()
-    //        .Border(TableBorder.DoubleEdge)
-    //        .Title("[teal]All Coding Sessions[/]");
-    //    string[] columns = columnHeaders.ToArray();
-    //    string[] rows = rowData.ToArray();
-
-    //    for(int i=0; i<columns.Length; i++)
-    //    {
-    //        table.AddColumn($"[yellow]{columns[i]}[/]");
-    //    }
-    //    for(int i = 0; i < rows.Length; i += 5)
-    //    {
-    //        table.AddRow(rows[i], rows[i + 1], rows[i + 2], rows[i + 3], rows[i + 4]);
-    //    }
-
-    //    AnsiConsole.Write(table);
-    //}
 
     internal void StopwatchTable()
     {
@@ -123,11 +109,22 @@ public class TableVisualisationEngine
 
     internal void GoalBreakDown(int hoursRemaining, int hoursCompleted, int daysRemaining, int hoursPerDay)
     {
+        AnsiConsole.Clear();
+        AnsiConsole.Write(new FigletText("Current Goal").Color(Color.Teal));
+
         var table = new Table()
             .Border(TableBorder.DoubleEdge);
         table.AddColumn("Days Remaining");
         table.AddColumn("Hours Per Day");
-        table.AddRow(daysRemaining.ToString(), hoursPerDay.ToString());
+
+        if (hoursPerDay == 0)
+        {
+            table.AddRow(daysRemaining.ToString(), "Less than 1 hour per day");
+        }
+        else
+        {
+            table.AddRow(daysRemaining.ToString(), hoursPerDay.ToString());
+        }
         AnsiConsole.Write(table);
         AnsiConsole.Write("\n");
         AnsiConsole.Write(new BreakdownChart()

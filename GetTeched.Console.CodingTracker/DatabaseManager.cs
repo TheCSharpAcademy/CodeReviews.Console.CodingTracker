@@ -1,5 +1,5 @@
-﻿using Microsoft.Data.Sqlite;
-using Dapper;
+﻿using Dapper;
+using Microsoft.Data.Sqlite;
 
 namespace coding_tracker;
 
@@ -7,7 +7,7 @@ internal class DatabaseManager
 {
     public void SqlInitialize(string connectionString)
     {
-        using(var connection = new SqliteConnection(connectionString))
+        using (var connection = new SqliteConnection(connectionString))
         {
             connection.Open();
             string sqlMain =
@@ -17,12 +17,13 @@ internal class DatabaseManager
                 StartTime TEXT,
                 EndTime TEXT,
                 Duration TEXT)";
-            string sqlGoal = 
+            string sqlGoal =
                 @"CREATE TABLE IF NOT EXISTS Coding_Goal (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 Date TEXT,
                 Hours INTEGER,
-                Completed INTEGER)";
+                Completed INTEGER,
+                Datestamp TEXT)";
             string sqlGoalScore =
                 @"CREATE TABLE IF NOT EXISTS All_Coding_Goals (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
