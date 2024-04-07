@@ -47,19 +47,21 @@ Developed using C# and SQLite.
 
 * **Reporting**
     - **View Coding Goals:**
-    ![image](https://github.com/GetTeched/CodeReviews.Console.CodingTracker/assets/1556111/50210fb4-50c2-4195-8ef4-0082646ec78f)
-    
         - View all previous goals that have been recorded
+          
+      ![image](https://github.com/GetTeched/CodeReviews.Console.CodingTracker/assets/1556111/50210fb4-50c2-4195-8ef4-0082646ec78f)
     - **View By Date Range:**
         - Display all users coding sessions based on entered date range.
     - **View By Biweekly Range:**
         - Display all user coding sessions in the past two weeks.
     - **View by 12 Month Range:**
         - Display users coding session for the past 12 months.
- ![image](https://github.com/GetTeched/CodeReviews.Console.CodingTracker/assets/1556111/693ca9d8-ca5b-49d7-886e-cde2abad65c5)
+          
+          ![image](https://github.com/GetTeched/CodeReviews.Console.CodingTracker/assets/1556111/693ca9d8-ca5b-49d7-886e-cde2abad65c5)
     - **Report Sorting:**
-        - User can sort data by duration of hours or by date 
-        ![image](https://github.com/GetTeched/CodeReviews.Console.CodingTracker/assets/1556111/441ab7d7-147e-4afa-9487-bc59581fd2bf)
+        - User can sort data by duration of hours or by date
+          
+          ![image](https://github.com/GetTeched/CodeReviews.Console.CodingTracker/assets/1556111/441ab7d7-147e-4afa-9487-bc59581fd2bf)
     - **Total and Average Hours Spent**
         - Each report will display the current range total and average hours spent coding. 
  ![image](https://github.com/GetTeched/CodeReviews.Console.CodingTracker/assets/1556111/cf70479a-4092-4466-b5f1-674a854fb410)
@@ -88,10 +90,6 @@ bool testMode = true \\Set to false;
 
 string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString")!;
 ```
-
-## Lessons Learned
-
-
 
 ## Resources
 - [Spectre Console documentation](https://spectreconsole.net/)
