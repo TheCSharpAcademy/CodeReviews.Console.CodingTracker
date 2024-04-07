@@ -46,11 +46,11 @@ Developed using C# and SQLite.
 
 ---
 * **Reporting** 
-
 ![image](https://github.com/GetTeched/CodeReviews.Console.CodingTracker/assets/1556111/060d2263-127e-49a1-b9bd-3e8e690dd2d7)
-    - **View Coding Goals:**
 
-![image](https://github.com/GetTeched/CodeReviews.Console.CodingTracker/assets/1556111/50210fb4-50c2-4195-8ef4-0082646ec78f)
+    - **View Coding Goals:**
+    ![image](https://github.com/GetTeched/CodeReviews.Console.CodingTracker/assets/1556111/50210fb4-50c2-4195-8ef4-0082646ec78f)
+    
         - View all previous goals that have been recorded
     - **View By Date Range:**
         - Display all users coding sessions based on entered date range.
