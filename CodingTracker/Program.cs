@@ -1,3 +1,3 @@
-﻿using CodingTracker;
+﻿using CodingTracker.Controllers;
 
 DbManager.CreateTable();

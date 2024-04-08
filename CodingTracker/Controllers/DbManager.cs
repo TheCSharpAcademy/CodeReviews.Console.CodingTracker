@@ -1,7 +1,7 @@
-using Microsoft.Data.Sqlite;
 using System.Configuration;
+using Microsoft.Data.Sqlite;
 
-namespace CodingTracker;
+namespace CodingTracker.Controllers;
 
 public static class DbManager
 {
