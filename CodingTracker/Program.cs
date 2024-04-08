@@ -1,8 +1,3 @@
-﻿using System.Configuration;
-using System.Collections.Specialized;
+﻿using CodingTracker;
 
-string sAttr;
-
-sAttr = ConfigurationManager.AppSettings.Get("connectionString");
-
-Console.WriteLine(sAttr);
+DbManager.CreateTable();
