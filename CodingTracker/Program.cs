@@ -1,3 +1,6 @@
 ﻿using CodingTracker.Controllers;
+using CodingTracker.Views;
 
-DbManager.CreateTable();
+DbBuilder.CreateTable();
+
+UserInput.GetMenuInput();

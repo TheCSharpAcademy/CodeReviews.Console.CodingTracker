@@ -1,20 +1,18 @@
 using System.Configuration;
+using Dapper;
 using Microsoft.Data.Sqlite;
 
 namespace CodingTracker.Controllers;
 
-public static class DbManager
+public static class DbBuilder
 {
-    private static string dbConnector = ConfigurationManager.ConnectionStrings["DbConnector"].ConnectionString;
+    private static string connectionString = ConfigurationManager.ConnectionStrings["DbConnector"].ConnectionString;
     
     public static void CreateTable()
     {
-        using (var connection = new SqliteConnection(dbConnector))
+        using (var connection = new SqliteConnection(connectionString))
         {
-            connection.Open();
-            var tableCmd = connection.CreateCommand();
-
-            tableCmd.CommandText =
+            string sql =
                 @"CREATE TABLE IF NOT EXISTS coding_tracker(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 start_time TEXT,
@@ -22,7 +20,7 @@ public static class DbManager
                 duration TEXT
                 )";
 
-            tableCmd.ExecuteNonQuery();
+            connection.Execute(sql);
         }
     }
 }

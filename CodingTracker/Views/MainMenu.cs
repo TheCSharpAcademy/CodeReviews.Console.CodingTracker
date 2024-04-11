@@ -2,6 +2,6 @@ namespace CodingTracker.Views;
 
 using Spectre.Console;
 
-public class TableVisualisationEngine
+public class MainMenu
 {
 }
