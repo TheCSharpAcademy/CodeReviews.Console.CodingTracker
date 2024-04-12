@@ -14,27 +14,39 @@ public class UserInput
             var menuInput = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                     .Title("[bold blue]\n\nMAIN MENU\n[/][blue]What would you like to do?[/]")
-                    .PageSize(6)
+                    .PageSize(5)
                     .AddChoices(new[]
                     {
-                        "View All Records", "Insert a Record", "Update a Record", 
-                        "Delete a Records", "Access Reporting Menu", "Close the Application"
+                        "Insert a Record", "Update a Record", "Delete a Record", 
+                        "Access Reporting Menu", "Close the Application"
                     }));
 
             switch (menuInput)
             {
-                case "View All Records":
+                case "Insert a Record":
                     Console.Clear();
-                    AnsiConsole.Markup($"[red]You have chosen to {menuInput}\n[/]");
-                    // ViewAllRecords()
+                    AnsiConsole.WriteLine($"You have chosen to {menuInput}");
+                    // InsertRecord();
+                    break;
+                case "Update a Record":
+                    Console.Clear();
+                    AnsiConsole.WriteLine($"You have chosen to {menuInput}");
+                    // UpdateRecord();
+                    break;
+                case "Delete a Record":
+                    Console.Clear();
+                    AnsiConsole.WriteLine($"You have chosen to {menuInput}");
+                    // DeleteRecord();
+                    break;
+                case "Access Reporting Menu":
+                    Console.Clear();
+                    AnsiConsole.WriteLine($"You have chosen to {menuInput}");
+                    // ReportMenu();
                     break;
                 case "Close the Application":
                     Console.Clear();
-                    AnsiConsole.Markup($"[bold underline red]You have chosen to {menuInput}. Goodbye![/]");
+                    AnsiConsole.Markup($"[bold red]You have chosen to [/][bold underline red]{menuInput}.[/][bold red] Goodbye![/]");
                     closeApp = true;
-                    break;
-                default:
-                    AnsiConsole.Markup($"[yellow]The option you have chosen is not yet implemented. Please select another option.");
                     break;
             }
         }
