@@ -53,7 +53,7 @@ public class UserInput
     while (!DateTimeValidator.AreValid(startDate, endDate))
     {
       endDate = AnsiConsole.Ask<string>("Try again: ");
-    };
+    }
 
     return endDate;
   }

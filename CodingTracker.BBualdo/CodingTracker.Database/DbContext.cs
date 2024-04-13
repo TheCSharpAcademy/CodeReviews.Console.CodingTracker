@@ -3,7 +3,6 @@ using CodingTracker.Database.Helpers;
 using CodingTracker.Database.Models;
 using Microsoft.Data.Sqlite;
 using Spectre.Console;
-using System.Configuration;
 
 namespace CodingTracker.Database.DbContext;
 
@@ -16,7 +15,7 @@ public class DbContext
 
   public DbContext()
   {
-    _connectionString = ConfigurationManager.AppSettings.Get("ConnectionString")!;
+    _connectionString = System.Configuration.ConfigurationManager.AppSettings.Get("ConnectionString")!;
     CreateTables();
     SeedData();
     _sessionDataAccess = new SessionDataAccess(_connectionString);
