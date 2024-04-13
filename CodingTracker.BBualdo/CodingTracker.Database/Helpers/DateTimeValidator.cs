@@ -16,7 +16,7 @@ public class DateTimeValidator
       }
 
       return true;
-    };
+    }
 
     AnsiConsole.Markup("[red]Invalid date. Must be in format (yyyy-MM-dd HH:mm).[/] ");
     return false;
