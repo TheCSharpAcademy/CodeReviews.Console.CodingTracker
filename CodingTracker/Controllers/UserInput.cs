@@ -17,7 +17,7 @@ public class UserInput
                     .PageSize(5)
                     .AddChoices(new[]
                     {
-                        "Insert a Record", "Update a Record", "Delete a Record", 
+                        "Insert a Record", "Update a Record", "Delete a Record",
                         "Access Reporting Menu", "Close the Application"
                     }));
 
@@ -45,10 +45,22 @@ public class UserInput
                     break;
                 case "Close the Application":
                     Console.Clear();
-                    AnsiConsole.Markup($"[bold red]You have chosen to [/][bold underline red]{menuInput}.[/][bold red] Goodbye![/]");
+                    AnsiConsole.Markup(
+                        $"[bold red]You have chosen to [/][bold underline red]{menuInput}.[/][bold red] Goodbye![/]");
                     closeApp = true;
                     break;
             }
         }
+    }
+
+    internal static string GetDateInput()
+    {
+        string message =
+            "Please provide the [green]start date[/] [blue](yyyy-MM-dd)[/] for your coding session. Type 0 to return to the main menu: ";
+        var input = AnsiConsole.Ask<string>(message);
+
+        if (input == "0") throw new Validation.InputZero();
+
+        return Validation.DateInputValidation(input, message);
     }
 }
