@@ -1,0 +1,6 @@
+CREATE TABLE [dbo].[CodingSession] (
+    [Id] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+    [DateTimeSessionInit] DATETIME NOT NULL,
+    [DateTimeSessionEnd] DATETIME NOT NULL,
+    [Duration] TIME NOT NULL
+);
