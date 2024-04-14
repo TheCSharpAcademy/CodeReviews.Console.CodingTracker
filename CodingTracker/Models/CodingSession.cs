@@ -11,27 +11,22 @@ public class CodingSession
         StartTime = start;
         EndTime = end;
     }
-    
+
     public string Id { get; set; }
     public string StartTime { get; set; }
     public string EndTime { get; set; }
-    
+
     private string CalculateDuration()
     {
-        DateTime start = ConvertStartTime();
-        DateTime end = ConvertEndTime();
+        DateTime start = ConvertToTime(StartTime);
+        DateTime end = ConvertToTime(EndTime);
         TimeSpan duration = end - start;
 
         return $"{duration.Hours.ToString()};{duration.Minutes.ToString()}";
     }
 
-    private DateTime ConvertStartTime()
+    private DateTime ConvertToTime(string datetimeString)
     {
-        return DateTime.ParseExact(StartTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-    }
-    
-    private DateTime ConvertEndTime()
-    {
-        return DateTime.ParseExact(EndTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+        return DateTime.ParseExact(datetimeString, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
     }
 }

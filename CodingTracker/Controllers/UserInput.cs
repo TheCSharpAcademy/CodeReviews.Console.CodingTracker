@@ -26,7 +26,7 @@ public class UserInput
                 case "Insert a Record":
                     Console.Clear();
                     AnsiConsole.WriteLine($"You have chosen to {menuInput}");
-                    // InsertRecord();
+                    CrudManager.InsertRecord();
                     break;
                 case "Update a Record":
                     Console.Clear();

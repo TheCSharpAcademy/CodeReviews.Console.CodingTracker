@@ -10,17 +10,22 @@ public static class DbBuilder
     
     public static void CreateTable()
     {
-        using (var connection = new SqliteConnection(connectionString))
+        using (var connection = GetConnection())
         {
             string sql =
                 @"CREATE TABLE IF NOT EXISTS coding_tracker(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                start_time TEXT,
-                end_time TEXT,
+                startTime TEXT,
+                endTime TEXT,
                 duration TEXT
                 )";
 
             connection.Execute(sql);
         }
+    }
+
+    public static SqliteConnection GetConnection()
+    {
+        return new SqliteConnection(connectionString);
     }
 }

@@ -1,5 +1,4 @@
 ﻿using CodingTracker.Controllers;
-using CodingTracker.Views;
 
 DbBuilder.CreateTable();
 
