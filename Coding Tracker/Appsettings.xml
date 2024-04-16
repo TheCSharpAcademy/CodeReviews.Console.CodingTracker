@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<database>
+	<name>CodingTracker.db</name>
+	<connectionString>DataSource=CodingTracker.db;</connectionString>
+</database>

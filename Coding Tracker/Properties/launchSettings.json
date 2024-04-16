@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Coding Tracker": {
+      "commandName": "Project",
+      "workingDirectory": "D:\\C#\\C# Academy\\CodeReviews.Console.CodingTracker\\Coding Tracker"
+    }
+  }
+}
