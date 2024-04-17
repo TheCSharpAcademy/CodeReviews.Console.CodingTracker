@@ -1,6 +1,5 @@
 using CodingTracker.Models;
 using Dapper;
-using Spectre.Console;
 
 namespace CodingTracker.Controllers;
 
@@ -17,7 +16,7 @@ public class CrudManager
                 $"VALUES ('{session.StartTime}', '{session.EndTime}', '{session.Duration}')";
 
             var rowsAffected = connection.Execute(sql);
-            AnsiConsole.Markup($"[bold underline]{rowsAffected}[/] row(s) inserted.");
+            Console.WriteLine($"{rowsAffected} row(s) inserted.");
         }
     }
 }
