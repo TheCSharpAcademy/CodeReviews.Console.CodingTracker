@@ -12,9 +12,12 @@ public class CrudManager
         {
             try
             {
-                var startDate = UserInput.GetDateInput();
+                var startDateTime = HelpersValidation.GetDateTimeInput();
+                var endDateTime = HelpersValidation.GetDateTimeInput();
+                
+                
             }
-            catch (Validation.InputZero)
+            catch (HelpersValidation.InputZero)
             {
                 AnsiConsole.MarkupLine("[bold]Returning to main menu...[/]");
             }

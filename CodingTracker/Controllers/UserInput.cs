@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace CodingTracker.Controllers;
 
 using Spectre.Console;
@@ -59,8 +61,20 @@ public class UserInput
             "Please provide the [green]start date[/] [blue](yyyy-MM-dd)[/] for your coding session. Type 0 to return to the main menu: ";
         var input = AnsiConsole.Ask<string>(message);
 
-        if (input == "0") throw new Validation.InputZero();
+        if (input == "0") throw new HelpersValidation.InputZero();
 
-        return Validation.DateInputValidation(input, message);
+        return HelpersValidation.DateInputValidation(input, message);
     }
+
+    internal static string GetTimeInput()
+    {
+        string message =
+            "Please provide the [green]start date[/] [blue](HH:mm)[/] for your coding session. Type 0 to return to the main menu: ";
+        var input = AnsiConsole.Ask<string>(message);
+
+        if (input == "0") throw new HelpersValidation.InputZero();
+
+        return HelpersValidation.TimeInputValidation(input, message);
+    }
+    
 }
