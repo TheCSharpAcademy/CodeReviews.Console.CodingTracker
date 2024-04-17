@@ -1,8 +1,6 @@
-using System.Text;
+using Spectre.Console;
 
 namespace CodingTracker.Controllers;
-
-using Spectre.Console;
 
 public class UserInput
 {
@@ -28,7 +26,7 @@ public class UserInput
                 case "Insert a Record":
                     Console.Clear();
                     AnsiConsole.WriteLine($"You have chosen to {menuInput}");
-                    CrudManager.InsertRecord();
+                    CrudManager.InsertSqlRecord();
                     break;
                 case "Update a Record":
                     Console.Clear();
@@ -55,26 +53,25 @@ public class UserInput
         }
     }
 
-    internal static string GetDateInput()
+    internal static string GetDateInput(string dateInput)
     {
         string message =
-            "Please provide the [green]start date[/] [blue](yyyy-MM-dd)[/] for your coding session. Type 0 to return to the main menu: ";
+            $"Please provide the [green]{dateInput} date[/] [blue](yyyy-MM-dd)[/] for your coding session. Type 0 to return to the main menu: ";
         var input = AnsiConsole.Ask<string>(message);
 
         if (input == "0") throw new HelpersValidation.InputZero();
 
-        return HelpersValidation.DateInputValidation(input, message);
+        return HelpersValidation.DateInputValidation(input, message, dateInput);
     }
 
-    internal static string GetTimeInput()
+    internal static string GetTimeInput(string timeInput)
     {
         string message =
-            "Please provide the [green]start date[/] [blue](HH:mm)[/] for your coding session. Type 0 to return to the main menu: ";
+            $"Please provide the [green]{timeInput} time[/] [blue](HH:mm)[/] for your coding session. Type 0 to return to the main menu: ";
         var input = AnsiConsole.Ask<string>(message);
 
         if (input == "0") throw new HelpersValidation.InputZero();
 
-        return HelpersValidation.TimeInputValidation(input, message);
+        return HelpersValidation.TimeInputValidation(input, message, timeInput);
     }
-    
 }

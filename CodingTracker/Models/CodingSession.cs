@@ -1,5 +1,4 @@
-using System.Globalization;
-using System.Runtime.InteropServices.JavaScript;
+using CodingTracker.Controllers;
 
 namespace CodingTracker.Models;
 
@@ -16,17 +15,14 @@ public class CodingSession
     public string StartTime { get; set; }
     public string EndTime { get; set; }
 
+    public string Duration => CalculateDuration();
+
     private string CalculateDuration()
     {
-        DateTime start = ConvertToTime(StartTime);
-        DateTime end = ConvertToTime(EndTime);
+        DateTime start = HelpersValidation.ConvertToTime(StartTime);
+        DateTime end = HelpersValidation.ConvertToTime(EndTime);
         TimeSpan duration = end - start;
 
-        return $"{duration.Hours.ToString()};{duration.Minutes.ToString()}";
-    }
-
-    private DateTime ConvertToTime(string datetimeString)
-    {
-        return DateTime.ParseExact(datetimeString, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+        return $"{duration.Hours.ToString().PadLeft(2, '0')}:{duration.Minutes.ToString().PadLeft(2, '0')}";
     }
 }

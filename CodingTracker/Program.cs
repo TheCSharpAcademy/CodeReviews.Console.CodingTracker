@@ -1,5 +1,5 @@
 ﻿using CodingTracker.Controllers;
 
-//DbBuilder.CreateTable();
+DbBuilder.CreateTable();
 
 UserInput.GetMenuInput();
