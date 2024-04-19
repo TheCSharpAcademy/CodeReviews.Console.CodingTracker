@@ -25,7 +25,7 @@ public class InputHandler
                         else
                         {
                             var errorMessage = $"[red]Date cannot be in the future.[/]";
-                            return ValidationResult.Error(errorMessage.ToString());
+                            return ValidationResult.Error(errorMessage);
                         }
                     }
                     else

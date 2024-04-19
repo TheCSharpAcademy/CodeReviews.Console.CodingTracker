@@ -7,7 +7,7 @@ namespace CodingTracker.Application;
 
 public class AppStopwatchManager
 {
-    private readonly CodingSessionDAO _codingSessionDAO;
+    private readonly CodingSessionDao _codingSessionDAO;
     private InputHandler _inputHandler;
     private CodingSessionModel? _sessionModel;
     private bool _returnToMain;
@@ -15,7 +15,7 @@ public class AppStopwatchManager
     private DateTime _startTime;
     private Panel? _sessionPanel;
 
-    public AppStopwatchManager(CodingSessionDAO codingSessionDAO, InputHandler inputHandler)
+    public AppStopwatchManager(CodingSessionDao codingSessionDAO, InputHandler inputHandler)
     {
         _codingSessionDAO = codingSessionDAO;
         _inputHandler = inputHandler;

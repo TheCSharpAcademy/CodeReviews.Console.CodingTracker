@@ -13,10 +13,10 @@ public class App
 {
     private DatabaseContext _dbContext;
     private DatabaseSeeder _dbSeeder;
-    private CodingSessionDAO _codingSessionDAO;
-    private CodingGoalDAO _codingGoalDAO;
+    private CodingSessionDao _codingSessionDAO;
+    private CodingGoalDao _codingGoalDAO;
     private InputHandler _inputHandler;
-    private bool _running = false;
+    private bool _running;
 
     public App()
     {
@@ -29,8 +29,8 @@ public class App
 
         // Initialize services
         _inputHandler = new InputHandler();
-        _codingGoalDAO = new CodingGoalDAO(_dbContext);
-        _codingSessionDAO = new CodingSessionDAO(_dbContext, _codingGoalDAO);
+        _codingGoalDAO = new CodingGoalDao(_dbContext);
+        _codingSessionDAO = new CodingSessionDao(_dbContext, _codingGoalDAO);
         _dbSeeder = new DatabaseSeeder(_codingSessionDAO, _codingGoalDAO,_inputHandler);
     }
 
@@ -39,12 +39,12 @@ public class App
         while (_running)
         {
             AnsiConsole.Clear();
-            displayMainScreenBanner();
+            DisplayMainScreenBanner();
             PromptForSessionAction();            
         }
     }
 
-    private void displayMainScreenBanner()
+    private void DisplayMainScreenBanner()
     {
         AnsiConsole.Write(
             new FigletText("Coding Tracker")
@@ -94,12 +94,12 @@ public class App
                 _dbSeeder.SeedDatabase();
                 break;
             case MainMenuOption.Exit:
-                closeSession();
+                CloseSession();
                 break;
         }
     }
 
-    private void closeSession()
+    private void CloseSession()
     {
         _running = false;
         AnsiConsole.Markup("[teal]Goodbye![/]");

@@ -8,11 +8,11 @@ using System.Data.SQLite;
 
 namespace CodingTracker.DAO;
 
-public class CodingGoalDAO
+public class CodingGoalDao
 {
     private readonly DatabaseContext _dbContext;
 
-    public CodingGoalDAO(DatabaseContext context)
+    public CodingGoalDao(DatabaseContext context)
     {
         _dbContext = context;
     }

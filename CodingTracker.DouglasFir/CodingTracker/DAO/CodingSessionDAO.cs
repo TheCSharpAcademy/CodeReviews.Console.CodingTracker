@@ -6,12 +6,12 @@ using System.Text;
 
 namespace CodingTracker.DAO;
 
-public class CodingSessionDAO
+public class CodingSessionDao
 {
     private readonly DatabaseContext _dbContext;
-    private CodingGoalDAO _codingGoalDAO;
+    private CodingGoalDao _codingGoalDAO;
 
-    public CodingSessionDAO(DatabaseContext context, CodingGoalDAO codingGoalDAO)
+    public CodingSessionDao(DatabaseContext context, CodingGoalDao codingGoalDAO)
     {
         _dbContext = context;
         _codingGoalDAO = codingGoalDAO;

@@ -7,10 +7,10 @@ namespace CodingTracker.Application;
 
 public class AppSessionManager
 {
-    private readonly CodingSessionDAO _codingSessionDAO;
+    private readonly CodingSessionDao _codingSessionDAO;
     private  InputHandler _inputHandler;
 
-    public AppSessionManager(CodingSessionDAO codingSessionDAO, InputHandler inputHandler)
+    public AppSessionManager(CodingSessionDao codingSessionDAO, InputHandler inputHandler)
     {
         _codingSessionDAO = codingSessionDAO;
         _inputHandler = inputHandler;

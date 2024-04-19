@@ -10,10 +10,10 @@ namespace CodingTracker.Application;
 public class AppGoalManager
 {
     private InputHandler _inputHandler;
-    CodingGoalDAO _codingGoalDAO;
+    CodingGoalDao _codingGoalDAO;
     private bool _running;
 
-    public AppGoalManager(CodingGoalDAO codingGoalDAO, InputHandler inputHandler)
+    public AppGoalManager(CodingGoalDao codingGoalDAO, InputHandler inputHandler)
     {
         _codingGoalDAO = codingGoalDAO;
         _inputHandler = inputHandler;

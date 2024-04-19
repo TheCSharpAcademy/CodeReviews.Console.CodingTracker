@@ -1,5 +1,4 @@
 ﻿using CodingTracker.Services;
-using System.Security.Cryptography;
 
 namespace CodingTracker.Models;
 

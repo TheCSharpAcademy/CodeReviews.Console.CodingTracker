@@ -11,10 +11,10 @@ public class DatabaseSeeder
 {
     private static Random _random = new Random();
     private InputHandler _inputHandler;
-    private CodingSessionDAO _codingSessionDAO;
-    private CodingGoalDAO _codingGoalDAO;
+    private CodingSessionDao _codingSessionDAO;
+    private CodingGoalDao _codingGoalDAO;
 
-    public DatabaseSeeder(CodingSessionDAO codingSessionDAO, CodingGoalDAO codingGoalDAO, InputHandler inputHandler)
+    public DatabaseSeeder(CodingSessionDao codingSessionDAO, CodingGoalDao codingGoalDAO, InputHandler inputHandler)
     {
         int seed = (int)DateTime.Now.Ticks;
         _random = new Random(seed);
