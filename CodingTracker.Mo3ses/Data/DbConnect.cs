@@ -20,19 +20,25 @@ namespace CodingTracker.Mo3ses.Data
         {
             using (var conn = new SQLiteConnection(connectionString))
             {
-                conn.Open();
-                var cmd = conn.CreateCommand();
+                if (!File.Exists("Coding-Tracker.db"))
+                {
+                    SQLiteConnection.CreateFile("Coding-Tracker.db");
 
-                cmd.CommandText =
-                    @"CREATE TABLE IF NOT EXISTS CODINGTRACKER(
+                    conn.Open();
+                    var cmd = conn.CreateCommand();
+
+                    cmd.CommandText =
+                        @"CREATE TABLE IF NOT EXISTS CODINGTRACKER(
 							Id INTEGER PRIMARY KEY AUTOINCREMENT,
 							STARTTIME TEXT NOT NULL,
 							ENDTIME TEXT NOT NULL,
 						    DURATION TEXT)";
 
-                cmd.ExecuteNonQuery();
+                    cmd.ExecuteNonQuery();
 
-                conn.Close();
+                    conn.Close();
+
+                }
             }
         }
 
@@ -186,6 +192,7 @@ namespace CodingTracker.Mo3ses.Data
                    })
                    .ExportAndWriteLine(TableAligntment.Left);
                 }
+                else { Console.WriteLine("No Sessions Recorded"); }
 
             }
 
@@ -202,8 +209,7 @@ namespace CodingTracker.Mo3ses.Data
                 conn.Open();
 
                 var cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT * FROM CODINGTRACKER WHERE STARTTIME < @dateTime";
-                cmd.Parameters.AddWithValue("@dateTime", dateTime);
+                cmd.CommandText = "SELECT * FROM CODINGTRACKERE";
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -218,7 +224,10 @@ namespace CodingTracker.Mo3ses.Data
                             Duration = String.Format("{0} days, {1} hours, {2} minutes, {3} seconds", durationSpan.Days, durationSpan.Hours, durationSpan.Minutes, durationSpan.Seconds)
                         };
 
-                        result.Add(session);
+                        if (session.StartTime >= dateTime)
+                        {
+                            result.Add(session);
+                        }
                     }
                 }
 

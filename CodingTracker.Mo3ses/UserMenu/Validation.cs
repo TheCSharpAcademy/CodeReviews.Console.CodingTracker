@@ -6,7 +6,7 @@ namespace CodingTracker.Mo3ses.UserMenu
     {
         public static bool CheckInt(string input, out int inputParsed)
         {
-            if (Int32.TryParse(input, out inputParsed))
+            if (Int32.TryParse(input, out inputParsed) && inputParsed != 0)
             {
                 return true;
             }
@@ -36,12 +36,14 @@ namespace CodingTracker.Mo3ses.UserMenu
                 else
                 {
                     System.Console.WriteLine("End date must be greater than start date");
+                    Thread.Sleep(2000);
                     return false;
                 }
             }
             else
             {
                 System.Console.WriteLine("Invalid Dates, try again");
+                Thread.Sleep(2000);
                 return false;
             }
         }

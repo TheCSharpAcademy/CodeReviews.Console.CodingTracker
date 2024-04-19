@@ -36,24 +36,21 @@ namespace CodingTracker.Mo3ses.UserMenu
                         DeleteSession();
                         break;
                     case "5":
-                        ReportMenu();
-                        break;
-                    case "6":
-                        GetSessionsDay();
+                        ExecuteReport();
                         break;
                     case "0":
                         Environment.Exit(0);
                         break;
                     default:
                         System.Console.WriteLine("This Option dont exist");
+                        Thread.Sleep(2000);
                         break;
                 }
             }
         }
-
         public void StartMenu()
         {
-            Console.Clear();
+            //Console.Clear();
             var menuData = new List<List<object>>
             {
                 new List<object> {"1 - Auto Track Coding Session"},
@@ -61,7 +58,7 @@ namespace CodingTracker.Mo3ses.UserMenu
                 new List<object>{ "3 - Update Coding Session"},
                 new List<object>{ "4 - Delete Coding Session"},
                 new List<object>{ "5 - Coding Session Report"},
-                new List<object>{ "0 - Exit"},
+                new List<object>{ "0 - Exit (Default exit value)"},
             };
 
             ConsoleTableBuilder.From(menuData)
@@ -87,7 +84,7 @@ namespace CodingTracker.Mo3ses.UserMenu
         {
             while (true)
             {
-                Console.Clear();
+                //Console.Clear();
                 System.Console.WriteLine("---------- MANUAL TRACKING ----------");
                 System.Console.WriteLine("Write the day and time it started(ex: 16-08-2023 08:41)");
                 string startTime = Console.ReadLine();
@@ -112,7 +109,7 @@ namespace CodingTracker.Mo3ses.UserMenu
         {
             while (true)
             {
-                Console.Clear();
+                //Console.Clear();
                 AllSessions();
                 System.Console.Write("Select One Id Session: ");
                 string input = Console.ReadLine();
@@ -124,17 +121,14 @@ namespace CodingTracker.Mo3ses.UserMenu
                     System.Console.WriteLine("Write the updated day and time it ended(ex: 16-08-2023 10:41)");
                     string endTime = Console.ReadLine();
 
+
                     if (Validation.CheckIsValidDates(startTime, endTime))
                     {
                         _sessionController.Update(id, startTime, endTime);
                         System.Console.WriteLine("Session Updated");
+                        Thread.Sleep(2000);
                         break;
 
-                    }
-                    else
-                    {
-                        System.Console.WriteLine("Invalid Dates, try again");
-                        continue;
                     }
 
                 }
@@ -147,7 +141,7 @@ namespace CodingTracker.Mo3ses.UserMenu
         }
         public void DeleteSession()
         {
-            Console.Clear();
+            //Console.Clear();
             AllSessions();
             System.Console.Write("Select One Id Session: ");
             string input = Console.ReadLine();
@@ -168,7 +162,7 @@ namespace CodingTracker.Mo3ses.UserMenu
             codingSession.StartTime = DateTime.Now;
             do
             {
-                Console.Clear();
+                //Console.Clear();
                 Console.WriteLine("Press Q to exit");
                 System.Console.WriteLine();
             } while (Console.ReadKey().Key != ConsoleKey.Q);
@@ -180,9 +174,64 @@ namespace CodingTracker.Mo3ses.UserMenu
         }
         public void ReportMenu()
         {
-            AllSessions();
-            System.Console.WriteLine("Press Any Key...");
-            Console.ReadKey();
+            //Console.Clear();
+            var menuData = new List<List<object>>
+            {
+                new List<object>{"1 - All Sessions"},
+                new List<object>{ "2 - Sessions by day"},
+                new List<object>{ "3 - Sessions by month"},
+                new List<object>{ "4 - Sessions by year"},
+                new List<object>{ "0 - Exit (Default exit value)"},
+            };
+
+            ConsoleTableBuilder.From(menuData)
+               .WithFormat(ConsoleTableBuilderFormat.MarkDown)
+               .WithTextAlignment(new Dictionary<int, TextAligntment> {
+                    { 0, TextAligntment.Left },
+                    { 1, TextAligntment.Left },
+                    { 3, TextAligntment.Left },
+                    { 100, TextAligntment.Left }
+               })
+               .WithMinLength(new Dictionary<int, int> {
+                    { 1, 30 }
+               })
+               .WithCharMapDefinition(CharMapDefinition.FramePipDefinition)
+               .WithTitle("REPORT MENU", ConsoleColor.Green, ConsoleColor.DarkGray, TextAligntment.Left)
+               .WithFormatter(1, (text) =>
+               {
+                   return text.ToString().ToUpper().Replace(" ", "-") + " «";
+               })
+               .ExportAndWriteLine(TableAligntment.Left);
+        }
+        public void ExecuteReport()
+        {
+            string answer = "";
+            ReportMenu();
+            Console.Write("Choose one option: ");
+            answer = Console.ReadLine();
+
+            switch (answer)
+            {
+                case "1":
+                    AllSessions();
+                    break;
+                case "2":
+                    GetSessionsDay();
+                    break;
+                case "3":
+                    GetSessionsMonth();
+                    break;
+                case "4":
+                    GetSessionsYear();
+                    break;
+                case "0":
+                    Environment.Exit(0);
+                    break;
+                default:
+                    System.Console.WriteLine("This Option dont exist");
+                    Thread.Sleep(2000);
+                    break;
+            }
         }
         public void GetSessionsDay()
         {
@@ -211,6 +260,8 @@ namespace CodingTracker.Mo3ses.UserMenu
         public void AllSessions()
         {
             _sessionController.GetAll();
+            System.Console.WriteLine("Press Any Key...");
+            Console.ReadKey();
         }
     }
 }
