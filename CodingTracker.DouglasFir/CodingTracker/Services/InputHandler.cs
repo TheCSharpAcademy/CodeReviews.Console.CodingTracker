@@ -31,7 +31,7 @@ public class InputHandler
                     else
                     {
                         var errorMessage = $"[red]Invalid date format. Please use the format {dateTimeFormat}.[/]";
-                        return ValidationResult.Error(errorMessage.ToString());
+                        return ValidationResult.Error(errorMessage);
                     }
                 }));
 
@@ -49,7 +49,7 @@ public class InputHandler
                     if (!regex.IsMatch(input))
                     {
                         var errorMessage = $"[red]Invalid time format. Please use the format {ConfigSettings.TimeFormatString}.[/]";
-                        return ValidationResult.Error(errorMessage.ToString());
+                        return ValidationResult.Error(errorMessage);
                     }
                     else if (TimeSpan.TryParseExact(input.Trim(), ConfigSettings.TimeFormatType, CultureInfo.InvariantCulture, out TimeSpan parsedTime))
                     {
@@ -58,7 +58,7 @@ public class InputHandler
                     else
                     {
                         var errorMessage = $"[red]Invalid time duration. Please ensure the input format is correct.[/]";
-                        return ValidationResult.Error(errorMessage.ToString());
+                        return ValidationResult.Error(errorMessage);
                     }
                 }));
 
