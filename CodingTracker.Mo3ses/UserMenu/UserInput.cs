@@ -50,7 +50,7 @@ namespace CodingTracker.Mo3ses.UserMenu
         }
         public void StartMenu()
         {
-            //Console.Clear();
+            Console.Clear();
             var menuData = new List<List<object>>
             {
                 new List<object> {"1 - Auto Track Coding Session"},
@@ -84,7 +84,7 @@ namespace CodingTracker.Mo3ses.UserMenu
         {
             while (true)
             {
-                //Console.Clear();
+                Console.Clear();
                 System.Console.WriteLine("---------- MANUAL TRACKING ----------");
                 System.Console.WriteLine("Write the day and time it started(ex: 16-08-2023 08:41)");
                 string startTime = Console.ReadLine();
@@ -109,7 +109,7 @@ namespace CodingTracker.Mo3ses.UserMenu
         {
             while (true)
             {
-                //Console.Clear();
+                Console.Clear();
                 AllSessions();
                 System.Console.Write("Select One Id Session: ");
                 string input = Console.ReadLine();
@@ -141,7 +141,7 @@ namespace CodingTracker.Mo3ses.UserMenu
         }
         public void DeleteSession()
         {
-            //Console.Clear();
+            Console.Clear();
             AllSessions();
             System.Console.Write("Select One Id Session: ");
             string input = Console.ReadLine();
@@ -162,7 +162,7 @@ namespace CodingTracker.Mo3ses.UserMenu
             codingSession.StartTime = DateTime.Now;
             do
             {
-                //Console.Clear();
+                Console.Clear();
                 Console.WriteLine("Press Q to exit");
                 System.Console.WriteLine();
             } while (Console.ReadKey().Key != ConsoleKey.Q);
@@ -174,7 +174,7 @@ namespace CodingTracker.Mo3ses.UserMenu
         }
         public void ReportMenu()
         {
-            //Console.Clear();
+            Console.Clear();
             var menuData = new List<List<object>>
             {
                 new List<object>{"1 - All Sessions"},
