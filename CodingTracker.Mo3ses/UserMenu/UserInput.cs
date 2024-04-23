@@ -235,33 +235,66 @@ namespace CodingTracker.Mo3ses.UserMenu
         }
         public void GetSessionsDay()
         {
-            System.Console.WriteLine("Do you want to see the sessions from how many days ago?");
-            int input = Int32.Parse(Console.ReadLine());
-            _sessionController.GetSessionsDay(input);
-            System.Console.WriteLine("Press Any Key...");
-            Console.ReadKey();
+            string timeString = "days";
+            (int input, int inputOrder) = GetSessionInputs(timeString);
+            if (input != -1 && inputOrder != -1)
+            {
+                _sessionController.GetSessionsDay(input, inputOrder);
+                System.Console.WriteLine("Press Any Key...");
+                Console.ReadKey();
+            }
         }
         public void GetSessionsMonth()
         {
-            System.Console.WriteLine("Do you want to see the sessions from how many months ago?");
-            int input = Int32.Parse(Console.ReadLine());
-            _sessionController.GetSessionsMonth(input);
-            System.Console.WriteLine("Press Any Key...");
-            Console.ReadKey();
+
+            string timeString = "months";
+            (int input, int inputOrder) = GetSessionInputs(timeString);
+            if (input != -1 && inputOrder != -1)
+            {
+                _sessionController.GetSessionsMonth(input, inputOrder);
+                System.Console.WriteLine("Press Any Key...");
+                Console.ReadKey();
+            }
         }
         public void GetSessionsYear()
         {
-            System.Console.WriteLine("Do you want to see the sessions from how many years ago?");
-            int input = Int32.Parse(Console.ReadLine());
-            _sessionController.GetSessionsYear(input);
-            System.Console.WriteLine("Press Any Key...");
-            Console.ReadKey();
+            string timeString = "years";
+            (int input, int inputOrder) = GetSessionInputs(timeString);
+            if (input != -1 && inputOrder != -1)
+            {
+                _sessionController.GetSessionsYear(input, inputOrder);
+                System.Console.WriteLine("Press Any Key...");
+                Console.ReadKey();
+            }
         }
         public void AllSessions()
         {
             _sessionController.GetAll();
             System.Console.WriteLine("Press Any Key...");
             Console.ReadKey();
+        }
+        public (int, int) GetSessionInputs(string timeString)
+        {
+            System.Console.WriteLine($"Do you want to see the sessions from how many {timeString} ago?");
+            string input = Console.ReadLine();
+            Console.WriteLine("Do you want to sort the sessions in ascending (1) or descending (2) order?");
+            string order = Console.ReadLine();
+
+            if (!Validation.CheckInt(input, out int inputId))
+            {
+                Console.WriteLine("Invalid input. Please enter a valid number.");
+                return (-1, -1);
+            }
+            else if (!Validation.CheckInt(order, out int orderId))
+            {
+                Console.WriteLine("Invalid order. Please enter either 1 for ascending or 2 for descending.");
+                return (-1, -1);
+            }
+            else
+            {
+                return (inputId, orderId);
+            }
+
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Data.SQLite;
 using ConsoleTableExt;
 using CodingTracker.Mo3ses.Models;
 using CodingTracker.Mo3ses.Interface;
+using System.Collections.Generic;
 
 namespace CodingTracker.Mo3ses.Data
 {
@@ -199,7 +200,7 @@ namespace CodingTracker.Mo3ses.Data
             return result;
         }
 
-        public List<CodingSession> GetSessionsPeriods(DateTime dateTime)
+        public List<CodingSession> GetSessionsPeriods(DateTime dateTime, int order)
         {
 
             List<CodingSession> result = new List<CodingSession>();
@@ -209,7 +210,7 @@ namespace CodingTracker.Mo3ses.Data
                 conn.Open();
 
                 var cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT * FROM CODINGTRACKERE";
+                cmd.CommandText = "SELECT * FROM CODINGTRACKER";
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -235,6 +236,14 @@ namespace CodingTracker.Mo3ses.Data
 
                 if (result.Count > 0)
                 {
+                    if (order == 1)
+                    {
+                        result.Sort((x, y) => x.StartTime.CompareTo(y.StartTime)); // ASC
+                    }
+                    else if (order == 2)
+                    {
+                        result.Sort((x, y) => y.StartTime.CompareTo(x.StartTime)); // DESC
+                    }
                     ConsoleTableBuilder.From(result)
                    //.WithFormat(ConsoleTableBuilderFormat.MarkDown)
                    .WithTextAlignment(new Dictionary<int, TextAligntment> {

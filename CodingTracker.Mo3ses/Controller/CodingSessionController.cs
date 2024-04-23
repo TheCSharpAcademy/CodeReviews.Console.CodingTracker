@@ -54,20 +54,20 @@ namespace CodingTracker.Mo3ses.Controller
             _codingSessionRepo.Update(codingSession);
         }
 
-        public List<CodingSession> GetSessionsDay(int day)
+        public List<CodingSession> GetSessionsDay(int day, int order)
         {
             DateTime dateTime = DateTime.Now.AddDays(day * -1);
-            return _codingSessionRepo.GetSessionsPeriods(dateTime);
+            return _codingSessionRepo.GetSessionsPeriods(dateTime, order);
         }
-        public List<CodingSession> GetSessionsMonth(int month)
+        public List<CodingSession> GetSessionsMonth(int month, int order)
         {
             DateTime dateTime = DateTime.Now.AddMonths(month * -1);
-            return _codingSessionRepo.GetSessionsPeriods(dateTime);
+            return _codingSessionRepo.GetSessionsPeriods(dateTime, order);
         }
-        public List<CodingSession> GetSessionsYear(int year)
+        public List<CodingSession> GetSessionsYear(int year, int order)
         {
             DateTime dateTime = DateTime.Now.AddYears(year * -1);
-            return _codingSessionRepo.GetSessionsPeriods(dateTime);
+            return _codingSessionRepo.GetSessionsPeriods(dateTime, order);
         }
     }
 }
