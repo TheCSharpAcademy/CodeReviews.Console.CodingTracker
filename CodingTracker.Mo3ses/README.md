@@ -2,27 +2,24 @@
 
 ## Introduction
 
-This app should be very similar to the Habit Tracker you’ve previously completed. It will serve the purpose of reinforcing what you’ve learned with a bit of repetition and building on that knowledge with slightly more challenging requirements.
+After the first two projects, you should be somewhat comfortable with how things work in C#. It’s time to make things slightly more complex. You’ll be using SQL Server for the first time. We could continue using SQLite, as it does everything needed for most small applications, but SQL Server is heavily used in the industry and the sooner we get familiar with it, the better.
 
-This time you’ll have to deal with the complexity of handling Dates and Times, which is a real challenge in any application. You’ll also be using your first external library. Often times in professional environments programmers don’t reinvent the wheel and save time by using public solutions provided by other coders. That’s the beauty of the internet. You have access to an amazing coding community!
+This time the database will be a little more complex as well. We will have two tables linked by a foreign key. And for the first time we will be working with DTOs (Data Transfer Objects), which will help us use the same object in different ways.
 
-In the first app we also didn’t have requirements for coding organization. This time you’ll have to use separation of concerns, one of the most important principles in modern programming. This is where you’ll start applying concepts of Object Oriented Programming. You’ll also need to use a “Model” or “Entity”, to to represent the data you are dealing with. In this case, your coding sessions. So let’s get started!
+Time to get started!
 
 ## Requirements
 
-- [x] This application has the same requirements as the previous project, except that now you'll be logging your daily coding time.
-- [x] To show the data on the console, you should use the "ConsoleTableExt" library.
-- [x] You're required to have separate classes in different files (ex. UserInput.cs, Validation.cs, CodingController.cs)
-- [x] You should tell the user the specific format you want the date and time to be logged and not allow any other format.
-- [x] You'll need to create a configuration file that you'll contain your database path and connection strings.
-- [x] You'll need to create a "CodingSession" class in a separate file. It will contain the properties of your coding session: Id, StartTime, EndTime, Duration
-- [x] The user shouldn't input the duration of the session. It should be calculated based on the Start and End times, in a separate "CalculateDuration" method.
-- [x] The user should be able to input the start and end times manually.
-- [x] When reading from the database, you can't use an anonymous object, you have to read your table into a List of Coding Sessions.
+- [ ] This is an application where the users will create Stacks of Flashcards.
+- [ ] You'll need two different tables for stacks and flashcards. The tables should be linked by a foreign key.
+- [ ] Stacks should have an unique name.
+- [ ] Every flashcard needs to be part of a stack. If a stack is deleted, the same should happen with the flashcard.
+- [ ] You should use DTOs to show the flashcards to the user without the Id of the stack it belongs to.
+- [ ] When showing a stack to the user, the flashcard Ids should always start with 1 without gaps between them. If you have 10 cards and number 5 is deleted, the table should show Ids from 1 to 9.
+- [ ] After creating the flashcards functionalities, create a "Study Session" area, where the users will study the stacks. All study sessions should be stored, with date and score.
+- [ ] The study and stack tables should be linked. If a stack is deleted, it's study sessions should be deleted.
+- [ ] The project should contain a call to the study table so the users can see all their study sessions. This table receives insert calls upon each study session, but there shouldn't be update and delete calls to it.
 
-## Challenges
+## Challenge
 
-- [x] Add the possibility of tracking the coding time via a stopwatch so the user can track the session as it happens.
-- [x] Let the users filter their coding records per period (days, months, years) and/or order ascending or descending.
-- [ ] Create reports where the users can see their total and average coding session per period.
-- [ ] Create the ability to set coding goals and show how far the users are from reaching their goal, along with how many hours a day they would have to code to reach their goal. You can do it via SQL queries or with C#.
+If you want to expand on this project, here’s an idea. Try to create a report system where you can see the number of sessions per month per stack. And another one with the average score per month per stack. This is not an easy challenge if you’re just getting started with databases, but it will teach you all the power of SQL and the possibilities it gives you to ask interesting questions from your tables.
