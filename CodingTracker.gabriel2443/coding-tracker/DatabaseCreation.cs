@@ -17,7 +17,7 @@ namespace coding_tracker
                 tableCmd.CommandText = "CREATE TABLE IF NOT EXISTS codingSession( Id INTEGER PRIMARY KEY AUTOINCREMENT, Date TEXT, StartTime TEXT, EndTime TEXT, Duration INTEGER )";
 
                 tableCmd.ExecuteNonQuery();
-            };
+            }
         }
     }
 }

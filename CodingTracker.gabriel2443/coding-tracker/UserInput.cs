@@ -131,7 +131,7 @@ namespace coding_tracker
             {
                 AnsiConsole.Markup("[red]Input can not be empty[/]\n");
                 id = Console.ReadLine();
-            };
+            }
 
             coding.Id = Convert.ToInt32(id);
             var startTime = GetStartEndTime("Please type the start time you want to update in format (hh:mm)");
