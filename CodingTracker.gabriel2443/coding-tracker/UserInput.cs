@@ -19,8 +19,8 @@ namespace coding_tracker
             new Text("Type 0 to Close Application.", new Style(Color.Red, Color.Black)),
             new Text("Type 1 to View records"),
             new Text("Type 2 to Add records"),
-               new Text("Type 3 to Delete records"),
-                  new Text("Type 4 to Update records")
+            new Text("Type 3 to Delete records"),
+            new Text("Type 4 to Update records")
 
         ));
 

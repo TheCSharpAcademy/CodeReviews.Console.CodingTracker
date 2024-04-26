@@ -4,6 +4,6 @@ var userInput = new UserInput();
 
 var databaseCreation = new DatabaseCreation();
 
-userInput.Menu();
-
 databaseCreation.CreateDatabase();
+
+userInput.Menu();
