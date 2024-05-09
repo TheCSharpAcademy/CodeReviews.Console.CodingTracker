@@ -14,4 +14,13 @@
       <PackageReference Include="System.Data.SQLite.Core" Version="1.0.118" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Controllers\" />
+      <Folder Include="Data\" />
+      <Folder Include="Models\" />
+      <Folder Include="Services\" />
+      <Folder Include="Utilities\" />
+      <Folder Include="Views\" />
+    </ItemGroup>
+
 </Project>
