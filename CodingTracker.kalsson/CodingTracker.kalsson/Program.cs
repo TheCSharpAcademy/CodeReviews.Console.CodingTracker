@@ -1,8 +1,7 @@
-﻿// Set up the configuration
-var builder = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-var configuration = builder.Build();
+﻿using ConfigurationProvider = CodingTracker.kalsson.Configuration.ConfigurationProvider;
+
+// Initialize configuration
+IConfiguration configuration = ConfigurationProvider.CreateConfiguration();
 
 // Initialize the database using the connection string from the configuration
 DatabaseInitializer.InitializeDatabase(configuration.GetConnectionString("DefaultConnection"));
