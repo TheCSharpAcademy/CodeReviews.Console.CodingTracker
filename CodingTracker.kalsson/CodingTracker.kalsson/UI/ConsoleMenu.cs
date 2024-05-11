@@ -104,8 +104,8 @@ public class ConsoleMenu
 
     private void ViewSessions()
     {
-        Console.Clear();  // Clear the console for a clean display
-        AnsiConsole.MarkupLine("[underline green]Session List[/]");  // Title for clarity
+        Console.Clear();
+        AnsiConsole.MarkupLine("[underline green]Session List[/]");
 
         var sessions = _repository.GetAllCodingSessions().ToList();
         if (!sessions.Any())
@@ -130,8 +130,7 @@ public class ConsoleMenu
 
             AnsiConsole.Write(table);
         }
-
-        // Prompt to return to the main menu
+        
         AnsiConsole.MarkupLine("[grey]Press any key to return to the main menu...[/]");
         Console.ReadKey();
     }
