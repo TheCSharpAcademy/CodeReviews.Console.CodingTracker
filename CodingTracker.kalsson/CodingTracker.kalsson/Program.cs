@@ -1,4 +1,5 @@
 ﻿using CodingTracker.kalsson.Data;
+using CodingTracker.kalsson.UI;
 using Microsoft.Extensions.Configuration;
 
 // Configure and build the configuration
@@ -11,10 +12,7 @@ var configuration = builder.Build();
 var databaseInitializer = new DatabaseInitializer(configuration.GetConnectionString("DefaultConnection"));
 databaseInitializer.InitializeDatabase();
 
-
-
-
-
-
+var ConsoleMenu = new ConsoleMenu(new CodingSessionRepository(configuration.GetConnectionString("DefaultConnection")));
+ConsoleMenu.ShowMenu();
 
 Console.ReadLine();
