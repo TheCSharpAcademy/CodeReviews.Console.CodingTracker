@@ -61,20 +61,44 @@ public class ConsoleMenu
     /// </summary>
     private void AddSession()
     {
-        var startTimeInput = AnsiConsole.Ask<string>("Enter the start time (yyyy-mm-dd hh:mm): ");
+        var startTimeInput =
+            AnsiConsole.Ask<string>("Enter the start time (yyyy-mm-dd hh:mm) or type [red]'back'[/] to cancel: ");
+        if (startTimeInput.Equals("back", StringComparison.OrdinalIgnoreCase))
+        {
+            AnsiConsole.MarkupLine("[grey]Add session canceled.[/]");
+            return;
+        }
+
         DateTime startTime;
         while (!DateTime.TryParse(startTimeInput, out startTime))
         {
-            AnsiConsole.MarkupLine("[red]Invalid date format. Please try again.[/]");
-            startTimeInput = AnsiConsole.Ask<string>("Enter the start time (yyyy-mm-dd hh:mm): ");
+            AnsiConsole.MarkupLine("[red]Invalid date format. Please try again or type 'back' to cancel.[/]");
+            startTimeInput =
+                AnsiConsole.Ask<string>("Enter the start time (yyyy-mm-dd hh:mm) or type 'back' to cancel: ");
+            if (startTimeInput.Equals("back", StringComparison.OrdinalIgnoreCase))
+            {
+                AnsiConsole.MarkupLine("[grey]Add session canceled.[/]");
+                return;
+            }
         }
 
-        var endTimeInput = AnsiConsole.Ask<string>("Enter the end time (yyyy-mm-dd hh:mm): ");
+        var endTimeInput = AnsiConsole.Ask<string>("Enter the end time (yyyy-mm-dd hh:mm) or type 'back' to cancel: ");
+        if (endTimeInput.Equals("back", StringComparison.OrdinalIgnoreCase))
+        {
+            AnsiConsole.MarkupLine("[grey]Add session canceled.[/]");
+            return;
+        }
+
         DateTime endTime;
         while (!DateTime.TryParse(endTimeInput, out endTime))
         {
-            AnsiConsole.MarkupLine("[red]Invalid date format. Please try again.[/]");
-            endTimeInput = AnsiConsole.Ask<string>("Enter the end time (yyyy-mm-dd hh:mm): ");
+            AnsiConsole.MarkupLine("[red]Invalid date format. Please try again or type 'back' to cancel.[/]");
+            endTimeInput = AnsiConsole.Ask<string>("Enter the end time (yyyy-mm-dd hh:mm) or type 'back' to cancel: ");
+            if (endTimeInput.Equals("back", StringComparison.OrdinalIgnoreCase))
+            {
+                AnsiConsole.MarkupLine("[grey]Add session canceled.[/]");
+                return;
+            }
         }
 
         if (endTime <= startTime)
@@ -130,7 +154,7 @@ public class ConsoleMenu
 
             AnsiConsole.Write(table);
         }
-        
+
         AnsiConsole.MarkupLine("[grey]Press any key to return to the main menu...[/]");
         Console.ReadKey();
     }
@@ -153,7 +177,8 @@ public class ConsoleMenu
 
         foreach (var session in sessions)
         {
-            table.AddRow(session.Id.ToString(), session.StartTime.ToString("yyyy-MM-dd HH:mm"), session.EndTime.ToString("yyyy-MM-dd HH:mm"));
+            table.AddRow(session.Id.ToString(), session.StartTime.ToString("yyyy-MM-dd HH:mm"),
+                session.EndTime.ToString("yyyy-MM-dd HH:mm"));
         }
 
         AnsiConsole.Write(table);
@@ -164,7 +189,8 @@ public class ConsoleMenu
                 .Title("Select a session to update:")
                 .PageSize(10)
                 .MoreChoicesText("[grey](Move up and down to reveal more sessions)[/]")
-                .UseConverter(s => $"ID: {s.Id} - Start: {s.StartTime:yyyy-MM-dd HH:mm} - End: {s.EndTime:yyyy-MM-dd HH:mm}")
+                .UseConverter(s =>
+                    $"ID: {s.Id} - Start: {s.StartTime:yyyy-MM-dd HH:mm} - End: {s.EndTime:yyyy-MM-dd HH:mm}")
                 .AddChoices(sessions));
 
         // Get new start time
@@ -226,8 +252,8 @@ public class ConsoleMenu
 
         foreach (var session in sessions)
         {
-            table.AddRow(session.Id.ToString(), 
-                session.StartTime.ToString("yyyy-MM-dd HH:mm"), 
+            table.AddRow(session.Id.ToString(),
+                session.StartTime.ToString("yyyy-MM-dd HH:mm"),
                 session.EndTime.ToString("yyyy-MM-dd HH:mm"));
         }
 
