@@ -232,7 +232,7 @@ public class ConsoleMenu
 
         // Ask for session ID to delete using UserInput class
         var sessionIdString =
-            UserInput.GetInput("Enter the ID of the session you wish to delete or type 'cancel' to return:");
+            UserInput.GetInput("Enter the ID of the session you wish to delete");
         if (sessionIdString == null)
         {
             AnsiConsole.MarkupLine("[grey]Delete canceled.[/]");
