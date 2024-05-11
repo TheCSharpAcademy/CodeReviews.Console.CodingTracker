@@ -1,44 +1,46 @@
-﻿namespace CodingTracker.kalsson.Data;
+using System.Data.SQLite;
+using Dapper;
 
-public static class DatabaseInitializer
+namespace CodingTracker.kalsson.Data;
+
+public class DatabaseInitializer
 {
+    private readonly string _connectionString;
+
     /// <summary>
-    /// Creates the 'CodingSessions' table in the SQLite database if it doesn't exist.
+    /// Class responsible for initializing the database.
     /// </summary>
-    /// <param name="connection">The SQLite connection object.</param>
-    private static void CreateCodingSessionsTable(SQLiteConnection connection)
+    public DatabaseInitializer(string connectionString)
     {
-        connection.Execute(
-            @"CREATE TABLE CodingSessions (
-                Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                StartTime TEXT NOT NULL,
-                EndTime TEXT NOT NULL
-            );");
-        Console.WriteLine("Database and table 'CodingSessions' created.");
+        _connectionString = connectionString;
     }
 
     /// <summary>
-    /// Initializes the database by creating the 'CodingSessions' table if it doesn't exist.
+    /// Initializes the database by creating the necessary table if it does not already exist.
     /// </summary>
-    /// <param name="connectionString">The connection string for the SQLite database.</param>
-    public static void InitializeDatabase(string connectionString)
+    /// <remarks>
+    /// The method uses the provided connection string to establish a connection to the database.
+    /// It then executes a SQL query to create the "CodingSessions" table if it does not already exist.
+    /// If any error occurs during the initialization process, an error message is printed to the console.
+    /// </remarks>
+    public void InitializeDatabase()
     {
-        using (var connection = new SQLiteConnection(connectionString))
+        try
         {
+            using var connection = new SQLiteConnection(_connectionString);
             connection.Open();
-
-            var tableExists = connection.ExecuteScalar<string>(
-                "SELECT name FROM sqlite_master WHERE type='table' AND name='CodingSessions';"
-            );
-
-            if (string.IsNullOrEmpty(tableExists))
-            {
-                CreateCodingSessionsTable(connection);
-            }
-            else
-            {
-                Console.WriteLine("Database already initialized.");
-            }
+            var tableCreationQuery = @"
+                    CREATE TABLE IF NOT EXISTS CodingSessions (
+                        Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        StartTime TEXT NOT NULL,
+                        EndTime TEXT NOT NULL
+                    );";
+            connection.Execute(tableCreationQuery);
+            Console.WriteLine("Database initialized and table created if not already present.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred while initializing the database: {ex.Message}");
         }
     }
 }
