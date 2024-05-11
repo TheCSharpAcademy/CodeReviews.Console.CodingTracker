@@ -56,9 +56,11 @@ public class ConsoleMenu
         }
     }
 
+    /// <summary>
+    /// Adds a coding session to the tracker.
+    /// </summary>
     private void AddSession()
     {
-
         var startTimeInput = AnsiConsole.Ask<string>("Enter the start time (yyyy-mm-dd hh:mm): ");
         DateTime startTime;
         while (!DateTime.TryParse(startTimeInput, out startTime))
@@ -81,9 +83,26 @@ public class ConsoleMenu
             return;
         }
 
-        // TODO: FORTSÄTT HÄR
+        // Create a new CodingSession
+        CodingSession session = new CodingSession
+        {
+            StartTime = startTime,
+            EndTime = endTime
+        };
+
+        // Use the repository to insert the new coding session into the database
+        try
+        {
+            _repository.InsertCodingSession(session);
+            AnsiConsole.MarkupLine("[green]The coding session was added successfully![/]");
+        }
+        catch (Exception ex)
+        {
+            AnsiConsole.MarkupLine($"[red]Error adding session: {ex.Message}[/]");
+        }
     }
 
+    // TODO: FORTSÄTT HÄR
     private void ViewSessions()
     {
         throw new NotImplementedException();

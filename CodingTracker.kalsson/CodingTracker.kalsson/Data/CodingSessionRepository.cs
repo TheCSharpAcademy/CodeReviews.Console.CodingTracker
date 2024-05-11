@@ -27,7 +27,7 @@ public class CodingSessionRepository
             using (var connection = new SQLiteConnection(_connectionString))
             {
                 var sql = @"
-            INSERT INTO CodingSession (StartTime, EndTime)
+            INSERT INTO CodingSessions (StartTime, EndTime)
             VALUES (@StartTime, @EndTime);";
                 connection.Open();
                 connection.Execute(sql, session);
@@ -52,7 +52,9 @@ public class CodingSessionRepository
             using (var connection = new SQLiteConnection(_connectionString))
             {
                 connection.Open();
-                return connection.Query<CodingSession>("SELECT * FROM CodingSession;");
+                var result = connection.Query<CodingSession>("SELECT * FROM CodingSessions;");
+                Console.WriteLine($"Retrieved {result.Count()} sessions."); // Debug output
+                return result;
             }
         }
         catch (Exception ex)
@@ -73,7 +75,7 @@ public class CodingSessionRepository
             using (var connection = new SQLiteConnection(_connectionString))
             {
                 var sql = @"
-                UPDATE CodingSession
+                UPDATE CodingSessions
                 SET StartTime = @StartTime, EndTime = @EndTime
                 WHERE Id = @Id;";
             
@@ -99,7 +101,7 @@ public class CodingSessionRepository
             using (var connection = new SQLiteConnection(_connectionString))
             {
                 var sql = @"
-                DELETE FROM CodingSession
+                DELETE FROM CodingSessions
                 WHERE Id = @Id;";
             
                 connection.Open();
