@@ -3,7 +3,7 @@ using Spectre.Console;
 
 namespace CodingTracker.Controllers;
 
-public static class UserInput
+public class UserInput
 {
     public static void GetMenuInput()
     {
@@ -34,7 +34,7 @@ public static class UserInput
                 case "Access Reporting Menu":
                     Console.Clear();
                     AnsiConsole.WriteLine($"You have chosen to {menuInput}");
-                    // Menus.ReportMenu();
+                    Menus.ReportMenu();
                     break;
                 case "Close the Application":
                     Console.Clear();
