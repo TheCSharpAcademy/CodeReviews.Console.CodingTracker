@@ -102,7 +102,6 @@ public class ConsoleMenu
         }
     }
 
-    // TODO: FORTSÄTT HÄR
     private void ViewSessions()
     {
         throw new NotImplementedException();
@@ -110,7 +109,75 @@ public class ConsoleMenu
 
     private void UpdateSession()
     {
-        throw new NotImplementedException();
+        var sessions = _repository.GetAllCodingSessions().ToList();
+        if (!sessions.Any())
+        {
+            AnsiConsole.MarkupLine("[yellow]No sessions available to update.[/]");
+            return;
+        }
+
+        // Display sessions in a table
+        var table = new Table();
+        table.Border(TableBorder.Rounded);
+        table.AddColumn("ID");
+        table.AddColumn("Start Time");
+        table.AddColumn("End Time");
+
+        foreach (var session in sessions)
+        {
+            table.AddRow(session.Id.ToString(), session.StartTime.ToString("yyyy-MM-dd HH:mm"), session.EndTime.ToString("yyyy-MM-dd HH:mm"));
+        }
+
+        AnsiConsole.Write(table);
+
+        // Ask for session selection
+        var selectedSession = AnsiConsole.Prompt(
+            new SelectionPrompt<CodingSession>()
+                .Title("Select a session to update:")
+                .PageSize(10)
+                .MoreChoicesText("[grey](Move up and down to reveal more sessions)[/]")
+                .UseConverter(s => $"ID: {s.Id} - Start: {s.StartTime:yyyy-MM-dd HH:mm} - End: {s.EndTime:yyyy-MM-dd HH:mm}")
+                .AddChoices(sessions));
+
+        // Get new start time
+        var newStartTimeInput = AnsiConsole.Ask<string>("Enter the new start time (yyyy-MM-dd hh:mm): ");
+        DateTime newStartTime;
+        while (!DateTime.TryParse(newStartTimeInput, out newStartTime))
+        {
+            AnsiConsole.MarkupLine("[red]Invalid date format. Please try again.[/]");
+            newStartTimeInput = AnsiConsole.Ask<string>("Enter the new start time (yyyy-MM-dd hh:mm): ");
+        }
+
+        // Get new end time
+        var newEndTimeInput = AnsiConsole.Ask<string>("Enter the new end time (yyyy-MM-dd hh:mm): ");
+        DateTime newEndTime;
+        while (!DateTime.TryParse(newEndTimeInput, out newEndTime))
+        {
+            AnsiConsole.MarkupLine("[red]Invalid date format. Please try again.[/]");
+            newEndTimeInput = AnsiConsole.Ask<string>("Enter the new end time (yyyy-MM-dd hh:mm): ");
+        }
+
+        // Validate end time is after start time
+        if (newEndTime <= newStartTime)
+        {
+            AnsiConsole.MarkupLine("[red]End time must be after start time.[/]");
+            return;
+        }
+
+        // Update the session details
+        selectedSession.StartTime = newStartTime;
+        selectedSession.EndTime = newEndTime;
+
+        // Save the updated session
+        try
+        {
+            _repository.UpdateCodingSession(selectedSession);
+            AnsiConsole.MarkupLine("[green]The coding session has been successfully updated.[/]");
+        }
+        catch (Exception ex)
+        {
+            AnsiConsole.MarkupLine($"[red]Error updating session: {ex.Message}[/]");
+        }
     }
 
     private void DeleteSession()
