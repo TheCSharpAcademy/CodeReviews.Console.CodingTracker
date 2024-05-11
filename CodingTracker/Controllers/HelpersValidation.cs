@@ -6,13 +6,17 @@ namespace CodingTracker.Controllers;
 
 public class HelpersValidation
 {
-    
     internal static DateTime ConvertToTime(string datetimeString)
     {
         return DateTime.ParseExact(datetimeString, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
     }
+
     internal class InputZero : Exception
     {
+        internal InputZero()
+        {
+            UserInput.GetMenuInput();
+        }
     }
 
     internal static string DateInputValidation(string input, string message, string dateInput)
@@ -46,24 +50,18 @@ public class HelpersValidation
     {
         string startDateTime = "";
         string endDateTime = "";
-        try
+
+        startDateTime = GetDateTimeInput("start");
+        endDateTime = GetDateTimeInput("end");
+
+        while (ConvertToTime(endDateTime) < ConvertToTime(startDateTime))
         {
-            startDateTime = GetDateTimeInput("start");
+            AnsiConsole.Markup(
+                $"[bold red] {endDateTime} is before {startDateTime}. Please provide a correct end date & time.[/]\n\n");
             endDateTime = GetDateTimeInput("end");
-                
-            while (ConvertToTime(endDateTime) < ConvertToTime(startDateTime))
-            {
-                AnsiConsole.Markup($"[bold red] {endDateTime} is before {startDateTime}. Please provide a correct end date & time.[/]\n\n");
-                endDateTime = GetDateTimeInput("end");
-            }
-            
         }
-        catch (InputZero)
-        {
-            AnsiConsole.MarkupLine("[bold]Returning to main menu...[/]");
-        }
+
 
         return new CodingSession("", startDateTime, endDateTime);
     }
-    
 }

@@ -3,7 +3,7 @@ using Spectre.Console;
 
 namespace CodingTracker.Controllers;
 
-public class UserInput
+public static class UserInput
 {
     public static void GetMenuInput()
     {
@@ -34,7 +34,7 @@ public class UserInput
                 case "Access Reporting Menu":
                     Console.Clear();
                     AnsiConsole.WriteLine($"You have chosen to {menuInput}");
-                    // ReportMenu();
+                    // Menus.ReportMenu();
                     break;
                 case "Close the Application":
                     Console.Clear();
@@ -53,7 +53,7 @@ public class UserInput
         string message =
             $"Please provide the [green]{dateInput} date[/] [blue](yyyy-MM-dd)[/] for your coding session. Type 0 to return to the main menu: ";
         var input = AnsiConsole.Ask<string>(message);
-
+        
         if (input == "0") throw new HelpersValidation.InputZero();
 
         return HelpersValidation.DateInputValidation(input, message, dateInput);
