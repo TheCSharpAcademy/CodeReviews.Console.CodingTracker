@@ -61,83 +61,39 @@ public class ConsoleMenu
     /// </summary>
     private void AddSession()
     {
-        var startTimeInput =
-            AnsiConsole.Ask<string>("Enter the start time (yyyy-mm-dd hh:mm) or type [red]'back'[/] to cancel: ");
-        if (startTimeInput.Equals("back", StringComparison.OrdinalIgnoreCase))
+        var startTime = UserInput.GetDateTime("Enter the start time");
+        if (startTime == null)
         {
             AnsiConsole.MarkupLine("[grey]Add session canceled.[/]");
             return;
         }
 
-        DateTime startTime;
-        while (!DateTime.TryParse(startTimeInput, out startTime))
+        var endTime = UserInput.GetDateTime("Enter the end time");
+        if (endTime == null || !Validation.ValidateDateTimeRange(startTime.Value, endTime.Value))
         {
-            AnsiConsole.MarkupLine("[red]Invalid date format. Please try again or type 'back' to cancel.[/]");
-            startTimeInput =
-                AnsiConsole.Ask<string>("Enter the start time (yyyy-mm-dd hh:mm) or type 'back' to cancel: ");
-            if (startTimeInput.Equals("back", StringComparison.OrdinalIgnoreCase))
-            {
-                AnsiConsole.MarkupLine("[grey]Add session canceled.[/]");
-                return;
-            }
-        }
-
-        var endTimeInput = AnsiConsole.Ask<string>("Enter the end time (yyyy-mm-dd hh:mm) or type 'back' to cancel: ");
-        if (endTimeInput.Equals("back", StringComparison.OrdinalIgnoreCase))
-        {
-            AnsiConsole.MarkupLine("[grey]Add session canceled.[/]");
+            AnsiConsole.MarkupLine("[red]End time must be after start time or operation canceled.[/]");
             return;
         }
 
-        DateTime endTime;
-        while (!DateTime.TryParse(endTimeInput, out endTime))
-        {
-            AnsiConsole.MarkupLine("[red]Invalid date format. Please try again or type 'back' to cancel.[/]");
-            endTimeInput = AnsiConsole.Ask<string>("Enter the end time (yyyy-mm-dd hh:mm) or type 'back' to cancel: ");
-            if (endTimeInput.Equals("back", StringComparison.OrdinalIgnoreCase))
-            {
-                AnsiConsole.MarkupLine("[grey]Add session canceled.[/]");
-                return;
-            }
-        }
-
-        if (endTime <= startTime)
-        {
-            AnsiConsole.MarkupLine("[red]End time must be after start time.[/]");
-            return;
-        }
-
-        // Create a new CodingSession
-        CodingSession session = new CodingSession
-        {
-            StartTime = startTime,
-            EndTime = endTime
-        };
-
-        // Use the repository to insert the new coding session into the database
-        try
-        {
-            _repository.InsertCodingSession(session);
-            AnsiConsole.MarkupLine("[green]The coding session was added successfully![/]");
-        }
-        catch (Exception ex)
-        {
-            AnsiConsole.MarkupLine($"[red]Error adding session: {ex.Message}[/]");
-        }
+        var session = new CodingSession { StartTime = startTime.Value, EndTime = endTime.Value };
+        _repository.InsertCodingSession(session);
+        AnsiConsole.MarkupLine("[green]Session added successfully![/]");
     }
 
     private void ViewSessions()
     {
-        Console.Clear();
-        AnsiConsole.MarkupLine("[underline green]Session List[/]");
+        while (true)
+        {
+            Console.Clear();
+            AnsiConsole.MarkupLine("[underline green]Session List[/]");
 
-        var sessions = _repository.GetAllCodingSessions().ToList();
-        if (!sessions.Any())
-        {
-            AnsiConsole.MarkupLine("[yellow]No sessions found to display.[/]");
-        }
-        else
-        {
+            var sessions = _repository.GetAllCodingSessions().ToList();
+            if (!sessions.Any())
+            {
+                AnsiConsole.MarkupLine("[yellow]No sessions found to display.[/]");
+                break; // Exit if there are no sessions to display
+            }
+
             // Display sessions in a table
             var table = new Table();
             table.Border(TableBorder.Rounded);
@@ -153,10 +109,16 @@ public class ConsoleMenu
             }
 
             AnsiConsole.Write(table);
-        }
 
-        AnsiConsole.MarkupLine("[grey]Press any key to return to the main menu...[/]");
-        Console.ReadKey();
+            // Provide options after displaying the table
+            AnsiConsole.MarkupLine(
+                "[grey]Press [blue]'R'[/] to refresh or any other key to return to the main menu...[/]");
+            var key = Console.ReadKey(true).Key; // Read the key without displaying it
+            if (key != ConsoleKey.R)
+            {
+                break; // Break the loop if 'R' is not pressed, returning to main menu
+            }
+        }
     }
 
     private void UpdateSession()
@@ -193,34 +155,31 @@ public class ConsoleMenu
                     $"ID: {s.Id} - Start: {s.StartTime:yyyy-MM-dd HH:mm} - End: {s.EndTime:yyyy-MM-dd HH:mm}")
                 .AddChoices(sessions));
 
-        // Get new start time
-        var newStartTimeInput = AnsiConsole.Ask<string>("Enter the new start time (yyyy-MM-dd hh:mm): ");
-        DateTime newStartTime;
-        while (!DateTime.TryParse(newStartTimeInput, out newStartTime))
+        if (selectedSession == null)
         {
-            AnsiConsole.MarkupLine("[red]Invalid date format. Please try again.[/]");
-            newStartTimeInput = AnsiConsole.Ask<string>("Enter the new start time (yyyy-MM-dd hh:mm): ");
+            AnsiConsole.MarkupLine("[grey]Update canceled.[/]");
+            return;
         }
 
-        // Get new end time
-        var newEndTimeInput = AnsiConsole.Ask<string>("Enter the new end time (yyyy-MM-dd hh:mm): ");
-        DateTime newEndTime;
-        while (!DateTime.TryParse(newEndTimeInput, out newEndTime))
+        // Get new start time using UserInput class
+        var newStartTime = UserInput.GetDateTime("Enter the new start time");
+        if (newStartTime == null)
         {
-            AnsiConsole.MarkupLine("[red]Invalid date format. Please try again.[/]");
-            newEndTimeInput = AnsiConsole.Ask<string>("Enter the new end time (yyyy-MM-dd hh:mm): ");
+            AnsiConsole.MarkupLine("[grey]Update canceled.[/]");
+            return;
         }
 
-        // Validate end time is after start time
-        if (newEndTime <= newStartTime)
+        // Get new end time using UserInput class
+        var newEndTime = UserInput.GetDateTime("Enter the new end time");
+        if (newEndTime == null || !Validation.ValidateDateTimeRange(newStartTime.Value, newEndTime.Value))
         {
-            AnsiConsole.MarkupLine("[red]End time must be after start time.[/]");
+            AnsiConsole.MarkupLine("[red]Invalid input or end time must be after start time. Update canceled.[/]");
             return;
         }
 
         // Update the session details
-        selectedSession.StartTime = newStartTime;
-        selectedSession.EndTime = newEndTime;
+        selectedSession.StartTime = newStartTime.Value;
+        selectedSession.EndTime = newEndTime.Value;
 
         // Save the updated session
         try
@@ -259,19 +218,24 @@ public class ConsoleMenu
 
         AnsiConsole.Write(table);
 
-        // Ask for session ID to delete
-        var sessionId = AnsiConsole.Prompt(
-            new TextPrompt<int>("Enter the ID of the session you wish to delete:")
-                .Validate(id =>
-                {
-                    // Validates that the entered ID exists in the list of sessions
-                    var valid = sessions.Any(s => s.Id == id);
-                    return valid ? ValidationResult.Success() : ValidationResult.Error("[red]ID not found![/]");
-                }));
+        // Ask for session ID to delete using UserInput class
+        var sessionIdString =
+            UserInput.GetInput("Enter the ID of the session you wish to delete or type 'cancel' to return:");
+        if (sessionIdString == null)
+        {
+            AnsiConsole.MarkupLine("[grey]Delete canceled.[/]");
+            return;
+        }
 
-        // Confirm deletion
-        var confirmDelete = AnsiConsole.Confirm("Are you sure you want to delete this session?", false);
-        if (!confirmDelete)
+        // Attempt to parse the input as an integer
+        if (!int.TryParse(sessionIdString, out int sessionId) || !sessions.Any(s => s.Id == sessionId))
+        {
+            AnsiConsole.MarkupLine("[red]ID not found or invalid input![/]");
+            return;
+        }
+
+        // Confirm deletion using UserInput class
+        if (!UserInput.ConfirmAction("Are you sure you want to delete this session?"))
         {
             AnsiConsole.MarkupLine("[grey]Delete canceled.[/]");
             return;
