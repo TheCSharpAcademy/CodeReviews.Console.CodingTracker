@@ -13,6 +13,9 @@ public class ConsoleMenu
         _repository = repository;
     }
 
+    /// <summary>
+    /// Displays the main menu of the Coding Session Tracker application and allows the user to choose options.
+    /// </summary>
     public void ShowMenu()
     {
         bool keepRunning = true;
@@ -56,6 +59,9 @@ public class ConsoleMenu
         }
     }
 
+    /// <summary>
+    /// Adds a new coding session.
+    /// </summary>
     private void AddSession()
     {
         var startTime = UserInput.GetDateTime("Enter the start time");
@@ -77,6 +83,9 @@ public class ConsoleMenu
         AnsiConsole.MarkupLine("[green]Session added successfully![/]");
     }
 
+    /// <summary>
+    /// Displays a list of coding sessions.
+    /// </summary>
     private void ViewSessions()
     {
         while (true)
@@ -118,6 +127,9 @@ public class ConsoleMenu
         }
     }
 
+    /// <summary>
+    /// Updates a coding session with new start and end times.
+    /// </summary>
     private void UpdateSession()
     {
         var sessions = _repository.GetAllCodingSessions().ToList();
@@ -190,6 +202,9 @@ public class ConsoleMenu
         }
     }
 
+    /// <summary>
+    /// Deletes a coding session from the repository.
+    /// </summary>
     private void DeleteSession()
     {
         var sessions = _repository.GetAllCodingSessions().ToList();

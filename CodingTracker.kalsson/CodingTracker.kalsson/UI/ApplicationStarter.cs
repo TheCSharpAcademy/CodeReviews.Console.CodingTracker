@@ -13,6 +13,10 @@ public class ApplicationStarter
         _configuration = configuration;
     }
 
+    /// <summary>
+    /// Starts the Coding Session Tracker application by displaying the main menu.
+    /// </summary>
+    /// <param name="configuration">The application configuration.</param>
     public void Start()
     {
         var consoleMenu = new ConsoleMenu(new CodingSessionRepository(_configuration.GetConnectionString("DefaultConnection")));
