@@ -13,7 +13,7 @@ public class UserInput
         {
             var menuInput = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
-                    .Title("[bold blue]\n\nMAIN MENU\n[/][blue]What would you like to do?[/]")
+                    .Title("[bold blue]\nMAIN MENU\n[/][blue]What would you like to do?[/]")
                     .PageSize(5)
                     .AddChoices(new[]
                     {

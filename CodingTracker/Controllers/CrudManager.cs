@@ -16,7 +16,7 @@ public class CrudManager
                 $"VALUES ('{session.StartTime}', '{session.EndTime}', '{session.Duration}')";
 
             var rowsAffected = connection.Execute(sql);
-            Console.WriteLine($"{rowsAffected} row(s) inserted.");
+            Console.WriteLine($"\n{rowsAffected} row(s) inserted.");
         }
     }
 }
