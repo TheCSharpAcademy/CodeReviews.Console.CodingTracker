@@ -104,7 +104,36 @@ public class ConsoleMenu
 
     private void ViewSessions()
     {
-        throw new NotImplementedException();
+        Console.Clear();  // Clear the console for a clean display
+        AnsiConsole.MarkupLine("[underline green]Session List[/]");  // Title for clarity
+
+        var sessions = _repository.GetAllCodingSessions().ToList();
+        if (!sessions.Any())
+        {
+            AnsiConsole.MarkupLine("[yellow]No sessions found to display.[/]");
+        }
+        else
+        {
+            // Display sessions in a table
+            var table = new Table();
+            table.Border(TableBorder.Rounded);
+            table.AddColumn(new TableColumn("[u]ID[/]").Centered());
+            table.AddColumn(new TableColumn("[u]Start Time[/]").Centered());
+            table.AddColumn(new TableColumn("[u]End Time[/]").Centered());
+
+            foreach (var session in sessions)
+            {
+                table.AddRow(session.Id.ToString(),
+                    session.StartTime.ToString("yyyy-MM-dd HH:mm"),
+                    session.EndTime.ToString("yyyy-MM-dd HH:mm"));
+            }
+
+            AnsiConsole.Write(table);
+        }
+
+        // Prompt to return to the main menu
+        AnsiConsole.MarkupLine("[grey]Press any key to return to the main menu...[/]");
+        Console.ReadKey();
     }
 
     private void UpdateSession()
@@ -182,6 +211,56 @@ public class ConsoleMenu
 
     private void DeleteSession()
     {
-        throw new NotImplementedException();
+        var sessions = _repository.GetAllCodingSessions().ToList();
+        if (!sessions.Any())
+        {
+            AnsiConsole.MarkupLine("[yellow]No sessions available to delete.[/]");
+            return;
+        }
+
+        // Display sessions in a table
+        var table = new Table();
+        table.Border(TableBorder.Rounded); // Adds rounded borders to the table
+        table.AddColumn(new TableColumn("[u]ID[/]").Centered());
+        table.AddColumn(new TableColumn("[u]Start Time[/]").Centered());
+        table.AddColumn(new TableColumn("[u]End Time[/]").Centered());
+
+        foreach (var session in sessions)
+        {
+            table.AddRow(session.Id.ToString(), 
+                session.StartTime.ToString("yyyy-MM-dd HH:mm"), 
+                session.EndTime.ToString("yyyy-MM-dd HH:mm"));
+        }
+
+        AnsiConsole.Write(table);
+
+        // Ask for session ID to delete
+        var sessionId = AnsiConsole.Prompt(
+            new TextPrompt<int>("Enter the ID of the session you wish to delete:")
+                .Validate(id =>
+                {
+                    // Validates that the entered ID exists in the list of sessions
+                    var valid = sessions.Any(s => s.Id == id);
+                    return valid ? ValidationResult.Success() : ValidationResult.Error("[red]ID not found![/]");
+                }));
+
+        // Confirm deletion
+        var confirmDelete = AnsiConsole.Confirm("Are you sure you want to delete this session?", false);
+        if (!confirmDelete)
+        {
+            AnsiConsole.MarkupLine("[grey]Delete canceled.[/]");
+            return;
+        }
+
+        // Delete the session
+        try
+        {
+            _repository.DeleteCodingSession(sessionId);
+            AnsiConsole.MarkupLine("[green]Session deleted successfully.[/]");
+        }
+        catch (Exception ex)
+        {
+            AnsiConsole.MarkupLine($"[red]Error deleting session: {ex.Message}[/]");
+        }
     }
 }
