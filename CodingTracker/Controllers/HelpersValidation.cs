@@ -30,7 +30,7 @@ public class HelpersValidation
     {
         while (!DateTime.TryParseExact(input, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
         {
-            AnsiConsole.Markup($"[bold red]Invalid date format.[/]\n");
+            AnsiConsole.Markup($"[bold red]Invalid time format.[/]\n");
             input = UserInput.GetTimeInput(timeInput);
         }
 
