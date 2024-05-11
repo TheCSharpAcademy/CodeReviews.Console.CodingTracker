@@ -56,9 +56,6 @@ public class ConsoleMenu
         }
     }
 
-    /// <summary>
-    /// Adds a coding session to the tracker.
-    /// </summary>
     private void AddSession()
     {
         var startTime = UserInput.GetDateTime("Enter the start time");
@@ -145,21 +142,21 @@ public class ConsoleMenu
 
         AnsiConsole.Write(table);
 
-        // Ask for session selection
-        var selectedSession = AnsiConsole.Prompt(
-            new SelectionPrompt<CodingSession>()
-                .Title("Select a session to update:")
-                .PageSize(10)
-                .MoreChoicesText("[grey](Move up and down to reveal more sessions)[/]")
-                .UseConverter(s =>
-                    $"ID: {s.Id} - Start: {s.StartTime:yyyy-MM-dd HH:mm} - End: {s.EndTime:yyyy-MM-dd HH:mm}")
-                .AddChoices(sessions));
-
-        if (selectedSession == null)
+        // Ask for session selection using UserInput.GetInput
+        var sessionIdString = UserInput.GetInput("Enter the ID of the session you wish to update");
+        if (sessionIdString == null)
         {
             AnsiConsole.MarkupLine("[grey]Update canceled.[/]");
             return;
         }
+
+        if (!int.TryParse(sessionIdString, out int sessionId) || !sessions.Any(s => s.Id == sessionId))
+        {
+            AnsiConsole.MarkupLine("[red]ID not found or invalid input![/]");
+            return;
+        }
+
+        var selectedSession = sessions.FirstOrDefault(s => s.Id == sessionId);
 
         // Get new start time using UserInput class
         var newStartTime = UserInput.GetDateTime("Enter the new start time");
