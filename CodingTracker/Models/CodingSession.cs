@@ -16,6 +16,6 @@ public class CodingSession(string id, string start, string end)
         DateTime end = HelpersValidation.ConvertToTime(EndTime);
         TimeSpan duration = end - start;
 
-        return $"{duration.Days}:{duration.Hours.ToString().PadLeft(2, '0')}:{duration.Minutes.ToString().PadLeft(2, '0')}";
+        return $"{duration.Hours.ToString().PadLeft(2, '0')}:{duration.Minutes.ToString().PadLeft(2, '0')}";
     }
 }
