@@ -23,4 +23,25 @@ public class CrudManager
             }
         }
     }
+
+    public static List<CodingSession> GetAllSessions()
+    {
+        List<CodingSession> sessionData = new();
+        using (var connection = DbBuilder.GetConnection())
+        {
+            connection.Open();
+            var reader = connection.ExecuteReader("SELECT id, startTime, endTime FROM coding_tracker");
+
+            while (reader.Read())
+            {
+                string id = reader.GetString(0);
+                string startTime = reader.GetString(1);
+                string endTime = reader.GetString(2);
+
+                sessionData.Add(new CodingSession(id, startTime, endTime));
+            }
+        }
+
+        return sessionData;
+    }
 }

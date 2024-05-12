@@ -28,16 +28,16 @@ public class Menus
                 .PageSize(4)
                 .AddChoices(new[]
                 {
-                    "Generate a Full Report", "Generate a Summary Report", 
+                    "Generate a Full Report", "Generate a Summary Report",
                     "Generate a Filtered Report", "Return to the Main Menu"
                 }));
-        
+
         switch (reportMenuInput)
         {
             case "Generate a Full Report":
                 Console.Clear();
                 AnsiConsole.WriteLine($"You have chosen to {reportMenuInput}");
-                // GenerateFullReport();
+                TableVisualisationEngine.GenerateFullReport();
                 break;
             case "Generate a Summary Report":
                 Console.Clear();
@@ -54,7 +54,6 @@ public class Menus
                 AnsiConsole.WriteLine($"You have chosen to {reportMenuInput}");
                 AnsiConsole.WriteLine($"\nReturning to main menu...");
                 break;
-
         }
     }
 }

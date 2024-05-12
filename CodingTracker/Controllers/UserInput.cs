@@ -47,13 +47,12 @@ public class UserInput
     }
 
 
-
     internal static string GetDateInput(string dateInput)
     {
         string message =
             $"Please provide the [green]{dateInput} date[/] [blue](yyyy-MM-dd)[/] for your coding session. Type 0 to return to the main menu: ";
         var input = AnsiConsole.Ask<string>(message);
-        
+
         if (input == "0") throw new HelpersValidation.InputZero();
 
         return HelpersValidation.DateInputValidation(input, message, dateInput);

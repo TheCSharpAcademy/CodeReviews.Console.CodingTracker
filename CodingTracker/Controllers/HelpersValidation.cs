@@ -12,14 +12,18 @@ public class HelpersValidation
         DateTime convertedString = default;
         try
         {
-            convertedString =  DateTime.ParseExact(datetimeString, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
+            convertedString = DateTime.ParseExact(datetimeString, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
         }
-        catch (FormatException) {}
+        catch (FormatException)
+        {
+        }
 
         return convertedString;
     }
 
-    internal class InputZero : Exception {}
+    internal class InputZero : Exception
+    {
+    }
 
     internal static string DateInputValidation(string input, string message, string dateInput)
     {
@@ -68,7 +72,7 @@ public class HelpersValidation
         {
             Console.WriteLine("Returning to main menu...");
         }
-        
+
         return new CodingSession("", startDateTime, endDateTime);
     }
 }
