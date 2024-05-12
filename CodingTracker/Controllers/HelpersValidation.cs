@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text;
 using CodingTracker.Models;
 using Spectre.Console;
 
@@ -6,6 +7,7 @@ namespace CodingTracker.Controllers;
 
 public static class HelpersValidation
 {
+    private static Random _random = new Random();
     internal static DateTime ConvertToTime(string datetimeString)
     {
         DateTime convertedString = default;
@@ -92,7 +94,41 @@ public static class HelpersValidation
 
         return totalTime;
     }
-    
+
+    internal static CodingSession SeedSessionData()
+    {
+        var seedStart = GenerateRandomDateTime();
+        var seedEnd = GenerateRandomDateTime();
+
+        while (ConvertToTime(seedEnd) < ConvertToTime(seedStart) ||
+               (ConvertToTime(seedEnd) - ConvertToTime(seedEnd)).Days > 2)
+        {
+            seedEnd = GenerateRandomDateTime();
+        }
+
+        return new CodingSession("", seedStart, seedEnd);
+    }
+
+    private static string GenerateRandomDateTime()
+    {
+        int year = _random.Next(20, 25);
+        int month = _random.Next(1, 13);
+        int day = _random.Next(1, DateTime.DaysInMonth(year, month) + 1);
+        int hour = _random.Next(0, 23);
+        int minute = _random.Next(0, 59);
+
+        return new StringBuilder()
+            .Append($"20{year}")
+            .Append('-')
+            .Append($"{month.ToString().PadLeft(2, '0')}")
+            .Append('-')
+            .Append($"{day.ToString().PadLeft(2, '0')} ")
+            .Append($"{hour.ToString().PadLeft(2, '0')}")
+            .Append(':')
+            .Append($"{minute.ToString().PadLeft(2, '0')}")
+            .ToString();
+    }
+
     internal class InputZero : Exception
     {
     }

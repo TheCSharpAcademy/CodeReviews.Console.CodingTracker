@@ -163,4 +163,20 @@ public static class CrudManager
 
         return sessionData;
     }
+    
+    internal static void SeedDatabase()
+    {
+        for (int i = 0; i < 50; i++)
+        {
+            using var connection = DbBuilder.GetConnection();
+            connection.Open();
+            CodingSession session = HelpersValidation.SeedSessionData();
+            
+            var sql =
+                $"INSERT INTO coding_tracker (startTime, endTime, duration)" +
+                $"VALUES ('{session.StartTime}', '{session.EndTime}', '{session.Duration}')";
+
+            var rowsAffected = connection.Execute(sql);
+        }
+    }
 }
