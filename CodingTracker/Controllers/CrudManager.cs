@@ -1,5 +1,7 @@
 using CodingTracker.Models;
+using CodingTracker.Views;
 using Dapper;
+using Spectre.Console;
 
 namespace CodingTracker.Controllers;
 
@@ -24,6 +26,43 @@ public class CrudManager
         }
     }
 
+    public static void DeleteSqlRecord()
+    {
+        try
+        {
+            TableVisualisationEngine.GenerateFullReport(false);
+
+            using (var connection = DbBuilder.GetConnection())
+            {
+                connection.Open();
+                int recordId = 0;
+
+                recordId = UserInput.GetNumberInput();
+
+
+                var sql =
+                    $"DELETE FROM coding_tracker WHERE id = '{recordId}'";
+
+                var rowsAffected = connection.Execute(sql);
+                if (rowsAffected == 0)
+                {
+                    AnsiConsole.Markup(
+                        $"[red]Record {recordId} does not exist in the database. Please any key to try another ID.[/]");
+                    Console.ReadKey();
+                    Console.Clear();
+                    DeleteSqlRecord();
+                }
+                else
+                {
+                    Console.WriteLine($"\n{rowsAffected} row(s) deleted.");
+                }
+            }
+        }
+        catch (HelpersValidation.InputZero)
+        {
+        }
+    }
+
     public static List<CodingSession> GetAllSessions()
     {
         List<CodingSession> sessionData = new();
@@ -44,7 +83,7 @@ public class CrudManager
 
         return sessionData;
     }
-    
+
     public static List<CodingSession> GetSummarySessions()
     {
         List<CodingSession> sessionData = new();
@@ -52,7 +91,7 @@ public class CrudManager
         {
             connection.Open();
             var reader = connection.ExecuteReader(
-                                    @"SELECT * FROM(
+                @"SELECT * FROM(
                                         SELECT id, startTime, endTime FROM coding_tracker ORDER BY id ASC LIMIT 3) a
                                         UNION
                                         SELECT * FROM(
@@ -71,7 +110,7 @@ public class CrudManager
 
         return sessionData;
     }
-    
+
     public static List<CodingSession> GetFilteredSessions(string startDate, string endDate)
     {
         List<CodingSession> sessionData = new();

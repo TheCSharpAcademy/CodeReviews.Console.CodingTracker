@@ -42,6 +42,18 @@ public class HelpersValidation
 
         return input;
     }
+    
+    internal static int NumberInputValidation(string input, string message)
+    {
+        int numberInput;
+        while (!int.TryParse(input, out numberInput) || numberInput < 0)
+        {
+            AnsiConsole.WriteLine($"[bold red]{input} is not a valid number format. Please provide an integer only.[/]\n");
+            input = AnsiConsole.Ask<string>(message);
+        }
+
+        return numberInput;
+    }
 
     private static string GetDateTimeInput(string startOrEnd, string inputType)
     {

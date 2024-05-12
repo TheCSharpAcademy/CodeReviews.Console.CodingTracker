@@ -29,7 +29,7 @@ public class UserInput
                 case "Delete a Record":
                     Console.Clear();
                     AnsiConsole.WriteLine($"You have chosen to {menuInput}");
-                    // DeleteRecord();
+                    CrudManager.DeleteSqlRecord();
                     break;
                 case "Access Reporting Menu":
                     Console.Clear();
@@ -68,4 +68,20 @@ public class UserInput
 
         return HelpersValidation.TimeInputValidation(input, message, timeInput);
     }
+
+    internal static int GetNumberInput()
+    {
+        string message =
+            "Please provide the [green]ID number[/] of the record you wish to delete. Type 0 to return to the main menu: ";
+        var input = AnsiConsole.Ask<string>(message);
+        int numberInput;
+
+        if (input == "0") throw new HelpersValidation.InputZero();
+
+        numberInput = HelpersValidation.NumberInputValidation(input, message);
+
+        return numberInput;
+    }
+
+
 }
