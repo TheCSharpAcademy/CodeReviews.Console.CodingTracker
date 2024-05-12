@@ -20,17 +20,13 @@ public class HelpersValidation
 
         return convertedString;
     }
-
-    internal class InputZero : Exception
-    {
-    }
-
-    internal static string DateInputValidation(string input, string message, string dateInput)
+    
+    internal static string DateInputValidation(string input, string message, string dateInput, string inputType)
     {
         while (!DateTime.TryParseExact(input, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
         {
             AnsiConsole.Markup($"[bold red]Invalid date format.[/]\n");
-            input = UserInput.GetDateInput(dateInput);
+            input = UserInput.GetDateInput(dateInput, inputType);
         }
 
         return input;
@@ -47,9 +43,9 @@ public class HelpersValidation
         return input;
     }
 
-    private static string GetDateTimeInput(string startOrEnd)
+    private static string GetDateTimeInput(string startOrEnd, string inputType)
     {
-        return $"{UserInput.GetDateInput(startOrEnd)} {UserInput.GetTimeInput(startOrEnd)}";
+        return $"{UserInput.GetDateInput(startOrEnd, inputType)} {UserInput.GetTimeInput(startOrEnd)}";
     }
 
     internal static CodingSession GetSessionData()
@@ -58,14 +54,14 @@ public class HelpersValidation
         string endDateTime = "";
         try
         {
-            startDateTime = GetDateTimeInput("start");
-            endDateTime = GetDateTimeInput("end");
+            startDateTime = GetDateTimeInput("start", "coding session");
+            endDateTime = GetDateTimeInput("end", "coding session");
 
             while (ConvertToTime(endDateTime) < ConvertToTime(startDateTime))
             {
                 AnsiConsole.Markup(
                     $"[bold red]{endDateTime} is before {startDateTime}. Please provide a correct end date & time.[/]\n\n");
-                endDateTime = GetDateTimeInput("end");
+                endDateTime = GetDateTimeInput("end", "coding session");
             }
         }
         catch (InputZero)
@@ -85,4 +81,9 @@ public class HelpersValidation
 
         return totalTime;
     }
+    
+    internal class InputZero : Exception
+    {
+    }
 }
+

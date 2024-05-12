@@ -40,6 +40,26 @@ public static class TableVisualisationEngine
         ProduceStats(tableData);
 
     }
+    
+    public static void GenerateFilteredReport()
+    {
+        string filterStartDate = UserInput.GetDateInput("start", "report filter");
+        string filterEndDate = UserInput.GetDateInput("end", "report filter");
+        
+        List<CodingSession> tableData = CrudManager.GetSummarySessions();
+
+        var table = GenerateTable("Full Report");
+        
+        foreach (CodingSession row in tableData)
+        {
+            table.AddRow($"{row.Id}", $"{row.StartTime}", $"{row.EndTime}", $"{row.Duration}");
+        }
+        
+        AnsiConsole.Write(table);
+        
+        ProduceStats(tableData);
+
+    }
 
     private static Table GenerateTable(string reportName)
     {
