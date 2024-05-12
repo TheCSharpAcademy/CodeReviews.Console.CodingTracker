@@ -6,11 +6,11 @@ namespace CodingTracker.Controllers;
 
 public static class DbBuilder
 {
-    private static readonly string ConnectionString = ConfigurationManager.ConnectionStrings["DbConnector"].ConnectionString;
+    private static string ConnectionString = ConfigurationManager.ConnectionStrings["DbConnector"].ConnectionString;
 
     public static void CreateTable()
     {
-        if (!File.Exists($"./bin/{ConnectionString}"))
+        if (!File.Exists($"coding-tracker.db"))
         {
             using var connection = GetConnection();
             string sql =
@@ -23,7 +23,7 @@ public static class DbBuilder
 
             connection.Execute(sql);
 
-            //HelpersValidation.SeedDatabase();
+            CrudManager.SeedDatabase();
         }
     }
 

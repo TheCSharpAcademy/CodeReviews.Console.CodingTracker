@@ -101,7 +101,7 @@ public static class HelpersValidation
         var seedEnd = GenerateRandomDateTime();
 
         while (ConvertToTime(seedEnd) < ConvertToTime(seedStart) ||
-               (ConvertToTime(seedEnd) - ConvertToTime(seedEnd)).Days > 2)
+               (ConvertToTime(seedEnd) - ConvertToTime(seedStart)).Days > 0)
         {
             seedEnd = GenerateRandomDateTime();
         }
