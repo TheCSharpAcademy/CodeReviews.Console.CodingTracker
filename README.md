@@ -35,15 +35,15 @@ Further to this I need to start applying Object Oriented Programming Concepts to
 
 ## Features of the program
 
-# Visual tables
+### Visual tables
 
 - By leveraging Spectre.Console I was able to make some smarter looking tables than the usual console application.
 
-# CRUD functionality
+### CRUD functionality
 
 - The program allows a user to Create, Read, Update & Delete data within the SQLite DB
 
-# Selection Menu
+### Selection Menu
 
 - Reading the Spectre.Console documentation I stumbled across the ability to create interactive menus in the console which have been used throughout.
 
