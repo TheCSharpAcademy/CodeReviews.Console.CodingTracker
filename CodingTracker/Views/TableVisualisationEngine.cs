@@ -12,53 +12,57 @@ public static class TableVisualisationEngine
         List<CodingSession> tableData = CrudManager.GetAllSessions();
 
         var table = GenerateTable("Summary Report");
-        
+
         foreach (CodingSession row in tableData)
         {
             table.AddRow($"{row.Id}", $"{row.StartTime}", $"{row.EndTime}", $"{row.Duration}");
         }
-        
-        AnsiConsole.Write(table);
-        
-        if (showStats) ProduceStats(tableData);
 
+        AnsiConsole.Write(table);
+
+        if (showStats) ProduceStats(tableData);
     }
-    
+
     public static void GenerateSummaryReport()
     {
         List<CodingSession> tableData = CrudManager.GetSummarySessions();
 
-        var table = GenerateTable("Full Report");
-        
+        var table = GenerateTable("Summary Report");
+
         foreach (CodingSession row in tableData)
         {
             table.AddRow($"{row.Id}", $"{row.StartTime}", $"{row.EndTime}", $"{row.Duration}");
         }
-        
-        AnsiConsole.Write(table);
-        
-        ProduceStats(tableData);
 
+        AnsiConsole.Write(table);
+
+        ProduceStats(tableData);
     }
-    
+
     public static void GenerateFilteredReport()
     {
-        string filterStartDate = UserInput.GetDateInput("start", "report filter");
-        string filterEndDate = UserInput.GetDateInput("end", "report filter");
-        
-        List<CodingSession> tableData = CrudManager.GetSummarySessions();
-
-        var table = GenerateTable("Full Report");
-        
-        foreach (CodingSession row in tableData)
+        try
         {
-            table.AddRow($"{row.Id}", $"{row.StartTime}", $"{row.EndTime}", $"{row.Duration}");
-        }
-        
-        AnsiConsole.Write(table);
-        
-        ProduceStats(tableData);
+            string filterStartDate = UserInput.GetDateInput("start", "report filter");
+            string filterEndDate = UserInput.GetDateInput("end", "report filter");
 
+            List<CodingSession> tableData = CrudManager.GetFilteredSessions(filterStartDate, filterEndDate);
+
+            var table = GenerateTable("Filtered Report");
+
+            foreach (CodingSession row in tableData)
+            {
+                table.AddRow($"{row.Id}", $"{row.StartTime}", $"{row.EndTime}", $"{row.Duration}");
+            }
+
+            AnsiConsole.Write(table);
+
+            ProduceStats(tableData);
+        }
+        catch (HelpersValidation.InputZero)
+        {
+            Console.WriteLine("Returning to main menu...");
+        }
     }
 
     private static Table GenerateTable(string reportName)
@@ -67,8 +71,8 @@ public static class TableVisualisationEngine
 
         table.Title($"\n[bold blue on yellow]-- {reportName} --[/]");
         table.Border(TableBorder.Rounded);
-        
-        table.AddColumns("[bold red]ID[/]","[bold red]Start[/]","[bold red]End[/]","[bold red]Duration[/]");
+
+        table.AddColumns("[bold red]ID[/]", "[bold red]Start[/]", "[bold red]End[/]", "[bold red]Duration[/]");
 
         table.Columns[3].RightAligned();
 
@@ -84,16 +88,15 @@ public static class TableVisualisationEngine
             .Append("\n[bold]Total time spent coding[/]: ")
             .Append((int)totalTime.TotalHours)
             .Append(':')
-            .Append(totalTime.Minutes.ToString().PadLeft(2,'0'))
+            .Append(totalTime.Minutes.ToString().PadLeft(2, '0'))
             .Append("\n[bold]Average session time: [/]")
             .Append((int)(totalTime / tableData.Count).TotalHours)
             .Append(':')
             .Append((totalTime / tableData.Count).Minutes.ToString().PadLeft(2, '0'))
             .ToString());
-        
+
         panel.Header("[bold red]Statistics[/]");
         panel.Border = BoxBorder.Rounded;
         AnsiConsole.Write(panel);
     }
-    
 }

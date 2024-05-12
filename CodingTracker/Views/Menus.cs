@@ -47,7 +47,7 @@ public class Menus
             case "Generate a Filtered Report":
                 Console.Clear();
                 AnsiConsole.WriteLine($"You have chosen to {reportMenuInput}");
-                // GenerateFilteredReport();
+                TableVisualisationEngine.GenerateFilteredReport();
                 break;
             case "Return to the Main Menu":
                 Console.Clear();

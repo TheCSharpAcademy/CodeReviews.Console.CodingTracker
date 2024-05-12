@@ -71,4 +71,28 @@ public class CrudManager
 
         return sessionData;
     }
+    
+    public static List<CodingSession> GetFilteredSessions(string startDate, string endDate)
+    {
+        List<CodingSession> sessionData = new();
+        using (var connection = DbBuilder.GetConnection())
+        {
+            connection.Open();
+            var reader = connection.ExecuteReader(@$"SELECT * FROM coding_tracker
+                                                        WHERE startTime > '{startDate} 00:00'
+                                                        AND endTime < '{endDate} 23:59'");
+
+
+            while (reader.Read())
+            {
+                string id = reader.GetString(0);
+                string startTime = reader.GetString(1);
+                string endTime = reader.GetString(2);
+
+                sessionData.Add(new CodingSession(id, startTime, endTime));
+            }
+        }
+
+        return sessionData;
+    }
 }
