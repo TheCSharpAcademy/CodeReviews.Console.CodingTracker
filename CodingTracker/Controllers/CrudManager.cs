@@ -97,6 +97,7 @@ public static class CrudManager
         }
         catch (HelpersValidation.InputZero)
         {
+            Console.WriteLine("Returning to main menu...");
         }
     }
 
@@ -176,7 +177,9 @@ public static class CrudManager
             var sql =
                 $"INSERT INTO coding_tracker (startTime, endTime, duration)" +
                 $"VALUES ('{session.StartTime}', '{session.EndTime}', '{session.Duration}')";
-            
+
+            connection.Execute(sql);
+
         }
     }
 }
