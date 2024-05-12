@@ -52,7 +52,7 @@ public class Menus
             case "Return to the Main Menu":
                 Console.Clear();
                 AnsiConsole.WriteLine($"You have chosen to {reportMenuInput}");
-                UserInput.GetMenuInput();
+                AnsiConsole.WriteLine($"\nReturning to main menu...");
                 break;
 
         }
