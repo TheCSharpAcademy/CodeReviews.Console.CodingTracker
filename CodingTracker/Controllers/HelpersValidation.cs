@@ -17,6 +17,7 @@ public static class HelpersValidation
         }
         catch (FormatException)
         {
+            Console.WriteLine("Returning to main menu...");
         }
 
         return convertedString;

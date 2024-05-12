@@ -1,9 +1,8 @@
+namespace CodingTracker.Controllers;
+
 using System.Configuration;
 using Dapper;
 using Microsoft.Data.Sqlite;
-
-namespace CodingTracker.Controllers;
-
 public static class DbBuilder
 {
     private static string ConnectionString = ConfigurationManager.ConnectionStrings["DbConnector"].ConnectionString;
