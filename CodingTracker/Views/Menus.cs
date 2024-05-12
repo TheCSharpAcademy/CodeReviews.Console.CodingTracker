@@ -1,9 +1,8 @@
-using CodingTracker.Controllers;
 using Spectre.Console;
 
 namespace CodingTracker.Views;
 
-public class Menus
+public static class Menus
 {
     public static string MenuInput()
     {

@@ -2,18 +2,11 @@ using CodingTracker.Controllers;
 
 namespace CodingTracker.Models;
 
-public class CodingSession
+public class CodingSession(string id, string start, string end)
 {
-    public CodingSession(string id, string start, string end)
-    {
-        Id = id;
-        StartTime = start;
-        EndTime = end;
-    }
-
-    public string Id { get; set; }
-    public string StartTime { get; set; }
-    public string EndTime { get; set; }
+    public string Id { get; set; } = id;
+    public string StartTime { get; set; } = start;
+    public string EndTime { get; set; } = end;
 
     public string Duration => CalculateDuration();
 

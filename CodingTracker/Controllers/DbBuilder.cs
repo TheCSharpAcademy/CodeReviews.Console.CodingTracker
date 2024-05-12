@@ -6,12 +6,13 @@ namespace CodingTracker.Controllers;
 
 public static class DbBuilder
 {
-    private static string connectionString = ConfigurationManager.ConnectionStrings["DbConnector"].ConnectionString;
-    
+    private static readonly string ConnectionString = ConfigurationManager.ConnectionStrings["DbConnector"].ConnectionString;
+
     public static void CreateTable()
     {
-        using (var connection = GetConnection())
+        if (!File.Exists($"./bin/{ConnectionString}"))
         {
+            using var connection = GetConnection();
             string sql =
                 @"CREATE TABLE IF NOT EXISTS coding_tracker(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -21,11 +22,13 @@ public static class DbBuilder
                 )";
 
             connection.Execute(sql);
+
+            //HelpersValidation.SeedDatabase();
         }
     }
 
     public static SqliteConnection GetConnection()
     {
-        return new SqliteConnection(connectionString);
+        return new SqliteConnection(ConnectionString);
     }
 }

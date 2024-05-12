@@ -1,11 +1,10 @@
 using System.Globalization;
 using CodingTracker.Models;
 using Spectre.Console;
-using SQLitePCL;
 
 namespace CodingTracker.Controllers;
 
-public class HelpersValidation
+public static class HelpersValidation
 {
     internal static DateTime ConvertToTime(string datetimeString)
     {
