@@ -64,7 +64,7 @@ public class HelpersValidation
             while (ConvertToTime(endDateTime) < ConvertToTime(startDateTime))
             {
                 AnsiConsole.Markup(
-                    $"[bold red] {endDateTime} is before {startDateTime}. Please provide a correct end date & time.[/]\n\n");
+                    $"[bold red]{endDateTime} is before {startDateTime}. Please provide a correct end date & time.[/]\n\n");
                 endDateTime = GetDateTimeInput("end");
             }
         }
@@ -74,5 +74,15 @@ public class HelpersValidation
         }
 
         return new CodingSession("", startDateTime, endDateTime);
+    }
+    internal static TimeSpan TotalTime(List<CodingSession> tableData)
+    {
+        TimeSpan totalTime = default;
+        foreach (var row in tableData)
+        {
+            totalTime += TimeSpan.Parse(row.Duration);
+        }
+
+        return totalTime;
     }
 }

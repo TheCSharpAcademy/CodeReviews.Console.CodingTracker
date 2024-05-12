@@ -9,7 +9,7 @@ public class Menus
     {
         var menuInput = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
-                .Title("[bold blue]\nMAIN MENU\n[/][blue]What would you like to do?[/]")
+                .Title("[bold blue on yellow]\n-- MAIN MENU --\n[/][blue on yellow]What would you like to do?[/]")
                 .PageSize(5)
                 .AddChoices(new[]
                 {
@@ -24,7 +24,7 @@ public class Menus
     {
         var reportMenuInput = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
-                .Title("[bold blue]\nREPORTING MENU\n[/][blue]What would you like to do?[/]")
+                .Title("[bold blue on yellow]\nREPORTING MENU\n[/][blue on yellow]What would you like to do?[/]")
                 .PageSize(4)
                 .AddChoices(new[]
                 {
@@ -37,12 +37,12 @@ public class Menus
             case "Generate a Full Report":
                 Console.Clear();
                 AnsiConsole.WriteLine($"You have chosen to {reportMenuInput}");
-                TableVisualisationEngine.GenerateFullReport();
+                TableVisualisationEngine.GenerateFullReport(true);
                 break;
             case "Generate a Summary Report":
                 Console.Clear();
                 AnsiConsole.WriteLine($"You have chosen to {reportMenuInput}");
-                // GenerateSummaryReport();
+                TableVisualisationEngine.GenerateSummaryReport();
                 break;
             case "Generate a Filtered Report":
                 Console.Clear();

@@ -44,4 +44,31 @@ public class CrudManager
 
         return sessionData;
     }
+    
+    public static List<CodingSession> GetSummarySessions()
+    {
+        List<CodingSession> sessionData = new();
+        using (var connection = DbBuilder.GetConnection())
+        {
+            connection.Open();
+            var reader = connection.ExecuteReader(
+                                    @"SELECT * FROM(
+                                        SELECT id, startTime, endTime FROM coding_tracker ORDER BY id ASC LIMIT 3) a
+                                        UNION
+                                        SELECT * FROM(
+                                        SELECT id, startTime, endTime FROM coding_tracker ORDER BY id DESC LIMIT 3) b");
+
+
+            while (reader.Read())
+            {
+                string id = reader.GetString(0);
+                string startTime = reader.GetString(1);
+                string endTime = reader.GetString(2);
+
+                sessionData.Add(new CodingSession(id, startTime, endTime));
+            }
+        }
+
+        return sessionData;
+    }
 }
