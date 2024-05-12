@@ -37,8 +37,7 @@ public class CrudManager
                 connection.Open();
                 int recordId = 0;
 
-                recordId = UserInput.GetNumberInput();
-
+                recordId = UserInput.GetNumberInput("delete");
 
                 var sql =
                     $"DELETE FROM coding_tracker WHERE id = '{recordId}'";
@@ -56,6 +55,52 @@ public class CrudManager
                 {
                     Console.WriteLine($"\n{rowsAffected} row(s) deleted.");
                 }
+            }
+        }
+        catch (HelpersValidation.InputZero)
+        {
+        }
+    }
+
+    public static void UpdateSqlRecord()
+    {
+        try
+        {
+            TableVisualisationEngine.GenerateFullReport(false);
+
+            using (var connection = DbBuilder.GetConnection())
+            {
+                connection.Open();
+                int recordId = 0;
+
+                recordId = UserInput.GetNumberInput("update");
+
+                CodingSession session = HelpersValidation.GetSessionData();
+
+                if (session.StartTime != "" || session.EndTime != "")
+                {
+                    var sql =
+                        $"""
+                            UPDATE coding_tracker
+                            SET startTime = '{session.StartTime}', endTime = '{session.EndTime}', duration = '{session.Duration}'
+                            WHERE id = '{recordId}'
+                         """;
+                    
+                    var rowsAffected = connection.Execute(sql);
+                    if (rowsAffected == 0)
+                    {
+                        AnsiConsole.Markup(
+                            $"[red]Record {recordId} does not exist in the database. Please any key to try another ID.[/]");
+                        Console.ReadKey();
+                        Console.Clear();
+                        UpdateSqlRecord();
+                    }
+                    else
+                    {
+                        Console.WriteLine($"\n{rowsAffected} row(s) updated.");
+                    }
+                }
+                
             }
         }
         catch (HelpersValidation.InputZero)

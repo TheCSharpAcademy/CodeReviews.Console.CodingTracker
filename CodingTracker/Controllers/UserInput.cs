@@ -24,7 +24,7 @@ public class UserInput
                 case "Update a Record":
                     Console.Clear();
                     AnsiConsole.WriteLine($"You have chosen to {menuInput}");
-                    // UpdateRecord();
+                    CrudManager.UpdateSqlRecord();
                     break;
                 case "Delete a Record":
                     Console.Clear();
@@ -69,10 +69,10 @@ public class UserInput
         return HelpersValidation.TimeInputValidation(input, message, timeInput);
     }
 
-    internal static int GetNumberInput()
+    internal static int GetNumberInput(string operationType)
     {
         string message =
-            "Please provide the [green]ID number[/] of the record you wish to delete. Type 0 to return to the main menu: ";
+            $"Please provide the [green]ID number[/] of the record you wish to {operationType}. Type 0 to return to the main menu: ";
         var input = AnsiConsole.Ask<string>(message);
         int numberInput;
 
