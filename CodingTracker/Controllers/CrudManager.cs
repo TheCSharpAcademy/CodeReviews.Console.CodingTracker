@@ -11,12 +11,16 @@ public class CrudManager
         {
             connection.Open();
             CodingSession session = HelpersValidation.GetSessionData();
-            var sql =
-                $"INSERT INTO coding_tracker (startTime, endTime, duration)" +
-                $"VALUES ('{session.StartTime}', '{session.EndTime}', '{session.Duration}')";
 
-            var rowsAffected = connection.Execute(sql);
-            Console.WriteLine($"\n{rowsAffected} row(s) inserted.");
+            if (session.StartTime != "" || session.EndTime != "")
+            {
+                var sql =
+                    $"INSERT INTO coding_tracker (startTime, endTime, duration)" +
+                    $"VALUES ('{session.StartTime}', '{session.EndTime}', '{session.Duration}')";
+
+                var rowsAffected = connection.Execute(sql);
+                Console.WriteLine($"\n{rowsAffected} row(s) inserted.");
+            }
         }
     }
 }

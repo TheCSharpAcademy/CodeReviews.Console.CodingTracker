@@ -1,6 +1,7 @@
 using System.Globalization;
 using CodingTracker.Models;
 using Spectre.Console;
+using SQLitePCL;
 
 namespace CodingTracker.Controllers;
 
@@ -8,16 +9,17 @@ public class HelpersValidation
 {
     internal static DateTime ConvertToTime(string datetimeString)
     {
-        return DateTime.ParseExact(datetimeString, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
+        DateTime convertedString = default;
+        try
+        {
+            convertedString =  DateTime.ParseExact(datetimeString, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
+        }
+        catch (FormatException) {}
+
+        return convertedString;
     }
 
-    internal class InputZero : Exception
-    {
-        internal InputZero()
-        {
-            UserInput.GetMenuInput();
-        }
-    }
+    internal class InputZero : Exception {}
 
     internal static string DateInputValidation(string input, string message, string dateInput)
     {
@@ -41,7 +43,7 @@ public class HelpersValidation
         return input;
     }
 
-    internal static string GetDateTimeInput(string startOrEnd)
+    private static string GetDateTimeInput(string startOrEnd)
     {
         return $"{UserInput.GetDateInput(startOrEnd)} {UserInput.GetTimeInput(startOrEnd)}";
     }
@@ -50,18 +52,23 @@ public class HelpersValidation
     {
         string startDateTime = "";
         string endDateTime = "";
-
-        startDateTime = GetDateTimeInput("start");
-        endDateTime = GetDateTimeInput("end");
-
-        while (ConvertToTime(endDateTime) < ConvertToTime(startDateTime))
+        try
         {
-            AnsiConsole.Markup(
-                $"[bold red] {endDateTime} is before {startDateTime}. Please provide a correct end date & time.[/]\n\n");
+            startDateTime = GetDateTimeInput("start");
             endDateTime = GetDateTimeInput("end");
+
+            while (ConvertToTime(endDateTime) < ConvertToTime(startDateTime))
+            {
+                AnsiConsole.Markup(
+                    $"[bold red] {endDateTime} is before {startDateTime}. Please provide a correct end date & time.[/]\n\n");
+                endDateTime = GetDateTimeInput("end");
+            }
         }
-
-
+        catch (InputZero)
+        {
+            Console.WriteLine("Returning to main menu...");
+        }
+        
         return new CodingSession("", startDateTime, endDateTime);
     }
 }
