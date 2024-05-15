@@ -97,6 +97,8 @@ public class ConsoleMenu
             if (!sessions.Any())
             {
                 AnsiConsole.MarkupLine("[yellow]No sessions found to display.[/]");
+                Console.Write("Press any key to return to the main menu...");
+                Console.ReadKey();
                 break; // Exit if there are no sessions to display
             }
 
@@ -136,6 +138,8 @@ public class ConsoleMenu
         if (!sessions.Any())
         {
             AnsiConsole.MarkupLine("[yellow]No sessions available to update.[/]");
+            Console.Write("Press any key to return to the main menu...");
+            Console.ReadKey();
             return;
         }
 
@@ -211,6 +215,8 @@ public class ConsoleMenu
         if (!sessions.Any())
         {
             AnsiConsole.MarkupLine("[yellow]No sessions available to delete.[/]");
+            Console.Write("Press any key to return to the main menu...");
+            Console.ReadKey();
             return;
         }
 
