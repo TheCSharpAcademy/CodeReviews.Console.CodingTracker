@@ -1,19 +1,28 @@
 using CodingTracker.ConsoleInteraction;
+using CodingTracker.IDataRepository;
+using CodingTracker.Services;
 
 namespace CodingTracker.Controllers
 {
     public class CodingSessionController
     {
         private readonly IUserInteraction? _userInteraction;
+        private readonly ICodingSessionService _sessionService;
+        private readonly IDataConfig _dataConfig;
         bool closeApp;
 
-        public CodingSessionController(IUserInteraction? userInteraction)
+        public CodingSessionController(IUserInteraction? userInteraction, ICodingSessionService sessionService, IDataConfig dataConfig)
         {
             _userInteraction = userInteraction;
+            _sessionService = sessionService;
+            _dataConfig = dataConfig;
         }
 
         public void Run()
         {
+            // Initialize Database
+            _dataConfig.InitializeDatabase();
+
             while (!closeApp)
             {
                 // Display Menu
@@ -36,7 +45,7 @@ namespace CodingTracker.Controllers
                     break;
                 case "1":
                     _userInteraction?.ShowMessageTimeout("Getting all coding sessions...");
-                    _codingSessionService.GetAllHabits();
+                    _sessionService.GetAllSessions();
                     break;
                 // case "2":
                 //     _habitRepository.InsertHabit(habit);
