@@ -1,2 +1,6 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using CodingTracker.DataRepository;
+using CodingTracker.IDataRepository;
+
+DataConfig dataConfig = new();
+
+dataConfig.InitializeDatabase();
