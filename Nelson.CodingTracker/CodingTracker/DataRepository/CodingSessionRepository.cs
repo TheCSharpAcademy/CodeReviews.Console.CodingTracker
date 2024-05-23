@@ -13,6 +13,11 @@ namespace CodingTracker.DataRepository
         readonly string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString") ?? "";
         private readonly IUserInteraction? _userInteraction;
 
+        public CodingSessionRepository(IUserInteraction? userInteraction)
+        {
+            _userInteraction = userInteraction;
+        }
+
         public void GetFromDatabase()
         {
             using var connection = new SqliteConnection(connectionString);
