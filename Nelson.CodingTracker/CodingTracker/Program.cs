@@ -1,6 +1,13 @@
-﻿using CodingTracker.DataRepository;
+﻿using CodingTracker.ConsoleInteraction;
+using CodingTracker.Controllers;
+using CodingTracker.DataRepository;
 using CodingTracker.IDataRepository;
+using CodingTracker.Services;
 
 DataConfig dataConfig = new();
+IUserInteraction userInteraction= new UserInteraction();
+ICodingSessionRepository codingSessionRepository= new CodingSessionRepository();
+ICodingSessionService codingSessionService= new CodingSessionService(codingSessionRepository);
+CodingSessionController codingSessionController= new(userInteraction, codingSessionService, dataConfig);
 
-dataConfig.InitializeDatabase();
+codingSessionController.Run();
