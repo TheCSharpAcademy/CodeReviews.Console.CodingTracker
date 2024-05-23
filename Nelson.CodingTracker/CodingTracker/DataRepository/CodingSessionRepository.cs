@@ -44,8 +44,29 @@ namespace CodingTracker.DataRepository
             }
             else
             {
-                _userInteraction.ShowMessageTimeout("[Red]There are no coding sessions stored in the database.[/]");
+                _userInteraction.ShowMessageTimeout("\n\n[Red]There are no coding sessions stored in the database.[/]");
             }
+        }
+
+        public void InsertSessionToDatabase(DateTime startTime, DateTime endTime, TimeSpan duration)
+        {
+            using var connection = new SqliteConnection(connectionString);
+            connection.Open();
+
+            // Define the object with properties for insertion
+            var session = new CodingSession
+            {
+                StartTime = startTime,
+                EndTime = endTime,
+                Duration = duration
+            };
+
+            const string insertQuery = @"
+                INSERT INTO CodingSession (StartTime, EndTime, Duration)
+                VALUES (@StartTime, @EndTime, @Duration)";
+
+            // Use Dapper to execute the query
+            connection.Execute(insertQuery, session);
         }
     }
 }
