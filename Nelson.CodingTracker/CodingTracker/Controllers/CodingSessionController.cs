@@ -39,12 +39,12 @@ namespace CodingTracker.Controllers
             switch (input)
             {
                 case "0":
-                    _userInteraction?.ShowMessageTimeout("\nGoodbye!\n");
+                    _userInteraction?.ShowMessageTimeout("\n[Red]Goodbye![/]\n");
                     closeApp = true;
                     Environment.Exit(0);
                     break;
                 case "1":
-                    _userInteraction?.ShowMessageTimeout("Getting all coding sessions...");
+                    _userInteraction?.ShowMessageTimeout("[Green]Getting all coding sessions...[/]");
                     _sessionService.GetAllSessions();
                     break;
                 // case "2":
@@ -57,7 +57,7 @@ namespace CodingTracker.Controllers
                 //     _habitRepository.DeleteHabit();
                 //     break;
                 default:
-                    _userInteraction?.ShowMessageTimeout("\nInvalid input. Please type a number from 0 to 4.\n");
+                    _userInteraction?.ShowMessageTimeout("\n[Red]Invalid input. Please type a number from 0 to 4.[/]\n");
                     break;
             }
         }
