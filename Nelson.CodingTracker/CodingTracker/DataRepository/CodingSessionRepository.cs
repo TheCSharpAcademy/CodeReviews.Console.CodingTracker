@@ -1,4 +1,5 @@
 using System.Configuration;
+using CodingTracker.ConsoleInteraction;
 using CodingTracker.IDataRepository;
 using CodingTracker.Models;
 using Dapper;
@@ -10,6 +11,7 @@ namespace CodingTracker.DataRepository
     public class CodingSessionRepository : ICodingSessionRepository
     {
         readonly string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString") ?? "";
+        private readonly IUserInteraction? _userInteraction;
 
         public void GetFromDatabase()
         {
@@ -37,7 +39,7 @@ namespace CodingTracker.DataRepository
             }
             else
             {
-            AnsiConsole.Write(new Markup("[Red]There are no coding sessions stored in the database.[/]"));
+                _userInteraction.ShowMessageTimeout("[Red]There are no coding sessions stored in the database.[/]");
             }
         }
     }
