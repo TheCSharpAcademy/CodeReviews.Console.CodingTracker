@@ -120,16 +120,24 @@ namespace CodingTracker.DataRepository
 
             if (exists == 0)
             {
-                _userInteraction.ShowMessageTimeout("[Red]\n\nHabit with ID {id} does not exist.\n\n[/]");
+                _userInteraction.ShowMessageTimeout($"[Red]\n\nHabit with ID {id} does not exist.\n\n[/]");
                 return;
             }
 
+            // Retrieve the end time
+            string endTimeQuery = "SELECT EndTime FROM CodingSession WHERE Id = @Id";
+            var endTime = connection.ExecuteScalar<DateTime>(endTimeQuery, new { Id = id });
+
+            // Calculate the new duration
+            var newDuration = _utils.GetSessionDuration(startTime, endTime);
+
+            // Update the StartTime and Duration
             const string updateQuery = @"
                 UPDATE CodingSession
-                SET StartTime = @StartTime
+                SET StartTime = @StartTime, Duration = @Duration
                 WHERE Id = @Id";
 
-            connection.Execute(updateQuery, new { Id = id, StartTime = startTime });
+            connection.Execute(updateQuery, new { Id = id, StartTime = startTime, Duration = newDuration});
             _userInteraction.ShowMessageTimeout($"[Green]\n\nHabit with ID {id} has been updated.\n\n[/]");
         }
     }
