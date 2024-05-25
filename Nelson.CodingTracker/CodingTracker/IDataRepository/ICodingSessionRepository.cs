@@ -4,6 +4,7 @@ namespace CodingTracker.IDataRepository
 {
     public interface ICodingSessionRepository
     {
+        void DeleteSessionFromDatabase(int id);
         void GetFromDatabase();
         void InsertSessionToDatabase(DateTime startTime, DateTime endTime, string duration);
         void UpdateEndTimeInDatabase(int id, DateTime endTime);

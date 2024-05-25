@@ -56,9 +56,10 @@ namespace CodingTracker.Controllers
                     _userInteraction?.ShowMessageTimeout("\n[Yellow]Please type the ID of the session you would like to update. Type 0 to return to Main Menu.[/]\n");
                     _sessionService.UpdateSession();
                     break;
-                // case "4":
-                //     _habitRepository.DeleteHabit();
-                //     break;
+                case "4":
+                    _userInteraction.ShowMessageTimeout("\n[Red]Please type the ID of the habit to delete or 0 to return to Main Menu: [/]");
+                    _sessionService.DeleteSession();
+                    break;
                 default:
                     _userInteraction?.ShowMessageTimeout("\n[Red]Invalid input. Please type a number from 0 to 4.[/]\n");
                     break;

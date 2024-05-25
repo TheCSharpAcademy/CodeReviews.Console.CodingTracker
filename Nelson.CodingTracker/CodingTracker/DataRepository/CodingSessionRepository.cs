@@ -22,6 +22,25 @@ namespace CodingTracker.DataRepository
             _utils = utils;
         }
 
+        public void DeleteSessionFromDatabase(int id)
+        {
+            using var connection = new SqliteConnection(connectionString);
+            connection.Open();
+
+            const string deleteQuery = @"DELETE FROM CodingSession WHERE Id = @Id";
+
+            int rowCount = connection.Execute(deleteQuery, new {Id = id});
+
+            if (rowCount == 0)
+            {
+                _userInteraction.ShowMessageTimeout($"\n\n[Red]There is no coding session with Id: {id}.[/]");
+            }
+            else
+            {
+                _userInteraction.ShowMessageTimeout($"\n\n[Green]Coding session with Id: {id}, has been deleted.[/]");
+            }
+        }
+
         public void GetFromDatabase()
         {
             using var connection = new SqliteConnection(connectionString);

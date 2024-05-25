@@ -20,7 +20,11 @@ namespace CodingTracker.Services
 
         public void DeleteSession()
         {
-            throw new NotImplementedException();
+            int id = _utils.ConvertToInt(_userInteraction.GetUserInput());
+
+            if (id == 0) return;
+
+            _sessionRepository.DeleteSessionFromDatabase(id);
         }
 
         public void GetAllSessions()
