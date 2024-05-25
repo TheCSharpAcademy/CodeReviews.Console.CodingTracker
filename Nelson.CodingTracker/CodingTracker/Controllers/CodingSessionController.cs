@@ -1,5 +1,6 @@
 using CodingTracker.ConsoleInteraction;
 using CodingTracker.IDataRepository;
+using CodingTracker.Models;
 using CodingTracker.Services;
 
 namespace CodingTracker.Controllers
@@ -9,6 +10,7 @@ namespace CodingTracker.Controllers
         private readonly IUserInteraction? _userInteraction;
         private readonly ICodingSessionService _sessionService;
         private readonly IDataConfig _dataConfig;
+        readonly CodingSession codingSession = new();
         bool closeApp;
 
         public CodingSessionController(IUserInteraction? userInteraction, ICodingSessionService sessionService, IDataConfig dataConfig)
@@ -44,15 +46,16 @@ namespace CodingTracker.Controllers
                     Environment.Exit(0);
                     break;
                 case "1":
-                    _userInteraction?.ShowMessageTimeout("[Green]Getting all coding sessions...[/]");
+                    _userInteraction?.ShowMessageTimeout("\n[Green]Getting all coding sessions...[/]\n");
                     _sessionService.GetAllSessions();
                     break;
-                // case "2":
-                //     _habitRepository.InsertHabit(habit);
-                //     break;
-                // case "3":
-                //     _habitRepository.UpdateHabit();
-                //     break;
+                case "2":
+                    _sessionService.InsertSession(codingSession);
+                    break;
+                case "3":
+                    _userInteraction?.ShowMessageTimeout("\n[Yellow]Please type the ID of the session you would like to update. Type 0 to return to Main Menu.[/]\n");
+                    _sessionService.UpdateSession();
+                    break;
                 // case "4":
                 //     _habitRepository.DeleteHabit();
                 //     break;
