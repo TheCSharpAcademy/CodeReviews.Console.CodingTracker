@@ -2,6 +2,7 @@ using System.Configuration;
 using CodingTracker.ConsoleInteraction;
 using CodingTracker.IDataRepository;
 using CodingTracker.Models;
+using CodingTracker.Utilities;
 using Dapper;
 using Microsoft.Data.Sqlite;
 using Spectre.Console;
@@ -26,10 +27,10 @@ namespace CodingTracker.DataRepository
             const string selectQuery = @"SELECT * FROM CodingSession";
 
             // Use Dapper to execute the query and get a list of sessions
-            var sessions = connection.Query<CodingSession>(selectQuery);
+            var sessions = connection.Query<CodingSession>(selectQuery).ToList();
 
             // Display the sessions using Spectre.Console
-            if (sessions.Any())
+            if (sessions.Count != 0)
             {
                 var table = new Table();
                 table.AddColumn(new TableColumn("Id").RightAligned());
@@ -39,8 +40,14 @@ namespace CodingTracker.DataRepository
 
                 foreach (var session in sessions)
                 {
-                    table.AddColumns(session.Id.ToString(), session.StartTime.ToString("dd-MM-yyyy"), session.EndTime.ToString("dd-MM-yyyy"), session.Duration.ToString());
+                    table.AddRow(
+                        session.Id.ToString(),
+                        session.StartTime.ToString("dd-MM-yyyy HH:mm:ss"),
+                        session.EndTime.ToString("dd-MM-yyyy HH:mm:ss"),
+                        session.Duration
+                    );
                 }
+                AnsiConsole.Write(table);
             }
             else
             {
@@ -48,7 +55,7 @@ namespace CodingTracker.DataRepository
             }
         }
 
-        public void InsertSessionToDatabase(DateTime startTime, DateTime endTime, TimeSpan duration)
+        public void InsertSessionToDatabase(DateTime startTime, DateTime endTime, string duration)
         {
             using var connection = new SqliteConnection(connectionString);
             connection.Open();
