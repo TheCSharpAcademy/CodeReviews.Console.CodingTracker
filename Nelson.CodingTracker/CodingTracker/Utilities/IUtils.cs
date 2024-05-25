@@ -6,6 +6,6 @@ namespace CodingTracker.Utilities
         DateTime ValidatedStartTime();
         DateTime ValidatedEndTime();
         List<DateTime> ValidatedTimes();
-        TimeSpan GetSessionDuration(DateTime startTime, DateTime endTime);
+        string GetSessionDuration(DateTime startTime, DateTime endTime);
     }
 }

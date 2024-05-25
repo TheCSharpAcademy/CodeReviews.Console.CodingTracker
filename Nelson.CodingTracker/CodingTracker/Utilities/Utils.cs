@@ -20,9 +20,9 @@ namespace CodingTracker.Utilities
             return dateInput;
         }
 
-        public TimeSpan GetSessionDuration(DateTime startTime, DateTime endTime)
+        public string GetSessionDuration(DateTime startTime, DateTime endTime)
         {
-            TimeSpan duration = endTime.Subtract(startTime);
+            string duration = endTime.Subtract(startTime).ToString(@"d\.hh\:mm\:ss");
             return duration;
         }
 
