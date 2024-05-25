@@ -27,6 +27,23 @@ namespace CodingTracker.DataRepository
             using var connection = new SqliteConnection(connectionString);
             connection.Open();
 
+            // Get all sessions from the database
+            const string selectQuery = @"SELECT * FROM CodingSession";
+            var sessions = connection.Query<CodingSession>(selectQuery).ToList();
+
+            // Check if the index is valid
+            if (id < 1 || id > sessions.Count)
+            {
+                _userInteraction.ShowMessageTimeout($"\n\n[Red]There is no coding session with Id: {id}.[/]");
+                return;
+            }
+
+            // Get the Id of the session to delete
+            var sessionToDelete = sessions[id - 1];
+            var idToDelete = sessionToDelete.Id;
+            _userInteraction.ShowMessageTimeout($"\n\n[Yellow]Deleting Coding Session with Id: {idToDelete}...[/]");
+
+            // Delete the session from the database
             const string deleteQuery = @"DELETE FROM CodingSession WHERE Id = @Id";
 
             int rowCount = connection.Execute(deleteQuery, new {Id = id});
@@ -60,10 +77,11 @@ namespace CodingTracker.DataRepository
                 table.AddColumn("EndTime");
                 table.AddColumn("Duration");
 
-                foreach (var session in sessions)
+                for (int i = 0; i < sessions.Count; i++)
                 {
+                    var session = sessions[i];
                     table.AddRow(
-                        session.Id.ToString(),
+                        (i + 1).ToString(),
                         session.StartTime.ToString("dd-MM-yyyy HH:mm:ss"),
                         session.EndTime.ToString("dd-MM-yyyy HH:mm:ss"),
                         session.Duration
