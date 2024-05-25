@@ -89,5 +89,7 @@ namespace CodingTracker.Utilities
 
             return [startTime, endTime];
         }
+
+        public int ConvertToInt(string input) => Convert.ToInt32(input);
     }
 }

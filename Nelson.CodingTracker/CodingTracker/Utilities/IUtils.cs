@@ -7,5 +7,6 @@ namespace CodingTracker.Utilities
         DateTime ValidatedEndTime();
         List<DateTime> ValidatedTimes();
         string GetSessionDuration(DateTime startTime, DateTime endTime);
+        int ConvertToInt(string input);
     }
 }
