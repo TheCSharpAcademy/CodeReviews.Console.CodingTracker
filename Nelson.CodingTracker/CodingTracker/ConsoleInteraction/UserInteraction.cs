@@ -28,6 +28,11 @@ namespace CodingTracker.ConsoleInteraction
             AnsiConsole.Write(new Markup(message));
         }
 
+        public void ShowMessage(Table table)
+        {
+            AnsiConsole.Write(table);
+        }
+
         public void ShowMessageTimeout(string message)
         {
             Thread.Sleep(500);
