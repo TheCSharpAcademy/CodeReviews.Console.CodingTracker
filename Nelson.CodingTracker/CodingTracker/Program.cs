@@ -4,12 +4,14 @@ using CodingTracker.DataRepository;
 using CodingTracker.IDataRepository;
 using CodingTracker.Services;
 using CodingTracker.Utilities;
+using Dapper;
+using SQLitePCL;
 
 DataConfig dataConfig = new();
 IUserInteraction userInteraction= new UserInteraction();
-ICodingSessionRepository codingSessionRepository= new CodingSessionRepository(userInteraction);
 IUtils utils = new Utils(userInteraction);
-ICodingSessionService codingSessionService= new CodingSessionService(codingSessionRepository, utils);
+ICodingSessionRepository codingSessionRepository= new CodingSessionRepository(userInteraction, utils);
+ICodingSessionService codingSessionService= new CodingSessionService(codingSessionRepository, utils, userInteraction);
 CodingSessionController codingSessionController= new(userInteraction, codingSessionService, dataConfig);
 
 codingSessionController.Run();
