@@ -1,3 +1,5 @@
+using Spectre.Console;
+
 namespace CodingTracker.ConsoleInteraction
 {
     public interface IUserInteraction
@@ -6,5 +8,6 @@ namespace CodingTracker.ConsoleInteraction
         void ShowMessage(string message);
         void ShowMessageTimeout(string message);
         string GetUserInput();
+        void ShowMessage(Table table);
     }
 }
