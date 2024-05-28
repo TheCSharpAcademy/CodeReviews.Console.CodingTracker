@@ -95,6 +95,19 @@ namespace CodingTracker.DataRepository
             }
         }
 
+        public List<CodingSession> GetAllFromDatabase()
+        {
+            using var connection = new SqliteConnection(connectionString);
+            connection.Open();
+
+            const string selectQuery = @"SELECT * FROM CodingSession";
+
+            // Use Dapper to execute the query and get a list of sessions
+            var sessions = connection.Query<CodingSession>(selectQuery);
+
+            return sessions.ToList();
+        }
+
         public void InsertSessionToDatabase(DateTime startTime, DateTime endTime, string duration)
         {
             using var connection = new SqliteConnection(connectionString);
@@ -176,6 +189,39 @@ namespace CodingTracker.DataRepository
 
             connection.Execute(updateQuery, new { Id = id, StartTime = startTime, Duration = newDuration});
             _userInteraction.ShowMessageTimeout($"[Green]\n\nHabit with ID {id} has been updated.\n\n[/]");
+        }
+        
+        public void GetFromDatabaseOrdered(IEnumerable<CodingSession> list)
+        {
+
+            // Display the sessions using Spectre.Console
+            if (list.Any())
+            {
+                var table = new Table();
+                table.AddColumn(new TableColumn("Id").RightAligned());
+                table.AddColumn("StartTime");
+                table.AddColumn("EndTime");
+                table.AddColumn("Duration");
+
+                // Count values in IEnumerable<CodingSession> list
+
+                var count = 1;
+                foreach (var item in list)
+                {
+                    table.AddRow(
+                        count.ToString(),
+                        item.StartTime.ToString("dd-MM-yyyy HH:mm:ss"),
+                        item.EndTime.ToString("dd-MM-yyyy HH:mm:ss"),
+                        item.Duration
+                    );
+                    count++;
+                }
+                _userInteraction.ShowMessage(table);
+            }
+            else
+            {
+                _userInteraction.ShowMessageTimeout("\n\n[Red]There are no coding sessions stored in the database.[/]");
+            }
         }
     }
 }
