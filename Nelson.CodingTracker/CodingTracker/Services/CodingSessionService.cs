@@ -2,6 +2,7 @@ using CodingTracker.Models;
 using CodingTracker.IDataRepository;
 using CodingTracker.Utilities;
 using CodingTracker.ConsoleInteraction;
+using System.Diagnostics;
 
 namespace CodingTracker.Services
 {
@@ -10,12 +11,14 @@ namespace CodingTracker.Services
         private readonly ICodingSessionRepository _sessionRepository;
         private readonly IUserInteraction _userInteraction;
         private readonly IUtils _utils;
+        private Stopwatch _stopwatch;
 
         public CodingSessionService(ICodingSessionRepository sessionRepository, IUtils utils, IUserInteraction userInteraction)
         {
             _sessionRepository = sessionRepository;
             _userInteraction = userInteraction;
             _utils = utils;
+            _stopwatch = new Stopwatch();
         }
 
         public void DeleteSession()
@@ -67,6 +70,33 @@ namespace CodingTracker.Services
                     _userInteraction.ShowMessageTimeout("\n[Red]You have inputed a wrong choice. Going back to Menu[/]\n");
                     break;
             }
+        }
+
+        public void StartCodingSession()
+        {
+            _stopwatch.Start();
+            _userInteraction.ShowMessageTimeout("\n[Green]Starting Coding Session...[/]\n");
+            _userInteraction.ShowMessageTimeout("\n[Red]Press any key to stop session...[/]\n");
+            Console.ReadKey();
+            StopCodingSession();
+        }
+
+        public void StopCodingSession()
+        {
+            _stopwatch.Stop();
+
+            var session = new CodingSession
+            {
+                StartTime = DateTime.Now.Subtract(_stopwatch.Elapsed),
+                EndTime = DateTime.Now,
+                Duration = _stopwatch.Elapsed.ToString(),
+            };
+
+            _sessionRepository.InsertSessionToDatabase(session.StartTime, session.EndTime, session.Duration);
+            _userInteraction.ShowMessageTimeout("\n[Green]Session Stopped.[/]\n");
+            _userInteraction.ShowMessageTimeout($"\n[Green]Start Time: { session.StartTime }[/]\n");
+            _userInteraction.ShowMessageTimeout($"\n[Green]End Time: { session.EndTime }[/]\n");
+            _userInteraction.ShowMessageTimeout($"\n[Green]Duration: { session.Duration }[/]\n");
         }
     }
 }

@@ -8,5 +8,7 @@ namespace CodingTracker.Services
         void InsertSession(CodingSession session);
         void UpdateSession();
         void DeleteSession();
+        void StartCodingSession();
+        void StopCodingSession();
     }
 }
