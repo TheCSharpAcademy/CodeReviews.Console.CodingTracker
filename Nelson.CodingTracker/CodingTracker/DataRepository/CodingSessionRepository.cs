@@ -146,18 +146,26 @@ namespace CodingTracker.DataRepository
             using var connection = new SqliteConnection(connectionString);
             connection.Open();
 
+            const string selectQuery = @"SELECT * FROM CodingSession";
+
+            // Use Dapper to execute the query and get a list of sessions
+            var sessions = connection.Query<CodingSession>(selectQuery).ToList();
+
+            var sessionToUpdate = sessions[id - 1];
+            var idToUpdate = sessionToUpdate.Id;
+
             string checkQuery = "SELECT EXISTS(SELECT 1 From CodingSession WHERE Id = @Id)";
-            var exists = connection.ExecuteScalar<int>(checkQuery, new { Id = id });
+            var exists = connection.ExecuteScalar<int>(checkQuery, new { Id = idToUpdate });
 
             if (exists == 0)
             {
-                _userInteraction.ShowMessageTimeout($"[Red]\n\nHabit with ID {id} does not exist.\n\n[/]");
+                _userInteraction.ShowMessageTimeout($"[Red]\n\nCoding with ID {id} does not exist.\n\n[/]");
                 return;
             }
 
             // Retrieve the start time
             string startTimeQuery = "SELECT StartTime FROM CodingSession WHERE Id = @Id";
-            var startTime = connection.ExecuteScalar<DateTime>(startTimeQuery, new { Id = id });
+            var startTime = connection.ExecuteScalar<DateTime>(startTimeQuery, new { Id = idToUpdate });
 
             // Calculate the new duration
             var newDuration = _utils.GetSessionDuration(startTime, endTime);
@@ -168,7 +176,7 @@ namespace CodingTracker.DataRepository
                 SET EndTime = @EndTime, Duration = @Duration
                 WHERE Id = @Id";
 
-            connection.Execute(updateQuery, new { Id = id, EndTime = endTime, Duration = newDuration });
+            connection.Execute(updateQuery, new { Id = idToUpdate, EndTime = endTime, Duration = newDuration });
             _userInteraction.ShowMessageTimeout($"[Green]\n\nHabit with ID {id} has been updated.\n\n[/]");
         }
 

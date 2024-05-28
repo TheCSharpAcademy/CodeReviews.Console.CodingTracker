@@ -25,6 +25,7 @@ namespace CodingTracker.Controllers
             // Initialize Database
             _dataConfig.InitializeDatabase();
 
+            _userInteraction.ClearConsole();
             while (!closeApp)
             {
                 // Display Menu
@@ -54,11 +55,11 @@ namespace CodingTracker.Controllers
                     _sessionService.InsertSession(codingSession);
                     break;
                 case "3":
-                    _userInteraction?.ShowMessageTimeout("\n[Yellow]Please type the ID of the session you would like to update. Type 0 to return to Main Menu.[/]\n");
+                    _userInteraction?.ShowMessageTimeout("\n[Yellow]Please type the ID of the session you would like to update. Type 0 to return to Main Menu: [/]");
                     _sessionService.UpdateSession();
                     break;
                 case "4":
-                    _userInteraction.ShowMessageTimeout("\n[Red]Please type the ID of the habit to delete or 0 to return to Main Menu: [/]");
+                    _userInteraction.ShowMessageTimeout("\n[Red]Please type the ID of the session to delete or 0 to return to Main Menu: [/]");
                     _sessionService.DeleteSession();
                     break;
                 case "5":
