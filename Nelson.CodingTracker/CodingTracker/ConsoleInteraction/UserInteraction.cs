@@ -13,6 +13,7 @@ namespace CodingTracker.ConsoleInteraction
             AnsiConsole.Write(new Markup("\n[Yellow]Type 2 to Insert New Coding Session[/]"));
             AnsiConsole.Write(new Markup("\n[DarkGreen]Type 3 to Update Coding Session[/]"));
             AnsiConsole.Write(new Markup("\n[Red]Type 4 to Delete Coding Session[/]"));
+            AnsiConsole.Write(new Markup("\n[Green]Type 5 to Start Live Coding Session[/]"));
             AnsiConsole.Write(new Markup("\n----------------------------------------\n"));
             AnsiConsole.Write(new Markup("Input: "));
         }
