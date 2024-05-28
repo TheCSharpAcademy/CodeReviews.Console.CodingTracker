@@ -38,6 +38,7 @@ namespace CodingTracker.Controllers
 
         public void SelectUserInput(string input)
         {
+            _userInteraction.ClearConsole();
             switch (input)
             {
                 case "0":

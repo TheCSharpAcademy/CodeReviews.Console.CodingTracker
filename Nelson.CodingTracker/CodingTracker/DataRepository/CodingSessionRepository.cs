@@ -137,6 +137,8 @@ namespace CodingTracker.DataRepository
 
             // Use Dapper to execute the query
             connection.Execute(insertQuery, session);
+
+            _userInteraction.ShowMessageTimeout($"\n\n[Green]Coding session, has been inserted.[/]");
         }
 
         public void UpdateEndTimeInDatabase(int id, DateTime endTime)
