@@ -1,5 +1,4 @@
 using System.Configuration;
-using System.Globalization;
 using CodingTracker.ConsoleInteraction;
 using CodingTracker.IDataRepository;
 using CodingTracker.Models;

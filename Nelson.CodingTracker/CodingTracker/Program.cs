@@ -4,8 +4,6 @@ using CodingTracker.DataRepository;
 using CodingTracker.IDataRepository;
 using CodingTracker.Services;
 using CodingTracker.Utilities;
-using Dapper;
-using SQLitePCL;
 
 DataConfig dataConfig = new();
 IUserInteraction userInteraction= new UserInteraction();
