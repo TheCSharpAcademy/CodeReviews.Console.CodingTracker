@@ -71,7 +71,10 @@ namespace CodingTracker.DataRepository
             // Display the sessions using Spectre.Console
             if (sessions.Count != 0)
             {
-                var table = new Table();
+                var table = new Table
+                {
+                    Border = TableBorder.Double
+                };
                 table.AddColumn(new TableColumn("Id").RightAligned());
                 table.AddColumn("StartTime");
                 table.AddColumn("EndTime");
@@ -86,6 +89,13 @@ namespace CodingTracker.DataRepository
                         session.EndTime.ToString("dd-MM-yyyy HH:mm:ss"),
                         session.Duration
                     );
+
+                    // Add a separator rule after each row except the last one
+                    if (i < sessions.Count - 1)
+                    {
+                        // Add an empty row to separate with an empty line
+                        table.AddEmptyRow();
+                    }
                 }
                 _userInteraction.ShowMessage(table);
             }
