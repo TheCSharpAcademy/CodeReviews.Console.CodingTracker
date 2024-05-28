@@ -34,19 +34,19 @@ namespace CodingTracker.DataRepository
             // Check if the index is valid
             if (id < 1 || id > sessions.Count)
             {
-                _userInteraction.ShowMessageTimeout($"\n\n[Red]There is no coding session with Id: {id}.[/]");
+                _userInteraction.ShowMessageTimeout($"\n\n[Red]Id: {id} doesn't exist.[/]");
                 return;
             }
 
             // Get the Id of the session to delete
             var sessionToDelete = sessions[id - 1];
             var idToDelete = sessionToDelete.Id;
-            _userInteraction.ShowMessageTimeout($"\n\n[Yellow]Deleting Coding Session with Id: {idToDelete}...[/]");
+            _userInteraction.ShowMessageTimeout($"\n\n[Yellow]Deleting Coding Session with Id: {id}...[/]");
 
             // Delete the session from the database
             const string deleteQuery = @"DELETE FROM CodingSession WHERE Id = @Id";
 
-            int rowCount = connection.Execute(deleteQuery, new {Id = id});
+            int rowCount = connection.Execute(deleteQuery, new {Id = idToDelete});
 
             if (rowCount == 0)
             {
