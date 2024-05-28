@@ -25,8 +25,6 @@ namespace CodingTracker.Utilities
             TimeSpan timespan = endTime.Subtract(startTime);
             string duration = $"{timespan.Days}d Days, {timespan.Hours}h Hours, {timespan.Minutes}m Minutes, and {timespan.Seconds}s seconds";
 
-            Console.WriteLine(duration);
-
             return duration;
         }
 
