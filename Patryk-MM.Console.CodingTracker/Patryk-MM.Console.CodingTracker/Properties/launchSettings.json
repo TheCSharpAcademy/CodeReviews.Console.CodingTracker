@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Patryk-MM.Console.CodingTracker": {
+      "commandName": "Project",
+      "workingDirectory": "$(ProjectDir)"
+    }
+  }
+}
