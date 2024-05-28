@@ -1,6 +1,8 @@
 ﻿using Dapper;
 using Patryk_MM.Console.CodingTracker.Config;
 using Patryk_MM.Console.CodingTracker.Models;
+using Patryk_MM.Console.CodingTracker.Utilities;
+using Spectre.Console;
 
 namespace Patryk_MM.Console.CodingTracker.Services {
     public class TrackerService {
@@ -11,6 +13,17 @@ namespace Patryk_MM.Console.CodingTracker.Services {
                 return connection.Query<CodingSession>(selectQuery).ToList();
             }
         }
+
+        public CodingSession GetSessionFromList() {
+            var sessions = GetSessions();
+            DataVisualization.PrintSessions(sessions);
+            int sessionId = UserInput.GetSessionId(sessions);
+
+            CodingSession session = sessions[sessionId - 1];
+            
+            return session;
+        }
+
         public void CreateSession(CodingSession session) {
             using (var connection = Database.GetConnection()) {
                 string insertQuery = "INSERT INTO CodingSessions (StartDate, EndDate, Duration) VALUES (@StartDate, @EndDate, @Duration);";

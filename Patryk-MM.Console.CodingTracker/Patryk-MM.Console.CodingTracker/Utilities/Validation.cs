@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Patryk_MM.Console.CodingTracker.Models;
 
 namespace Patryk_MM.Console.CodingTracker.Utilities {
     public static class Validation {
@@ -14,6 +10,27 @@ namespace Patryk_MM.Console.CodingTracker.Utilities {
 
         public static bool ValidateDateOrder(DateTime startDate, DateTime endDate) {
             return startDate < endDate;
+        }
+
+        public static bool ValidateSessionOverlap(List<CodingSession> existingSessions, CodingSession newSession) {
+            foreach (CodingSession existingSession in existingSessions) {
+                // Check if the start time of the new session is between the start and end times of the existing session
+                if (newSession.StartDate >= existingSession.StartDate && newSession.StartDate <= existingSession.EndDate) {
+                    return true;
+                }
+
+                // Check if the end time of the new session is between the start and end times of the existing session
+                if (newSession.EndDate >= existingSession.StartDate && newSession.EndDate <= existingSession.EndDate) {
+                    return true;
+                }
+
+                // Check if the new session completely contains the existing session
+                if (newSession.StartDate <= existingSession.StartDate && newSession.EndDate >= existingSession.EndDate) {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }
