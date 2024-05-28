@@ -22,7 +22,11 @@ namespace CodingTracker.Utilities
 
         public string GetSessionDuration(DateTime startTime, DateTime endTime)
         {
-            string duration = endTime.Subtract(startTime).ToString(@"d\.hh\:mm\:ss");
+            TimeSpan timespan = endTime.Subtract(startTime);
+            string duration = $"{timespan.Days}d Days, {timespan.Hours}h Hours, {timespan.Minutes}m Minutes, and {timespan.Seconds}s seconds";
+
+            Console.WriteLine(duration);
+
             return duration;
         }
 
