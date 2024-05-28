@@ -63,6 +63,9 @@ namespace CodingTracker.Controllers
                 case "5":
                     _sessionService.StartCodingSession();
                     break;
+                case "6":
+                    _sessionService.CodingSessionsByPeriod();
+                    break;
                 default:
                     _userInteraction?.ShowMessageTimeout("\n[Red]Invalid input. Please type a number from 0 to 4.[/]\n");
                     break;
