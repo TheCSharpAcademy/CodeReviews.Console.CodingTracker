@@ -89,7 +89,7 @@ namespace CodingTracker.Services
             {
                 StartTime = DateTime.Now.Subtract(_stopwatch.Elapsed),
                 EndTime = DateTime.Now,
-                Duration = _stopwatch.Elapsed.ToString(),
+                Duration = _utils.GetSessionDuration(DateTime.Now.Subtract(_stopwatch.Elapsed), DateTime.Now),
             };
 
             _sessionRepository.InsertSessionToDatabase(session.StartTime, session.EndTime, session.Duration);
@@ -97,6 +97,35 @@ namespace CodingTracker.Services
             _userInteraction.ShowMessageTimeout($"\n[Green]Start Time: { session.StartTime }[/]\n");
             _userInteraction.ShowMessageTimeout($"\n[Green]End Time: { session.EndTime }[/]\n");
             _userInteraction.ShowMessageTimeout($"\n[Green]Duration: { session.Duration }[/]\n");
+        }
+
+        public void CodingSessionsByPeriod()
+        {
+            var sessions = _sessionRepository.GetAllFromDatabase();
+            IEnumerable<CodingSession> filteredSessions = [];
+
+            _userInteraction.ShowMessage("\n[Green]Which period do you want to filter by? (days, hours, minutes)[/]. Press '0' to exit: ");
+
+            string period = _userInteraction.GetUserInput();
+
+            if (period == "0") return;
+
+            switch (period)
+            {
+                case "days":
+                    filteredSessions = sessions.GroupBy(s => (s.EndTime - s.StartTime.Date).Days).Select(g => g.First());
+                    break;
+                case "hours":
+                    filteredSessions = sessions.GroupBy(s => (s.EndTime - s.StartTime.Date).Hours).Select(g => g.First());
+                    break;
+                case "minutes":
+                    filteredSessions = sessions.GroupBy(s => (s.EndTime - s.StartTime.Date).Minutes).Select(g => g.First());
+                    break;
+                default:
+                    break;
+            }
+
+            _sessionRepository.GetFromDatabaseOrdered([.. filteredSessions.OrderBy(s => s.Duration)]);
         }
     }
 }

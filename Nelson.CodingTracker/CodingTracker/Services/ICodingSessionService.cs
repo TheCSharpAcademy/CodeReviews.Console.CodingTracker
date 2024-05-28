@@ -10,5 +10,6 @@ namespace CodingTracker.Services
         void DeleteSession();
         void StartCodingSession();
         void StopCodingSession();
+        void CodingSessionsByPeriod();
     }
 }
