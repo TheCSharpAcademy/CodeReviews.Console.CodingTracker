@@ -41,5 +41,10 @@ namespace CodingTracker.ConsoleInteraction
             AnsiConsole.Write(new Markup(message));
             Thread.Sleep(500);
         }
+
+        public void ClearConsole()
+        {
+            AnsiConsole.Clear();
+        }
     }
 }

@@ -9,5 +9,6 @@ namespace CodingTracker.ConsoleInteraction
         void ShowMessageTimeout(string message);
         string GetUserInput();
         void ShowMessage(Table table);
+        void ClearConsole();
     }
 }
