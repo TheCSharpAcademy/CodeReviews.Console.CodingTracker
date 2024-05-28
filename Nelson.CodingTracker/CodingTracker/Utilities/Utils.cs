@@ -46,9 +46,9 @@ namespace CodingTracker.Utilities
             // Validation loop for date input.
             while (!isValidDate)
             {
-                string date = GetDateInput("\n[Green]Please enter a start date (Format: dd-MM-yy hh:mm:ss): [/]");
+                string date = GetDateInput("\n[Green]Please enter a start date (Format: dd-MM-yy HH:mm:ss): [/]");
 
-                isValidDate = DateTime.TryParseExact(date, "dd-MM-yy hh:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out finalDate);
+                isValidDate = DateTime.TryParseExact(date, "dd-MM-yy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out finalDate);
 
                 if (!isValidDate)
                 {
@@ -67,8 +67,8 @@ namespace CodingTracker.Utilities
             // Validation loop for date input.
             while (!isValidDate)
             {
-                string date = GetDateInput("\n[Green]Please enter an end date (Format: dd-MM-yy hh:mm:ss): [/]");
-                isValidDate = DateTime.TryParseExact(date, "dd-MM-yy hh:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out finalDate);
+                string date = GetDateInput("\n[Green]Please enter an end date (Format(24-hr): dd-MM-yy HH:mm:ss): [/]");
+                isValidDate = DateTime.TryParseExact(date, "dd-MM-yy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out finalDate);
 
                 if (!isValidDate)
                 {
