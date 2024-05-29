@@ -4,6 +4,12 @@ using Spectre.Console;
 namespace Patryk_MM.Console.CodingTracker.Utilities {
     public static class DataVisualization {
         public static void PrintSessions(List<CodingSession> sessions) {
+
+            if (!sessions.Any()) {
+                AnsiConsole.MarkupLine("[red]No sessions found.[/]");
+                return;
+            }
+
             var table = new Table();
 
             table.AddColumn("Id");

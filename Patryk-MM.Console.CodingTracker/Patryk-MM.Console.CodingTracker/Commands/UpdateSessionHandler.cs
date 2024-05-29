@@ -13,8 +13,10 @@ namespace Patryk_MM.Console.CodingTracker.Commands {
 
         public void Handle(CodingSession newSession, List<CodingSession> sessions) {
             do {
-                newSession.StartDate = UserInput.GetDate();
-                newSession.EndDate = UserInput.GetDate();
+                newSession.StartDate = UserInput.GetDate("Please provide a new starting date of a new session or type 'exit' to cancel: ");
+                if (newSession.StartDate == DateTime.MinValue) break;
+                newSession.EndDate = UserInput.GetDate("Please provide a new ending date of a new session or type 'exit' to cancel: ");
+                if (newSession.EndDate == DateTime.MinValue) break;
 
                 // Validate date order
                 if (!Validation.ValidateDateOrder(newSession.StartDate, newSession.EndDate)) {
@@ -28,12 +30,27 @@ namespace Patryk_MM.Console.CodingTracker.Commands {
                     continue; // Continue to the next iteration of the loop
                 }
 
-                // If both validations pass, create the session and exit the loop
+                if (Validation.ValidateFutureDate(newSession.StartDate) || Validation.ValidateFutureDate(newSession.EndDate)) {
+                    AnsiConsole.MarkupLine("[red]Error: Dates must not be in the future. Please try again.[/]");
+                    continue; // Continue to the next iteration of the loop
+                }
+
+                // If all validations pass, create the session and exit the loop
                 break;
 
             } while (true); // Loop until a valid session is provided
 
-            _trackerService.UpdateSession(newSession);
+            if (newSession.StartDate == DateTime.MinValue || newSession.EndDate == DateTime.MinValue) {
+                AnsiConsole.MarkupLine("[yellow]Operation cancelled.[/]");
+                return;
+            }
+
+            if (UserInput.ConfirmAction("Are you sure to update this session?")) {
+                _trackerService.UpdateSession(newSession);
+                AnsiConsole.MarkupLine("[green]Session updated![/]");
+            } else {
+                AnsiConsole.MarkupLine("[yellow]Operation cancelled.[/]");
+            }
 
         }
     }

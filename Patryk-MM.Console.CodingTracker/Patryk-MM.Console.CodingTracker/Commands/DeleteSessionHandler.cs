@@ -1,5 +1,7 @@
 ﻿using Patryk_MM.Console.CodingTracker.Models;
 using Patryk_MM.Console.CodingTracker.Services;
+using Patryk_MM.Console.CodingTracker.Utilities;
+using Spectre.Console;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +17,13 @@ namespace Patryk_MM.Console.CodingTracker.Commands {
         }
 
         public void Handle(CodingSession session) {
-            _trackerService.DeleteSession(session);
+            if (UserInput.ConfirmAction("Are you sure to delete this session?")) { 
+                _trackerService.DeleteSession(session);
+                AnsiConsole.MarkupLine("[green]Session deleted![/]");
+            }
+            else {
+                AnsiConsole.MarkupLine("[yellow]Operation cancelled.[/]");
+            }
         }
     }
 }

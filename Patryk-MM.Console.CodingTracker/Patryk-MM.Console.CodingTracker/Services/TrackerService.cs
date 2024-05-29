@@ -1,26 +1,28 @@
 ﻿using Dapper;
 using Patryk_MM.Console.CodingTracker.Config;
 using Patryk_MM.Console.CodingTracker.Models;
+using Patryk_MM.Console.CodingTracker.Queries;
 using Patryk_MM.Console.CodingTracker.Utilities;
-using Spectre.Console;
 
 namespace Patryk_MM.Console.CodingTracker.Services {
     public class TrackerService {
         public List<CodingSession> GetSessions() {
-            using(var connection = Database.GetConnection()) {
+            using (var connection = Database.GetConnection()) {
                 string selectQuery = "SELECT * FROM CodingSessions";
 
                 return connection.Query<CodingSession>(selectQuery).ToList();
             }
         }
 
-        public CodingSession GetSessionFromList() {
-            var sessions = GetSessions();
+        public CodingSession? GetSessionFromList() {
+            var getSessionsHandler = new GetSessionsHandler(this);
+            var sessions = getSessionsHandler.Handle();
             DataVisualization.PrintSessions(sessions);
             int sessionId = UserInput.GetSessionId(sessions);
+            if (sessionId == 0) { return null; }
 
             CodingSession session = sessions[sessionId - 1];
-            
+
             return session;
         }
 

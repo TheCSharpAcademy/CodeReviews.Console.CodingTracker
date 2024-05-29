@@ -11,13 +11,19 @@ namespace Patryk_MM.Console.CodingTracker.Models {
         public DateTime EndDate { get; set; }
         public TimeSpan Duration => EndDate - StartDate;
 
+        public CodingSession(DateTime startDate, DateTime endTime)
+        {
+            StartDate = startDate;
+            EndDate = endTime;
+        }
+
         public CodingSession()
         {
             
         }
 
         public override string ToString() {
-            return $"ID: {Id} Session started: {StartDate} Session ended: {EndDate} Duration: {Duration}";
+            return $"Session started: {StartDate} Session ended: {EndDate} Duration: {Duration}";
         }
     }
 }

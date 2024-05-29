@@ -11,7 +11,9 @@ namespace Patryk_MM.Console.CodingTracker.Queries {
             _trackerService = trackerService;
         }
         public List<CodingSession> Handle() {
-            return _trackerService.GetSessions();
+            var sessions = _trackerService.GetSessions();
+
+            return _trackerService.GetSessions().OrderBy(s => s.StartDate).ToList();
         }
     }
 }
