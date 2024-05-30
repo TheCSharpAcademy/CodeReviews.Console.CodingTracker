@@ -36,7 +36,7 @@ public static class TableVisualisationEngine
 
         AnsiConsole.Write(table);
 
-        ProduceStats(tableData);
+        ProduceStats(CrudManager.GetAllSessions());
     }
 
     public static void GenerateFilteredReport()

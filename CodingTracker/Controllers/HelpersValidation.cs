@@ -133,5 +133,9 @@ public static class HelpersValidation
     internal class InputZero : Exception
     {
     }
+
+    internal class NoRecords : Exception
+    {
+    }
 }
 
