@@ -1,7 +1,7 @@
 ﻿using Dapper;
 using Patryk_MM.Console.CodingTracker.Config;
 using Patryk_MM.Console.CodingTracker.Models;
-using Patryk_MM.Console.CodingTracker.Queries;
+using Patryk_MM.Console.CodingTracker.Queries.Session;
 using Patryk_MM.Console.CodingTracker.Utilities;
 
 namespace Patryk_MM.Console.CodingTracker.Services {
@@ -47,6 +47,29 @@ namespace Patryk_MM.Console.CodingTracker.Services {
                 string insertQuery = "DELETE FROM CodingSessions WHERE Id = @Id;";
 
                 connection.Execute(insertQuery, session);
+            }
+        }
+
+        public List<CodingGoal> GetGoals() {
+            using (var connection = Database.GetConnection()) {
+                string insertQuery = "SELECT * FROM CodingGoals;";
+
+                return connection.Query<CodingGoal>(insertQuery).ToList();
+            }
+        }
+
+        public void CreateGoal(CodingGoal goal) {
+            using (var connection = Database.GetConnection()) {
+                string insertQuery = "INSERT INTO CodingGoals (YearAndMonth, Hours, HourGoal) VALUES (@YearAndMonth, @Hours, @HourGoal);";
+
+                connection.Execute(insertQuery, goal);
+            }
+        }
+        public void UpdateGoal(CodingGoal goal) {
+            using (var connection = Database.GetConnection()) {
+                string insertQuery = "UPDATE CodingGoals SET YearAndMonth = @YearAndMonth, Hours = @Hours, HourGoal = @HourGoal WHERE Id = @Id;";
+
+                connection.Execute(insertQuery, goal);
             }
         }
     }

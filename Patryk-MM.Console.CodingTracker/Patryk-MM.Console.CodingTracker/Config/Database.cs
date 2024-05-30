@@ -21,6 +21,7 @@ namespace Patryk_MM.Console.CodingTracker.Config {
                                             CREATE TABLE IF NOT EXISTS CodingGoals(
                                             Id INTEGER PRIMARY KEY AUTOINCREMENT,
                                             YearAndMonth TEXT NOT NULL,
+                                            Hours INTEGET NOT NULL,
                                             HourGoal INTEGER NOT NULL);";
 
                 using (var command = new SQLiteCommand(createTableQuery, connection)) {

@@ -1,8 +1,10 @@
 ﻿using Patryk_MM.Console.CodingTracker.Models;
 using Patryk_MM.Console.CodingTracker.Services;
 
-namespace Patryk_MM.Console.CodingTracker.Queries {
-    public class GetSessionFromListHandler {
+namespace Patryk_MM.Console.CodingTracker.Queries.Session
+{
+    public class GetSessionFromListHandler
+    {
         private static TrackerService _trackerService;
 
         public GetSessionFromListHandler(TrackerService trackerService)
@@ -10,7 +12,8 @@ namespace Patryk_MM.Console.CodingTracker.Queries {
             _trackerService = trackerService;
         }
 
-        public CodingSession Handle() { 
+        public CodingSession Handle()
+        {
             return _trackerService.GetSessionFromList();
         }
     }
