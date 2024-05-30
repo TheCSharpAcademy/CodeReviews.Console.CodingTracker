@@ -11,7 +11,7 @@ public static class CrudManager
     {
         using var connection = DbBuilder.GetConnection();
         connection.Open();
-        CodingSession session = HelpersValidation.GetSessionData();
+        var session = HelpersValidation.GetSessionData();
 
         if (session.StartTime != "" || session.EndTime != "")
         {
@@ -31,7 +31,7 @@ public static class CrudManager
             try
             {
                 if (CheckForRecords() == 0) throw new HelpersValidation.NoRecords();
-                
+
                 TableVisualisationEngine.GenerateFullReport(false);
 
                 using var connection = DbBuilder.GetConnection();
@@ -65,7 +65,6 @@ public static class CrudManager
         {
             Console.WriteLine("There are no records to delete. Returning to main menu...");
         }
-        
     }
 
     public static void UpdateSqlRecord()
@@ -75,7 +74,7 @@ public static class CrudManager
             try
             {
                 if (CheckForRecords() == 0) throw new HelpersValidation.NoRecords();
-                
+
                 TableVisualisationEngine.GenerateFullReport(false);
 
                 using var connection = DbBuilder.GetConnection();
@@ -83,7 +82,7 @@ public static class CrudManager
 
                 var recordId = UserInput.GetNumberInput("update");
 
-                CodingSession session = HelpersValidation.GetSessionData();
+                var session = HelpersValidation.GetSessionData();
 
                 if (session.StartTime != "" || session.EndTime != "")
                 {
@@ -129,9 +128,9 @@ public static class CrudManager
 
         while (reader.Read())
         {
-            string id = reader.GetString(0);
-            string startTime = reader.GetString(1);
-            string endTime = reader.GetString(2);
+            var id = reader.GetString(0);
+            var startTime = reader.GetString(1);
+            var endTime = reader.GetString(2);
 
             sessionData.Add(new CodingSession(id, startTime, endTime));
         }
@@ -154,9 +153,9 @@ public static class CrudManager
 
         while (reader.Read())
         {
-            string id = reader.GetString(0);
-            string startTime = reader.GetString(1);
-            string endTime = reader.GetString(2);
+            var id = reader.GetString(0);
+            var startTime = reader.GetString(1);
+            var endTime = reader.GetString(2);
 
             sessionData.Add(new CodingSession(id, startTime, endTime));
         }
@@ -176,9 +175,9 @@ public static class CrudManager
 
         while (reader.Read())
         {
-            string id = reader.GetString(0);
-            string startTime = reader.GetString(1);
-            string endTime = reader.GetString(2);
+            var id = reader.GetString(0);
+            var startTime = reader.GetString(1);
+            var endTime = reader.GetString(2);
 
             sessionData.Add(new CodingSession(id, startTime, endTime));
         }
@@ -188,11 +187,11 @@ public static class CrudManager
 
     internal static void SeedDatabase()
     {
-        for (int i = 0; i < 50; i++)
+        for (var i = 0; i < 50; i++)
         {
             using var connection = DbBuilder.GetConnection();
             connection.Open();
-            CodingSession session = HelpersValidation.SeedSessionData();
+            var session = HelpersValidation.SeedSessionData();
 
             var sql =
                 $"INSERT INTO coding_tracker (startTime, endTime, duration)" +

@@ -11,11 +11,8 @@ public static class Menus
             new SelectionPrompt<string>()
                 .Title("[bold blue on yellow]\n-- MAIN MENU --\n[/][blue on yellow]What would you like to do?[/]")
                 .PageSize(5)
-                .AddChoices(new[]
-                {
-                    "Insert a Record", "Update a Record", "Delete a Record",
-                    "Access Reporting Menu", "Close the Application"
-                }));
+                .AddChoices("Insert a Record", "Update a Record", "Delete a Record", "Access Reporting Menu",
+                    "Close the Application"));
 
         return menuInput;
     }
@@ -25,16 +22,13 @@ public static class Menus
         try
         {
             if (CrudManager.CheckForRecords() == 0) throw new HelpersValidation.NoRecords();
-                
+
             var reportMenuInput = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                     .Title("[bold blue on yellow]\nREPORTING MENU\n[/][blue on yellow]What would you like to do?[/]")
                     .PageSize(4)
-                    .AddChoices(new[]
-                    {
-                        "Generate a Full Report", "Generate a Summary Report",
-                        "Generate a Filtered Report", "Return to the Main Menu"
-                    }));
+                    .AddChoices("Generate a Full Report", "Generate a Summary Report", "Generate a Filtered Report",
+                        "Return to the Main Menu"));
 
 
             switch (reportMenuInput)
@@ -57,7 +51,7 @@ public static class Menus
                 case "Return to the Main Menu":
                     Console.Clear();
                     AnsiConsole.WriteLine($"You have chosen to {reportMenuInput}");
-                    AnsiConsole.WriteLine($"\nReturning to main menu...");
+                    AnsiConsole.WriteLine("\nReturning to main menu...");
                     break;
             }
         }

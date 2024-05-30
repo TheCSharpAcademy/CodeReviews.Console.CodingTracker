@@ -49,7 +49,7 @@ public class UserInput
 
     internal static string GetDateInput(string dateInput, string inputType)
     {
-        string message =
+        var message =
             $"Please provide the [green]{dateInput} date[/] [blue](yyyy-MM-dd)[/] for your {inputType}. Type 0 to return to the main menu: ";
         var input = AnsiConsole.Ask<string>(message);
 
@@ -60,7 +60,7 @@ public class UserInput
 
     internal static string GetTimeInput(string timeInput)
     {
-        string message =
+        var message =
             $"Please provide the [green]{timeInput} time[/] [blue](HH:mm)[/] for your coding session. Type 0 to return to the main menu: ";
         var input = AnsiConsole.Ask<string>(message);
 
@@ -71,7 +71,7 @@ public class UserInput
 
     internal static int GetNumberInput(string operationType)
     {
-        string message =
+        var message =
             $"Please provide the [green]ID number[/] of the record you wish to {operationType}. Type 0 to return to the main menu: ";
         var input = AnsiConsole.Ask<string>(message);
         int numberInput;
@@ -82,6 +82,4 @@ public class UserInput
 
         return numberInput;
     }
-
-
 }

@@ -12,9 +12,9 @@ public class CodingSession(string id, string start, string end)
 
     private string CalculateDuration()
     {
-        DateTime start = HelpersValidation.ConvertToTime(StartTime);
-        DateTime end = HelpersValidation.ConvertToTime(EndTime);
-        TimeSpan duration = end - start;
+        var start = HelpersValidation.ConvertToTime(StartTime);
+        var end = HelpersValidation.ConvertToTime(EndTime);
+        var duration = end - start;
 
         return $"{duration.Hours.ToString().PadLeft(2, '0')}:{duration.Minutes.ToString().PadLeft(2, '0')}";
     }

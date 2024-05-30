@@ -7,7 +7,8 @@ namespace CodingTracker.Controllers;
 
 public static class HelpersValidation
 {
-    private static Random _random = new Random();
+    private static readonly Random _random = new();
+
     internal static DateTime ConvertToTime(string datetimeString)
     {
         DateTime convertedString = default;
@@ -22,12 +23,12 @@ public static class HelpersValidation
 
         return convertedString;
     }
-    
+
     internal static string DateInputValidation(string input, string message, string dateInput, string inputType)
     {
         while (!DateTime.TryParseExact(input, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
         {
-            AnsiConsole.Markup($"[bold red]Invalid date format.[/]\n");
+            AnsiConsole.Markup("[bold red]Invalid date format.[/]\n");
             input = UserInput.GetDateInput(dateInput, inputType);
         }
 
@@ -38,19 +39,20 @@ public static class HelpersValidation
     {
         while (!DateTime.TryParseExact(input, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
         {
-            AnsiConsole.Markup($"[bold red]Invalid time format.[/]\n");
+            AnsiConsole.Markup("[bold red]Invalid time format.[/]\n");
             input = UserInput.GetTimeInput(timeInput);
         }
 
         return input;
     }
-    
+
     internal static int NumberInputValidation(string input, string message)
     {
         int numberInput;
         while (!int.TryParse(input, out numberInput) || numberInput < 0)
         {
-            AnsiConsole.WriteLine($"[bold red]{input} is not a valid number format. Please provide an integer only.[/]\n");
+            AnsiConsole.WriteLine(
+                $"[bold red]{input} is not a valid number format. Please provide an integer only.[/]\n");
             input = AnsiConsole.Ask<string>(message);
         }
 
@@ -64,8 +66,8 @@ public static class HelpersValidation
 
     internal static CodingSession GetSessionData()
     {
-        string startDateTime = "";
-        string endDateTime = "";
+        var startDateTime = "";
+        var endDateTime = "";
         try
         {
             startDateTime = GetDateTimeInput("start", "coding session");
@@ -85,13 +87,11 @@ public static class HelpersValidation
 
         return new CodingSession("", startDateTime, endDateTime);
     }
+
     internal static TimeSpan TotalTime(List<CodingSession> tableData)
     {
         TimeSpan totalTime = default;
-        foreach (var row in tableData)
-        {
-            totalTime += TimeSpan.Parse(row.Duration);
-        }
+        foreach (var row in tableData) totalTime += TimeSpan.Parse(row.Duration);
 
         return totalTime;
     }
@@ -103,20 +103,18 @@ public static class HelpersValidation
 
         while (ConvertToTime(seedEnd) < ConvertToTime(seedStart) ||
                (ConvertToTime(seedEnd) - ConvertToTime(seedStart)).Days > 0)
-        {
             seedEnd = GenerateRandomDateTime();
-        }
 
         return new CodingSession("", seedStart, seedEnd);
     }
 
     private static string GenerateRandomDateTime()
     {
-        int year = _random.Next(20, 25);
-        int month = _random.Next(1, 13);
-        int day = _random.Next(1, DateTime.DaysInMonth(year, month) + 1);
-        int hour = _random.Next(0, 23);
-        int minute = _random.Next(0, 59);
+        var year = _random.Next(20, 25);
+        var month = _random.Next(1, 13);
+        var day = _random.Next(1, DateTime.DaysInMonth(year, month) + 1);
+        var hour = _random.Next(0, 23);
+        var minute = _random.Next(0, 59);
 
         return new StringBuilder()
             .Append($"20{year}")
@@ -138,4 +136,3 @@ public static class HelpersValidation
     {
     }
 }
-

@@ -9,14 +9,12 @@ public static class TableVisualisationEngine
 {
     public static void GenerateFullReport(bool showStats)
     {
-        List<CodingSession> tableData = CrudManager.GetAllSessions();
+        var tableData = CrudManager.GetAllSessions();
 
         var table = GenerateTable("Summary Report");
 
-        foreach (CodingSession row in tableData)
-        {
+        foreach (var row in tableData)
             table.AddRow($"{row.Id}", $"{row.StartTime}", $"{row.EndTime}", $"{row.Duration}");
-        }
 
         AnsiConsole.Write(table);
 
@@ -25,14 +23,12 @@ public static class TableVisualisationEngine
 
     public static void GenerateSummaryReport()
     {
-        List<CodingSession> tableData = CrudManager.GetSummarySessions();
+        var tableData = CrudManager.GetSummarySessions();
 
         var table = GenerateTable("Summary Report");
 
-        foreach (CodingSession row in tableData)
-        {
+        foreach (var row in tableData)
             table.AddRow($"{row.Id}", $"{row.StartTime}", $"{row.EndTime}", $"{row.Duration}");
-        }
 
         AnsiConsole.Write(table);
 
@@ -43,17 +39,15 @@ public static class TableVisualisationEngine
     {
         try
         {
-            string filterStartDate = UserInput.GetDateInput("start", "report filter");
-            string filterEndDate = UserInput.GetDateInput("end", "report filter");
+            var filterStartDate = UserInput.GetDateInput("start", "report filter");
+            var filterEndDate = UserInput.GetDateInput("end", "report filter");
 
-            List<CodingSession> tableData = CrudManager.GetFilteredSessions(filterStartDate, filterEndDate);
+            var tableData = CrudManager.GetFilteredSessions(filterStartDate, filterEndDate);
 
             var table = GenerateTable("Filtered Report");
 
-            foreach (CodingSession row in tableData)
-            {
+            foreach (var row in tableData)
                 table.AddRow($"{row.Id}", $"{row.StartTime}", $"{row.EndTime}", $"{row.Duration}");
-            }
 
             AnsiConsole.Write(table);
 

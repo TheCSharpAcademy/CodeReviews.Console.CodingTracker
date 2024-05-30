@@ -1,19 +1,20 @@
+using System.Configuration;
 using Dapper;
 using Microsoft.Data.Sqlite;
 
 namespace CodingTracker.Controllers;
 
-
 public static class DbBuilder
 {
-    private static readonly string ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["DbConnector"].ConnectionString;
+    private static readonly string ConnectionString =
+        ConfigurationManager.ConnectionStrings["DbConnector"].ConnectionString;
 
     public static void CreateTable()
     {
-        if (!File.Exists($"coding-tracker.db"))
+        if (!File.Exists("coding-tracker.db"))
         {
             using var connection = GetConnection();
-            string sql =
+            var sql =
                 @"CREATE TABLE IF NOT EXISTS coding_tracker(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 startTime TEXT,
