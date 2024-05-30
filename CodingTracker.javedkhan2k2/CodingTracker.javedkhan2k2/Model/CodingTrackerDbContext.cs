@@ -84,7 +84,7 @@ internal class CodingTrackerDbContext
         }
     }
 
-    internal void UpdateSessionCode(int id, CodingSessionDto codingSession)
+    internal bool UpdateSessionCode(int id, CodingSessionDto codingSession)
     {
         using (var connection = new SqliteConnection(ConnectionString))
         {
@@ -99,18 +99,11 @@ internal class CodingTrackerDbContext
                   ";
             var parameters = new { Id = id, StartTime = codingSession.StartTime, EndTime = codingSession.EndTime, Duration = codingSession.Duration };
             int result = connection.Execute(sql, parameters);
-            if (result == 0)
-            {
-                Console.WriteLine($"Record with id: {id} not found.");
-            }
-            else
-            {
-                Console.WriteLine($"Record with id: {id} updated successfully.");
-            }
+            return result == 0 ? false : true;
         }
     }
 
-    internal void DeleteSessionCode(int id)
+    internal bool DeleteSessionCode(int id)
     {
         using (var connection = new SqliteConnection(ConnectionString))
         {
@@ -120,14 +113,7 @@ internal class CodingTrackerDbContext
                        ";
             var parameters = new { Id = id };
             int result = connection.Execute(sql, parameters);
-            if (result == 0)
-            {
-                Console.WriteLine($"Record with id: {id} not found.");
-            }
-            else
-            {
-                Console.WriteLine($"Record with id: {id} deleted successfully.");
-            }
+            return result == 0 ? false : true;
         }
     }
 

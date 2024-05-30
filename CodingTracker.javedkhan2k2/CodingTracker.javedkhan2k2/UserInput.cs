@@ -1,5 +1,6 @@
 
 using CodingTracker.Models;
+using Spectre.Console;
 
 namespace CodingTracker;
 
@@ -7,38 +8,33 @@ internal static class UserInput
 {
     internal static string GetDateTimeInput(string message)
     {
-        Console.WriteLine(message);
-        string? userInput = Console.ReadLine();
+        string? userInput = AnsiConsole.Ask<string?>(message);
         while(!Validation.IsValidDateTimeInput(userInput))
         {
-            Console.WriteLine($"Invalid input {userInput}. {message}");
-            userInput = Console.ReadLine();
+            userInput = AnsiConsole.Ask<string?>($"[bold red]Invalid input ({userInput})[/].\n{message}");
         }
-
         return userInput;
     }
 
     internal static int GetIntegerValue(string message)
     {
-        Console.Write(message);
-        string? userInput = Console.ReadLine();
+        string? userInput = AnsiConsole.Ask<string?>(message);
         while(userInput == null || !Int32.TryParse(userInput, out _))
         {
-            Console.Write($"Invalid input! {message}");
-            userInput = Console.ReadLine();
+            userInput = AnsiConsole.Ask<string?>($"[bold red]Invalid input {userInput}[/]\n{message}");
         }
         return Convert.ToInt32(userInput);
     }
 
     internal static CodingSessionDto GetNewCodingSession()
     {
-        string startDate = GetDateTimeInput("Enter Start date and time in (yyyy-MM-dd hh:mm:ss) format ");
-        string endDate = GetDateTimeInput("Enter End date and time in (yyyy-MM-dd hh:mm:ss) format ");
+        string startDate = GetDateTimeInput("Enter Start date and time in [bold green](yyyy-MM-dd hh:mm:ss)[/] format ");
+        string endDate = GetDateTimeInput("Enter End date and time in [bold green](yyyy-MM-dd hh:mm:ss)[/] format ");
         while(!IsValidDateTimeInputs(startDate, endDate))
         {
             Console.WriteLine($"End Date Time {endDate} should be later than Start Date Time {startDate}");
-            startDate = GetDateTimeInput("Enter Start date and time in (yyyy-MM-dd hh:mm:ss) format ");
-            endDate = GetDateTimeInput("Enter End date and time in (yyyy-MM-dd hh:mm:ss) format ");
+            startDate = GetDateTimeInput("Enter Start date and time in [bold green](yyyy-MM-dd hh:mm:ss)[/] format ");
+            endDate = GetDateTimeInput("Enter End date and time in [bold green](yyyy-MM-dd hh:mm:ss)[/] format ");
         }
         long duration = CalculateDuration(startDate, endDate);
         return new CodingSessionDto {StartTime = startDate, EndTime = endDate, Duration = duration};
