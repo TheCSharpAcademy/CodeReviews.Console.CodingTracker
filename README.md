@@ -1,11 +1,8 @@
-# Head
 
-# Coding Tracker
+## Coding Tracker
 
 A console-based CRUD application to track coding sessions; start-time, end-time,
 and calculates the duration based on the two, developed using C# and SQLite.
-
-# Item
 
 ## Given Requirements
 
@@ -24,8 +21,6 @@ session based on start and end times.
 - A configuration file should contain the database path and connection strings.
 - The code should be organized with separation of concerns.
 
-# Item
-
 ## Features
 
 - **SQLite Database Connection**
@@ -33,27 +28,24 @@ session based on start and end times.
   - If no database or correct table exists, they will be created on program start.
   - Live coding session with stopwatch to calculate coding time.
   - Filter records in ascending order by period.
-
+  
 - **Console-based UI**
   - Users can navigate using key presses.
-
+  
 - **CRUD DB Functions**
   - Users can Create, Read, Update, or Delete entries for coding sessions.
   - Inputted start and end times are validated to ensure they
 are in the correct and realistic format.
-
+  
 - **Stopwatch Functionality**
-  - Users can track coding sessions in real-time using a stopwatch
-feature.
-
-# Item
+  - Users can track coding sessions in real-time using a stopwatch feature.
 
 ## Challenges
 
 - **Learning Dapper, Spectre, and SQLite from Scratch**
   - Understanding the basics of Dapper and Spectre.
   - Setting up and managing a SQLite database.
-
+  
 - **Handling Date and Time**
   - Parsing and formatting dates and times.
   - Calculating durations based on start and end times.
@@ -61,11 +53,9 @@ feature.
 - **Implementing Separation of Concerns**
   - Organizing code into separate classes and methods.
   - Ensuring each class and method has a single responsibility.
-
+  
 - **Error Handling**
   - Ensuring the application handles all possible errors gracefully to prevent crashes.
-
-# Item
 
 ## Lessons Learned
 
@@ -82,8 +72,6 @@ avoid spaghetti code.
   
 - **Dapper**
   - Using Dapper to navigate database.
-
-## Foot
 
 ## Areas to Improve
 
@@ -105,8 +93,6 @@ avoid spaghetti code.
   
 - **LINQ**
   - Learning how to use LINQ in-depth.
-
-## Foot
 
 ## Resources Used
 
