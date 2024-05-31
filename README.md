@@ -1,10 +1,10 @@
 
-## Coding Tracker
+# Coding Tracker
 
 A console-based CRUD application to track coding sessions; start-time, end-time,
 and calculates the duration based on the two, developed using C# and SQLite.
 
-## Given Requirements
+# Given Requirements
 
 - When the application starts, it should create a SQLite database if one isn’t present.
 - It should also create a table in the database where the
@@ -21,7 +21,7 @@ session based on start and end times.
 - A configuration file should contain the database path and connection strings.
 - The code should be organized with separation of concerns.
 
-## Features
+# Features
 
 - **SQLite Database Connection**
   - The program uses a SQLite database connection to store and read information.
@@ -40,7 +40,7 @@ are in the correct and realistic format.
 - **Stopwatch Functionality**
   - Users can track coding sessions in real-time using a stopwatch feature.
 
-## Challenges
+# Challenges
 
 - **Learning Dapper, Spectre, and SQLite from Scratch**
   - Understanding the basics of Dapper and Spectre.
@@ -57,7 +57,7 @@ are in the correct and realistic format.
 - **Error Handling**
   - Ensuring the application handles all possible errors gracefully to prevent crashes.
 
-## Lessons Learned
+# Lessons Learned
 
 - **Planning and Mapping**
   - Planning and mapping out objects and methods before coding to
@@ -73,7 +73,7 @@ avoid spaghetti code.
 - **Dapper**
   - Using Dapper to navigate database.
 
-## Areas to Improve
+# Areas to Improve
 
 - **Code Snippets**
   - Utilizing more code snippets for common tasks.
@@ -94,7 +94,7 @@ avoid spaghetti code.
 - **LINQ**
   - Learning how to use LINQ in-depth.
 
-## Resources Used
+# Resources Used
 
 - [Dapper](https://github.com/DapperLib/Dapper) for navigating Database.
 - [Microsoft Docs](https://learn.microsoft.com/en-us/dotnet/api/system.datetime?view=net-8.0)
