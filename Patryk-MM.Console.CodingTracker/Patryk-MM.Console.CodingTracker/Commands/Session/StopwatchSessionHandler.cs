@@ -56,7 +56,7 @@ namespace Patryk_MM.Console.CodingTracker.Commands.Session {
             session.EndDate = endDate;
 
             // Display session details
-            AnsiConsole.WriteLine($"{session}");
+            AnsiConsole.MarkupLine($"{session}");
 
             // Save the session
             _trackerService.CreateSession(session);

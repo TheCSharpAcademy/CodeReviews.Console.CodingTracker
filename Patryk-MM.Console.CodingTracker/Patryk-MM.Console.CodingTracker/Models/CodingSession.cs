@@ -23,7 +23,7 @@ namespace Patryk_MM.Console.CodingTracker.Models {
         }
 
         public override string ToString() {
-            return $"Session started: {StartDate} Session ended: {EndDate} Duration: {Duration}";
+            return $"Session started: [cyan]{StartDate}[/] Session ended: [cyan]{EndDate}[/] Duration: [cyan]{Duration}[/]";
         }
     }
 }

@@ -21,9 +21,9 @@ namespace Patryk_MM.Console.CodingTracker.Commands.Session
             CodingSession newSession = new CodingSession();
             do
             {
-                newSession.StartDate = UserInput.GetDate("Please provide a starting date of a new session or type 'exit' to cancel: ");
+                newSession.StartDate = UserInput.GetDate("Please provide a starting date of a new session using format \"dd.MM.yyyy hh:mm:ss\" \nor type 'exit' to cancel: ");
                 if (newSession.StartDate == DateTime.MinValue) break; //"exit" sets the value of prop to DateTime.MinValue.
-                newSession.EndDate = UserInput.GetDate("Please provide an ending date of a new session or type 'exit' to cancel: ");
+                newSession.EndDate = UserInput.GetDate("Please provide an ending date of a new session using format \"dd.MM.yyyy hh:mm:ss\" \nor type 'exit' to cancel: ");
                 if (newSession.EndDate == DateTime.MinValue) break;
 
 

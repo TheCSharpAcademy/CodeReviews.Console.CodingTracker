@@ -23,5 +23,12 @@ namespace Patryk_MM.Console.CodingTracker.Utilities {
 
             AnsiConsole.Write(table);
         }
+
+        public static void PrintLogo() {
+            AnsiConsole.Write(
+            new FigletText("Coding Tracker")
+            .Centered()
+            .Color(Color.Green));
+        }
     }
 }

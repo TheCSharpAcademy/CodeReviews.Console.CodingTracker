@@ -18,9 +18,9 @@ namespace Patryk_MM.Console.CodingTracker.Commands.Session
         {
             do
             {
-                newSession.StartDate = UserInput.GetDate("Please provide a new starting date of a new session or type 'exit' to cancel: ");
+                newSession.StartDate = UserInput.GetDate("Please provide a new starting date of a new session using format \"dd.MM.yyyy hh:mm:ss\" \nor type 'exit' to cancel: ");
                 if (newSession.StartDate == DateTime.MinValue) break;
-                newSession.EndDate = UserInput.GetDate("Please provide a new ending date of a new session or type 'exit' to cancel: ");
+                newSession.EndDate = UserInput.GetDate("Please provide a new ending date of a new session using format \"dd.MM.yyyy hh:mm:ss\" \nor type 'exit' to cancel: ");
                 if (newSession.EndDate == DateTime.MinValue) break;
 
                 // Validate date order
