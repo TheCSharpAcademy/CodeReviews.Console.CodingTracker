@@ -1,5 +1,5 @@
 
-# Coding Tracker
+
 
 A console-based CRUD application to track coding sessions; start-time, end-time,
 and calculates the duration based on the two, developed using C# and SQLite.
