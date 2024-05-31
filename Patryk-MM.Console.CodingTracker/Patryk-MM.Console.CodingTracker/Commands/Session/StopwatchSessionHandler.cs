@@ -5,17 +5,14 @@ using Spectre.Console;
 using System.Diagnostics;
 
 namespace Patryk_MM.Console.CodingTracker.Commands.Session {
-    public class StopwatchSessionHandler
-    {
+    public class StopwatchSessionHandler {
         private readonly TrackerService _trackerService;
 
-        public StopwatchSessionHandler(TrackerService trackerService)
-        {
+        public StopwatchSessionHandler(TrackerService trackerService) {
             _trackerService = trackerService;
         }
 
-        public void Handle()
-        {
+        public void Handle() {
             // Initialize session
             CodingSession session = new CodingSession();
 
@@ -25,8 +22,7 @@ namespace Patryk_MM.Console.CodingTracker.Commands.Session {
             ConsoleKeyInfo keyInfo = System.Console.ReadKey(intercept: true);
 
             // Check if the pressed key is Esc
-            if (keyInfo.Key == ConsoleKey.Escape)
-            {
+            if (keyInfo.Key == ConsoleKey.Escape) {
                 AnsiConsole.MarkupLine("[yellow]Operation cancelled.[/]");
                 return; // Cancel operation
             }
@@ -45,8 +41,7 @@ namespace Patryk_MM.Console.CodingTracker.Commands.Session {
             DateTime endDate = DateTime.Now.Truncate(TimeSpan.FromSeconds(1));
 
             // Check if the pressed key is Esc
-            if (keyInfo.Key == ConsoleKey.Escape)
-            {
+            if (keyInfo.Key == ConsoleKey.Escape) {
                 AnsiConsole.MarkupLine("[yellow]Operation cancelled.[/]");
                 return; // Cancel operation
             }

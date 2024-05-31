@@ -1,7 +1,5 @@
-﻿using Patryk_MM.Console.CodingTracker.Commands.Goal;
-using Patryk_MM.Console.CodingTracker.Commands.Session;
+﻿using Patryk_MM.Console.CodingTracker.Commands.Session;
 using Patryk_MM.Console.CodingTracker.Config;
-using Patryk_MM.Console.CodingTracker.Models;
 using Patryk_MM.Console.CodingTracker.Queries.Goal;
 using Patryk_MM.Console.CodingTracker.Queries.Session;
 using Patryk_MM.Console.CodingTracker.Services;

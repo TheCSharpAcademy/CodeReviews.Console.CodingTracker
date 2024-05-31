@@ -1,11 +1,6 @@
 ﻿using Patryk_MM.Console.CodingTracker.Services;
 using Patryk_MM.Console.CodingTracker.Utilities;
 using Spectre.Console;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Patryk_MM.Console.CodingTracker.Queries.Session {
     public class GenerateReportHandler {

@@ -4,24 +4,18 @@ using Patryk_MM.Console.CodingTracker.Utilities;
 using Spectre.Console;
 
 namespace Patryk_MM.Console.CodingTracker.Commands.Session {
-    public class DeleteSessionHandler
-    {
+    public class DeleteSessionHandler {
         private readonly TrackerService _trackerService;
 
-        public DeleteSessionHandler(TrackerService trackerService)
-        {
+        public DeleteSessionHandler(TrackerService trackerService) {
             _trackerService = trackerService;
         }
 
-        public void Handle(CodingSession session)
-        {
-            if (UserInput.ConfirmAction("Are you sure to delete this session?"))
-            {
+        public void Handle(CodingSession session) {
+            if (UserInput.ConfirmAction("Are you sure to delete this session?")) {
                 _trackerService.DeleteSession(session);
                 AnsiConsole.MarkupLine("[green]Session deleted![/]");
-            }
-            else
-            {
+            } else {
                 AnsiConsole.MarkupLine("[yellow]Operation cancelled.[/]");
             }
         }

@@ -23,7 +23,7 @@ namespace Patryk_MM.Console.CodingTracker.Utilities {
                 new TextPrompt<int>("Please provide an Id of the coding session or type '0' (zero) to cancel: ")
                 .Validate(id => {
                     if (id < 0) return ValidationResult.Error("Id must be a non-negative number.");
-                    else if(id == 0) return ValidationResult.Success();
+                    else if (id == 0) return ValidationResult.Success();
                     else if (id > sessions.Count) return ValidationResult.Error("Provided Id not found.");
                     else return ValidationResult.Success();
                 }
