@@ -7,7 +7,7 @@ namespace CodingTracker.DataRepository
 {
     public class DataConfig : IDataConfig
     {
-        readonly string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString") ?? "";
+        private readonly string _connectionString = ConfigurationManager.AppSettings.Get("ConnectionString") ?? "";
 
         public void InitializeDatabase()
         {
@@ -15,7 +15,7 @@ namespace CodingTracker.DataRepository
             // If not, create the database and tables
 
             // Initialize the database
-            using var connection = new SqliteConnection(connectionString);
+            using var connection = new SqliteConnection(_connectionString);
             connection.Open();
 
             const string createTableQuery = @"

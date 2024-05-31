@@ -11,7 +11,7 @@ namespace CodingTracker.DataRepository
 {
     public class CodingSessionRepository : ICodingSessionRepository
     {
-        readonly string connectionString = ConfigurationManager.AppSettings.Get("ConnectionString") ?? "";
+        private readonly string _connectionString = ConfigurationManager.AppSettings.Get("ConnectionString") ?? "";
         private readonly IUserInteraction? _userInteraction;
         private readonly IUtils _utils;
 
@@ -23,7 +23,7 @@ namespace CodingTracker.DataRepository
 
         public void DeleteSessionFromDatabase(int id)
         {
-            using var connection = new SqliteConnection(connectionString);
+            using var connection = new SqliteConnection(_connectionString);
             connection.Open();
 
             // Get all sessions from the database
@@ -59,7 +59,7 @@ namespace CodingTracker.DataRepository
 
         public void GetFromDatabase()
         {
-            using var connection = new SqliteConnection(connectionString);
+            using var connection = new SqliteConnection(_connectionString);
             connection.Open();
 
             const string selectQuery = @"SELECT * FROM CodingSession";
@@ -106,7 +106,7 @@ namespace CodingTracker.DataRepository
 
         public List<CodingSession> GetAllFromDatabase()
         {
-            using var connection = new SqliteConnection(connectionString);
+            using var connection = new SqliteConnection(_connectionString);
             connection.Open();
 
             const string selectQuery = @"SELECT * FROM CodingSession";
@@ -119,7 +119,7 @@ namespace CodingTracker.DataRepository
 
         public void InsertSessionToDatabase(DateTime startTime, DateTime endTime, string duration)
         {
-            using var connection = new SqliteConnection(connectionString);
+            using var connection = new SqliteConnection(_connectionString);
             connection.Open();
 
             // Define the object with properties for insertion
@@ -142,7 +142,7 @@ namespace CodingTracker.DataRepository
 
         public void UpdateEndTimeInDatabase(int id, DateTime endTime)
         {
-            using var connection = new SqliteConnection(connectionString);
+            using var connection = new SqliteConnection(_connectionString);
             connection.Open();
 
             const string selectQuery = @"SELECT * FROM CodingSession";
@@ -181,7 +181,7 @@ namespace CodingTracker.DataRepository
 
         public void UpdateStartTimeInDatabase(int id, DateTime startTime)
         {
-            using var connection = new SqliteConnection(connectionString);
+            using var connection = new SqliteConnection(_connectionString);
             connection.Open();
 
             string checkQuery = "SELECT EXISTS(SELECT 1 From CodingSession WHERE Id = @Id)";
