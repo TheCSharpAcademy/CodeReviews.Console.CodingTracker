@@ -7,7 +7,7 @@ and calculates the duration based on the two, developed using C# and SQLite.
 ## Given Requirements
 
 - When the application starts, it should create a SQLite database if one isn’t present.
-- It should also create a table in the database where the 
+- It should also create a table in the database where the
 coding sessions will be logged.
 - Users need to be able to insert, delete, update, and view logged coding sessions.
 - All possible errors should be handled so that the application never crashes.
@@ -15,7 +15,7 @@ coding sessions will be logged.
 - Interaction with the database should be done using raw SQL;
 no mappers such as Entity Framework are allowed.
 - Users should be able to log start and end times manually.
-- The application should calculate the duration of a coding 
+- The application should calculate the duration of a coding
 session based on start and end times.
 - The application should use the "Spectre.Console" library to display data.
 - A configuration file should contain the database path and connection strings.
@@ -34,7 +34,7 @@ session based on start and end times.
   
 - **CRUD DB Functions**
   - Users can Create, Read, Update, or Delete entries for coding sessions.
-  - Inputted start and end times are validated to ensure they 
+  - Inputted start and end times are validated to ensure they
 are in the correct and realistic format.
   
 - **Stopwatch Functionality**
@@ -60,7 +60,7 @@ are in the correct and realistic format.
 ## Lessons Learned
 
 - **Planning and Mapping**
-  - Planning and mapping out objects and methods before coding to 
+  - Planning and mapping out objects and methods before coding to
 avoid spaghetti code.
   
 - **Code Organization**
@@ -97,5 +97,7 @@ avoid spaghetti code.
 ## Resources Used
 
 - [Dapper](https://github.com/DapperLib/Dapper) for navigating Database.
-- [Microsoft Docs]() for DateTime.
-- [Spectre.Console Documentation](https://spectreconsole.net/) for better console output.
+- [Microsoft Docs](https://learn.microsoft.com/en-us/dotnet/api/system.datetime?view=net-8.0)
+for DateTime.
+- [Spectre.Console Documentation](https://spectreconsole.net/) for better
+console output.
