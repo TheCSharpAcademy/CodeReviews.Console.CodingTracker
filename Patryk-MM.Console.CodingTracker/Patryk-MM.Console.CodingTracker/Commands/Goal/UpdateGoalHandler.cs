@@ -3,13 +3,24 @@ using Patryk_MM.Console.CodingTracker.Services;
 using Spectre.Console;
 
 namespace Patryk_MM.Console.CodingTracker.Commands.Goal {
+    /// <summary>
+    /// Handles updating a coding goal.
+    /// </summary>
     public class UpdateGoalHandler {
         private readonly TrackerService _trackerService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UpdateGoalHandler"/> class with the specified <paramref name="trackerService"/>.
+        /// </summary>
+        /// <param name="trackerService">The TrackerService instance to be used for updating goals.</param>
         public UpdateGoalHandler(TrackerService trackerService) {
             _trackerService = trackerService;
         }
 
+        /// <summary>
+        /// Handles updating a coding goal.
+        /// </summary>
+        /// <param name="goal">The coding goal to be updated.</param>
         public void Handle(CodingGoal goal) {
             int hours = AnsiConsole.Prompt(
                 new TextPrompt<int>("Please provide a new number of hours for the monthly goal: ")

@@ -2,16 +2,27 @@
 using Patryk_MM.Console.CodingTracker.Services;
 using Patryk_MM.Console.CodingTracker.Utilities;
 using Spectre.Console;
+using System;
 using System.Diagnostics;
 
 namespace Patryk_MM.Console.CodingTracker.Commands.Session {
+    /// <summary>
+    /// Handles tracking a coding session using a stopwatch.
+    /// </summary>
     public class StopwatchSessionHandler {
         private readonly TrackerService _trackerService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StopwatchSessionHandler"/> class with the specified <paramref name="trackerService"/>.
+        /// </summary>
+        /// <param name="trackerService">The TrackerService instance to be used for saving sessions.</param>
         public StopwatchSessionHandler(TrackerService trackerService) {
             _trackerService = trackerService;
         }
 
+        /// <summary>
+        /// Handles tracking a coding session using a stopwatch.
+        /// </summary>
         public void Handle() {
             // Initialize session
             CodingSession session = new CodingSession();
@@ -57,6 +68,5 @@ namespace Patryk_MM.Console.CodingTracker.Commands.Session {
             _trackerService.CreateSession(session);
             AnsiConsole.MarkupLine("[green]Session saved successfully![/]");
         }
-
     }
 }

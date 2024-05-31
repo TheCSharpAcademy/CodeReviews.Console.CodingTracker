@@ -24,10 +24,7 @@ while (true) {
 
     Console.Clear();
 
-    AnsiConsole.Write(
-    new FigletText("Coding Tracker")
-    .Centered()
-    .Color(Color.Green));
+    DataVisualization.PrintLogo();
 
     switch (choice) {
         case "View coding sessions":

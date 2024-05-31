@@ -1,15 +1,26 @@
 ﻿using Patryk_MM.Console.CodingTracker.Services;
 using Patryk_MM.Console.CodingTracker.Utilities;
 using Spectre.Console;
+using System;
 
 namespace Patryk_MM.Console.CodingTracker.Queries.Session {
+    /// <summary>
+    /// Handles generating a report of coding sessions within a specified date range.
+    /// </summary>
     public class GenerateReportHandler {
         private readonly TrackerService _trackerService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GenerateReportHandler"/> class with the specified <paramref name="trackerService"/>.
+        /// </summary>
+        /// <param name="trackerService">The TrackerService instance to be used for retrieving sessions.</param>
         public GenerateReportHandler(TrackerService trackerService) {
             _trackerService = trackerService;
         }
 
+        /// <summary>
+        /// Handles generating a report of coding sessions within a specified date range.
+        /// </summary>
         public void Handle() {
             DateTime startDate = new DateTime();
             DateTime endDate = new DateTime();
@@ -26,7 +37,7 @@ namespace Patryk_MM.Console.CodingTracker.Queries.Session {
                     continue; // Continue to the next iteration of the loop
                 }
 
-
+                // Validate future dates
                 if (Validation.ValidateFutureDate(startDate) || Validation.ValidateFutureDate(endDate)) {
                     AnsiConsole.MarkupLine("[red]Error: Dates must not be in the future. Please try again.[/]");
                     continue; // Continue to the next iteration of the loop
@@ -37,7 +48,7 @@ namespace Patryk_MM.Console.CodingTracker.Queries.Session {
 
             } while (true); // Loop until a valid session is provided
 
-
+            // Check if operation was cancelled
             if (startDate == DateTime.MinValue || endDate == DateTime.MinValue) {
                 AnsiConsole.MarkupLine("[yellow]Operation cancelled.[/]");
                 return;
@@ -45,6 +56,7 @@ namespace Patryk_MM.Console.CodingTracker.Queries.Session {
                 var getSessionsHandler = new GetSessionsHandler(_trackerService);
                 var sessions = getSessionsHandler.Handle();
 
+                // Filter sessions within the specified date range
                 sessions = sessions.Where(s => s.StartDate >= startDate && s.EndDate <= endDate).ToList();
                 if (sessions.Count > 0) {
                     // Print sessions
@@ -66,4 +78,3 @@ namespace Patryk_MM.Console.CodingTracker.Queries.Session {
         }
     }
 }
-

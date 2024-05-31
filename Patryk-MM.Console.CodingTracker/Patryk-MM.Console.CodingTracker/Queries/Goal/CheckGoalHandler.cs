@@ -6,13 +6,23 @@ using Patryk_MM.Console.CodingTracker.Utilities;
 using Spectre.Console;
 
 namespace Patryk_MM.Console.CodingTracker.Queries.Goal {
+    /// <summary>
+    /// Handles checking and updating coding goals for the current month.
+    /// </summary>
     public class CheckGoalHandler {
         private readonly TrackerService _trackerService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CheckGoalHandler"/> class with the specified <paramref name="trackerService"/>.
+        /// </summary>
+        /// <param name="trackerService">The TrackerService instance to be used for handling goals.</param>
         public CheckGoalHandler(TrackerService trackerService) {
             _trackerService = trackerService;
         }
 
+        /// <summary>
+        /// Handles checking and updating coding goals for the current month.
+        /// </summary>
         public void Handle() {
             var getGoalHandler = new GetGoalHandler(_trackerService);
             CodingGoal? goal = getGoalHandler.Handle();
