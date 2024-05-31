@@ -1,4 +1,3 @@
-using System.Configuration;
 using CodingTracker.ConsoleInteraction;
 using CodingTracker.IDataRepository;
 using CodingTracker.Models;
@@ -11,7 +10,7 @@ namespace CodingTracker.DataRepository
 {
     public class CodingSessionRepository : ICodingSessionRepository
     {
-        private readonly string _connectionString = ConfigurationManager.AppSettings.Get("ConnectionString") ?? "";
+        private readonly string _connectionString = System.Configuration.ConfigurationManager.AppSettings.Get("ConnectionString") ?? "";
         private readonly IUserInteraction? _userInteraction;
         private readonly IUtils _utils;
 

@@ -1,4 +1,3 @@
-using System.Configuration;
 using CodingTracker.IDataRepository;
 using Dapper;
 using Microsoft.Data.Sqlite;
@@ -7,7 +6,7 @@ namespace CodingTracker.DataRepository
 {
     public class DataConfig : IDataConfig
     {
-        private readonly string _connectionString = ConfigurationManager.AppSettings.Get("ConnectionString") ?? "";
+        private readonly string _connectionString = System.Configuration.ConfigurationManager.AppSettings.Get("ConnectionString") ?? "";
 
         public void InitializeDatabase()
         {
