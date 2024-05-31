@@ -1,16 +1,18 @@
 ﻿using Spectre.Console;
+using static System.Net.Mime.MediaTypeNames;
 
 public class UserInput
 {
 
-    public void Introduction()
+    public void Header()
     {
+        Console.Clear();
         AnsiConsole.Write(new FigletText("CodingTracker").Color(Color.Orange1));
     }
 
     public MainMenuOptions MainMenu()
     {
-        Introduction();
+        Header();
 
         var optionDescriptions = new Dictionary<string, MainMenuOptions>
         {
@@ -25,7 +27,33 @@ public class UserInput
 
         var options = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
-                .Title("What would you like todo?")
+                .PageSize(10)
+                .AddChoices(optionDescriptions.Keys));
+
+        return optionDescriptions[options];
+    }
+
+    public NewSessionOptions NewSessionMenu(TimeSpan elapsedTime)
+    {
+        Header();
+
+        var optionDescriptions = new Dictionary<string, NewSessionOptions>
+        {
+            { "Start", NewSessionOptions.Start },
+            { "Stop", NewSessionOptions.Stop },
+            { "Reset", NewSessionOptions.Reset },
+            { "Get Updated Time", NewSessionOptions.Update },
+            { "Save & Exit to main menu", NewSessionOptions.Exit },
+        };
+
+        var panel = new Panel($"Coding Time: {elapsedTime}");
+        panel.Header = new PanelHeader("Session Tracker");
+        panel.Border = BoxBorder.Square;
+        AnsiConsole.Write(panel);
+
+
+        var options = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
                 .PageSize(10)
                 .AddChoices(optionDescriptions.Keys));
 

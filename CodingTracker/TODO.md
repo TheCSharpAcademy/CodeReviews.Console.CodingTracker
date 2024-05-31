@@ -4,14 +4,22 @@
 - [x] Create a `CodingSession` class in a separate file with properties: Id, StartTime, EndTime, Duration.
 - [x] Create a SQLite database if not present at application start.
 - [x] Create a table in the database for coding session logging.
-- [ ] Implement data access using Dapper ORM.
 - [x] Create a `UserInput` class to handle user input.
 - [ ] Create a `Validation` class to validate user input.
-- [ ] Ensure end date/time is not before the start date/time in `Validation`.
 - [x] Use the "Spectre.Console" library to display data on the console.
-- [x] Implement the main menu with options
-- [ ] Implement a stopwatch feature to track coding time live.
-- [ ] Allow users to filter coding records by period (weeks, days, years) and order them (ascending/descending).
-- [ ] Create reports for total and average coding sessions per period.
-- [ ] Add a feature to set coding goals and track progress.
+- [x] Implement the main menu with options to the user. Also implemented the following sub options and crud operations
+	- [ ] Implement NewSession
+		- [x] Implement a stopwatch feature to track coding time
+	- [ ] Implement ExistingSession
+		- [ ] Implement a stopwatch feature to track coding time
+	- [ ] Implement AddManualSession
+		- [ ] Ensure end date/time is not before the start date/time	
+	- [ ] Implement ViewSessions
+		- [ ] Allow users to filter coding records by period (weeks, days, years) and order them (ascending/descending).
+	- [ ] Implement Goals
+		- [ ] Add a feature to set coding goals and track progress
+	- [ ] Implement Reports
+		- [ ] Create reports for total and average coding sessions per period.	
+	- [ ] Implement Exit the application
+- [ ] Implement data access using Dapper ORM.
 - [ ] Include a ReadMe file explaining the app's functionality and how to use it.
