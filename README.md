@@ -1,3 +1,4 @@
+
 # Coding Tracker
 
 A console-based CRUD application to track coding sessions; start-time, end-time,
@@ -56,8 +57,7 @@ no mappers such as Entity Framework are allowed.
 ## Lessons Learned
 
 - **Planning and Mapping**
-  - Planning and mapping out objects and methods before coding to avoid spaghetti 
-  code.
+  - Planning and mapping out objects and methods before coding to avoid spaghetti code.
   
 - **Code Organization**
   - Refactoring code into more organized classes and methods.
@@ -92,6 +92,5 @@ no mappers such as Entity Framework are allowed.
 
 ## Resources Used
 
-- [Dapper](https://github.com/DapperLib/Dapper) for navigating Database.- Microsoft 
-Docs for DateTime.
+- [Dapper](https://github.com/DapperLib/Dapper) for navigating Database.- Microsoft Docs for DateTime.
 - [Spectre.Console Documentation](https://spectreconsole.net/) for better console output.
