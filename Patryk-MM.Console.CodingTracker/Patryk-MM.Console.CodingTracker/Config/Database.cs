@@ -1,9 +1,8 @@
-﻿using System.Configuration;
-using System.Data.SQLite;
+﻿using System.Data.SQLite;
 
 namespace Patryk_MM.Console.CodingTracker.Config {
     public class Database {
-        private static string _connectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
+        private static string _connectionString = System.Configuration.ConfigurationManager.AppSettings.Get("ConnectionString");
 
         public static SQLiteConnection GetConnection() {
             return new SQLiteConnection(_connectionString);

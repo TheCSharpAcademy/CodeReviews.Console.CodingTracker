@@ -13,7 +13,6 @@ DataVisualization.PrintLogo();
 var trackerService = new TrackerService();
 var getSessionFromListHandler = new GetSessionFromListHandler(trackerService);
 var getSessionsHandler = new GetSessionsHandler(trackerService);
-var getGoalHandler = new GetGoalHandler(trackerService);
 
 
 while (true) {
