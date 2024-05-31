@@ -1,21 +1,19 @@
+# Coding Tracker
 
-A console-based CRUD application to track coding sessions; start-time, end-time, 
+A console-based CRUD application to track coding sessions; start-time, end-time,
 and calculates the duration based on the two, developed using C# and SQLite.
 
 ## Given Requirements
 
-- When the application starts, it should create a SQLite database if one isn’t 
-present.
-- It should also create a table in the database where the coding sessions 
-will be logged.
+- When the application starts, it should create a SQLite database if one isn’t present.
+- It should also create a table in the database where the coding sessions will be logged.
 - Users need to be able to insert, delete, update, and view logged coding sessions.
 - All possible errors should be handled so that the application never crashes.
 - The application should only be terminated when the user inserts 0.
-- Interaction with the database should be done using raw SQL; 
+- Interaction with the database should be done using raw SQL;
 no mappers such as Entity Framework are allowed.
 - Users should be able to log start and end times manually.
-- The application should calculate the duration of a coding session based on start 
-and end times.
+- The application should calculate the duration of a coding session based on start and end times.
 - The application should use the "Spectre.Console" library to display data.
 - A configuration file should contain the database path and connection strings.
 - The code should be organized with separation of concerns.
@@ -33,8 +31,7 @@ and end times.
   
 - **CRUD DB Functions**
   - Users can Create, Read, Update, or Delete entries for coding sessions.
-  - Inputted start and end times are validated to ensure they are in the correct and 
-  realistic format.
+  - Inputted start and end times are validated to ensure they are in the correct and realistic format.
   
 - **Stopwatch Functionality**
   - Users can track coding sessions in real-time using a stopwatch feature.
@@ -95,8 +92,6 @@ and end times.
 
 ## Resources Used
 
-- [Dapper](https://github.com/DapperLib/Dapper) for navigating Database.
-- Microsoft Docs for DateTime.
-- [Spectre.Console Documentation](https://spectreconsole.net/) for better 
-console output.
-
+- [Dapper](https://github.com/DapperLib/Dapper) for navigating Database.- Microsoft 
+Docs for DateTime.
+- [Spectre.Console Documentation](https://spectreconsole.net/) for better console output.
