@@ -5,30 +5,11 @@
 - [x] Create a SQLite database if not present at application start.
 - [x] Create a table in the database for coding session logging.
 - [ ] Implement data access using Dapper ORM.
-- [ ] Create a `CodingController` class to handle CRUD operations.
-- [ ] Add a method in `CodingController` to insert a new coding session.
-- [ ] Add a method in `CodingController` to update an existing coding session.
-- [ ] Add a method in `CodingController` to delete a coding session.
-- [ ] Add a method in `CodingController` to view all coding sessions.
-- [ ] Create a `UserInput` class to handle user input.
-- [ ] Implement a method in `UserInput` to get the start time from the user.
-- [ ] Implement a method in `UserInput` to get the end time from the user.
+- [x] Create a `UserInput` class to handle user input.
 - [ ] Create a `Validation` class to validate user input.
-- [ ] Validate date and time input format in `Validation`.
 - [ ] Ensure end date/time is not before the start date/time in `Validation`.
-- [ ] Use the "Spectre.Console" library to display data on the console.
-- [ ] Create a `TableVisualisationEngine` class to handle table display logic.
-- [ ] Implement the main menu with options:
-    - [ ] Insert a new coding session record.
-    - [ ] Update an existing coding session record.
-    - [ ] Delete a coding session record.
-    - [ ] View all coding sessions.
-    - [ ] Exit the application.
-- [ ] Create a `CalculateDuration` method to calculate the duration of a coding session based on start and end times.
-- [ ] Validate all user inputs to prevent application crashes.
-    - [ ] Check for incorrect dates.
-    - [ ] Handle invalid menu options.
-    - [ ] Handle non-numeric input where numeric input is expected.
+- [x] Use the "Spectre.Console" library to display data on the console.
+- [x] Implement the main menu with options
 - [ ] Implement a stopwatch feature to track coding time live.
 - [ ] Allow users to filter coding records by period (weeks, days, years) and order them (ascending/descending).
 - [ ] Create reports for total and average coding sessions per period.
