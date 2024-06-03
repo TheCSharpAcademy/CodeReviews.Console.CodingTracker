@@ -33,10 +33,10 @@ public class DatabaseManager
 
                 string query = @"
                     CREATE TABLE codingtracker (
-	                    id	INTEGER NOT NULL UNIQUE,
-	                    starttime	TEXT,
-	                    endtime	TEXT,
-	                    duration	TEXT,
+	                    Id	INTEGER NOT NULL UNIQUE,
+	                    StartTime	TEXT,
+	                    EndTime	TEXT,
+	                    Duration	TEXT,
 	                    PRIMARY KEY(id AUTOINCREMENT)
                     );";
 

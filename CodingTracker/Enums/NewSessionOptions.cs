@@ -2,7 +2,6 @@
 {
     Start,
     Reset,
-    Stop,
     Update,
     Exit
 }

@@ -3,9 +3,9 @@
 public class App
 {
     private DatabaseManager _databaseManager = new DatabaseManager(ConfigurationManager.ConnectionStrings["CodingTrackerDB"].ConnectionString);
-
     private UserInput _userInput = new UserInput();
     private LiveTracker _liveTracker;
+    private CodingRepository _codingRepository;
 
     public void Run()
     {
@@ -14,13 +14,13 @@ public class App
         while (true)
         {
             var mainMenuOptions = _userInput.MainMenu();
+            _codingRepository = new CodingRepository(_databaseManager);
 
             switch (mainMenuOptions)
             {
                 case MainMenuOptions.NewSession:
                     NewSession();
                     break;
-                case MainMenuOptions.ExistingSession: break;
                 case MainMenuOptions.AddManualSession: break;
                 case MainMenuOptions.ViewSessions: break; // Let the user filter their coding records per period (weeks, days, years) and/or order ascending or descending.
                 case MainMenuOptions.Goals: break;
@@ -37,16 +37,12 @@ public class App
 
         while (!exit)
         {
-            TimeSpan ts = new TimeSpan(_liveTracker.Stopwatch.Elapsed.Hours, _liveTracker.Stopwatch.Elapsed.Minutes, _liveTracker.Stopwatch.Elapsed.Seconds);
-            var newSessionOptions = _userInput.NewSessionMenu(ts);
+            var newSessionOptions = _userInput.NewSessionMenu(_liveTracker.GetTime(), _liveTracker.Stopwatch.IsRunning);
 
             switch (newSessionOptions)
             {
                 case NewSessionOptions.Start:
                     _liveTracker.Start();
-                    break;
-                case NewSessionOptions.Stop:
-                    _liveTracker.Stop();
                     break;
                 case NewSessionOptions.Reset:
                     _liveTracker.Reset();
@@ -54,10 +50,10 @@ public class App
                 case NewSessionOptions.Update:
                     break;
                 case NewSessionOptions.Exit:
-                    _liveTracker.Stop();
+                    _codingRepository.AddSession(_liveTracker.Save());
                     exit = true;
                     return;
-            } 
+            }
         }
     }
 }

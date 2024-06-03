@@ -1,7 +1,7 @@
 ﻿public class CodingSession
 {
-    public int Id;
-    public DateTime StartTime;
-    public DateTime EndTime;
-    public TimeSpan Duration;
+    public int Id { get; set; }
+    public DateTime StartTime {  get; set; }
+    public DateTime EndTime { get; set; }
+    public TimeSpan Duration { get; set; }
 }

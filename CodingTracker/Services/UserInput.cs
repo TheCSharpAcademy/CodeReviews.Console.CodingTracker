@@ -17,7 +17,6 @@ public class UserInput
         var optionDescriptions = new Dictionary<string, MainMenuOptions>
         {
             { "Start a new session", MainMenuOptions.NewSession },
-            { "Continue an existing session", MainMenuOptions.ExistingSession },
             { "Add a session manually", MainMenuOptions.AddManualSession },
             { "View & update previous sessions", MainMenuOptions.ViewSessions },
             { "Add, update or view goals", MainMenuOptions.Goals }, 
@@ -33,22 +32,23 @@ public class UserInput
         return optionDescriptions[options];
     }
 
-    public NewSessionOptions NewSessionMenu(TimeSpan elapsedTime)
+    public NewSessionOptions NewSessionMenu(TimeSpan elapsedTime, bool isRunning)
     {
         Header();
 
         var optionDescriptions = new Dictionary<string, NewSessionOptions>
         {
             { "Start", NewSessionOptions.Start },
-            { "Stop", NewSessionOptions.Stop },
             { "Reset", NewSessionOptions.Reset },
             { "Get Updated Time", NewSessionOptions.Update },
             { "Save & Exit to main menu", NewSessionOptions.Exit },
         };
 
-        var panel = new Panel($"Coding Time: {elapsedTime}");
-        panel.Header = new PanelHeader("Session Tracker");
-        panel.Border = BoxBorder.Square;
+        var panel = new Panel($"Coding Time: {elapsedTime}\nRunning: {isRunning}")
+        {
+            Header = new PanelHeader("Session Tracker"),
+            Border = BoxBorder.Square
+        };
         AnsiConsole.Write(panel);
 
 

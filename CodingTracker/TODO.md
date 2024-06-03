@@ -10,8 +10,6 @@
 - [x] Implement the main menu with options to the user. Also implemented the following sub options and crud operations
 	- [ ] Implement NewSession
 		- [x] Implement a stopwatch feature to track coding time
-	- [ ] Implement ExistingSession
-		- [ ] Implement a stopwatch feature to track coding time
 	- [ ] Implement AddManualSession
 		- [ ] Ensure end date/time is not before the start date/time	
 	- [ ] Implement ViewSessions
