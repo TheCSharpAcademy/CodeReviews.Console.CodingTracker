@@ -8,10 +8,10 @@
 - [ ] Create a `Validation` class to validate user input.
 - [x] Use the "Spectre.Console" library to display data on the console.
 - [x] Implement the main menu with options to the user. Also implemented the following sub options and crud operations
-	- [ ] Implement NewSession
+	- [x] Implement NewSession
 		- [x] Implement a stopwatch feature to track coding time
-	- [ ] Implement AddManualSession
-		- [ ] Ensure end date/time is not before the start date/time	
+	- [x] Implement AddManualSession
+		- [x] Ensure end date/time is not before the start date/time	
 	- [ ] Implement ViewSessions
 		- [ ] Allow users to filter coding records by period (weeks, days, years) and order them (ascending/descending).
 	- [ ] Implement Goals
