@@ -21,7 +21,8 @@ internal class CodingSession
 
 internal class CodingSessionDto
 {
-    public string StartTime { get; set; }
-    public string EndTime { get; set; }
-    public long Duration { get; set; }
+    public string StartTime { get; set; } = default!;
+    public string EndTime { get; set; } = default!;
+    public long Duration { get; set; } = 0;
 }
+

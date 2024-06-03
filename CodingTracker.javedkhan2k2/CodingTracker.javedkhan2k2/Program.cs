@@ -13,13 +13,3 @@ if (connectionString == null)
 }
 CodingController app = new CodingController(connectionString);
 app.runApp();
-
-
-// CodingTrackerDbContext dbContext = new CodingTrackerDbContext(connectionString);
-// var sessions = dbContext.GetAllCodingSessions();
-// foreach (var cs in sessions)
-// {
-//     Console.WriteLine($"Id: {cs.Id} - Start Time: {cs.StartTime} - End Time: {cs.EndTime} - Duration: {cs.Duration} ");
-// }
-
-// Console.ReadLine();

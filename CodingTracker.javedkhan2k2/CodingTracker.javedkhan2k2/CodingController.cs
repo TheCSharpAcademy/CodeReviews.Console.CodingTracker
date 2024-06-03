@@ -17,56 +17,6 @@ internal class CodingController
         dbContext = new CodingTrackerDbContext(connectionString);
     }
 
-    // Old version of runApp. Using the console.writeline() functions.
-    internal void runAppOldVersion()
-    {
-        bool runApplication = true;
-
-        while (runApplication)
-        {
-            Console.WriteLine(@$"
-Main Menu
-
-0 - Quit the Application.
-1 - Show All Coding Sessions
-2 - Add new Coding Session
-3 - Update Coding Session
-4 - Delete Coding Session
-");
-            Console.Write("Please enter an Option from the Menu above: ");
-            string? userInput = Console.ReadLine();
-            while (userInput == null || !Regex.IsMatch(userInput, "^[0-5]$"))
-            {
-                Console.Write($"Error!!! Invalid option: {userInput}. Please enter an Option from the Menu above: ");
-                userInput = Console.ReadLine();
-            }
-            switch (userInput)
-            {
-                case "0":
-                    Console.WriteLine("Bye Bye");
-                    runApplication = false;
-                    break;
-                case "1":
-                    ViewAllSessions();
-                    break;
-                case "2":
-                    AddNewSession();
-                    break;
-                case "3":
-                    UpdateSession();
-                    break;
-                case "4":
-                    DeleteSession();
-                    break;
-                case "5":
-                    ShowMenu();
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
     internal void runApp()
     {
         bool runApplication = true;
@@ -77,13 +27,14 @@ Main Menu
             var choice = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                     .Title("What do you want to do?")
-                    .PageSize(6)
+                    //.PageSize(3)
                     .AddChoices(new[] {
-                        "View All Sessions", 
-                        "Add New Session", 
+                        "View All Sessions",
+                        "Add New Session",
                         "Add New Session using Stop Watch",
-                        "Update Session", 
-                        "Delete Session", 
+                        "Update Session",
+                        "Delete Session",
+                        "Reports",
                         "Exit"
                     }));
             switch (choice)
@@ -99,91 +50,171 @@ Main Menu
                     break;
                 case "View All Sessions":
                     ViewAllSessions();
-                    Console.WriteLine("Press any key to continue");
+                    AnsiConsole.Markup("Press [green]Enter[/] to continue");
                     Console.ReadLine();
                     break;
                 case "Delete Session":
                     DeleteSession();
                     break;
+                case "Reports":
+                    Reports();
+                    break;
                 case "Exit":
-                    return;
+                    runApplication = false;
+                    break;
             }
+        }
+    }
+
+    private void Reports()
+    {
+        while (true)
+        {
+            AnsiConsole.Clear();
+            var choice = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("Select a Report")
+                    .PageSize(10)
+                    .AddChoices(new[]
+                    {
+                    "Daily Report",
+                    "Weekly Report",
+                    "Monthly Report",
+                    "Yearly Report",
+                    "Back to Main Menu",
+                    "Exit"
+                    }
+            ));
+            switch (choice)
+            {
+                case "Daily Report":
+                case "Weekly Report":
+                case "Monthly Report":
+                    GenerateReport(choice);
+                    break;
+                case "Yearly Report":
+                    GenerateYearlyReport();
+                    break;
+                case "Back to Main Menu":
+                    return;
+                case "Exit":
+                    System.Environment.Exit(0);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    private void GenerateReport(string choice)
+    {
+        ReportDto reportInput = UserInput.GetDailyReportInput();
+        if (reportInput != null)
+        {
+            switch (choice)
+            {
+                case "Daily Report":
+                    VisualisationEngine.DisplayDailyReport(dbContext.GetDailyReport(reportInput), reportInput);
+                    break;
+                case "Weekly Report":
+                    VisualisationEngine.DisplayWeeklyReport(dbContext.GetWeeklyReport(reportInput), reportInput);
+                    break;
+                case "Monthly Report":
+                    VisualisationEngine.DisplayMonthlyReport(dbContext.GetMonthlyReport(reportInput), reportInput);
+                    var report3 = dbContext.GetMonthlyReport(reportInput);
+                    break;
+            }
+            AnsiConsole.Markup("Press [green]Enter[/] to continue");
+            Console.ReadLine();
+        }
+    }
+
+    private void GenerateYearlyReport()
+    {
+        ReportDto reportInput = UserInput.GetYearlyReportInput();
+        if (reportInput != null)
+        {
+            VisualisationEngine.DisplayYearlyReport(dbContext.GetYearlyReport(reportInput), reportInput);
+            AnsiConsole.Markup("Press [green]Enter[/] to continue");
+            Console.ReadLine();
         }
     }
 
     private void AddSessionUsingStopWatch()
     {
-        Console.WriteLine("Press any key to start the timer");
-        Console.ReadLine();
-        DateTime startDateTime = DateTime.Now;
-        Console.WriteLine($"Start Time: {startDateTime.ToString("yyyy-MM-dd HH:mm:ss")}");
-        Console.WriteLine("Press any key to stop the timer");
-        Console.ReadLine();
-        DateTime endDateTime = DateTime.Now;
-        Console.WriteLine($"End Time: {endDateTime.ToString("yyyy-MM-dd HH:mm:ss")}");
-        long duration = (long)endDateTime.Subtract(startDateTime).Duration().TotalSeconds;
-        CodingSessionDto codingSessionDto = new CodingSessionDto {
-         StartTime = startDateTime.ToString("yyyy-MM-dd HH:mm:ss"),
-         EndTime = endDateTime.ToString("yyyy-MM-dd HH:mm:ss"),
-         Duration = duration
-        };
-        dbContext.AddSessionCode(codingSessionDto);
-        Console.WriteLine("New Coding Session added successfully. Press any key to view main menu");
-        Console.ReadLine();
-    }
-
-    private void ShowMenu()
-    {
-        Console.Clear();
-        var choice = AnsiConsole.Prompt(
-            new SelectionPrompt<string>()
-                .Title("What do you want to do?")
-                .PageSize(10)
-                .AddChoices(new[] {
-                            "Add New Session", "Update Session", "View All Sessions", "Delete Session", "Exit"
-                }));
-        switch (choice)
+        var startInput = UserInput.GetStopWatchInput("Press [bold green]'S'[/] to start the timer or Press [bold green]'0'[/] to cancel: ");
+        if (!startInput)
         {
-            case "Add New Session":
-                AddNewSession();
-                break;
-            case "Update Session":
-                UpdateSession();
-                break;
-            case "View All Sessions":
-                ViewAllSessions();
-                Console.WriteLine("Press any key to continue");
-                Console.ReadLine();
-                break;
-            case "Delete Session":
-                DeleteSession();
-                break;
-            case "Exit":
-                return;
+            AnsiConsole.Markup("[bold orange1]User canceled the Stopwatch.[/]\n");
+            AnsiConsole.Markup("Press [green]Enter[/] to continue: ");
+            Console.ReadLine();
+            return;
         }
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.StartDateTime = DateTime.Now;
+        AnsiConsole.Markup($"Start Time: [bold green]{stopWatch.StartDateTime.ToString("yyyy-MM-dd HH:mm:ss")}[/]\n");
+        var input = UserInput.GetStopWatchInput("Press [bold green]'S'[/] to stop the timer or Press [bold green]'0'[/] to cancel: ");
+        if (input)
+        {
+            stopWatch.EndDateTime = DateTime.Now;
+            AnsiConsole.Markup($"End Time: [bold green]{stopWatch.EndDateTime.ToString("yyyy-MM-dd HH:mm:ss")}[/]\n");
+            long duration = (long)stopWatch.EndDateTime.Subtract(stopWatch.StartDateTime).Duration().TotalSeconds;
+            CodingSessionDto codingSessionDto = new CodingSessionDto
+            {
+                StartTime = stopWatch.StartDateTime.ToString("yyyy-MM-dd HH:mm:ss"),
+                EndTime = stopWatch.EndDateTime.ToString("yyyy-MM-dd HH:mm:ss"),
+                Duration = duration
+            };
+            dbContext.AddSessionCode(codingSessionDto);
+            AnsiConsole.Markup("[bold green]New Coding Session added successfully.[/]\n");
+        }
+        else
+        {
+            AnsiConsole.Markup("[bold orange1]User canceled the Stopwatch.[/]\n");
+        }
+        AnsiConsole.Markup("Press [green]Enter[/] to continue");
+        Console.ReadLine();
     }
 
     private void UpdateSession()
     {
         ViewAllSessions();
         int id = UserInput.GetIntegerValue("To update a Coding Session, please Enter an Id from the above Table: ");
-        if (dbContext.GetCodingSessionById(id) != null)
+        if (id == 0)
         {
-            CodingSessionDto codingSession = UserInput.GetNewCodingSession();
-            if (dbContext.UpdateSessionCode(id, codingSession))
+            AnsiConsole.Markup("[bold orange1]User canceled the Update Operation.[/]\n");
+            AnsiConsole.Markup("Press [green]Enter[/] to continue: ");
+            Console.ReadLine();
+            return;
+        }
+        CodingSession? record = dbContext.GetCodingSessionById(id);
+        if (record != null)
+        {
+            CodingSessionDto codingSession = UserInput.UpdateCodingSessionDialog(record);
+            if (codingSession != null)
             {
-                Console.WriteLine("Coding Session updated successfully");
+                if (dbContext.UpdateSessionCode(id, codingSession))
+                {
+                    AnsiConsole.Markup("[bold green]Coding Session updated successfully[/]");
+                }
+                else
+                {
+                    Console.WriteLine($"The record with id {id} could not found in database");
+                }
             }
             else
             {
-                Console.WriteLine($"The record with id {id} could not found in database");
+                AnsiConsole.Markup("[bold orange1]User canceled the Update Operation.[/]\n");
+                AnsiConsole.Markup("Press [green]Enter[/] to continue: ");
+                Console.ReadLine();
+                return;
             }
         }
         else
         {
             Console.WriteLine($"The record with id {id} could not found in database");
         }
-        Console.WriteLine("Press any key to continue");
+        AnsiConsole.Markup("Press [green]Enter[/] to continue");
         Console.ReadLine();
     }
 
@@ -191,30 +222,47 @@ Main Menu
     {
         ViewAllSessions();
         int id = UserInput.GetIntegerValue("To Delete a Coding Session, please Enter an Id from the above Table: ");
+        if (id == 0)
+        {
+            AnsiConsole.Markup("[bold orange1]User canceled the Delete Operation.[/]\n");
+            AnsiConsole.Markup("Press [green]Enter[/] to continue: ");
+            Console.ReadLine();
+            return;
+        }
         if (dbContext.DeleteSessionCode(id))
         {
-            Console.WriteLine("Coding Session deleted successfully");
+            AnsiConsole.Markup($"[bold green]Coding Session deleted successfully[/]\n");
         }
         else
         {
-            Console.WriteLine($"The record with id {id} could not found in database");
+            Console.WriteLine($"The record with id {id} could not found in database\n");
         }
-        Console.WriteLine("Press any key to continue");
+        AnsiConsole.Markup("Press [green]Enter[/] to continue");
         Console.ReadLine();
     }
 
     private void AddNewSession()
     {
-        CodingSessionDto codingSession = UserInput.GetNewCodingSession();
-        dbContext.AddSessionCode(codingSession);
-        Console.WriteLine("New Coding Session added successfully. Press any key to view main menu");
-        Console.ReadLine();
+        CodingSessionDto codingSession = UserInput.NewCodingSessionDialog();
+        if (codingSession != null)
+        {
+            dbContext.AddSessionCode(codingSession);
+            AnsiConsole.Markup("New Coding Session added successfully. Press [green]Enter[/] to continue");
+            Console.ReadLine();
+        }
+        else
+        {
+            AnsiConsole.Markup("[bold orange1]User canceled the Add New Session Operation.[/]\n");
+            AnsiConsole.Markup("Press [green]Enter[/] to continue: ");
+            Console.ReadLine();
+            return;
+        }
     }
-
+    
     private void ViewAllSessions()
     {
         var sessions = dbContext.GetAllCodingSessions();
-        TableVisualisationEngine.DisplayAllSessions(sessions);
+        VisualisationEngine.DisplayAllSessions(sessions);
     }
 
 }
