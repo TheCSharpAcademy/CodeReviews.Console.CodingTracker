@@ -26,7 +26,7 @@ public class ValidateInput
         do
         {
             string input = AnsiConsole.Ask<string>(prompt);
-            validInput = TimeSpan.TryParse(input, out result) && result.TotalSeconds > 0 && input.Split(":").Length == 3;
+            validInput = TimeSpan.TryParse(input, out result) && result.TotalSeconds > 0 && CountDelimiters(input, ':') == 2 && AreComponentsTwoDigits(input);
             if (!validInput)
             {
                 AnsiConsole.Markup($"[red]Invalid input, try again. Please input a valid time[/]\n");
@@ -39,5 +39,16 @@ public class ValidateInput
     public bool ValidateSessionDates(DateTime startDate, DateTime endDate)
     {
         return endDate > startDate;
+    }
+
+    private int CountDelimiters(string input, char delimiter)
+    {
+        return input.Count(c => c == delimiter);
+    }
+
+    private bool AreComponentsTwoDigits(string input)
+    {
+        var components = input.Split(':');
+        return components.All(c => c.Length == 2);
     }
 }

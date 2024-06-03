@@ -17,7 +17,8 @@ public class CodingRepository
     public void AddSession(CodingSession codingSession)
     {
         string query = "INSERT INTO codingtracker (StartTime, EndTime, Duration) VALUES (@StartTime, @EndTime, @Duration)";
-        using (var conn = _databaseManager.GetConnection()){
+        using (var conn = _databaseManager.GetConnection())
+        {
             conn.Execute(query, codingSession);
         }
     }
@@ -28,6 +29,30 @@ public class CodingRepository
         using (var conn = _databaseManager.GetConnection())
         {
             return conn.Query<CodingSession>(query).ToList();
+        }
+    }
+
+    public void InsertTestData(int number)
+    {
+        for (int i = 0; i <= number; i++)
+        {
+            DateTime startDate;
+            DateTime endDate;
+
+            do
+            {
+                startDate = Utilities.GenerateRandomDate();
+                endDate = Utilities.GenerateRandomDate();
+            } while (endDate <= startDate);
+
+            CodingSession codingSession = new CodingSession
+            {
+                StartTime = startDate,
+                EndTime = endDate,
+                Duration = endDate - startDate
+            };
+
+            AddSession(codingSession);
         }
     }
 }

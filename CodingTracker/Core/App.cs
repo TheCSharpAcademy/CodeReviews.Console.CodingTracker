@@ -33,6 +33,9 @@ public class App
                     break; // Let the user filter their coding records per period (weeks, days, years) and/or order ascending or descending.
                 case MainMenuOptions.Goals: break;
                 case MainMenuOptions.Reports: break; // options (years, weeks, days). Breakdown by filter. 
+                case MainMenuOptions.InsertTestData:
+                    InsertTestData();
+                    break; 
                 case MainMenuOptions.Exit: 
                     Environment.Exit(0);
                     break;
@@ -71,7 +74,11 @@ public class App
     private void AddManualSession()
     {
         CodingSession codingSession = _userInput.AddManualSession();
-        _codingRepository.AddSession(codingSession);
+
+        if (codingSession.EndTime > codingSession.StartTime)
+        {
+            _codingRepository.AddSession(codingSession);
+        }
     }
 
     private void ViewSessions()
@@ -80,7 +87,8 @@ public class App
 
         if (_codingRepository.GetSessions().Count == 0)
         {
-            AnsiConsole.Ask<string>("No entries in database to filter. Press any key to continue.");
+            AnsiConsole.MarkupLine("[yellow]No entries in database to filter. Enter any key to continue.[/]");
+            Console.ReadKey(true);
         }
         else
         {
@@ -96,5 +104,13 @@ public class App
         }
 
         
+    }
+
+    private void InsertTestData()
+    {
+        var number = _userInput.InsertTestData();
+        _codingRepository.InsertTestData(number);
+        AnsiConsole.MarkupLine($"[green]{number} random records have been inserted[/]");
+        Console.ReadKey(true);
     }
 }

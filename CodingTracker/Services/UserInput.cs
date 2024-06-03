@@ -28,6 +28,7 @@ public class UserInput
             { "View & update previous sessions", MainMenuOptions.ViewSessions },
             { "Add, update or view goals", MainMenuOptions.Goals }, 
             { "View Reports", MainMenuOptions.Reports }, 
+            { "Insert Test Data", MainMenuOptions.InsertTestData }, 
             { "Exit the application", MainMenuOptions.Exit }
         };
 
@@ -103,4 +104,6 @@ public class UserInput
 
         return codingSession;
     }
+
+    public int InsertTestData() => _validateInput.GetValidInt($"How many test records would you like to insert? (1-1000)", 1, 1000);
 }
