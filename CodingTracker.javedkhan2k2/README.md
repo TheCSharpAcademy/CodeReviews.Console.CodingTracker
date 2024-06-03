@@ -1,5 +1,4 @@
-# Coding Tracker
-
+# Coding Sessions Tracker
 In this Project we created A Coding Tracker App to track ones all
 coding sessions. We have the CRUD operations and Report section
 to display different reports to user based on the start and end date.
@@ -72,7 +71,9 @@ to the user.
 - Update/Delete are also similar Operations.
 
 ## Reports
+
 - There are total 4 reports as shown below:  
 ![image](https://github.com/javedkhan2k2/42Heilbronn/assets/48986371/1bfe99d4-e788-4066-8690-bfe15d73d8a1)
 - Example Daily Report:  
 ![image](https://github.com/javedkhan2k2/42Heilbronn/assets/48986371/5f267d88-d5cb-4947-b162-7d1e79d39d1d)
+

@@ -11,7 +11,6 @@ internal class CodingTrackerDbContext
     {
         ConnectionString = connectionString;
         InitDatabase();
-        //SeedData();
     }
 
     private void InitDatabase()

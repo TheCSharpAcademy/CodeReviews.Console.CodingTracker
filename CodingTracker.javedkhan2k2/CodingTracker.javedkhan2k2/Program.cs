@@ -1,8 +1,7 @@
-﻿using System.Configuration;
-using CodingTracker;
+﻿using CodingTracker;
 
 string? connectionString;
-connectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
+connectionString = System.Configuration.ConfigurationManager.AppSettings.Get("ConnectionString");
 
 if (connectionString == null)
 {
