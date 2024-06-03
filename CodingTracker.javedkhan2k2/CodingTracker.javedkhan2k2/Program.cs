@@ -1,6 +1,4 @@
 ﻿using System.Configuration;
-using System.Collections.Specialized;
-using CodingTracker.Models;
 using CodingTracker;
 
 string? connectionString;
@@ -12,4 +10,4 @@ if (connectionString == null)
     System.Environment.Exit(0);
 }
 CodingController app = new CodingController(connectionString);
-app.runApp();
+app.RunApp();

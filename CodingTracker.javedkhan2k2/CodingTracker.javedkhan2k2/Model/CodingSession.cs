@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations.Schema;
-using Dapper;
 
 namespace CodingTracker.Models;
 
@@ -23,6 +22,6 @@ internal class CodingSessionDto
 {
     public string StartTime { get; set; } = default!;
     public string EndTime { get; set; } = default!;
-    public long Duration { get; set; } = 0;
+    public long Duration { get; set; }
 }
 

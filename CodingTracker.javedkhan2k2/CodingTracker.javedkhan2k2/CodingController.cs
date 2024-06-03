@@ -1,8 +1,3 @@
-
-using System.Collections;
-using System.Diagnostics;
-using System.Globalization;
-using System.Text.RegularExpressions;
 using CodingTracker.Models;
 using Spectre.Console;
 
@@ -17,7 +12,7 @@ internal class CodingController
         dbContext = new CodingTrackerDbContext(connectionString);
     }
 
-    internal void runApp()
+    internal void RunApp()
     {
         bool runApplication = true;
 
@@ -121,7 +116,6 @@ internal class CodingController
                     break;
                 case "Monthly Report":
                     VisualisationEngine.DisplayMonthlyReport(dbContext.GetMonthlyReport(reportInput), reportInput);
-                    var report3 = dbContext.GetMonthlyReport(reportInput);
                     break;
             }
             AnsiConsole.Markup("Press [green]Enter[/] to continue");

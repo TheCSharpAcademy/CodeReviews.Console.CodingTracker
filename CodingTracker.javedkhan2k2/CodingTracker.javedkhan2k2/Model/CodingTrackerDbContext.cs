@@ -1,6 +1,5 @@
 using Dapper;
 using Microsoft.Data.Sqlite;
-using SQLitePCL;
 
 namespace CodingTracker.Models;
 
@@ -28,7 +27,6 @@ internal class CodingTrackerDbContext
             )";
             connection.Execute(sql);
         }
-        //SeedData();
     }
 
     private void SeedData()
