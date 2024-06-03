@@ -1,6 +1,4 @@
-
 # Coding Sessions Tracker
-
 In this Project we created A Coding Tracker App to track ones all
 coding sessions. We have the CRUD operations and Report section
 to display different reports to user based on the start and end date.
