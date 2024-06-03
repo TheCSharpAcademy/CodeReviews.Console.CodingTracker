@@ -5,7 +5,7 @@
 - [x] Create a SQLite database if not present at application start.
 - [x] Create a table in the database for coding session logging.
 - [x] Create a `UserInput` class to handle user input.
-- [ ] Create a `Validation` class to validate user input.
+- [x] Create a `Validation` class to validate user input.
 - [x] Use the "Spectre.Console" library to display data on the console.
 - [x] Implement the main menu with options to the user. Also implemented the following sub options and crud operations
 	- [x] Implement NewSession
@@ -18,6 +18,6 @@
 		- [ ] Add a feature to set coding goals and track progress
 	- [ ] Implement Reports
 		- [ ] Create reports for total and average coding sessions per period.	
-	- [ ] Implement Exit the application
-- [ ] Implement data access using Dapper ORM.
+	- [x] Implement Exit the application
+- [x] Implement data access using Dapper ORM.
 - [ ] Include a ReadMe file explaining the app's functionality and how to use it.

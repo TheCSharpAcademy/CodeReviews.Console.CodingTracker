@@ -12,7 +12,7 @@ public class ValidateInput
             validInput = result >= min && result <= max;
             if (!validInput)
             {
-                Console.WriteLine($"Invalid input, try again. Value must be between {min} and {max}.");
+                AnsiConsole.Markup($"[red]Invalid input, try again. Value must be between {min} and {max}.[/]\n");
             }
         } while (!validInput);
 
@@ -26,10 +26,10 @@ public class ValidateInput
         do
         {
             string input = AnsiConsole.Ask<string>(prompt);
-            validInput = TimeSpan.TryParse(input, out result);
+            validInput = TimeSpan.TryParse(input, out result) && result.TotalSeconds > 0 && input.Split(":").Length == 3;
             if (!validInput)
             {
-                Console.WriteLine("Invalid input, try again. Please input a valid time");
+                AnsiConsole.Markup($"[red]Invalid input, try again. Please input a valid time[/]\n");
             }
         } while (!validInput);
 

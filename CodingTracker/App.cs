@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using Spectre.Console;
+using System.Configuration;
 
 public class App
 {
@@ -27,10 +28,14 @@ public class App
                 case MainMenuOptions.AddManualSession: 
                     AddManualSession();
                     break;
-                case MainMenuOptions.ViewSessions: break; // Let the user filter their coding records per period (weeks, days, years) and/or order ascending or descending.
+                case MainMenuOptions.ViewSessions: 
+                    ViewSessions();
+                    break; // Let the user filter their coding records per period (weeks, days, years) and/or order ascending or descending.
                 case MainMenuOptions.Goals: break;
                 case MainMenuOptions.Reports: break; // options (years, weeks, days). Breakdown by filter. 
-                case MainMenuOptions.Exit: break;
+                case MainMenuOptions.Exit: 
+                    Environment.Exit(0);
+                    break;
             }
         }
     }
@@ -67,5 +72,29 @@ public class App
     {
         CodingSession codingSession = _userInput.AddManualSession();
         _codingRepository.AddSession(codingSession);
+    }
+
+    private void ViewSessions()
+    {
+        var getSessions = _codingRepository.GetSessions();
+
+        if (_codingRepository.GetSessions().Count == 0)
+        {
+            AnsiConsole.Ask<string>("No entries in database to filter. Press any key to continue.");
+        }
+        else
+        {
+            /* Build a menu to prompt the user for their filtering preferences.
+             * Ensure that the list of sessions to filter is not empty.
+             * Offer options for filtering in ascending or descending order.
+             * Provide an additional submenu with the following options:
+             *   - Filter by date (weeks, days, years)
+             *     - If this option is selected, prompt the user to choose from one of the three available options.
+             *       Once selected, ask the user to input an integer. For example, if they choose "weeks," entering 3 would represent the past 3 weeks of sessions.
+             *   - Show all sessions
+             */
+        }
+
+        
     }
 }

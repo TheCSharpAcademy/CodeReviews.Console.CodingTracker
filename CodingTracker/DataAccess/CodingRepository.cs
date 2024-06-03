@@ -1,5 +1,7 @@
 ﻿using Dapper;
 using Microsoft.Data.Sqlite;
+using Spectre.Console;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 
@@ -14,16 +16,18 @@ public class CodingRepository
 
     public void AddSession(CodingSession codingSession)
     {
-        try
-        {
-            string query = "INSERT INTO codingtracker (StartTime, EndTime, Duration) VALUES (@StartTime, @EndTime, @Duration)";
-            using (var conn = _databaseManager.GetConnection()){
-                conn.Execute(query, codingSession);
-            }
+        string query = "INSERT INTO codingtracker (StartTime, EndTime, Duration) VALUES (@StartTime, @EndTime, @Duration)";
+        using (var conn = _databaseManager.GetConnection()){
+            conn.Execute(query, codingSession);
         }
-        catch (SqliteException e)
+    }
+
+    public List<CodingSession> GetSessions()
+    {
+        string query = "SELECT * FROM codingtracker";
+        using (var conn = _databaseManager.GetConnection())
         {
-            Console.WriteLine("Error inserting into database: " + e);
+            return conn.Query<CodingSession>(query).ToList();
         }
     }
 }

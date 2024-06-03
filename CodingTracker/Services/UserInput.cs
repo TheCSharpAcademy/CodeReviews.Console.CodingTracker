@@ -72,12 +72,14 @@ public class UserInput
         Header();
         DateTime startDate;
         DateTime endDate; 
+
         do
         {
             var startYear = _validateInput.GetValidInt("In what year did your coding session start? (e.g., 2024)", DateTime.Now.Year, DateTime.Now.Year + 1);
             var startMonth = _validateInput.GetValidInt("In what month did your coding session start? (1 for January, 12 for December)", 1, 12);
             var startDay = _validateInput.GetValidInt("On what day did your coding session start? (1-31)", 1, 31);
             var startTime = _validateInput.GetValidTime("What time did you start your session? (hh:mm:ss)");
+
             var endYear = _validateInput.GetValidInt("In what year did your coding session end? (e.g., 2024)", DateTime.Now.Year, DateTime.Now.Year + 1);
             var endMonth = _validateInput.GetValidInt("In what month did your coding session end? (1 for January, 12 for December)", 1, 12);
             var endDay = _validateInput.GetValidInt("On what day did your coding session end? (1-31)", 1, 31);
@@ -88,7 +90,7 @@ public class UserInput
 
             if (!_validateInput.ValidateSessionDates(startDate, endDate))
             {
-                AnsiConsole.WriteLine("End date must be after start date.");
+                AnsiConsole.Markup("[red]End date must be after start date.[/]");
             }
             
         } while (!_validateInput.ValidateSessionDates(startDate, endDate));
