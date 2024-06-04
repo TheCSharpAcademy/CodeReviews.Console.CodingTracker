@@ -12,8 +12,8 @@
 		- [x] Implement a stopwatch feature to track coding time
 	- [x] Implement AddManualSession
 		- [x] Ensure end date/time is not before the start date/time	
-	- [ ] Implement ViewSessions
-		- [ ] Allow users to filter coding records by period (weeks, days, years) and order them (ascending/descending).
+	- [x] Implement ViewSessions
+		- [x] Allow users to filter coding records by period (weeks, days, years) and order them (ascending/descending).
 	- [ ] Implement Goals
 		- [ ] Add a feature to set coding goals and track progress
 	- [ ] Implement Reports

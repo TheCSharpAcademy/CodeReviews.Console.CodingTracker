@@ -15,7 +15,7 @@ public class UserInput
 
     public void Header()
     {
-        Console.Clear();
+        AnsiConsole.Clear();
         AnsiConsole.Write(new FigletText("CodingTracker").Color(Color.Orange1));
     }
 
@@ -145,7 +145,7 @@ public class UserInput
 
     }
 
-    public void OutputSessions(List<CodingSession> codingSessions, SortBy sordOrder)
+    public void OutputSessions(IEnumerable<CodingSession> codingSessions, SortBy sordOrder)
     {
         Header();
 
@@ -180,5 +180,39 @@ public class UserInput
         AnsiConsole.WriteLine("Press any key to go back to main menu.");
         Console.ReadKey();
 
+    }
+
+    public FilterByPeriod GetUserFilterPeriod()
+    {
+        var optionDescriptions = new Dictionary<string, FilterByPeriod>
+        {
+            { "Days", FilterByPeriod.Days },
+            { "Weeks", FilterByPeriod.Weeks },
+            { "Years", FilterByPeriod.Years },
+        };
+
+        var options = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .AddChoices(optionDescriptions.Keys));
+
+        return optionDescriptions[options];
+    }
+
+    public int FilterDuration(FilterByPeriod filter)
+    {
+        Header();
+
+        var number = _validateInput.GetValidInt($"How long would you like to filter", 1, 1000);
+
+        switch (filter)
+        {
+            case FilterByPeriod.Days:
+                return number;
+            case FilterByPeriod.Weeks:
+                return number * 7;
+            case FilterByPeriod.Years:
+                return number * 365;
+        }
+        return 0;
     }
 }

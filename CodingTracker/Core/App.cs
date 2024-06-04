@@ -99,8 +99,10 @@ public class App
             switch (filter)
             {
                 case FilteringOptions.Dates:
-                    // If this option is selected, prompt the user to choose from one of the three available options.
-                    // Once selected, ask the user to input an integer. For example, if they choose "weeks," entering 3 would represent the past 3 weeks of sessions.
+                    var option = _userInput.GetUserFilterPeriod();
+                    int length = _userInput.FilterDuration(option);
+                    var filterSession = sessionList.Where(e => e.StartTime >= DateTime.Today.AddDays(-length));
+                    _userInput.OutputSessions(filterSession, sortOrber);
                     break;
                 case FilteringOptions.All:
                     _userInput.OutputSessions(sessionList, sortOrber);
