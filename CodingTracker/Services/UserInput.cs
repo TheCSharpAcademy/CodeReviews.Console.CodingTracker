@@ -145,7 +145,7 @@ public class UserInput
 
     }
 
-    public void OutputSessions(IEnumerable<CodingSession> codingSessions, SortBy sordOrder)
+    public void OutputSessions(IEnumerable<CodingSession> codingSessions, SortBy sortOrder)
     {
         Header();
 
@@ -156,25 +156,17 @@ public class UserInput
             table.AddColumn(new TableColumn(p.Name).Centered());
         }
 
-        switch (sordOrder)
+        IEnumerable<CodingSession> sortedSessions = sortOrder switch
         {
-            case SortBy.Descending:
-            {
-                foreach (var item in codingSessions.OrderByDescending(x => x.StartTime))
-                {
-                    table.AddRow(item.Id.ToString(), item.StartTime.ToString(), item.EndTime.ToString(), item.Duration.ToString());
-                }
-                break;
-            }
-            case SortBy.Ascending:
-            {
-                foreach (var item in codingSessions.OrderBy(x => x.StartTime))
-                {
-                    table.AddRow(item.Id.ToString(), item.StartTime.ToString(), item.EndTime.ToString(), item.Duration.ToString());
-                }
-                break;
-            }
-        } 
+            SortBy.Descending => codingSessions.OrderByDescending(x => x.StartTime),
+            SortBy.Ascending => codingSessions.OrderBy(x => x.StartTime),
+            _ => codingSessions
+        };
+
+        foreach (var item in sortedSessions)
+        {
+            table.AddRow(item.Id.ToString(), item.StartTime.ToString(), item.EndTime.ToString(), item.Duration.ToString());
+        }
 
         AnsiConsole.Write(table);
         AnsiConsole.WriteLine("Press any key to go back to main menu.");
