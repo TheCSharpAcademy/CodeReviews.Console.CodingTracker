@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Collections.Immutable;
+using System.Reflection;
 using Spectre.Console;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -26,7 +27,7 @@ public class UserInput
         {
             { "Start a new session", MainMenuOptions.NewSession },
             { "Add a session manually", MainMenuOptions.AddManualSession },
-            { "View & update previous sessions", MainMenuOptions.ViewSessions },
+            { "View previous sessions", MainMenuOptions.ViewSessions },
             { "Add, update or view goals", MainMenuOptions.Goals }, 
             { "View Reports", MainMenuOptions.Reports }, 
             { "Insert Test Data", MainMenuOptions.InsertTestData }, 
@@ -144,7 +145,7 @@ public class UserInput
 
     }
 
-    public void OutputSessions(IEnumerable<CodingSession> codingSessions)
+    public void OutputSessions(List<CodingSession> codingSessions, SortBy sordOrder)
     {
         Header();
 
@@ -155,12 +156,28 @@ public class UserInput
             table.AddColumn(new TableColumn(p.Name).Centered());
         }
 
-        foreach (var item in codingSessions)
+        switch (sordOrder)
         {
-            table.AddRow(item.Id.ToString(), item.StartTime.ToString(), item.EndTime.ToString(), item.Duration.ToString());
-        }
+            case SortBy.Descending:
+            {
+                foreach (var item in codingSessions.OrderByDescending(x => x.StartTime))
+                {
+                    table.AddRow(item.Id.ToString(), item.StartTime.ToString(), item.EndTime.ToString(), item.Duration.ToString());
+                }
+                break;
+            }
+            case SortBy.Ascending:
+            {
+                foreach (var item in codingSessions.OrderBy(x => x.StartTime))
+                {
+                    table.AddRow(item.Id.ToString(), item.StartTime.ToString(), item.EndTime.ToString(), item.Duration.ToString());
+                }
+                break;
+            }
+        } 
 
         AnsiConsole.Write(table);
+        AnsiConsole.WriteLine("Press any key to go back to main menu.");
         Console.ReadKey();
 
     }

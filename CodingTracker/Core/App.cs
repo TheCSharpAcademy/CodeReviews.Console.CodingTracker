@@ -103,7 +103,7 @@ public class App
                     // Once selected, ask the user to input an integer. For example, if they choose "weeks," entering 3 would represent the past 3 weeks of sessions.
                     break;
                 case FilteringOptions.All:
-                    _userInput.OutputSessions(sessionList);
+                    _userInput.OutputSessions(sessionList, sortOrber);
                     break;
             }
         }
