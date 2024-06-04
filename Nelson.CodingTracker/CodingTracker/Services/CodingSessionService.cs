@@ -47,6 +47,11 @@ namespace CodingTracker.Services
 
         public void UpdateSession()
         {
+            // Show table of sessions
+            GetAllSessions();
+
+            _userInteraction?.ShowMessageTimeout("\n\n[Yellow]Please type the ID of the session you would like to update. Type 0 to return to Main Menu: [/]");
+
             int id = _utils.ConvertToInt(_userInteraction.GetUserInput());
 
             if (id == 0) return;

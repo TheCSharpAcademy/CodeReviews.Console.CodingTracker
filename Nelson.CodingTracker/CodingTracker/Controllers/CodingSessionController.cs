@@ -55,7 +55,6 @@ namespace CodingTracker.Controllers
                     _sessionService.InsertSession(codingSession);
                     break;
                 case "3":
-                    _userInteraction?.ShowMessageTimeout("\n[Yellow]Please type the ID of the session you would like to update. Type 0 to return to Main Menu: [/]");
                     _sessionService.UpdateSession();
                     break;
                 case "4":
