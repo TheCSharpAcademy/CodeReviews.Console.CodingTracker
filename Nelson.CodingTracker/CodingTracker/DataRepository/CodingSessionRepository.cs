@@ -1,3 +1,4 @@
+using System.Globalization;
 using CodingTracker.ConsoleInteraction;
 using CodingTracker.IDataRepository;
 using CodingTracker.Models;
@@ -164,6 +165,9 @@ namespace CodingTracker.DataRepository
             // Retrieve the start time
             string startTimeQuery = "SELECT StartTime FROM CodingSession WHERE Id = @Id";
             var startTime = connection.ExecuteScalar<DateTime>(startTimeQuery, new { Id = idToUpdate });
+
+            if (_utils.ValidatedEndTime(startTime, endTime))
+                return;
 
             // Calculate the new duration
             var newDuration = _utils.GetSessionDuration(startTime, endTime);

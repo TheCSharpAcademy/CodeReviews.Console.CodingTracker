@@ -58,7 +58,6 @@ namespace CodingTracker.Controllers
                     _sessionService.UpdateSession();
                     break;
                 case "4":
-                    _userInteraction.ShowMessageTimeout("\n[Red]Please type the ID of the session to delete or 0 to return to Main Menu: [/]");
                     _sessionService.DeleteSession();
                     break;
                 case "5":

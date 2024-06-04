@@ -23,6 +23,10 @@ namespace CodingTracker.Services
 
         public void DeleteSession()
         {
+            GetAllSessions();
+
+            _userInteraction.ShowMessageTimeout("\n\n[Red]Please type the ID of the session to delete or 0 to return to Main Menu: [/]");
+
             int id = _utils.ConvertToInt(_userInteraction.GetUserInput());
 
             if (id == 0) return;

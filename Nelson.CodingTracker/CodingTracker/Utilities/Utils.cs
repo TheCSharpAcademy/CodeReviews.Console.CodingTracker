@@ -77,6 +77,16 @@ namespace CodingTracker.Utilities
             return finalDate;
         }
 
+        public bool ValidatedEndTime(DateTime startTime, DateTime endTime)
+        {
+            if (endTime.CompareTo(startTime) <= 0)
+            {
+                _userInteraction.ShowMessageTimeout("\n[Red]The End Time must be after the Start Time[/]\n");
+                return true;
+            }
+            return false;
+        }
+
         public List<DateTime> ValidatedTimes()
         {
             DateTime startTime = ValidatedStartTime();
