@@ -1,4 +1,5 @@
-﻿using Spectre.Console;
+﻿using System.Reflection;
+using Spectre.Console;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -106,4 +107,61 @@ public class UserInput
     }
 
     public int InsertTestData() => _validateInput.GetValidInt($"How many test records would you like to insert? (1-1000)", 1, 1000);
+
+    public SortBy GetSortingOrder()
+    {
+        Header();
+
+        var optionDescriptions = new Dictionary<string, SortBy>
+        {
+            { "Sort by Ascending", SortBy.Ascending },
+            { "Sort by Decending", SortBy.Descending },
+        };
+
+        var options = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .AddChoices(optionDescriptions.Keys));
+
+        return optionDescriptions[options];
+
+    }
+
+    public FilteringOptions FilteringOptionsMenu()
+    {
+        Header();
+
+        var optionDescriptions = new Dictionary<string, FilteringOptions>
+        {
+            { "Filter by date range", FilteringOptions.Dates },
+            { "Show all", FilteringOptions.All },
+        };
+
+        var options = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .AddChoices(optionDescriptions.Keys));
+
+        return optionDescriptions[options];
+
+    }
+
+    public void OutputSessions(IEnumerable<CodingSession> codingSessions)
+    {
+        Header();
+
+        var table = new Table();
+
+        foreach (PropertyInfo p in typeof(CodingSession).GetProperties())
+        {
+            table.AddColumn(new TableColumn(p.Name).Centered());
+        }
+
+        foreach (var item in codingSessions)
+        {
+            table.AddRow(item.Id.ToString(), item.StartTime.ToString(), item.EndTime.ToString(), item.Duration.ToString());
+        }
+
+        AnsiConsole.Write(table);
+        Console.ReadKey();
+
+    }
 }

@@ -92,15 +92,20 @@ public class App
         }
         else
         {
-            /* Build a menu to prompt the user for their filtering preferences.
-             * Ensure that the list of sessions to filter is not empty.
-             * Offer options for filtering in ascending or descending order.
-             * Provide an additional submenu with the following options:
-             *   - Filter by date (weeks, days, years)
-             *     - If this option is selected, prompt the user to choose from one of the three available options.
-             *       Once selected, ask the user to input an integer. For example, if they choose "weeks," entering 3 would represent the past 3 weeks of sessions.
-             *   - Show all sessions
-             */
+            var sessionList = _codingRepository.GetSessions();
+            var sortOrber = _userInput.GetSortingOrder();
+            var filter = _userInput.FilteringOptionsMenu();
+
+            switch (filter)
+            {
+                case FilteringOptions.Dates:
+                    // If this option is selected, prompt the user to choose from one of the three available options.
+                    // Once selected, ask the user to input an integer. For example, if they choose "weeks," entering 3 would represent the past 3 weeks of sessions.
+                    break;
+                case FilteringOptions.All:
+                    _userInput.OutputSessions(sessionList);
+                    break;
+            }
         }
 
         

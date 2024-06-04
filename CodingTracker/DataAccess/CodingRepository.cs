@@ -2,7 +2,6 @@
 using Microsoft.Data.Sqlite;
 using Spectre.Console;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
 
 public class CodingRepository
@@ -28,6 +27,7 @@ public class CodingRepository
         string query = "SELECT * FROM codingtracker";
         using (var conn = _databaseManager.GetConnection())
         {
+            SqlMapper.AddTypeHandler(new TimeSpanHandler());
             return conn.Query<CodingSession>(query).ToList();
         }
     }
