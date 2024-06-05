@@ -38,7 +38,16 @@ public class DatabaseManager
 	                    EndTime	TEXT,
 	                    Duration	TEXT,
 	                    PRIMARY KEY(id AUTOINCREMENT)
-                    );";
+                    );
+
+                    CREATE TABLE goals (
+                            Id INTEGER NOT NULL UNIQUE,
+                            TotalHours INTEGER NOT NULL,
+                            StartDate TEXT NOT NULL,
+                            EndDate TEXT,
+                            CompletionStatus TEXT NOT NULL,
+                            PRIMARY KEY(Id AUTOINCREMENT)
+                        );";
 
                 conn.Execute(query);
             }

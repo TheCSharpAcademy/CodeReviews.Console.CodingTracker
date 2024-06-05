@@ -51,4 +51,19 @@ public class ValidateInput
         var components = input.Split(':');
         return components.All(c => c.Length == 2);
     }
+
+    public int GoalPicked(List<CodingGoals> codingGoals)
+    {
+        int goalPicked;
+        bool isValidId;
+
+        do
+        {
+            goalPicked = GetValidInt($"Pick a goal by typing it's id", 1, int.MaxValue);
+            isValidId = codingGoals.Any(x => x.Id == goalPicked);
+            if (!isValidId) AnsiConsole.WriteLine("That goal (Id) does not exist.");
+        } while (!isValidId);
+
+        return goalPicked;
+    }
 }

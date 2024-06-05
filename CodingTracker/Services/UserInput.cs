@@ -28,9 +28,9 @@ public class UserInput
             { "Start a new session", MainMenuOptions.NewSession },
             { "Add a session manually", MainMenuOptions.AddManualSession },
             { "View previous sessions", MainMenuOptions.ViewSessions },
-            { "Add, update or view goals", MainMenuOptions.Goals }, 
-            { "View Reports", MainMenuOptions.Reports }, 
-            { "Insert Test Data", MainMenuOptions.InsertTestData }, 
+            { "Add, update or view goals", MainMenuOptions.Goals },
+            { "View Reports", MainMenuOptions.Reports },
+            { "Insert Test Data", MainMenuOptions.InsertTestData },
             { "Exit the application", MainMenuOptions.Exit }
         };
 
@@ -74,7 +74,7 @@ public class UserInput
     {
         Header();
         DateTime startDate;
-        DateTime endDate; 
+        DateTime endDate;
 
         do
         {
@@ -88,14 +88,14 @@ public class UserInput
             var endDay = _validateInput.GetValidInt("On what day did your coding session end? (1-31)", 1, 31);
             var endTime = _validateInput.GetValidTime("What time did you end your session? (hh:mm:ss)");
 
-            startDate =  new DateTime(startYear, startMonth, startDay, startTime.Hours, startTime.Minutes, startTime.Seconds);
+            startDate = new DateTime(startYear, startMonth, startDay, startTime.Hours, startTime.Minutes, startTime.Seconds);
             endDate = new DateTime(endYear, endMonth, endDay, endTime.Hours, endTime.Minutes, endTime.Seconds);
 
             if (!_validateInput.ValidateSessionDates(startDate, endDate))
             {
                 AnsiConsole.Markup("[red]End date must be after start date.[/]");
             }
-            
+
         } while (!_validateInput.ValidateSessionDates(startDate, endDate));
 
 
@@ -171,7 +171,6 @@ public class UserInput
         AnsiConsole.Write(table);
         AnsiConsole.WriteLine("Press any key to go back to main menu.");
         Console.ReadKey();
-
     }
 
     public FilterByPeriod GetUserFilterPeriod()
@@ -206,5 +205,88 @@ public class UserInput
                 return number * 365;
         }
         return 0;
+    }
+
+    public GoalOptions GoalMenuOptions()
+    {
+        Header();
+
+        var optionDescriptions = new Dictionary<string, GoalOptions>
+        {
+            { "Add a new goal", GoalOptions.NewGoal },
+            { "View Current Goals", GoalOptions.CurrentGoals },
+            { "Remove a goal", GoalOptions.DeleteGoal },
+            { "Insert test goals", GoalOptions.InsertTestGoals },
+        };
+
+        var options = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .AddChoices(optionDescriptions.Keys));
+
+        return optionDescriptions[options];
+
+    }
+
+    public int SetNewGoal() => _validateInput.GetValidInt($"How many hours do you want your new goal to be? (1-1000)", 1, 1000);
+
+    public void DisplayGoalList(List<CodingGoals> codingGoals)
+    {
+        Header();
+
+        var table = new Table();
+
+        foreach (PropertyInfo p in typeof(CodingGoals).GetProperties())
+        {
+            table.AddColumn(new TableColumn(p.Name).Centered());
+        }
+
+        foreach (var item in codingGoals)
+        {
+            table.AddRow(item.Id.ToString(), item.TotalHours.ToString(), item.StartDate.ToString(), item.EndDate.ToString(), item.CompletionStatus);
+        }
+
+        AnsiConsole.Write(table);
+    }
+
+    public void DisplayGoal(CodingGoals codingGoal, int currentHours)
+    {
+        Header();
+
+        double completionPercentage = (double)currentHours / codingGoal.TotalHours * 100;
+        double remainingPercentage = 100 - completionPercentage;
+
+        if (completionPercentage + remainingPercentage != 100) remainingPercentage = 100 - completionPercentage;
+        
+        var progress = new BreakdownChart()
+            .HideTags()
+            .Width(100)
+            .AddItem("Complete", (int)completionPercentage, Color.Green)
+            .AddItem("Still to do", (int)remainingPercentage, Color.Red);
+
+        var startDate = $"[bold]Start Date:[/] {codingGoal.StartDate}";
+        var goalHours = $"[bold]Hours to reach:[/] {codingGoal.TotalHours}";
+        var displayCurrentHours = $"[bold]Current hours:[/] {currentHours}"; 
+        var endDate = $"[bold]Completed Date:[/] {codingGoal.EndDate}";
+
+        var grid = new Grid();
+        grid.AddColumn(new GridColumn().NoWrap());
+        grid.AddColumn();
+
+        grid.AddRow(startDate);
+        grid.AddRow(goalHours);
+        grid.AddRow(displayCurrentHours);
+        grid.AddRow(progress);
+        grid.AddRow(endDate);
+
+        var panel = new Panel(grid)
+        {
+            Header = new PanelHeader("Goal Progress"),
+            Padding = new Padding(2, 2, 2, 2)
+        };
+
+        AnsiConsole.Write(panel);
+
+        AnsiConsole.WriteLine("Press any key to go back to main menu.");
+        Console.ReadKey();
     }
 }
