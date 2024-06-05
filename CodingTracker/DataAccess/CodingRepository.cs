@@ -34,16 +34,18 @@ public class CodingRepository
 
     public void InsertTestData(int number)
     {
-        for (int i = 0; i <= number; i++)
+        for (int i = 0; i < number; i++)
         {
             DateTime startDate;
             DateTime endDate;
+            TimeSpan duration;
 
             do
             {
                 startDate = Utilities.GenerateRandomDate();
-                endDate = Utilities.GenerateRandomDate();
-            } while (endDate <= startDate);
+                duration = new TimeSpan(Utilities.RandomNumber(0, 24), Utilities.RandomNumber(0, 60), Utilities.RandomNumber(0, 60));
+                endDate = startDate.Add(duration);
+            } while (endDate <= startDate || startDate >= DateTime.Now || duration.TotalHours >= 6);
 
             CodingSession codingSession = new CodingSession
             {
@@ -53,6 +55,9 @@ public class CodingRepository
             };
 
             AddSession(codingSession);
+
+            AnsiConsole.WriteLine($"{i + 1}. Added recored to database: {codingSession.StartTime} - {codingSession.EndTime} - {codingSession.Duration}");
+
         }
     }
 }

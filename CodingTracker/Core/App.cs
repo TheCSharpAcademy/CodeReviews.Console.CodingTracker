@@ -30,8 +30,35 @@ public class App
                     break;
                 case MainMenuOptions.ViewSessions: 
                     ViewSessions();
-                    break; // Let the user filter their coding records per period (weeks, days, years) and/or order ascending or descending.
-                case MainMenuOptions.Goals: break;
+                    break;
+                case MainMenuOptions.Goals: 
+                    /*
+                     * Goals Table Structure:
+                     * Fields: Id | Name | Total Hours | Start Date | End Date | Completion Status
+                     *
+                     * Menu Options:
+                     * 1. Set New Goal:
+                     *    - Prompt the user to input the total amount of coding hours for the new goal.
+                     *
+                     * 2. View Current Goals:
+                     *    - Display a list of all goals with details such as name, total hours, start date, and completion status. Color completed ones green.
+                     *    - Allow the user to select a goal for more information.
+                     *    - Output additional details including remaining hours, days remaining, and a table of related coding sessions.
+                     *
+                     * 3. Delete a Goal:
+                     *    - Output all goals in a table format and prompt the user to select a goal ID for deletion.
+                     *
+                     * 4. Insert Test Goal Data:
+                     *    - Generate and insert test data for goals into the goals table.
+                     *    
+                     * Information on implementation:
+                     * When displaying information about a selected goal, filter the coding sessions:
+                     * - Retrieve coding sessions with a start date after the start date of the selected goal.
+                     * - Exclude coding sessions with a start date after the completion date of the selected goal.
+                     * This ensures only relevant coding sessions are included in the output, limited to the duration of the goal.
+                     */
+
+                    break;
                 case MainMenuOptions.Reports: break; // options (years, weeks, days). Breakdown by filter. 
                 case MainMenuOptions.InsertTestData:
                     InsertTestData();
