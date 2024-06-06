@@ -29,7 +29,6 @@ public class UserInput
             { "Add a session manually", MainMenuOptions.AddManualSession },
             { "View previous sessions", MainMenuOptions.ViewSessions },
             { "Add, update or view goals", MainMenuOptions.Goals },
-            { "View Reports", MainMenuOptions.Reports },
             { "Insert Test Data", MainMenuOptions.InsertTestData },
             { "Exit the application", MainMenuOptions.Exit }
         };

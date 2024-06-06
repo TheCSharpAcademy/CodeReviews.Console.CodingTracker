@@ -36,7 +36,6 @@ public class App
                 case MainMenuOptions.Goals: 
                     ManageGoals();
                     break;
-                case MainMenuOptions.Reports: break; // options (years, weeks, days). Breakdown by filter. 
                 case MainMenuOptions.InsertTestData:
                     InsertTestData();
                     break; 

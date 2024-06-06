@@ -4,7 +4,6 @@
     AddManualSession,
     ViewSessions,
     Goals,
-    Reports,
     InsertTestData,
     Exit
 }
