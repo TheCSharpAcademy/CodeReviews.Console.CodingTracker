@@ -132,7 +132,7 @@ namespace CodingTracker.Arashi256.Views
             AnsiConsole.MarkupLine($"[skyblue2]Elapsed Time:[/]\t\t\t[cyan1]{elapsedTime:hh\\:mm\\:ss}[/]");
             if (AnsiConsole.Confirm("\n[yellow]Do you want to save this coding session?[/]", false))
             {
-                string result = _sessionController.AddCodingSession((DateTime)startTime, (DateTime)endTime);
+                string result = _sessionController.AddCodingSession(startTime, endTime);
                 AnsiConsole.MarkupLine($"[paleturquoise1]{result}[/].\n");
             }
             CommonUI.Pause();

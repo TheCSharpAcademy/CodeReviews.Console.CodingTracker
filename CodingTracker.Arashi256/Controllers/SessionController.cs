@@ -23,7 +23,7 @@ namespace CodingTracker.Arashi256.Controllers
 
         public string UpdateCodingSession(int id, DateTime startDT, DateTime endDT) 
         {
-            string duration = Utility.CalculateDuration((DateTime)startDT, (DateTime)endDT);
+            string duration = Utility.CalculateDuration(startDT, endDT);
             var codingSession = new CodingSession() { Id = id, StartDateTime = startDT, EndDateTime = endDT, Duration = duration };
             int rows = _database.UpdateCodingSession(codingSession);
             return $"Updated {rows} coding session with id of {codingSession.Id} with new duration of {codingSession.Duration}";
