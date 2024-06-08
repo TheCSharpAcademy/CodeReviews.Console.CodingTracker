@@ -81,10 +81,8 @@ namespace CodingTracker.Arashi256.Classes
             using (var connection = new SqliteConnection(_connection.DatabaseConnectionString))
             {
                 string sql = "DELETE FROM coding_session WHERE Id = @Id";
-                {
-                    var rowsAffected = connection.Execute(sql, codingSession);
-                    return rowsAffected;
-                }
+                var rowsAffected = connection.Execute(sql, codingSession);
+                return rowsAffected;
             }
         }
 
@@ -123,14 +121,12 @@ namespace CodingTracker.Arashi256.Classes
             using (var connection = new SqliteConnection(_connection.DatabaseConnectionString))
             {
                 var sql = "INSERT INTO coding_goal(StartDateTime, Hours, DeadlineDateTime) VALUES (@StartDateTime, @Hours, @DeadlineDateTime)";
-                {
-                    var parameters = new DynamicParameters();
-                    parameters.Add("@StartDateTime", codingGoal.StartDateTime.ToString("yyyy-MM-dd HH:mm:ss"));
-                    parameters.Add("@Hours", codingGoal.Hours);
-                    parameters.Add("@DeadlineDateTime", codingGoal.DeadlineDateTime.ToString("yyyy-MM-dd HH:mm:ss"));
-                    var rowsAffected = connection.Execute(sql, parameters);
-                    return rowsAffected;
-                }
+                var parameters = new DynamicParameters();
+                parameters.Add("@StartDateTime", codingGoal.StartDateTime.ToString("yyyy-MM-dd HH:mm:ss"));
+                parameters.Add("@Hours", codingGoal.Hours);
+                parameters.Add("@DeadlineDateTime", codingGoal.DeadlineDateTime.ToString("yyyy-MM-dd HH:mm:ss"));
+                var rowsAffected = connection.Execute(sql, parameters);
+                return rowsAffected;
             }
         }
 
@@ -139,14 +135,12 @@ namespace CodingTracker.Arashi256.Classes
             using (var connection = new SqliteConnection(_connection.DatabaseConnectionString))
             {
                 string sql = "UPDATE coding_goal SET Hours = @Hours, DeadlineDateTime = @DeadlineDateTime WHERE Id = @Id";
-                {
-                    var parameters = new DynamicParameters();
-                    parameters.Add("@Id", codingGoal.Id);
-                    parameters.Add("@Hours", codingGoal.Hours);
-                    parameters.Add("@DeadlineDateTime", codingGoal.DeadlineDateTime.ToString("yyyy-MM-dd HH:mm:ss"));
-                    var rowsAffected = connection.Execute(sql, parameters);
-                    return rowsAffected;
-                }
+                var parameters = new DynamicParameters();
+                parameters.Add("@Id", codingGoal.Id);
+                parameters.Add("@Hours", codingGoal.Hours);
+                parameters.Add("@DeadlineDateTime", codingGoal.DeadlineDateTime.ToString("yyyy-MM-dd HH:mm:ss"));
+                var rowsAffected = connection.Execute(sql, parameters);
+                return rowsAffected;
             }
         }
 
@@ -155,10 +149,8 @@ namespace CodingTracker.Arashi256.Classes
             using (var connection = new SqliteConnection(_connection.DatabaseConnectionString))
             {
                 string sql = "DELETE FROM coding_goal";
-                {
-                    var rowsAffected = connection.Execute(sql);
-                    return rowsAffected;
-                }
+                var rowsAffected = connection.Execute(sql);
+                return rowsAffected;
             }
         }
     }
