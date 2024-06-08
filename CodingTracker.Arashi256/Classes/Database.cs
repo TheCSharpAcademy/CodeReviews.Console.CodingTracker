@@ -52,14 +52,12 @@ namespace CodingTracker.Arashi256.Classes
             using (var connection = new SqliteConnection(_connection.DatabaseConnectionString))
             {
                 var sql = "INSERT INTO coding_session (StartDateTime, EndDateTime, Duration) VALUES (@StartDateTime, @EndDateTime, @Duration)";
-                {
-                    var parameters = new DynamicParameters();
-                    parameters.Add("@StartDateTime", codingSession.StartDateTime.ToString("yyyy-MM-dd HH:mm:ss"));
-                    parameters.Add("@EndDateTime", codingSession.EndDateTime.ToString("yyyy-MM-dd HH:mm:ss"));
-                    parameters.Add("@Duration", codingSession.Duration);
-                    var rowsAffected = connection.Execute(sql, parameters);
-                    return rowsAffected;
-                }         
+                var parameters = new DynamicParameters();
+                parameters.Add("@StartDateTime", codingSession.StartDateTime.ToString("yyyy-MM-dd HH:mm:ss"));
+                parameters.Add("@EndDateTime", codingSession.EndDateTime.ToString("yyyy-MM-dd HH:mm:ss"));
+                parameters.Add("@Duration", codingSession.Duration);
+                var rowsAffected = connection.Execute(sql, parameters);
+                return rowsAffected;    
             }
         }
 
