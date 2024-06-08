@@ -66,15 +66,13 @@ namespace CodingTracker.Arashi256.Classes
             using (var connection = new SqliteConnection(_connection.DatabaseConnectionString))
             {
                 string sql = "UPDATE coding_session SET StartDateTime = @StartDateTime, EndDateTime = @EndDateTime, Duration = @Duration WHERE Id = @Id";
-                {
-                    var parameters = new DynamicParameters();
-                    parameters.Add("@Id", codingSession.Id);
-                    parameters.Add("@StartDateTime", codingSession.StartDateTime.ToString("yyyy-MM-dd HH:mm:ss"));
-                    parameters.Add("@EndDateTime", codingSession.EndDateTime.ToString("yyyy-MM-dd HH:mm:ss"));
-                    parameters.Add("@Duration", codingSession.Duration);
-                    var rowsAffected = connection.Execute(sql, parameters);
-                    return rowsAffected;
-                }
+                var parameters = new DynamicParameters();
+                parameters.Add("@Id", codingSession.Id);
+                parameters.Add("@StartDateTime", codingSession.StartDateTime.ToString("yyyy-MM-dd HH:mm:ss"));
+                parameters.Add("@EndDateTime", codingSession.EndDateTime.ToString("yyyy-MM-dd HH:mm:ss"));
+                parameters.Add("@Duration", codingSession.Duration);
+                var rowsAffected = connection.Execute(sql, parameters);
+                return rowsAffected;
             }
         }
 
