@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34616.47
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodingTracker.Arashi256", "CodingTracker.Arashi256.csproj", "{EE285676-F0DF-4890-A307-80C130B2054F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EE285676-F0DF-4890-A307-80C130B2054F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE285676-F0DF-4890-A307-80C130B2054F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE285676-F0DF-4890-A307-80C130B2054F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE285676-F0DF-4890-A307-80C130B2054F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A161D0A1-321D-4FE5-8567-FCC5F8C37B19}
+	EndGlobalSection
+EndGlobal
