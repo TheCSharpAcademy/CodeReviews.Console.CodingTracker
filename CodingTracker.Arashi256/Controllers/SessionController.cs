@@ -15,7 +15,7 @@ namespace CodingTracker.Arashi256.Controllers
 
         public string AddCodingSession(DateTime startDT, DateTime endDT)
         {
-            string duration = Utility.CalculateDuration((DateTime)startDT, (DateTime)endDT);
+            string duration = Utility.CalculateDuration(startDT, endDT);
             var codingSession = new CodingSession() { Id = null, StartDateTime = startDT, EndDateTime = endDT, Duration = duration };
             int rows = _database.AddNewCodingSession(codingSession);
             return $"Added {rows} coding session of {duration} time";
@@ -75,7 +75,6 @@ namespace CodingTracker.Arashi256.Controllers
             int[] validIds = new int[codingSessions.Count];
             for (int i = 0; i < codingSessions.Count; i++)
             {
-                //validIds[i] = (int)codingSessions[i].Id;
                 validIds[i] = i + 1;
             }
             return validIds;

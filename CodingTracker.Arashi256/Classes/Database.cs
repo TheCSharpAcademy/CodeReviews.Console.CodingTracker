@@ -18,11 +18,11 @@ namespace CodingTracker.Arashi256.Classes
                 Console.WriteLine("Database already present and correct.");
         }
 
-        private int ExecuteQuery(string query, DynamicParameters? parameters = null)
+        private void ExecuteQuery(string query, DynamicParameters? parameters = null)
         {
             using (var connection = new SqliteConnection(_connection.DatabaseConnectionString))
             {
-                return connection.Execute(query, parameters);
+                connection.Execute(query, parameters);
             }
         }
 

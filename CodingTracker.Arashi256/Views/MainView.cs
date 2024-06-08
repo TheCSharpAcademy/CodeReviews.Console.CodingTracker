@@ -2,7 +2,6 @@
 using CodingTracker.Arashi256.Controllers;
 using CodingTracker.Arashi256.Models;
 using Spectre.Console;
-using System.Diagnostics;
 
 namespace CodingTracker.Arashi256.Views
 {
@@ -208,7 +207,7 @@ namespace CodingTracker.Arashi256.Views
                     DateTime[]? updatedDateTimes = CommonUI.GetUserCodingSessionDatesDialog();
                     if (updatedDateTimes != null) 
                     {
-                        string result = _sessionController.UpdateCodingSession((int)sessionToUpdate.Id, (DateTime)updatedDateTimes[0], (DateTime)updatedDateTimes[1]);
+                        string result = _sessionController.UpdateCodingSession((int)sessionToUpdate.Id, updatedDateTimes[0], updatedDateTimes[1]);
                         AnsiConsole.MarkupLine($"\n[lime]{result}[/]\n");
                     }
                 }

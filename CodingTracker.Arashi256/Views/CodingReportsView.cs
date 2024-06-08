@@ -89,7 +89,7 @@ namespace CodingTracker.Arashi256.Views
             DateTime[]? sessionsDateTimes = CommonUI.GetUserCodingSessionDatesDialog();
             if (sessionsDateTimes != null && sessionsDateTimes[0] != null && sessionsDateTimes[1] != null)
             {
-                DisplayCodingSessions(_sessionController.GetCodingSessionsBetweenDates((DateTime)sessionsDateTimes[0], (DateTime)sessionsDateTimes[1], sortOrder));
+                DisplayCodingSessions(_sessionController.GetCodingSessionsBetweenDates(sessionsDateTimes[0], sessionsDateTimes[1], sortOrder));
                 CommonUI.Pause();
             }
         }
