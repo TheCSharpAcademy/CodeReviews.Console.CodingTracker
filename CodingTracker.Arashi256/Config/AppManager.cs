@@ -1,5 +1,4 @@
-﻿using System.Configuration;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 
 namespace CodingTracker.Arashi256.Config
 {
@@ -12,7 +11,7 @@ namespace CodingTracker.Arashi256.Config
         {
             try
             {
-                _appConfig = ConfigurationManager.AppSettings;
+                _appConfig = System.Configuration.ConfigurationManager.AppSettings;
                 if (_appConfig.Count == 0)
                 {
                     Console.WriteLine("\nERROR: AppSettings is empty or cannot be read.\n");
