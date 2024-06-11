@@ -65,8 +65,8 @@ namespace CodingTracker.Arashi256.Controllers
             param.Add("@Days", $"-{days} days");
             string query = @$"SELECT Id, StartDateTime, EndDateTime, Duration 
                     FROM coding_session 
-                    WHERE DATE(StartDateTime) >= DATE('now', @Days) AND DATE(EndDateTime) <= DATE('now') 
-                    ORDER BY DATE(StartDateTime) {Utility.TranslateSortOrderToString(sortOrder)};";
+                    WHERE DATE(StartDateTime) >= DATETIME('now', @Days) AND DATE(EndDateTime) <= DATETIME('now') 
+                    ORDER BY DATETIME(StartDateTime) {Utility.TranslateSortOrderToString(sortOrder)};";
             return _database.GetCodingSessionResults(query, param);
         }
 

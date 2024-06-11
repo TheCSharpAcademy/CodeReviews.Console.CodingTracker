@@ -24,7 +24,7 @@ namespace CodingTracker.Arashi256.Classes
             _stopwatch.Start();
             _stopwatchRunning = true;
             _displayTask = Task.Run(UpdateDisplayAsync);
-            Task.Run(HandleInputAsync); // Start a task to handle user input asynchronously
+            Task.Run(HandleInputAsync);
         }
 
         public void Stop()
@@ -32,12 +32,9 @@ namespace CodingTracker.Arashi256.Classes
             _stopwatchRunning = false;
             _cancellationTokenSource.Cancel();
             _stopwatch.Stop();
-            _displayTask.Wait();  // Ensure the display task has completed
-
+            _displayTask.Wait();
             var elapsedTime = _stopwatch.Elapsed;
             var endTime = _startTime.Add(elapsedTime);
-
-            // Trigger the event with the start time, end time, and elapsed time
             StopwatchStopped?.Invoke(_startTime, endTime, elapsedTime);
         }
 
@@ -48,7 +45,7 @@ namespace CodingTracker.Arashi256.Classes
                 if (_stopwatchRunning)
                 {
                     AnsiConsole.Cursor.SetPosition(0, 0);
-                    AnsiConsole.Render(new Panel($"[white]Time: {_stopwatch.Elapsed:hh\\:mm\\:ss\\.fff}[/]"));
+                    AnsiConsole.Write(new Panel($"[white]Time: {_stopwatch.Elapsed:hh\\:mm\\:ss\\.fff}[/]"));
                 }
                 Thread.Sleep(100);
             }
@@ -67,7 +64,6 @@ namespace CodingTracker.Arashi256.Classes
                         break;
                     }
                 }
-
                 await Task.Delay(100);
             }
         }

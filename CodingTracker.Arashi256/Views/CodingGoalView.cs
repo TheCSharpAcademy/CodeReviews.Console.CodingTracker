@@ -8,7 +8,7 @@ namespace CodingTracker.Arashi256.Views
     internal class CodingGoalView
     {
         private const int GOALS_MAIN_MENU_OPTION_NUM = 5;
-        private Table _tblCodingGoalMenu;
+        private Table? _tblCodingGoalMenu;
         private GoalController _goalController;
         private SessionController _sessionController;
         private string[] _goalOptions =
@@ -20,10 +20,13 @@ namespace CodingTracker.Arashi256.Views
             "Return to Main Menu"
         };
 
-        public CodingGoalView(SessionController sc)
+        public CodingGoalView(SessionController? sc)
         {
-            _sessionController = sc;
-            _goalController = new GoalController();
+            if (sc != null) 
+                _sessionController = sc;
+            else
+                _sessionController = new SessionController();
+            _goalController = new GoalController(); 
         }
 
         public void CodingGoalMenu()
@@ -40,7 +43,7 @@ namespace CodingTracker.Arashi256.Views
             do
             {
                 Console.WriteLine("\n");
-                AnsiConsole.Render(new Text("C O D I N G   G O A L S   M E N U").Centered());
+                AnsiConsole.Write(new Text("C O D I N G   G O A L S   M E N U").Centered());
                 AnsiConsole.Write(_tblCodingGoalMenu);
                 selectedValue = CommonUI.MenuOption($"Enter a value between 1 and {_goalOptions.Length}: ", 1, _goalOptions.Length);
                 ProcessCodingGoalMenu(selectedValue);
@@ -121,7 +124,7 @@ namespace CodingTracker.Arashi256.Views
                 if (isValid)
                 {
                     AnsiConsole.MarkupLine($"[lime]{_goalController.AddCodingGoal(startDateTime, deadlineDateTime, hours)}[/]");
-                    AnsiConsole.MarkupLine($"[cyan2]You will have to code a minimum of {Utility.CalculateRequiredCodingHoursPerDay(startDateTime, (DateTime)deadlineDateTime, hours)} hours per day to reach this goal.[/]");
+                    AnsiConsole.MarkupLine($"[cyan2]You will have to code a minimum of {Utility.CalculateRequiredCodingHoursPerDay(startDateTime, (DateTime)deadlineDateTime, hours).ToString("F3")} hours per day to reach this goal.[/]");
                 }
             }
             CommonUI.Pause();
@@ -132,7 +135,7 @@ namespace CodingTracker.Arashi256.Views
             DateTime? deadlineDateTime;
             int hours = 0;
             bool isValid = false;
-            CodingGoal codingGoal = _goalController.GetCurrentCodingGoal();
+            CodingGoal? codingGoal = _goalController.GetCurrentCodingGoal();
             DisplayCodingGoal(codingGoal);
             if (AnsiConsole.Confirm("[yellow]Do you want to update this coding goal?[/]", false))
             {
@@ -184,7 +187,7 @@ namespace CodingTracker.Arashi256.Views
 
         private void DeleteCodingGoal()
         {
-            CodingGoal codingGoal = _goalController.GetCurrentCodingGoal();
+            CodingGoal? codingGoal = _goalController.GetCurrentCodingGoal();
             DisplayCodingGoal(codingGoal);
             if (AnsiConsole.Confirm("[yellow]Are you sure you want to delete this coding goal?[/]", false))
             {
@@ -196,7 +199,7 @@ namespace CodingTracker.Arashi256.Views
         private void DisplayCurrentCodingGoalProgress()
         {
             DateTime currentDateTime = DateTime.Now;
-            CodingGoal currentCodingGoal = _goalController.GetCurrentCodingGoal();
+            CodingGoal? currentCodingGoal = _goalController.GetCurrentCodingGoal();
             DisplayCodingGoal(currentCodingGoal);
             if (currentCodingGoal != null)
             {
@@ -229,7 +232,7 @@ namespace CodingTracker.Arashi256.Views
             AnsiConsole.MarkupLine($"\nProgress: [[{Utility.ColorizeProgressBar(progressBar)}]]\n");
         }
 
-        private void DisplayCodingGoal(CodingGoal codingGoal)
+        private void DisplayCodingGoal(CodingGoal? codingGoal)
         {
             if (codingGoal != null)
             {

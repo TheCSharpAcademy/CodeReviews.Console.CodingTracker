@@ -21,7 +21,7 @@ namespace CodingTracker.Arashi256.Config
                     DatabaseConnectionString = _appConfig.Get("ConnectionString");
                 }
             }
-            catch (ConfigurationErrorsException)
+            catch (System.Configuration.ConfigurationErrorsException)
             {
                 Console.WriteLine("\nERROR: Could not read app settings\n");
             }

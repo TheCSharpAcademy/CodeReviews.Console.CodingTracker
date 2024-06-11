@@ -8,8 +8,8 @@ namespace CodingTracker.Arashi256.Views
     internal class CodingReportsView
     {
         private const int REPORTS_MAIN_MENU_OPTION_NUM = 6;
-        private SessionController _sessionController;
-        private Table _tblReportMenu;
+        private SessionController? _sessionController;
+        private Table? _tblReportMenu;
         private string[] _reportOptions =
         {
             "Show coding sessions for the last week",
@@ -20,9 +20,12 @@ namespace CodingTracker.Arashi256.Views
             "Return to Main Menu"
         };
 
-        public CodingReportsView(SessionController sc)
+        public CodingReportsView(SessionController? sc)
         {
-            _sessionController = sc;
+            if (sc != null) 
+                _sessionController = sc;
+            else
+                _sessionController = new SessionController();        
         }
 
         public void CodingSessionReports()

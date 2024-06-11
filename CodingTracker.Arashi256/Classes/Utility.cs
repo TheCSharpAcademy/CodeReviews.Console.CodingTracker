@@ -65,11 +65,33 @@ namespace CodingTracker.Arashi256.Classes
             TimeSpan totalDuration = TimeSpan.Zero;
             foreach (CodingSession codingSession in codingSessions)
             {
-                TimeSpan duration = TimeSpan.Parse(codingSession.Duration);
+                TimeSpan duration = ParseTimeSpan(codingSession.Duration);
                 totalDuration += duration;
             }
             string formattedTotalDuration = $"{(int)totalDuration.TotalHours:D2}:{totalDuration.Minutes:D2}:{totalDuration.Seconds:D2}";
             return formattedTotalDuration;
+        }
+
+        private static TimeSpan ParseTimeSpan(string durationString)
+        {
+            var parts = durationString.Split(':');
+            if (parts.Length != 3)
+            {
+                throw new FormatException("Utility.ParseTimeSpan(): Invalid duration format.");
+            }
+            if (!int.TryParse(parts[0], out int hours))
+            {
+                throw new FormatException("Utility.ParseTimeSpan(): Invalid hours format.");
+            }
+            if (!int.TryParse(parts[1], out int minutes))
+            {
+                throw new FormatException("Utility.ParseTimeSpan(): Invalid minutes format.");
+            }
+            if (!int.TryParse(parts[2], out int seconds))
+            {
+                throw new FormatException("Invalid seconds format.");
+            }
+            return new TimeSpan(hours / 24, hours % 24, minutes, seconds);
         }
 
         public static string AverageCodingSessions(CodingSession[] sessions)
@@ -78,7 +100,7 @@ namespace CodingTracker.Arashi256.Classes
             TimeSpan totalDuration = TimeSpan.Zero;
             foreach (CodingSession codingSession in sessions)
             {
-                TimeSpan duration = TimeSpan.Parse(codingSession.Duration);
+                TimeSpan duration = ParseTimeSpan(codingSession.Duration);
                 totalDuration += duration;
             }
             double averageTicks = totalDuration.Ticks / (double)sessions.Length;
@@ -115,8 +137,8 @@ namespace CodingTracker.Arashi256.Classes
             int totalLength = progressBar.Length;
             int sectionLength = totalLength / 3;
             string colorizedProgressBar = Colorize(progressBar.Substring(0, sectionLength), "red") +
-                                           Colorize(progressBar.Substring(sectionLength, sectionLength), "yellow") +
-                                           Colorize(progressBar.Substring(2 * sectionLength), "lime");
+                Colorize(progressBar.Substring(sectionLength, sectionLength), "yellow") +
+                Colorize(progressBar.Substring(2 * sectionLength), "lime");
             return $"{colorizedProgressBar}";
         }
 

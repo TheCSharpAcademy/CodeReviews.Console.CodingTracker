@@ -11,9 +11,9 @@ namespace CodingTracker.Arashi256.Views
         private Table _tblMainMenu;
         private string _appTitle = "[CODING TRACKER]";
         private FigletText _figletAppTitle;
-        private SessionController _sessionController;
-        private CodingGoalView _codingGoalView;
-        private CodingReportsView _codingReportsView;
+        private SessionController? _sessionController;
+        private CodingGoalView? _codingGoalView;
+        private CodingReportsView? _codingReportsView;
         private string[] _menuOptions =
         {
             "Add a new coding session",
