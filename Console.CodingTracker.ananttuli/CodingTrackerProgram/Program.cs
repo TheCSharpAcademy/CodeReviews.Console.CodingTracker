@@ -183,6 +183,12 @@ public class Program
     {
         List<CodingSession> sessions = CodingSessionRepository.FindAll();
 
+        if (sessions.Count == 0)
+        {
+            AnsiConsole.MarkupLine("\n\t[red]No records found[/]");
+            return;
+        }
+
         var table = new Table();
 
         table.AddColumn(new TableColumn("Id").Centered());
