@@ -1,4 +1,3 @@
-using System.Configuration;
 using Microsoft.Data.Sqlite;
 
 namespace CodingTrackerProgram.Database
@@ -11,8 +10,8 @@ namespace CodingTrackerProgram.Database
         {
             try
             {
-                string dbName = ConfigurationManager.AppSettings["DbPath"] ??
-                    throw new ConfigurationErrorsException("DbPath configuration must be defined in App.config");
+                string dbName = System.Configuration.ConfigurationManager.AppSettings["DbPath"] ??
+                    throw new System.Configuration.ConfigurationErrorsException("DbPath configuration must be defined in App.config");
 
                 _connection = new SqliteConnection($"Data Source={dbName}");
 
