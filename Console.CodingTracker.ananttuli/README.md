@@ -31,11 +31,12 @@ To run this locally,he application can be run locally via command line:
 
 ## Tech Stack
 
-- This C# console application uses Dapper to connect to an SQLite database.
+- This C# console application uses `Dapper` to connect to an SQLite database.
 - When the application starts, it should create a sqlite database,
   if one isn’t present.
 - It should also create a table in the database, where the sessions
   will be stored.
+- Uses a App.config file to configure DB source.(see below for details)
 
 ## Code Organization
 
@@ -45,6 +46,10 @@ maintain separation of concerns:
 ### `CodingTracker/CodingTrackerProgram/Program.cs`
 
 - Entrypoint
+
+### `CodingTracker/CodingTrackerProgram/app.config`
+
+- Config file, values can be changed dynamically
 
 ### `CodingTracker/CodingTrackerProgram/Database`
 
