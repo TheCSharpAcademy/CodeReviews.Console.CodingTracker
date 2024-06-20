@@ -1,37 +1,27 @@
-namespace CodingTrackerProgram.Model
+namespace CodingTrackerProgram.Model;
+
+public class CodingSession
 {
-    public class CodingSession
+    public Int64 Id;
+    public DateTime StartDateTime;
+    public DateTime EndDateTime;
+    public TimeSpan Duration
     {
-        public int Id;
-        public DateTime StartTime;
-        public DateTime EndTime;
-        public TimeSpan Duration
+        get
         {
-            get
-            {
-                return CalculateDuration(StartTime, EndTime);
-            }
+            return CalculateDuration(StartDateTime, EndDateTime);
         }
+    }
 
-        public static TimeSpan CalculateDuration(DateTime startTime, DateTime endTime)
-        {
-            return endTime.Subtract(startTime);
-        }
+    public static TimeSpan CalculateDuration(DateTime startDateTime, DateTime endDateTime)
+    {
+        return endDateTime.Subtract(startDateTime);
+    }
 
-        public CodingSession(int id, DateTime startTime, DateTime endTime)
-        {
-            Id = id;
-            StartTime = startTime;
-            EndTime = endTime;
-        }
-
-        public static bool IsValidTimeRange(DateTime? startTime, DateTime? endTime)
-        {
-            return (
-                startTime != null &&
-                endTime != null &&
-                endTime.Value >= startTime.Value
-            );
-        }
+    public CodingSession(Int64 id, string startDateTime, string endDateTime)
+    {
+        Id = id;
+        StartDateTime = DateTime.Parse(startDateTime);
+        EndDateTime = DateTime.Parse(endDateTime);
     }
 }
