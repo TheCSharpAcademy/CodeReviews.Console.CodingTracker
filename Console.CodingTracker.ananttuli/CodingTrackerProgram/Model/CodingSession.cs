@@ -9,8 +9,13 @@ namespace CodingTrackerProgram.Model
         {
             get
             {
-                return EndTime.Subtract(StartTime);
+                return CalculateDuration(StartTime, EndTime);
             }
+        }
+
+        public static TimeSpan CalculateDuration(DateTime startTime, DateTime endTime)
+        {
+            return endTime.Subtract(startTime);
         }
 
         public CodingSession(int id, DateTime startTime, DateTime endTime)
