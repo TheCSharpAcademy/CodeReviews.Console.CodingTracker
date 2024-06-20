@@ -1,7 +1,7 @@
 using System.Globalization;
 
 namespace Input;
-public class Input
+public class Parser
 {
     public static Tuple<bool, decimal> ParseDecimal(string input)
     {
