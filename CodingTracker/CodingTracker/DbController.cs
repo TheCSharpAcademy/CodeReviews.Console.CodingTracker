@@ -2,23 +2,22 @@
 using System.Configuration;
 using Dapper;
 using System;
+using System.Data.SqlClient;
 namespace CodingTracker
 {
     public class DbController
     {
         private readonly string _connectionString;
+        public SQLiteConnection SQLiteConnection { get; private set; }
         public DbController()
         {
             _connectionString = ConfigurationManager.AppSettings["connectionString"];
-        }
-        public void ExecuteQuery(string query)
-        {
-            using (var connection = new SQLiteConnection(_connectionString))
+            SQLiteConnection = new SQLiteConnection("Data Source=CodingSessions.db;");
+            if(!File.Exists("./CodingSessions.db"))
             {
-                connection.Open();
-                connection.Execute(query);
-                connection.Close();
+
             }
+            
         }
     }
 }
