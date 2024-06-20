@@ -23,7 +23,7 @@ public class Program
 
     public static void ShowExitMessage()
     {
-        AnsiConsole.MarkupLine("\n\t[green]Thanks[/] for using [red]Coding[/][blue]Tracker[/]");
+        AnsiConsole.MarkupLine("\n\n\t[green]Thanks[/] for using [red]Coding[/][blue]Tracker[/]");
     }
 
     public static void ShowWelcomeScreen()
@@ -61,9 +61,12 @@ public class Program
                 break;
         }
 
-        AnsiConsole.MarkupLine("[green]Press any key to go back to the menu[/]");
-        Console.ReadKey();
-        Console.Clear();
+        if (isAppRunning)
+        {
+            AnsiConsole.MarkupLine("[green]Press any key to go back to the menu[/]");
+            Console.ReadKey();
+            Console.Clear();
+        }
 
         return isAppRunning;
     }
