@@ -1,3 +1,4 @@
+using System.Data.SqlTypes;
 using CodingTrackerProgram.Model;
 using Dapper;
 using Microsoft.Data.Sqlite;
@@ -43,8 +44,6 @@ namespace CodingTrackerProgram.Database
 
         public static CodingSession? FindById(Int64 codingSessionId)
         {
-            CodingSession? session = null;
-
             try
             {
                 using (SqliteConnection connection = Connection.GetConnection())
@@ -54,18 +53,17 @@ namespace CodingTrackerProgram.Database
                     string sql = $@"SELECT * FROM {TableName}
                         WHERE Id = @Id";
 
-                    var sessions = connection.Query<CodingSession>(
+                    var session = connection.QuerySingle<CodingSession>(
                         sql,
                         new { Id = codingSessionId }
-                    ).ToList() ?? new List<CodingSession>();
+                    );
 
-                    if (sessions.Count == 0)
+                    if (session == null)
                     {
-                        Console.WriteLine("Could not find.");
-                        return null;
+                        throw new SqlNullValueException($"ID {codingSessionId} not found.");
                     }
 
-                    return sessions[0];
+                    return session;
                 }
             }
             catch (Exception ex)
@@ -73,7 +71,7 @@ namespace CodingTrackerProgram.Database
                 Console.WriteLine($"\n\tERROR: Could not find. {ex.Message}");
             }
 
-            return session;
+            return null;
         }
 
         public static List<CodingSession> FindAll()
