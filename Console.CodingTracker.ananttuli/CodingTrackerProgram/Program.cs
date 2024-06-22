@@ -48,9 +48,11 @@ public class Program
                 CodingSessionService.ViewSessions();
                 break;
             case Menu.UPDATE_SESSION:
+                CodingSessionService.ViewSessions();
                 CodingSessionService.CreateOrUpdateSession(updateMode: true);
                 break;
             case Menu.DELETE_SESSION:
+                CodingSessionService.ViewSessions();
                 CodingSessionService.DeleteSession();
                 break;
             case Menu.EXIT_PROGRAM:
