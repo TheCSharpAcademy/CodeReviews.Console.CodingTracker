@@ -54,7 +54,7 @@ public class CodingSessionService
 
         AnsiConsole.MarkupLineInterpolated($"\n[b][blue]{heading}[/][/]\n");
 
-        AnsiConsole.MarkupLine("[grey]Note: Date times should be 24hr format e.g. [/][blue]2024-01-01 12:15[/]");
+        AnsiConsole.MarkupLine("[grey]Note: Date times must be YYYY-mm-dd hh:mm with 24hr time e.g. [/][blue]2024-12-31 14:15[/]");
 
         string validStartDateTimeString = AnsiConsole.Prompt(
             new TextPrompt<string>("[green]Start[/] date time: ")
