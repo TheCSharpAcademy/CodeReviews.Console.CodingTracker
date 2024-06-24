@@ -54,11 +54,11 @@ namespace CodingTracker
                         var startDate = reader.GetString(1);
                         var endDate = reader.GetString(2);
                         var duration = reader.GetString(3);
-                        Console.WriteLine($"Id: {id}, Beginning date: {startDate}, Ending date: {endDate} Total duration: {duration}");
+                        AnsiConsole.MarkupLine($"[bold]Id: {id}, Beginning date: {startDate}, Ending date: {endDate} Total duration: {duration}[/b]");
                     }
                     if (!hasRows)
                     {
-                        Console.WriteLine("No records found.");
+                        AnsiConsole.MarkupLine("[bold]No records found.[/]");
                     }
                 }
                 connection.Close();
@@ -66,14 +66,14 @@ namespace CodingTracker
         }
         public void InsertRecords()
         {
-            AnsiConsole.WriteLine("[green]Please type in the date of the start below:");
+            AnsiConsole.WriteLine("[green]Please type in the date of the start below:[/]");
             string startDate = Console.ReadLine();
             Validation validation = new Validation();
             if (!String.IsNullOrEmpty(startDate))
             {
                 validation.ValidString(startDate); //placeholder method, will check the input here.
             }
-            AnsiConsole.WriteLine("[green]Please type in the date of the end below:");
+            AnsiConsole.WriteLine("[green]Please type in the date of the end below:[/]");
             string endDate = Console.ReadLine();
             if (!String.IsNullOrEmpty(endDate))
             {
@@ -91,6 +91,7 @@ namespace CodingTracker
                 insertCommand.Parameters.AddWithValue("@Duration", duration);
                 insertCommand.ExecuteNonQuery();
                 connection.Close();
+                AnsiConsole.MarkupLine("[yellow]Record added![/]");
             }
         }
 
