@@ -5,14 +5,9 @@ namespace CodingTracker
     public class CodingSession
     {
         public int Id { get; set; }
-        public DateTime startTime { get; set; }
-        public DateTime endTime { get; set; }
-        public TimeSpan duration { get; set; }
-        public CodingSession(DateTime start, DateTime end, TimeSpan dur)
-        {
-            startTime = start;
-            endTime = end;
-            duration = dur;
-        }
+        public string StartDate { get; set; }
+        public string EndDate { get; set; }
+        public string Duration { get; set; }
+
     }
 }

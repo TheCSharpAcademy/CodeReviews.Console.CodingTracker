@@ -1,28 +1,32 @@
 ﻿using System.Configuration;
 using System.Data.SQLite;
 using Spectre.Console;
+using Dapper;
 
 namespace CodingTracker
 {
     public class DbController
     {
         private readonly string _connectionString;
+        public SQLiteConnection _connection { get; private set; }
 
         public DbController()
         {
             _connectionString = ConfigurationManager.AppSettings["connectionString"] ?? "Data Source=CodingSessions.db;";
+            _connection = new SQLiteConnection("Data Source=CodingSessions.db;");
             InitializeDatabase();
         }
 
         private void InitializeDatabase()
         {
+            //Creating the database if it does not exist already
             if (!File.Exists("./CodingSessions.db"))
             {
                 SQLiteConnection.CreateFile("CodingSessions.db");
                 AnsiConsole.MarkupLine("[underline bold]The database has been created![/]");
             }
-
-            using (var connection = new SQLiteConnection(_connectionString))
+            //Creating the table if it does not exist already
+            using (var connection = new SQLiteConnection(_connection))
             {
                 connection.Open();
                 var tableCommand = connection.CreateCommand();
@@ -40,31 +44,24 @@ namespace CodingTracker
 
         public void ReadRecords()
         {
-            using (var connection = new SQLiteConnection(_connectionString))
+            using (var connection = new SQLiteConnection(_connection))
             {
                 connection.Open();
-                var selectCommand = connection.CreateCommand();
-                selectCommand.CommandText = "SELECT * FROM Sessions";
+                var records = connection.Query<CodingSession>("SELECT * FROM Sessions");
 
-                using (var reader = selectCommand.ExecuteReader())
+                if (records.Any())
                 {
-                    bool hasRows = false;
-                    while (reader.Read())
+                    foreach (var record in records)
                     {
-                        hasRows = true;
-                        var id = reader.GetInt32(0);
-                        var startDate = reader.GetString(1);
-                        var endDate = reader.GetString(2);
-                        var duration = reader.GetString(3);
-                        Console.WriteLine($"Id: {id}, Beginning date: {startDate}, Ending date: {endDate}, Total duration: {duration}");
-                    }
-
-                    if (!hasRows)
-                    {
-                        AnsiConsole.MarkupLine("[bold]No records found.[/]");
+                        AnsiConsole.MarkupLine($"[bold]Id: {record.Id}, Beginning date: {record.StartDate}, Ending date: {record.EndDate}, Total duration: {record.Duration}[/]");
                     }
                 }
+                else
+                {
+                    AnsiConsole.MarkupLine("[bold]No records found.[/]");
+                }
             }
+            
         }
 
         public void InsertRecords()
@@ -88,7 +85,7 @@ namespace CodingTracker
             AnsiConsole.MarkupLine("[green]Please type in the duration below:[/]");
             string duration = Console.ReadLine(); // placeholder for duration counting
 
-            using (var connection = new SQLiteConnection(_connectionString))
+            using (var connection = new SQLiteConnection(_connection))
             {
                 connection.Open();
                 var insertCommand = connection.CreateCommand();
@@ -107,7 +104,7 @@ namespace CodingTracker
             AnsiConsole.MarkupLine("[bold]Enter the Id of the record you want to update: [/]");
             if (int.TryParse(Console.ReadLine(), out int id))
             {
-                using (var connection = new SQLiteConnection(_connectionString))
+                using (var connection = new SQLiteConnection(_connection))
                 {
                     connection.Open();
                     var selectCommand = connection.CreateCommand();
