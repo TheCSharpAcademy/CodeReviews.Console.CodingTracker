@@ -5,11 +5,12 @@ namespace CodingTracker
 {
     class Program
     {
+        DbController dbController = new DbController();
         static void Main(string[] args)
         {
-            DisplayMenu();
+            DisplayMenu();     
         }
-        static char DisplayMenu()
+        static void DisplayMenu()
         {
             AnsiConsole.Clear();
             AnsiConsole.MarkupLine("[bold]Choose from the options below:[/]");
@@ -19,23 +20,24 @@ namespace CodingTracker
             AnsiConsole.MarkupLine("4 - [bold yellow]Update[/] record");
             AnsiConsole.MarkupLine("0 - [bold red]Quit[/] the application");
             string choice = Console.ReadLine();
-            return choice[0];
+            MenuOption(choice[0]);
         }
-        public void MenuOption(char option)
+        public static void MenuOption(char option) //static for now, will update later. Testing
         {
+            DbController dbController = new DbController();
             switch (option)
             {
                 case '1':
-                    ViewRecords();
+                    dbController.ReadRecords();
                     break;
                 case '2':
-                    AddRecords();
+                    dbController.InsertRecords();
                     break;
                 case '3':
                     DeleteRecords();
                     break;
                 case '4':
-                    UpdateRecord();
+                    dbController.UpdateRecord();
                     break;
                 case '0':
                     QuitApplication();
@@ -47,27 +49,12 @@ namespace CodingTracker
             }
         }
 
-        private void ViewRecords()
+        private static void DeleteRecords()
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("Not yet implemented.");
         }
 
-        private void AddRecords()
-        {
-            throw new NotImplementedException();
-        }
-
-        private void DeleteRecords()
-        {
-            throw new NotImplementedException();
-        }
-
-        private void UpdateRecord()
-        {
-            throw new NotImplementedException();
-        }
-
-        private void QuitApplication()
+        private static void QuitApplication()
         {
             throw new NotImplementedException();
         }
