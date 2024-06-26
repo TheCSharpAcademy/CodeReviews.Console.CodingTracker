@@ -9,6 +9,7 @@ namespace CodingTracker
     {
         private readonly string _connectionString;
         public SQLiteConnection _connection { get; private set; }
+        CodingSession session = new CodingSession();
 
         public DbController()
         {
@@ -66,36 +67,28 @@ namespace CodingTracker
 
         public void InsertRecords()
         {
-            AnsiConsole.MarkupLine("[green]Please type in the date of the start below:[/]");
-            string startDate = Console.ReadLine();
             Validation validation = new Validation();
-
-            if (!String.IsNullOrEmpty(startDate))
+            AnsiConsole.MarkupLine("[green]Please type in the date of the start below:[/]");
+            session.StartDate = Console.ReadLine();
+            if (!String.IsNullOrEmpty(session.StartDate))
             {
-                validation.ValidString(startDate); // placeholder method, will check the input here.
+                validation.ValidString(session.StartDate); // placeholder method, will check the input here.
             }
-
             AnsiConsole.MarkupLine("[green]Please type in the date of the end below:[/]");
-            string endDate = Console.ReadLine();
-            if (!String.IsNullOrEmpty(endDate))
+            session.EndDate = Console.ReadLine();
+            if (!String.IsNullOrEmpty(session.EndDate))
             {
-                validation.ValidString(endDate); // placeholder method, will check the input here.
+                validation.ValidString(session.EndDate); // placeholder method, will check the input here.
             }
-
             AnsiConsole.MarkupLine("[green]Please type in the duration below:[/]");
-            string duration = Console.ReadLine(); // placeholder for duration counting
-
+            session.Duration = Console.ReadLine(); // placeholder for duration counting
             using (var connection = new SQLiteConnection(_connection))
             {
                 connection.Open();
-                var insertCommand = connection.CreateCommand();
-                insertCommand.CommandText = @"INSERT INTO Sessions (StartDate, EndDate, Duration)
-                                              VALUES (@StartDate, @EndDate, @Duration)";
-                insertCommand.Parameters.AddWithValue("@StartDate", startDate);
-                insertCommand.Parameters.AddWithValue("@EndDate", endDate);
-                insertCommand.Parameters.AddWithValue("@Duration", duration);
-                insertCommand.ExecuteNonQuery();
-                AnsiConsole.MarkupLine("[yellow]Record added![/]");
+                string sqlCommand = "INSERT INTO Sessions (StartDate, EndDate, Duration) VALUES (@StartDate, @EndDate, @Duration)";
+                var parameters = new {session.StartDate, session.EndDate, session.Duration};
+                connection.Execute(sqlCommand,parameters);
+                connection.Close();
             }
         }
 
@@ -119,19 +112,19 @@ namespace CodingTracker
                             AnsiConsole.MarkupLine($"End date: {reader.GetString(2)}");
 
                             AnsiConsole.MarkupLine("[green]Enter a new start date: [/]");
-                            string startDate = Console.ReadLine();
+                            session.StartDate = Console.ReadLine();
                             AnsiConsole.MarkupLine("[green]Enter a new end date: [/]");
-                            string endDate = Console.ReadLine();
+                            session.EndDate = Console.ReadLine();
 
-                            if (!String.IsNullOrEmpty(startDate) && !String.IsNullOrEmpty(endDate))
+                            if (!String.IsNullOrEmpty(session.StartDate) && !String.IsNullOrEmpty(session.EndDate))
                             {
                                 var updateCommand = connection.CreateCommand();
                                 updateCommand.CommandText = @"
                                     UPDATE Sessions
                                     SET StartDate = @StartDate, EndDate = @EndDate
                                     WHERE Id = @Id";
-                                updateCommand.Parameters.AddWithValue("@StartDate", startDate);
-                                updateCommand.Parameters.AddWithValue("@EndDate", endDate);
+                                updateCommand.Parameters.AddWithValue("@StartDate", session.StartDate);
+                                updateCommand.Parameters.AddWithValue("@EndDate", session.EndDate);
                                 updateCommand.Parameters.AddWithValue("@Id", id);
                                 updateCommand.ExecuteNonQuery();
                                 AnsiConsole.MarkupLine("[yellow]Record updated.[/]");
