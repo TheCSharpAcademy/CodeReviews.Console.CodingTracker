@@ -21,6 +21,7 @@ class CodingController
             Console.WriteLine("4 - Delete");
             Console.WriteLine("5 - StopWatch");
             Console.WriteLine("6 - Filter records");
+            Console.WriteLine("7 - Get Report");
             Console.WriteLine("0 - Quit");
 
             Console.WriteLine("Select an option from the menu");
@@ -45,6 +46,9 @@ class CodingController
                 case "6":
                     controller.FilterRecords();
                     break;
+                case "7":
+                    controller.GetReport();
+                    break;
                 case "0":
                     Console.WriteLine("Goodbye\n");
                     endApp = true;
@@ -66,7 +70,7 @@ class CodingController
 
         while (!DateTime.TryParseExact(dateInput1, "yyyy-MM-dd hh:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate))
         {
-            Console.WriteLine("Input your start time in the format of YYYY-MM-DD HH-MM");
+            Console.WriteLine("Input your start time in the format of YYYY-MM-DD HH:MM");
             dateInput1 = Console.ReadLine();
         }
 
@@ -195,43 +199,69 @@ class CodingController
 
         switch (option)
         {
-            case 1:
-                Console.WriteLine("Range or a specific year");
-                Console.WriteLine("1 - range");
-                Console.WriteLine("2 - specific year");
-                option = Console.ReadLine();
-                if (option == "1")
-                {
-                    Console.WriteLine("Enter the first range value");
-                    var firstRange = Console.ReadLine();
-                    Console.WriteLine("Enter the second range value");
-                    var firstRange = Console.ReadLine();
-                }
-                else
-                {
-                    Console.WriteLine("Enter the year to filter");
-                    var firstRange = Console.ReadLine();
-                }
+            case "1":
+                FilterTable("%Y", "year", "yyyy eg 2024");
                 break;
-            case 2:
-                Console.WriteLine("Range or a specific month");
-                Console.WriteLine("1 - range");
-                Console.WriteLine("2 - specific month");
-                option = Console.ReadLine();
-                if (option == "1")
-                {
-                    Console.WriteLine("Enter the first range value, in the format of 'yyyy-mm'");
-                    var firstRange = Console.ReadLine();
-                    Console.WriteLine("Enter the second range value, in the format of 'yyyy-mm'");
-                    var firstRange = Console.ReadLine();
-                }
-                else
-                {
-                    Console.WriteLine("Enter the month to filter, in the format of 'yyyy-mm'");
-                    var firstRange = Console.ReadLine();
-                }
+            case "2":
+                FilterTable("%Y-%m", "months", "yyyy-mm eg 2024-06");
+                break;
+            case "3":
+                FilterTable("%Y-%m-%d", "day", "yyyy-mm-dd eg 2024-06-24");
+                break;
+            default:
+                Console.WriteLine("InvalidInput, Select an option from menu");
+                FilterRecords();
                 break;
         }
+    }
+
+    public void FilterTable (string format, string filter, string filterFormat)
+    {
+        Console.WriteLine($"Range or a specific {filter}");
+        Console.WriteLine("1 - range");
+        Console.WriteLine($"2 - specific {filter}");
+        var option = Console.ReadLine();
+        if (option == "1")
+        {
+            Console.WriteLine($"Enter the first range value in the format of {filterFormat}");
+            var firstRange = Console.ReadLine();
+            Console.WriteLine($"Enter the second range value {filterFormat}");
+            var secondRange = Console.ReadLine();
+            string order = GetOrderInput();
+            database.Filter(format, firstRange, secondRange, order);
+        }
+        else
+        {
+            Console.WriteLine($"Enter the {filter} to filter in the format of {filterFormat}");
+            var firstRange = Console.ReadLine();
+            string order = GetOrderInput();
+            database.Filter(format, firstRange, order);
+        }
+    }
+
+
+    void GetReport()
+    {
+
+        DateTime dateTime = DateTime.Now;
+        string month = $"{dateTime.Year}-{dateTime.Month:D2}";
+
+        database.Analyze("%Y-%m", month);
+    }
+
+    string GetOrderInput()
+    {
+        Console.WriteLine("1 - ascending order");
+        Console.WriteLine("2 - descending order");
+        var orderInput = Console.ReadLine();
+
+        while (orderInput != "1" && orderInput != "2")
+        {
+            Console.WriteLine("Select an option from the menu");
+            orderInput = Console.ReadLine();
+        }
+        string order = (orderInput == "1") ? "ASC" : "DESC";
+        return order;
     }
 
     public void StartWatch()
