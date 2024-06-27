@@ -24,6 +24,7 @@ namespace DatabaseLibrary
         }
 
 
+
         public async void Insert(DateTime startDate, DateTime endDate, TimeSpan duration)
         {
             using var connectionString = new SqliteConnection(@"Data Source = Coding_Tracker.db");
@@ -90,8 +91,8 @@ namespace DatabaseLibrary
 
             var sql = @$"SELECT *
                         FROM codingTracker
-                        WHERE strftime('{format}', endDate)
-                        BETWEEN '{firstRange}' AND '{secondRange}' ORDER BY endDate {order}";
+                        WHERE strftime('{format}', EndDate)
+                        BETWEEN '{firstRange}' AND '{secondRange}' ORDER BY EndDate {order}";
 
             var codingDurations = connection.Query<UserEntity>(sql).ToList();
 
@@ -110,7 +111,7 @@ namespace DatabaseLibrary
 
             var sql = @$"SELECT *
                         FROM codingTracker
-                        WHERE strftime('{format}', endDate) = '{value}' ORDER BY endDate  {order}";
+                        WHERE strftime('{format}', EndDate) = '{value}' ORDER BY EndDate  {order}";
 
             var codingDurations = connection.Query<UserEntity>(sql).ToList();
 
@@ -129,7 +130,7 @@ namespace DatabaseLibrary
 
             var sql = @$"SELECT *
                         FROM codingTracker
-                        WHERE strftime('{format}', endDate) = '{value}'";
+                        WHERE strftime('{format}', EndDate) = '{value}'";
 
             var codingDurations = connection.Query<UserEntity>(sql).ToList();
 

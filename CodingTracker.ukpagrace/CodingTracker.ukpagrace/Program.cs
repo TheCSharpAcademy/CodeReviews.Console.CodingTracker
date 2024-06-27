@@ -5,11 +5,13 @@ using Application.Entities;
 class CodingController
 {
     readonly Database database = new();
+    readonly Goal goal = new();
     bool stop = false;
     static void Main()
     {
         CodingController controller = new CodingController();
         controller.CreateTable();
+        controller.CreateGoalTable();
         Console.WriteLine("Welcome to Coding Tracker, where we will track your coding hours");
         bool endApp = false;
         while (!endApp)
@@ -22,6 +24,8 @@ class CodingController
             Console.WriteLine("5 - StopWatch");
             Console.WriteLine("6 - Filter records");
             Console.WriteLine("7 - Get Report");
+            Console.WriteLine("8 - Set A goal");
+            Console.WriteLine("9 - See Goal progress");
             Console.WriteLine("0 - Quit");
 
             Console.WriteLine("Select an option from the menu");
@@ -48,6 +52,12 @@ class CodingController
                     break;
                 case "7":
                     controller.GetReport();
+                    break;
+                case "8":
+                    controller.SetGoal();
+                    break;
+                case "9":
+                    controller.SeeGoalProgress();
                     break;
                 case "0":
                     Console.WriteLine("Goodbye\n");
@@ -108,6 +118,46 @@ class CodingController
     void CreateTable()
     {
         database.Create();
+    }
+    void CreateGoalTable()
+    {
+        goal.Create();
+    }
+
+    void SetGoal()
+    {
+        Console.WriteLine("Set a coding goal for this month, goal must be an integer");
+
+        var userInput = Console.ReadLine();
+        int goalInput;
+
+        while(!int.TryParse(userInput, out goalInput) && Convert.ToInt32(userInput) < 0)
+        {
+            Console.WriteLine("Enter a valid goal");
+            userInput = Console.ReadLine();
+        }
+        DateTime date = DateTime.Now;
+        string month = $"{date.Year} - {date.Month:D2}";
+
+        goal.Insert(month, goalInput);
+
+        GetAverageCodePerDay();
+
+    }
+
+    void SeeGoalProgress()
+    {
+        DateTime date = DateTime.Now;
+        string month = $"{date.Year} - {date.Month:D2}";
+        goal.GoalProgress(month);
+    }
+
+    void GetAverageCodePerDay()
+    {
+        DateTime date = DateTime.Now;
+        string month = $"{date.Year} - {date.Month:D2}";
+        int days = Convert.ToInt32(DateTime.DaysInMonth(date.Year, date.Month));
+        goal.AverageTimePerDay(month, days);
     }
     void InsertTable()
     {
