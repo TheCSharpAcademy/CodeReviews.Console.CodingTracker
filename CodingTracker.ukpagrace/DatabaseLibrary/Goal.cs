@@ -12,7 +12,7 @@ namespace DatabaseLibrary
             connectionString.Open();
             string createTable = @"CREATE TABLE IF NOT EXISTS codingGoal (
             Id INTEGER PRIMARY KEY AUTOINCREMENT,
-            Month TEXT
+            Month TEXT,
             Hours INTEGER
             )";
 
@@ -24,7 +24,7 @@ namespace DatabaseLibrary
         {
             using var connectionString = new SqliteConnection(@"Data Source = Coding_Tracker.db");
 
-            var sql = "Insert INTO codingGoal (Month, Hours) VALUES (@Date, @Hours)";
+            var sql = "Insert INTO codingGoal (Month, Hours) VALUES (@Month, @Hours)";
             GoalEntity goalEntity = new() { Month = month, Hours=hours};
 
             var affectedRows = await connectionString.ExecuteAsync(sql, goalEntity);
@@ -64,20 +64,20 @@ namespace DatabaseLibrary
             Console.WriteLine("------------------------------------------------\n"); ;
         }
 
-        public void AverageTimePerDay(string month, int days)
+        public double AverageTimePerDay(string month, int days)
         {
             string connectionString = @"Data Source = Coding_Tracker.db";
             using var connection = new SqliteConnection(connectionString);
 
-            var sql = @$"SELECT Hours, 
+            var sql = @$"SELECT Hours 
                         FROM  codingGoal
                         WHERE strftime('%Y-%m', {month})";
             var codingGoal = connection.QuerySingle<int>(sql);
-            var codePerDay = codingGoal/days;
+            double codePerDay = codingGoal/days;
 
-            Console.WriteLine("------------------------------------------------\n"); ;
-            Console.WriteLine($"To achieve your goal this month you have to code a minimun of {codePerDay} hours everdays, GoodLuck");
-            Console.WriteLine("------------------------------------------------\n"); ;
+            return codePerDay;
+
+
         }
     }
 }

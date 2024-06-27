@@ -131,7 +131,7 @@ class CodingController
         var userInput = Console.ReadLine();
         int goalInput;
 
-        while(!int.TryParse(userInput, out goalInput) && Convert.ToInt32(userInput) < 0)
+        while(!int.TryParse(userInput, out goalInput) || Convert.ToInt32(userInput) < 0)
         {
             Console.WriteLine("Enter a valid goal");
             userInput = Console.ReadLine();
@@ -157,7 +157,13 @@ class CodingController
         DateTime date = DateTime.Now;
         string month = $"{date.Year} - {date.Month:D2}";
         int days = Convert.ToInt32(DateTime.DaysInMonth(date.Year, date.Month));
-        goal.AverageTimePerDay(month, days);
+        double codePerDay = goal.AverageTimePerDay(month, days);
+        TimeSpan timespan = TimeSpan.FromHours(codePerDay);
+        string timespanString = FormatTimeSpan(timespan);
+
+        Console.WriteLine("------------------------------------------------\n"); ;
+        Console.WriteLine($"To achieve your goal this month you have to code a minimun of {timespanString} hours everdays, GoodLuck");
+        Console.WriteLine("------------------------------------------------\n"); ;
     }
     void InsertTable()
     {
@@ -350,5 +356,27 @@ class CodingController
                 stop = true;
             }
         }
+    }
+
+    public string FormatTimeSpan(TimeSpan duration)
+    {
+        List<string> parts = new List<string>();
+        if (duration.Days > 0)
+        {
+            parts.Add($"{duration.Days} {(duration.Days == 1 ? "day" : "days")}");
+        }
+        if (duration.Hours > 0)
+        {
+            parts.Add($"{duration.Hours} {(duration.Hours == 1 ? "hour" : "hours")}");
+        }
+        if (duration.Minutes > 0)
+        {
+            parts.Add($"{duration.Minutes} {(duration.Minutes == 1 ? "minute" : "minutes")}");
+        }
+        if (duration.Seconds > 0)
+        {
+            parts.Add($"{duration.Seconds} {(duration.Seconds == 1 ? "second" : "seconds")}");
+        }
+        return string.Join(", ", parts);
     }
 }
