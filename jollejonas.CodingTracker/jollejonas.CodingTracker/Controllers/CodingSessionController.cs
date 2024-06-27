@@ -57,7 +57,7 @@ namespace jollejonas.CodingTracker.Controllers
         static double CalculateDuration(DateTime startTime, DateTime endTime)
         {
 
-            return (double)(endTime - startTime).TotalHours;
+            return (endTime - startTime).TotalHours;
         }
         public List<CodingSession> GetCodingSessions(DateTime? startDate = null, DateTime? endDate = null, bool ascending = true)
         {
