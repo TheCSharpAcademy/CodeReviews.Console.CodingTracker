@@ -1,7 +1,7 @@
 ﻿using Dapper;
 using Microsoft.Data.Sqlite;
 using Application.Entities;
-using System.Security.Cryptography.X509Certificates;
+
 
 namespace DatabaseLibrary
 {
@@ -89,6 +89,20 @@ namespace DatabaseLibrary
             
         }
 
+        public void Filter(string firstRange, string secondRange)
+        {
+            string connectionString = @"Data Source = Coding_Tracker.db";
+            using var connection = new SqliteConnection(connectionString);
+
+            var sql = @"SELECT * FROM codingTracker where Id = @Id";
+
+
+            var codingDurations = connection.Query<UserEntity>(sql, new { Id = id }).ToList();
+
+
+            return codingDurations[0];
+
+        }
 
         public async void Delete(int id)
         {
