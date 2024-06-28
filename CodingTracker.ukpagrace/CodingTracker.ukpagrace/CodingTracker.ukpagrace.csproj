@@ -8,6 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Spectre.Console" Version="0.49.1" />
+    <PackageReference Include="Spectre.Console.Cli" Version="0.49.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Application.Entities\Application.Entities.csproj" />
     <ProjectReference Include="..\DatabaseLibrary\DatabaseLibrary.csproj" />
   </ItemGroup>
