@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Spectre.Console;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace CodingTracker.ukpagrace
 {
     internal class UserInput
     {
-        DateTime GetStartDate()
+        public DateTime GetStartDate()
         {
             Console.WriteLine("Input your start time in the format of YYYY-MM-DD HH:MM");
             var dateInput1 = Console.ReadLine();
@@ -27,7 +28,7 @@ namespace CodingTracker.ukpagrace
         }
 
 
-        DateTime GetEndDate()
+        public DateTime GetEndDate()
         {
             Console.WriteLine("Input your end time in the format of YYYY-MM-DD HH:MM");
             var dateInput2 = Console.ReadLine();
@@ -42,7 +43,7 @@ namespace CodingTracker.ukpagrace
         }
 
 
-        int GetNumberInput(string message)
+        public int GetNumberInput(string message)
         {
             Console.WriteLine(message);
             var input = Console.ReadLine();
@@ -57,18 +58,16 @@ namespace CodingTracker.ukpagrace
         }
 
 
-        string GetOrderInput()
+        public string GetOrderInput()
         {
-            Console.WriteLine("1 - ascending order");
-            Console.WriteLine("2 - descending order");
-            var orderInput = Console.ReadLine();
-
-            while (orderInput != "1" && orderInput != "2")
-            {
-                Console.WriteLine("Select an option from the menu");
-                orderInput = Console.ReadLine();
-            }
-            string order = (orderInput == "1") ? "ASC" : "DESC";
+            var option = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title($"Would you like to order in ascending or descending order")
+                    .PageSize(2)
+                    .AddChoices("Ascending", "Descending")
+            );
+            if (option == null) option = "ascending";
+            string order = (option == "ascending") ? "ASC" : "DESC";
             return order;
         }
     }

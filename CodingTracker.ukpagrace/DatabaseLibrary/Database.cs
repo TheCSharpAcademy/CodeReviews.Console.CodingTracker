@@ -25,7 +25,7 @@ namespace DatabaseLibrary
 
 
 
-        public async void Insert(DateTime startDate, DateTime endDate, TimeSpan duration)
+        public async Task<int> Insert(DateTime startDate, DateTime endDate, TimeSpan duration)
         {
             using var connectionString = new SqliteConnection(@"Data Source = Coding_Tracker.db");
 
@@ -33,12 +33,13 @@ namespace DatabaseLibrary
             UserEntity userEntity = new() { StartDate = startDate.ToString("yyyy-MM-dd hh:mm"), EndDate = endDate.ToString("yyyy-MM-dd hh:mm"), Duration = duration.ToString() };
 
 
-            var affectedRows = await connectionString.ExecuteAsync(sql, userEntity);
-            Console.WriteLine($"{affectedRows} row(s) inserted");
+            int affectedRows = await connectionString.ExecuteAsync(sql, userEntity);
+            return affectedRows;
+            
         }
 
 
-        public async void Update(int id, DateTime startDate, DateTime endDate, TimeSpan duration)
+        public async Task<int> Update(int id, DateTime startDate, DateTime endDate, TimeSpan duration)
         {
             using var connectionString = new SqliteConnection(@"Data Source = Coding_Tracker.db");
 
@@ -49,11 +50,11 @@ namespace DatabaseLibrary
 
 
             var affectedRows = await connectionString.ExecuteAsync(sql, userEntity);
-            Console.WriteLine($"{affectedRows} row(s) inserted");
+            return affectedRows; 
         }
 
 
-        public void List()
+        public List<UserEntity> List()
         {
             string connectionString = @"Data Source = Coding_Tracker.db";
             using var connection = new SqliteConnection(connectionString);
@@ -61,15 +62,9 @@ namespace DatabaseLibrary
             var sql = @"SELECT * FROM codingTracker";
 
             var codingDurations = connection.Query<UserEntity>(sql).ToList();
-            Console.WriteLine("------------------------------------------------\n");
-            Console.WriteLine("CODING TRACKER\n");
 
-            foreach (UserEntity userEntity in codingDurations)
-            {
-                Console.WriteLine($"{userEntity.Id}, {userEntity.StartDate}, {userEntity.EndDate}, {userEntity.Duration}");
-            }
+            return codingDurations;
 
-            Console.WriteLine("------------------------------------------------\n");
         }
 
         public UserEntity GetOne(int id)
@@ -84,7 +79,7 @@ namespace DatabaseLibrary
             return codingDurations[0];
         }
 
-        public void Filter(string format, string firstRange, string secondRange, string order)
+        public List<UserEntity> Filter(string format, string firstRange, string secondRange, string order)
         {
             string connectionString = @"Data Source = Coding_Tracker.db";
             using var connection = new SqliteConnection(connectionString);
@@ -95,16 +90,13 @@ namespace DatabaseLibrary
                         BETWEEN '{firstRange}' AND '{secondRange}' ORDER BY EndDate {order}";
 
             var codingDurations = connection.Query<UserEntity>(sql).ToList();
+            return codingDurations;
 
-            foreach (UserEntity userEntity in codingDurations)
-            {
-                Console.WriteLine($"{userEntity.Id}, {userEntity.StartDate}, {userEntity.EndDate}, {userEntity.Duration}");
-            }
-            Console.WriteLine("------------------------------------------------\n"); ;
+
 
         }
 
-        public void Filter(string format, string value, string order)
+        public List<UserEntity> Filter(string format, string value, string order)
         {
             string connectionString = @"Data Source = Coding_Tracker.db";
             using var connection = new SqliteConnection(connectionString);
@@ -114,16 +106,11 @@ namespace DatabaseLibrary
                         WHERE strftime('{format}', EndDate) = '{value}' ORDER BY EndDate  {order}";
 
             var codingDurations = connection.Query<UserEntity>(sql).ToList();
-
-            foreach (UserEntity userEntity in codingDurations)
-            {
-                Console.WriteLine($"{userEntity.Id}, {userEntity.StartDate}, {userEntity.EndDate}, {userEntity.Duration}");
-            }
-            Console.WriteLine("------------------------------------------------\n"); ;
+            return codingDurations;
 
         }
 
-        public void Analyze(string format, string value)
+        public (string, string) Analyze(string format, string value)
         {
             string connectionString = @"Data Source = Coding_Tracker.db";
             using var connection = new SqliteConnection(connectionString);
@@ -137,8 +124,6 @@ namespace DatabaseLibrary
             TimeSpan duration;
             TimeSpan total = TimeSpan.Zero;
 
-
-            Console.WriteLine("------------------------------------------------\n");
             foreach (UserEntity userEntity in codingDurations)
             {
                 TimeSpan.TryParse(userEntity.Duration, out duration);
@@ -148,10 +133,7 @@ namespace DatabaseLibrary
             string totalString = FormatTimeSpan(total);
             TimeSpan average = total / codingDurations.Count;
             string averageString = FormatTimeSpan(average);
-            Console.WriteLine(@$"This month you sent a total of {totalString}
-            and an Average of {averageString}
-            ");
-            Console.WriteLine("------------------------------------------------\n");
+            return (totalString, averageString);
         }
 
         public string FormatTimeSpan(TimeSpan duration)
@@ -177,7 +159,7 @@ namespace DatabaseLibrary
         }
 
 
-        public async void Delete(int id)
+        public async Task<int> Delete(int id)
         {
             string connectionString = @"Data Source = Coding_Tracker.db";
             using var connection = new SqliteConnection(connectionString);
@@ -185,7 +167,7 @@ namespace DatabaseLibrary
             var sql = @"DELETE FROM codingTracker where Id = @Id";
 
             var affectedRows = await connection.ExecuteAsync(sql, new { Id = id });
-            Console.WriteLine($"{affectedRows} row(s) inserted");
+            return affectedRows;
         }
     }
 }
