@@ -17,7 +17,7 @@ namespace CodingTracker.ukpagrace
 
         public async void SetGoal()
         {
-            int goalInput = validate.validateGoal();
+            int goalInput = validate.ValidateGoal();
 
             DateTime date = DateTime.Now;
             string month = $"{date.Year}-{date.Month:D2}";

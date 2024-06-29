@@ -6,7 +6,6 @@ class CodingController
 {
     readonly Database database = new();
     readonly Goal goal = new();
-    bool stop = false;
     static void Main()
     {
         TrackerController trackerController = new ();

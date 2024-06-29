@@ -12,7 +12,7 @@ namespace CodingTracker.ukpagrace
         UserInput userInput = new ();
         Utility utility = new();
         Validation validate = new();
-        bool stopSession = false;
+        bool stopSession;
         public void CreateTable()
         {
             database.Create();
@@ -89,17 +89,17 @@ namespace CodingTracker.ukpagrace
                 if (option == "StartDate")
                 {
 
-                    updateStartDate(id, record);
+                    UpdateStartDate(id, record);
                 }
                 else if (option == "EndDate")
                 {
-                    updateEndDate(id, record);
+                    UpdateEndDate(id, record);
                 }
             }
 
         }
 
-        async void updateStartDate(int id, UserEntity record)
+        async void UpdateStartDate(int id, UserEntity record)
         {
             DateTime startDate = userInput.GetStartDate();
             DateTime endDate;
@@ -118,7 +118,7 @@ namespace CodingTracker.ukpagrace
             AnsiConsole.MarkupLine($" [white]{affectedRows}[blue] row(s)[/] updated[/]");
         }
 
-        async void updateEndDate(int id, UserEntity record)
+        async void UpdateEndDate(int id, UserEntity record)
         {
             DateTime endDate = userInput.GetEndDate();
             DateTime startDate;

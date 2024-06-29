@@ -5,7 +5,7 @@ namespace CodingTracker.ukpagrace
 {
     internal class Validation
     {
-        public int validateGoal() {
+        public int ValidateGoal() {
             return AnsiConsole.Prompt(
                 new TextPrompt<int>("[blue]Set a coding goal for this month, goal must be an integer[/]")
                     .PromptStyle("green")
