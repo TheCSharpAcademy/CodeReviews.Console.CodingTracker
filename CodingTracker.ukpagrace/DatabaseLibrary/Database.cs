@@ -127,8 +127,7 @@ namespace DatabaseLibrary
             {
                 TimeSpan.TryParse(record.Duration, out duration);
                 total += duration;
-            }
-            TimeSpan maxvalue = TimeSpan.MaxValue;  
+            } 
             TimeSpan average = total / records.Count;
             return (total, average);
         }
