@@ -11,6 +11,8 @@ namespace CodingTracker
         public SQLiteConnection _connection { get; private set; }
         CodingSession session = new CodingSession();
         private readonly Menu menu;
+        Validation validation;
+        UserInput userInput;
 
         public DbController(Menu _menu)
         {
@@ -18,6 +20,8 @@ namespace CodingTracker
             _connection = new SQLiteConnection("Data Source=CodingSessions.db;");
             InitializeDatabase();
             menu = _menu;
+            validation = new Validation(string.Empty);
+            userInput = new UserInput();
         }
 
         private void InitializeDatabase()
@@ -67,26 +71,44 @@ namespace CodingTracker
                 }
                 connection.Close();
             }
-            
+            AnsiConsole.MarkupLine("[bold]Press any key to return to the main menu[/]");
+            Console.ReadKey();
+            menu.DisplayMenu();
         }
 
         public void InsertRecords()
         {
-            Validation validation = new Validation();
-            AnsiConsole.MarkupLine("[green]Please type in the date of the start below:[/]");
-            session.StartDate = Console.ReadLine();
-            if (!String.IsNullOrEmpty(session.StartDate))
+            AnsiConsole.MarkupLine("[green]Please type in the date of the start below in yyyy.mm.dd. format (like this: 2024.06.29.):[/]");
+            string helper=Console.ReadLine();
+            if (validation.ValidString(helper))
             {
-                validation.ValidString(session.StartDate); // placeholder method, will check the input here.
+                session.StartDate = helper;
             }
-            AnsiConsole.MarkupLine("[green]Please type in the date of the end below:[/]");
-            session.EndDate = Console.ReadLine();
-            if (!String.IsNullOrEmpty(session.EndDate))
+            else
             {
-                validation.ValidString(session.EndDate); // placeholder method, will check the input here.
+                AnsiConsole.MarkupLine("[bold red]Please try again![/]");
+                Thread.Sleep(1000);
+                InsertRecords();
             }
-            AnsiConsole.MarkupLine("[green]Please type in the duration below:[/]");
-            session.Duration = Console.ReadLine(); // placeholder for duration counting
+            AnsiConsole.MarkupLine("[green]Please type in the date of the end below in yyyy.mm.dd. format (like this: 2024.06.29.):[/]");
+            helper = Console.ReadLine();
+            if (validation.ValidString(helper))
+            {
+                session.EndDate = helper;
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("[bold red]Please try again![/]");
+                Thread.Sleep(1000);
+                InsertRecords();
+            }
+            session.Duration = userInput.Duration(session.StartDate, session.EndDate);
+            if(session.Duration=="")
+            {
+                AnsiConsole.MarkupLine("[bold red]The provided data was not correct, try again.[/]");
+                Thread.Sleep(1000);
+                InsertRecords();
+            }
             using (var connection = new SQLiteConnection(_connection))
             {
                 connection.Open();
@@ -118,13 +140,14 @@ namespace CodingTracker
                         AnsiConsole.MarkupLine("[green]Enter a new end date (leave empty to keep the current value): [/]");
                         string newEndDate = Console.ReadLine();
 
-                        if (!string.IsNullOrEmpty(newStartDate))
+                        if (!string.IsNullOrEmpty(newStartDate)&&validation.ValidString(newEndDate))
                         {
                             session.StartDate = newStartDate;
                         }
                         else
                         {
                             session.StartDate = existingRecord.StartDate;
+                            AnsiConsole.MarkupLine("[bold red]The record will not be changed, the given data was not correct![/]");
                         }
 
                         if (!string.IsNullOrEmpty(newEndDate))
@@ -134,6 +157,14 @@ namespace CodingTracker
                         else
                         {
                             session.EndDate = existingRecord.EndDate;
+                            AnsiConsole.MarkupLine("[bold red]The record will not be changed, the given data was not correct![/]");
+                        }
+                        session.Duration = userInput.Duration(session.StartDate, session.EndDate);
+                        if (session.Duration == "")
+                        {
+                            AnsiConsole.MarkupLine("[bold red]The provided data was not correct, try again.[/]");
+                            Thread.Sleep(1000);
+                            UpdateRecord();
                         }
                         string updateCommand = "UPDATE Sessions SET StartDate = @StartDate, EndDate = @EndDate WHERE Id = @Id";
                         connection.Execute(updateCommand, new { StartDate = session.StartDate, EndDate = session.EndDate, Id=id });

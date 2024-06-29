@@ -1,22 +1,22 @@
 ﻿using Spectre.Console;
 using System;
+using System.Globalization;
 namespace CodingTracker
 {
     public class Validation
     {
-        int first;
-        public int ValidString(string start)
+        public Validation(string value)
         {
-            if (Int32.TryParse(start, out int a))
+            bool result = ValidString(value); //2024.06.29.
+            if (result)
             {
-                first = a;
+                AnsiConsole.MarkupLine("[yellow bold]Date passed the test.[/]");
             }
-            else
-            {
-                AnsiConsole.Markup("[underline red]Try again![/]");
-                ValidString(Console.ReadLine());
-            }
-            return a;
+        }
+
+        public bool ValidString(string value)
+        {
+            return DateTime.TryParseExact(value, "yyyy.MM.dd.", CultureInfo.InvariantCulture, DateTimeStyles.None, out var _);
         }
     }
 }
