@@ -1,72 +1,75 @@
 ﻿using DatabaseLibrary;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Spectre.Console;
 
 namespace CodingTracker.ukpagrace
 {
     
     internal class GoalController
     {
-        Goal goal = new();
-        Utility utility = new ();
-        void CreateGoalTable()
+        readonly Goal goal = new();
+        readonly Utility utility = new ();
+        readonly Validation validate = new ();
+        readonly UserInput userInput = new ();
+        public void CreateGoalTable()
         {
             goal.Create();
         }
 
-        void SetGoal()
+        public async void SetGoal()
         {
-            Console.WriteLine("Set a coding goal for this month, goal must be an integer");
+            int goalInput = validate.validateGoal();
 
-            var userInput = Console.ReadLine();
-            int goalInput;
-
-            while (!int.TryParse(userInput, out goalInput) || Convert.ToInt32(userInput) < 0)
-            {
-                Console.WriteLine("Enter a valid goal");
-                userInput = Console.ReadLine();
-            }
             DateTime date = DateTime.Now;
             string month = $"{date.Year}-{date.Month:D2}";
 
             if (goal.GoalCreated(month))
             {
-                Console.WriteLine("Goal for the Month has been created would you like to update it?");
-                Console.WriteLine("1 - yes");
-                Console.WriteLine("2 - no");
-                userInput = Console.ReadLine();
+                bool updateGoal = userInput.ConfirmAction("Goal for the Month has been created would you like to update it?");
 
-                if (userInput == "1")
+                if (updateGoal)
                 {
                     goal.Update(month, goalInput);
                 }
-                else if (userInput == "2")
-                {
-                    GetAverageCodePerDay();
-                }
                 else
                 {
-                    Console.WriteLine("Invalid Input");
+                    GetAverageCodePerDay();
                 }
             }
             else
             {
-                goal.Insert(month, goalInput);
+                int affectedRows = await goal.Insert(month, goalInput);
+                AnsiConsole.MarkupLine($"[white]{affectedRows}[/] [yellow]row(s) inserted[/]");
                 GetAverageCodePerDay();
             }
 
 
         }
 
-        void SeeGoalProgress()
+        public void SeeGoalProgress()
         {
             DateTime date = DateTime.Now;
             string month = $"{date.Year}-{date.Month:D2}";
 
-            goal.GoalProgress(month);
+            var result = goal.GoalProgress(month);
+            var codingGoals = result.Item1;
+            var codingHours = result.Item2;
+
+            if(codingGoals == -1)
+            {
+                AnsiConsole.MarkupLine("[red] No Coding Goal has been set[/]");
+                return;
+            }
+            var remainingHours = codingGoals - codingHours;
+            var surpassedHours = codingHours - codingGoals;
+
+            if (result.Item2 < result.Item1)
+            {
+                AnsiConsole.MarkupLine($"[yellow]Your coding goal this month is {codingGoals} hours and you have coded {codingHours} hours, you have {remainingHours} hours left to reach your goal[/]");
+            }
+            else
+            {
+                AnsiConsole.MarkupLine($"[blue]You have surpassed your goal by {surpassedHours} hours,[/]  [yellow] Weldone Tiger[/]");
+            }
         }
 
         void GetAverageCodePerDay()
@@ -78,9 +81,12 @@ namespace CodingTracker.ukpagrace
             TimeSpan timespan = TimeSpan.FromHours(codePerDay);
             string timespanString = utility.FormatTimeSpan(timespan);
 
-            Console.WriteLine("------------------------------------------------\n"); ;
-            Console.WriteLine($"To achieve your goal this month you have to code a minimun of {timespanString} everday, GoodLuck");
-            Console.WriteLine("------------------------------------------------\n"); ;
+
+            AnsiConsole.MarkupLine($"[yellow]To achieve your goal this month you have to code a minimun of {timespanString} everday[/]");
+            AnsiConsole.Write(
+                new FigletText("GoodLuck")
+                    .LeftJustified()
+                    .Color(Color.Chartreuse3));
         }
     }
 }

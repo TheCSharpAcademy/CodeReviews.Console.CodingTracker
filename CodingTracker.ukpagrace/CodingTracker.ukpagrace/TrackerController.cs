@@ -11,119 +11,137 @@ namespace CodingTracker.ukpagrace
         Database database = new ();
         UserInput userInput = new ();
         Utility utility = new();
+        Validation validate = new();
         bool stopSession = false;
-        void CreateTable()
+        public void CreateTable()
         {
             database.Create();
         }
 
 
-        public async void InsertTable()
+        public async void InsertRecord()
         {
             DateTime startDate = userInput.GetStartDate();
             DateTime endDate = userInput.GetEndDate();
 
             while (startDate > endDate)
             {
-                Console.WriteLine("start date cannot be greater than end date");
+                AnsiConsole.MarkupLine("[bold yellow]start date cannot be greater than end date[/]");
                 endDate = userInput.GetEndDate();
 
             }
             TimeSpan duration = endDate - startDate;
             int affectedRows = await database.Insert(startDate, endDate, duration);
-            AnsiConsole.WriteLine($"[white]{affectedRows} [yellow]row(s) inserted");
+            AnsiConsole.MarkupLine($"[white]{affectedRows} [yellow]row(s)[/] inserted[/]");
 
         }
 
-        void ListRecords()
+        public void ListRecords()
         {
             var records = database.List();
 
             var table = new Table();
 
-            table.Title("[blue]Coding Tracker").Centered();
+            table.Title("[blue]Coding Tracker[/]").Centered();
             table.AddColumn(new TableColumn("[red]Id[/]").Centered());
-            table.AddColumn(new TableColumn("[red]StartDate[/]").Centered());
-            table.AddColumn(new TableColumn("[red]EndDate[/]").Centered());
-            table.AddColumn(new TableColumn("[red]Duration[/]").Centered());
+            table.AddColumn(new TableColumn("[blue]StartDate[/]").Centered());
+            table.AddColumn(new TableColumn("[yellow]EndDate[/]").Centered());
+            table.AddColumn(new TableColumn("[blue]Duration[/]").Centered());
+
             foreach (UserEntity record in records)
             {
-                table.AddRow($"{record.Id}, {record.StartDate}, {record.EndDate}, {record.Duration}");
+                table.AddRow(record.Id.ToString(), record.StartDate, record.EndDate, record.Duration);
             }
 
             AnsiConsole.Write(table);
         }
 
-        async void UpdateRecord()
+        public void UpdateRecord()
         {
             ListRecords();
             int id = userInput.GetNumberInput("Enter the Id your want to update");
 
             UserEntity record = database.GetOne(id);
-            var table = new Table();
-            table.Title("[blue]Record").Centered();
+            if(record == null)
+            {
+                AnsiConsole.MarkupLine($"[red]Record with {id} does not exist[/]");
+            }
+            else
+            {
+                var table = new Table();
+                table.Title("[blue]Record[/]").Centered();
 
-            table.AddColumn(new TableColumn("[red]Id[/]").Centered());
-            table.AddColumn(new TableColumn("[red]StartDate[/]").Centered());
-            table.AddColumn(new TableColumn("[red]EndDate[/]").Centered());
-            table.AddColumn(new TableColumn("[red]Duration[/]").Centered());
+                table.AddColumn(new TableColumn("[red]Id[/]").Centered());
+                table.AddColumn(new TableColumn("[red]StartDate[/]").Centered());
+                table.AddColumn(new TableColumn("[red]EndDate[/]").Centered());
+                table.AddColumn(new TableColumn("[red]Duration[/]").Centered());
 
-            table.AddRow($"{record.Id}, {record.StartDate}, {record.EndDate}, {record.Duration}");
-            AnsiConsole.Write(table);
-            var prompt = new SelectionPrompt<string>()
-                .Title("What column do you want to update")
-                .AddChoices(new[]
-                {
+                table.AddRow(record.Id.ToString(), record.StartDate, record.EndDate, record.Duration);
+                AnsiConsole.Write(table);
+                var prompt = new SelectionPrompt<string>()
+                    .Title("What column do you want to update")
+                    .AddChoices(new[]
+                    {
                     "StartDate", "EndDate"
-                });
-             var option = AnsiConsole.Prompt(prompt);
+                    });
+                var option = AnsiConsole.Prompt(prompt);
 
-            if (option == "StartDate")
-            {
-                DateTime startDate = userInput.GetStartDate();
-                DateTime endDate;
-
-                DateTime.TryParseExact(record.EndDate, "yyyy-MM-dd hh:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDate);
-
-                while (startDate > endDate)
+                if (option == "StartDate")
                 {
-                    AnsiConsole.Write("[red]Start Date cannot greater than Start Date[/]");
-                    startDate = userInput.GetStartDate();
+
+                    updateStartDate(id, record);
                 }
-
-                TimeSpan duration = utility.GetDuration(startDate, endDate);
-
-                int affectedRows = await database.Update(id, startDate, endDate, duration);
-                AnsiConsole.Write($"[white]{affectedRows}[blue]row(s) inserted");
-
-            }
-            else if (option == "EndDate")
-            {
-                DateTime endDate = userInput.GetEndDate();
-                DateTime startDate;
-
-                DateTime.TryParseExact(record.StartDate, "yyyy-MM-dd hh:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate);
-
-                while (endDate < startDate)
+                else if (option == "EndDate")
                 {
-                    AnsiConsole.Write("[red]End Date cannot be less than Start Date[/]");
-                    endDate = userInput.GetEndDate();
+                    updateEndDate(id, record);
                 }
-
-                TimeSpan duration = endDate - startDate;
-                int affectedRows = await database.Update(id, startDate, endDate, duration);
-                AnsiConsole.Write($"[white]{affectedRows}[blue]row(s) inserted");
             }
+
         }
 
+        async void updateStartDate(int id, UserEntity record)
+        {
+            DateTime startDate = userInput.GetStartDate();
+            DateTime endDate;
+
+            DateTime.TryParseExact(record.EndDate, "yyyy-MM-dd hh:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDate);
+
+            while (startDate > endDate)
+            {
+                AnsiConsole.MarkupLine("[red]Start Date cannot greater than End Date[/]");
+                startDate = userInput.GetStartDate();
+            }
+
+            TimeSpan duration = utility.GetDuration(startDate, endDate);
+
+            int affectedRows = await database.Update(id, startDate, endDate, duration);
+            AnsiConsole.MarkupLine($" [white]{affectedRows}[blue] row(s)[/] updated[/]");
+        }
+
+        async void updateEndDate(int id, UserEntity record)
+        {
+            DateTime endDate = userInput.GetEndDate();
+            DateTime startDate;
+
+            DateTime.TryParseExact(record.StartDate, "yyyy-MM-dd hh:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate);
+
+            while (endDate < startDate)
+            {
+                AnsiConsole.MarkupLine("[red]End Date cannot be less than Start Date[/]");
+                endDate = userInput.GetEndDate();
+            }
+
+            TimeSpan duration = endDate - startDate;
+            int affectedRows = await database.Update(id, startDate, endDate, duration);
+            AnsiConsole.MarkupLine($"[white]{affectedRows}[blue]row(s) updated");
+        }
         public async void DeleteRecord()
         {
             ListRecords();
             int id = userInput.GetNumberInput("Enter the Id your want to delete");
             int affectedRows = await database.Delete(id);
-            AnsiConsole.Write($"[white]{affectedRows}[blue]row(s) inserted");
+            AnsiConsole.MarkupLine($" [white]{affectedRows}[/] [blue]row(s) deleted[/]");
         }
-
 
         public void FilterRecords()
         {
@@ -137,13 +155,13 @@ namespace CodingTracker.ukpagrace
             switch (option.ToLower())
             {
                 case "year":
-                    FilterTable("%Y", "year", "yyyy eg 2024");
+                    FilterTable("%Y", "year", "yyyy");
                     break;
                 case "month":
-                    FilterTable("%Y-%m", "months", "yyyy-mm eg 2024-06");
+                    FilterTable("%Y-%m", "month", "yyyy-MM");
                     break;
                 case "day":
-                    FilterTable("%Y-%m-%d", "day", "yyyy-mm-dd eg 2024-06-24");
+                    FilterTable("%Y-%m-%d", "day", "yyyy-MM-dd");
                     break;
                 default:
                     Console.WriteLine("InvalidInput, Select an option from menu");
@@ -158,13 +176,21 @@ namespace CodingTracker.ukpagrace
             var option = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                     .Title($"Range or specific {filter}")
-                    .PageSize(2)
+                    .PageSize(3)
                     .AddChoices("Range", $"Specific {filter}")
             );
-            if (option == "1")
+            if (option == "Range")
             {
-                var firstRange = AnsiConsole.Ask<string>($"Enter the first range value in the format of [yellow]{filterFormat}[/]");
-                var secondRange = AnsiConsole.Ask<string>($"Enter the second range value in the format of [yellow]{filterFormat}[/]");
+                var rangeInput = userInput.GetRange(filterFormat);
+                var firstRange = rangeInput.Item1;
+                var secondRange = rangeInput.Item2;
+
+
+                if(validate.ValidateRange(firstRange, secondRange, filterFormat))
+                {
+                    AnsiConsole.MarkupLine($"[red]start Date Cannot be greater than end Date[/]");
+                    return;
+                }
                 string order = userInput.GetOrderInput();
                 List<UserEntity> records = database.Filter(format, firstRange, secondRange, order);
                 DisplayFilteredRecords( records );
@@ -172,7 +198,7 @@ namespace CodingTracker.ukpagrace
             }
             else
             {
-                var specificValue = AnsiConsole.Ask<string>($"Enter the {filter} in the format of [yellow]{filterFormat}[/]");
+                var specificValue = userInput.DateInput(filterFormat);
                 string order = userInput.GetOrderInput();
                 List<UserEntity> records = database.Filter(format, specificValue, order);
                 DisplayFilteredRecords( records );
@@ -183,61 +209,74 @@ namespace CodingTracker.ukpagrace
         {
             var table = new Table();
 
-            table.Title("[blue]Coding Tracker").Centered();
+            table.Title("[blue]Coding Tracker[/]").Centered();
             table.AddColumn(new TableColumn("[red]Id[/]").Centered());
-            table.AddColumn(new TableColumn("[red]StartDate[/]").Centered());
-            table.AddColumn(new TableColumn("[red]EndDate[/]").Centered());
-            table.AddColumn(new TableColumn("[red]Duration[/]").Centered());
+            table.AddColumn(new TableColumn("[yellow]StartDate[/]").Centered());
+            table.AddColumn(new TableColumn("[blue]EndDate[/]").Centered());
+            table.AddColumn(new TableColumn("[yellow]Duration[/]").Centered());
             foreach (UserEntity record in records)
             {
-                table.AddRow($"{record.Id}, {record.StartDate}, {record.EndDate}, {record.Duration}");
+                table.AddRow(record.Id.ToString(), record.StartDate, record.EndDate, record.Duration);
             }
 
             AnsiConsole.Write(table);
         }
 
-        public async void StartWatch()
+        public async void LiveCodingSession()
         {
             DateTime startDate = DateTime.Now;
             DateTime interval;
-            Console.WriteLine("To Stop watch enter 0");
             Thread inputThread = new Thread(StopWatch);
             inputThread.Start();
 
             while (!stopSession)
             {
                 interval = DateTime.Now;
-                Console.Clear();
-                Console.WriteLine($"{interval.ToString("yyyy-MM-dd hh:mm:ss")}");
+                int cursorLeft = Console.CursorLeft;
+                int cursorTop = Console.CursorTop;
+
+                Console.SetCursorPosition(0, 0);
+                AnsiConsole.MarkupLine($"[red]TIME[/] [grey50]{interval.ToString("yyyy-MM-dd hh:mm:ss")}[/]");
+                
+                Console.SetCursorPosition(cursorLeft, cursorTop);
                 Thread.Sleep(1000);
             }
             DateTime endDate = DateTime.Now;
             TimeSpan duration = utility.GetDuration(startDate, endDate);
 
             int affectedRows = await database.Insert(startDate, endDate, duration);
-            AnsiConsole.Write($"[white]{affectedRows}[blue]row(s) inserted");
+            AnsiConsole.Write($"[white]{affectedRows}[/][blue]row(s) inserted[/]");
         }
 
         public void StopWatch()
         {
             while (!stopSession)
             {
-                var input = Console.ReadLine();
+                var input = userInput.ConfirmAction("Stop Live session");
 
-                if (input == "0")
+                if (input)
                 {
                     stopSession = true;
                 }
             }
         }
 
-
-        void GetReport()
+        public void GetReport()
         {
             DateTime dateTime = DateTime.Now;
             string month = $"{dateTime.Year}-{dateTime.Month:D2}";
 
-            database.Analyze("%Y-%m", month);
+            var results = database.Analyze("%Y-%m", month);
+
+            string totalString = utility.FormatTimeSpan(results.Item1);
+            string averageString = utility.FormatTimeSpan(results.Item2);
+
+            AnsiConsole.MarkupLine($"[blue]This month you spent a total of {totalString} coding and an average of {averageString}[/]");
+
+            AnsiConsole.Write(
+            new FigletText("Weldone")
+                .Centered()
+                .Color(Color.Chartreuse3));
         }
     }
 }
