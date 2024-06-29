@@ -30,7 +30,7 @@ namespace CodingTracker.ukpagrace
                 endDate = userInput.GetEndDate();
 
             }
-            TimeSpan duration = endDate - startDate;
+            TimeSpan duration = utility.GetDuration(startDate, endDate);
             int affectedRows = await database.Insert(startDate, endDate, duration);
             AnsiConsole.MarkupLine($"[white]{affectedRows} [yellow]row(s)[/] inserted[/]");
 
@@ -50,7 +50,8 @@ namespace CodingTracker.ukpagrace
 
             foreach (UserEntity record in records)
             {
-                table.AddRow(record.Id.ToString(), record.StartDate, record.EndDate, record.Duration);
+                TimeSpan duration = TimeSpan.Parse(record.Duration);
+                table.AddRow(record.Id.ToString(), record.StartDate, record.EndDate, utility.FormatTimeSpan(duration));
             }
 
             AnsiConsole.Write(table);
@@ -131,7 +132,7 @@ namespace CodingTracker.ukpagrace
                 endDate = userInput.GetEndDate();
             }
 
-            TimeSpan duration = endDate - startDate;
+            TimeSpan duration = utility.GetDuration(startDate, endDate);
             int affectedRows = await database.Update(id, startDate, endDate, duration);
             AnsiConsole.MarkupLine($"[white]{affectedRows}[blue]row(s) updated");
         }
@@ -263,20 +264,28 @@ namespace CodingTracker.ukpagrace
 
         public void GetReport()
         {
-            DateTime dateTime = DateTime.Now;
-            string month = $"{dateTime.Year}-{dateTime.Month:D2}";
+            try
+            {
+                DateTime dateTime = DateTime.Now;
+                string month = $"{dateTime.Year}-{dateTime.Month:D2}";
 
-            var results = database.Analyze("%Y-%m", month);
+                var results = database.Analyze("%Y-%m", month);
 
-            string totalString = utility.FormatTimeSpan(results.Item1);
-            string averageString = utility.FormatTimeSpan(results.Item2);
+                string totalString = utility.FormatTimeSpan(results.Item1);
+                string averageString = utility.FormatTimeSpan(results.Item2);
 
-            AnsiConsole.MarkupLine($"[blue]This month you spent a total of {totalString} coding and an average of {averageString}[/]");
+                AnsiConsole.MarkupLine($"[blue]This month you spent a total of {totalString} coding and an average of {averageString}[/]");
 
-            AnsiConsole.Write(
-            new FigletText("Weldone")
-                .Centered()
-                .Color(Color.Chartreuse3));
+                AnsiConsole.Write(
+                new FigletText("Weldone")
+                    .Centered()
+                    .Color(Color.Chartreuse3));
+            }
+            catch (Exception e) {
+                AnsiConsole.MarkupLine($"[red]{e.Message}[/]");
+            
+            }
+
         }
     }
 }

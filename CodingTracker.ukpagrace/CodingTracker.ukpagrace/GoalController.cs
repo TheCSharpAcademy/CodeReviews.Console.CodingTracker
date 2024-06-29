@@ -41,34 +41,46 @@ namespace CodingTracker.ukpagrace
                 AnsiConsole.MarkupLine($"[white]{affectedRows}[/] [yellow]row(s) inserted[/]");
                 GetAverageCodePerDay();
             }
-
-
         }
 
         public void SeeGoalProgress()
         {
-            DateTime date = DateTime.Now;
-            string month = $"{date.Year}-{date.Month:D2}";
-
-            var result = goal.GoalProgress(month);
-            var codingGoals = result.Item1;
-            var codingHours = result.Item2;
-
-            if(codingGoals == -1)
+            try
             {
-                AnsiConsole.MarkupLine("[red] No Coding Goal has been set[/]");
-                return;
+                DateTime date = DateTime.Now;
+                string month = $"{date.Year}-{date.Month:D2}";
+
+                var result = goal.GoalProgress(month);
+                var codingGoals = result.Item1;
+                var totalDuration = result.Item2;
+
+                string formattedCodedHours = utility.FormatTimeSpan(totalDuration);
+                string codedHours = string.IsNullOrEmpty(formattedCodedHours) ? "nothing" : utility.FormatTimeSpan(totalDuration);
+
+                int TotalToMilliseconds = (int)TimeSpan.Parse(totalDuration.ToString()).TotalMilliseconds;
+                int codingHours = (int)TimeSpan.FromMilliseconds(TotalToMilliseconds).TotalHours;
+
+                TimeSpan goalsTimeSpan = TimeSpan.FromHours(codingGoals);
+
+                var remainingHours = utility.FormatTimeSpan(goalsTimeSpan - totalDuration);
+                var surpassedHours = utility.FormatTimeSpan( totalDuration - goalsTimeSpan);
+
+                if (codingHours < result.Item1)
+                {
+                    AnsiConsole.MarkupLine($"[yellow]Your coding goal this month is {codingGoals} hours and you have coded {codedHours}, you have {remainingHours} left to reach your goal[/]");
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine($"[blue]You have surpassed your goal by {surpassedHours}[/].");
+                    AnsiConsole.Write(
+                        new FigletText("Weldone Tiger")
+                            .Centered()
+                            .Color(Color.DodgerBlue3));
+                }
             }
-            var remainingHours = codingGoals - codingHours;
-            var surpassedHours = codingHours - codingGoals;
-
-            if (result.Item2 < result.Item1)
+            catch (Exception ex)
             {
-                AnsiConsole.MarkupLine($"[yellow]Your coding goal this month is {codingGoals} hours and you have coded {codingHours} hours, you have {remainingHours} hours left to reach your goal[/]");
-            }
-            else
-            {
-                AnsiConsole.MarkupLine($"[blue]You have surpassed your goal by {surpassedHours} hours,[/]  [yellow] Weldone Tiger[/]");
+                AnsiConsole.MarkupLine("[red]ex[/]");
             }
         }
 
@@ -80,7 +92,6 @@ namespace CodingTracker.ukpagrace
             double codePerDay = goal.AverageTimePerDay(month, days);
             TimeSpan timespan = TimeSpan.FromHours(codePerDay);
             string timespanString = utility.FormatTimeSpan(timespan);
-
 
             AnsiConsole.MarkupLine($"[yellow]To achieve your goal this month you have to code a minimun of {timespanString} everday[/]");
             AnsiConsole.Write(

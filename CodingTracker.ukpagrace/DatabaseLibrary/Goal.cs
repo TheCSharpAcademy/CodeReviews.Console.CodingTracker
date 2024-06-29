@@ -33,7 +33,7 @@ namespace DatabaseLibrary
             return affectedRows;
         }
 
-        public (int, int) GoalProgress(string month)
+        public (int, TimeSpan) GoalProgress(string month)
         {
             try
             {
@@ -53,9 +53,6 @@ namespace DatabaseLibrary
                     total += duration;
                 }
 
-                int TotalToMilliseconds = (int)TimeSpan.Parse(total.ToString()).TotalMilliseconds;
-                int codingHours = (int)TimeSpan.FromMilliseconds(TotalToMilliseconds).TotalHours;
-
                 sql = @$"SELECT Hours
                         FROM  codingGoal
                         WHERE strftime('%Y-%m', {month})";
@@ -64,10 +61,10 @@ namespace DatabaseLibrary
                 var codingGoal = connection.QuerySingle<int>(sql);
 
 
-                return (codingGoal, codingHours);
+                return (codingGoal, total);
             }
             catch (InvalidOperationException ex) {
-                return (-1, -1);
+                throw new Exception("No Coding Goal has been set");
             }
         }
 

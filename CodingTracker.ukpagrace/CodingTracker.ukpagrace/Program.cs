@@ -13,7 +13,7 @@ class CodingController
         trackerController.CreateTable();
         goalController.CreateGoalTable();
         AnsiConsole.Write(
-            new FigletText("CODING TRACKER")
+            new FigletText("[CODING TRACKER]")
             .LeftJustified()
             .Color(Color.Red3_1)
             );

@@ -115,6 +115,11 @@ namespace DatabaseLibrary
 
             var records = connection.Query<UserEntity>(sql).ToList();
 
+            if(records.Count == 0)
+            {
+                throw new Exception("No Coding Records for this month");
+            }
+
             TimeSpan duration;
             TimeSpan total = TimeSpan.Zero;
 
@@ -123,6 +128,7 @@ namespace DatabaseLibrary
                 TimeSpan.TryParse(record.Duration, out duration);
                 total += duration;
             }
+            TimeSpan maxvalue = TimeSpan.MaxValue;  
             TimeSpan average = total / records.Count;
             return (total, average);
         }
