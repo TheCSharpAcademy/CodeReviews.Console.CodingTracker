@@ -21,7 +21,7 @@ namespace CodingTracker
             InitializeDatabase();
             menu = _menu;
             validation = new Validation(string.Empty);
-            userInput = new UserInput();
+            userInput = new UserInput(session,this);
         }
 
         private void InitializeDatabase()
@@ -78,30 +78,8 @@ namespace CodingTracker
 
         public void InsertRecords()
         {
-            AnsiConsole.MarkupLine("[green]Please type in the date of the start below in yyyy.mm.dd. format (like this: 2024.06.29.):[/]");
-            string helper=Console.ReadLine();
-            if (validation.ValidString(helper))
-            {
-                session.StartDate = helper;
-            }
-            else
-            {
-                AnsiConsole.MarkupLine("[bold red]Please try again![/]");
-                Thread.Sleep(1000);
-                InsertRecords();
-            }
-            AnsiConsole.MarkupLine("[green]Please type in the date of the end below in yyyy.mm.dd. format (like this: 2024.06.29.):[/]");
-            helper = Console.ReadLine();
-            if (validation.ValidString(helper))
-            {
-                session.EndDate = helper;
-            }
-            else
-            {
-                AnsiConsole.MarkupLine("[bold red]Please try again![/]");
-                Thread.Sleep(1000);
-                InsertRecords();
-            }
+            userInput.DateOfStart();
+            userInput.DateOfEnd();
             session.Duration = userInput.Duration(session.StartDate, session.EndDate);
             if(session.Duration=="")
             {
@@ -166,8 +144,8 @@ namespace CodingTracker
                             Thread.Sleep(1000);
                             UpdateRecord();
                         }
-                        string updateCommand = "UPDATE Sessions SET StartDate = @StartDate, EndDate = @EndDate WHERE Id = @Id";
-                        connection.Execute(updateCommand, new { StartDate = session.StartDate, EndDate = session.EndDate, Id=id });
+                        string updateCommand = "UPDATE Sessions SET StartDate = @StartDate, EndDate = @EndDate, Duration = @Duration WHERE Id = @Id";
+                        connection.Execute(updateCommand, new { StartDate = session.StartDate, EndDate = session.EndDate, Duration = session.Duration, Id=id });
                         AnsiConsole.MarkupLine("[yellow]Record updated.[/]");
                         connection.Close();
 

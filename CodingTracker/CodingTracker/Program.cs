@@ -1,7 +1,4 @@
-﻿using System;
-using Spectre.Console;
-
-namespace CodingTracker
+﻿namespace CodingTracker
 {
     class Program
     {

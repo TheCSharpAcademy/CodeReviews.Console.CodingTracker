@@ -1,5 +1,4 @@
 ﻿using Spectre.Console;
-using System;
 using System.Globalization;
 namespace CodingTracker
 {

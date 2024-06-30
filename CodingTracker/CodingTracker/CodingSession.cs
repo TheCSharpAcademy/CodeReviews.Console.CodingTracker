@@ -1,6 +1,4 @@
-﻿using System;
-using Spectre.Console;
-namespace CodingTracker
+﻿namespace CodingTracker
 {
     public class CodingSession
     {
