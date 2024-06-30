@@ -1,5 +1,4 @@
-﻿using System.Configuration;
-using System.Data.SQLite;
+﻿using System.Data.SQLite;
 using Spectre.Console;
 using Dapper;
 
@@ -8,7 +7,7 @@ namespace CodingTracker
     public class DbController
     {
         private readonly string _connectionString;
-        public SQLiteConnection _connection { get; private set; }
+        public SQLiteConnection conn { get; private set; } //renamed from _connection because of codacy.
         CodingSession session = new CodingSession();
         private readonly Menu menu;
         Validation validation;
@@ -16,8 +15,9 @@ namespace CodingTracker
 
         public DbController(Menu _menu)
         {
-            _connectionString = ConfigurationManager.AppSettings["connectionString"] ?? "Data Source=CodingSessions.db;";
-            _connection = new SQLiteConnection("Data Source=CodingSessions.db;");
+            _connectionString = System.Configuration.ConfigurationManager.AppSettings["connectionString"] ?? "Data Source=CodingSessions.db;";
+            //_connectionString = ConfigurationManager.AppSettings["connectionString"] ?? "Data Source=CodingSessions.db;";
+            conn = new SQLiteConnection("Data Source=CodingSessions.db;");
             InitializeDatabase();
             menu = _menu;
             validation = new Validation(string.Empty);
@@ -33,7 +33,7 @@ namespace CodingTracker
                 AnsiConsole.MarkupLine("[underline bold]The database has been created![/]");
             }
             //Creating the table if it does not exist already
-            using (var connection = new SQLiteConnection(_connection))
+            using (var connection = new SQLiteConnection(conn))
             {
                 connection.Open();
                 var tableCommand = connection.CreateCommand();
@@ -51,7 +51,7 @@ namespace CodingTracker
 
         public void ReadRecords()
         {
-            using (var connection = new SQLiteConnection(_connection))
+            using (var connection = new SQLiteConnection(conn))
             {
                 connection.Open();
                 var records = connection.Query<CodingSession>("SELECT * FROM Sessions");
@@ -87,7 +87,7 @@ namespace CodingTracker
                 Thread.Sleep(1000);
                 InsertRecords();
             }
-            using (var connection = new SQLiteConnection(_connection))
+            using (var connection = new SQLiteConnection(conn))
             {
                 connection.Open();
                 string sqlCommand = "INSERT INTO Sessions (StartDate, EndDate, Duration) VALUES (@StartDate, @EndDate, @Duration)";
@@ -104,7 +104,7 @@ namespace CodingTracker
             AnsiConsole.MarkupLine("[bold]Enter the Id of the record you want to update: [/]");
             if (int.TryParse(Console.ReadLine(), out int id))
             {
-                using (var connection = new SQLiteConnection(_connection))
+                using (var connection = new SQLiteConnection(conn))
                 {
                     connection.Open();
                     var existingRecord = connection.QueryFirstOrDefault<CodingSession>("SELECT * FROM Sessions WHERE Id = @Id", new { Id = id });
@@ -170,7 +170,7 @@ namespace CodingTracker
             AnsiConsole.MarkupLine("[bold]Enter the Id of the record you want to delete: [/]");
             if (int.TryParse(Console.ReadLine(), out int id))
             {
-                using(var connection = new SQLiteConnection(_connection))
+                using(var connection = new SQLiteConnection(conn))
                 {
                     connection.Open();
                     var existingRecord = connection.Query<CodingSession>("SELECT * FROM Sessions WHERE Id=@Id",new { Id = id }).FirstOrDefault();
@@ -187,7 +187,6 @@ namespace CodingTracker
                         else
                         {
                             AnsiConsole.MarkupLine("[red]Returning to the menu now.[/]");
-                            Thread.Sleep(1500);
                         }
                     }
                     connection.Close();
