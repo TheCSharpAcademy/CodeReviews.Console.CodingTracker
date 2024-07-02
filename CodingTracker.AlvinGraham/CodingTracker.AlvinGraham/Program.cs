@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using CodingTracker;
+using Microsoft.Extensions.Configuration;
 
 
 IConfiguration configuration = new ConfigurationBuilder()
@@ -7,4 +8,6 @@ IConfiguration configuration = new ConfigurationBuilder()
 
 string connectionString = configuration.GetSection("ConnectionStrings")["DefaultConnection"]!;
 
-Console.WriteLine(connectionString);
+var dataAccess = new DataAccess(connectionString);
+
+dataAccess.CreateDatabase();
