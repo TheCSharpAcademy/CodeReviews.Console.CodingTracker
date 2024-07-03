@@ -43,7 +43,6 @@ Use the Up and Down arrow key to cycle through options, press Enter to select";
         }
 
 
-
         private static void ExitProgram()
         {
             string[] exitOptions = ["Yes", "No"];
