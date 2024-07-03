@@ -29,7 +29,9 @@ internal static class UserInterface
 					AddRecord();
 					break;
 				case MainMenuChoices.ViewRecords:
-					ViewRecords();
+					var dataAccess = new DataAccess();
+					var records = dataAccess.GetAllRecords();
+					ViewRecords(records);
 					break;
 				case MainMenuChoices.UpdateRecord:
 					UpdateRecord();
@@ -56,9 +58,20 @@ internal static class UserInterface
 
 	}
 
-	private static void ViewRecords()
+	private static void ViewRecords(IEnumerable<CodingRecord> records)
 	{
+		var table = new Table();
+		table.AddColumn("Id");
+		table.AddColumn("Start Date");
+		table.AddColumn("End Date");
+		table.AddColumn("Duration");
 
+		foreach (var record in records)
+		{
+			table.AddRow(record.Id.ToString(), record.DateStart.ToString(), record.DateEnd.ToString(), $"{(int)record.Duration.TotalHours} hours {record.Duration.TotalMinutes % 60} minutes");
+		}
+
+		AnsiConsole.Write(table);
 	}
 
 	private static void AddRecord()
