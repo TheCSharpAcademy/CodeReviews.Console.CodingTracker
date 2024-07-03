@@ -16,20 +16,18 @@ namespace CodingTracker.Controllers
         
         private void InitialzieDatabase()
         {
-            using (var connection = new SqliteConnection(_connectionString))
-            {
-                connection.Open();
-                var tableCmd = connection.CreateCommand();
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+            var tableCmd = connection.CreateCommand();
 
-                tableCmd.CommandText = @"CREATE TABLE IF NOT EXISTS CodingSessions (
+            tableCmd.CommandText = @"CREATE TABLE IF NOT EXISTS CodingSessions (
                                             Id INTEGER PRIMARY KEY,
                                             StartTime TEXT,
                                             EndTime TEXT
                                         )";
-                tableCmd.ExecuteNonQuery();
+            tableCmd.ExecuteNonQuery();
 
-                connection.Close();
-            }
+            connection.Close();
         }
 
         public void AddSession(CodingSession session)
