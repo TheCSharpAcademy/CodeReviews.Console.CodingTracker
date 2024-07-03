@@ -12,9 +12,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FancyMenu\FancyMenu.csproj">
+    <ProjectReference Include="..\FancyMenu\Services.csproj">
       <Private>True</Private>
     </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+    <Folder Include="Ultilities\" />
+    <Folder Include="Repositories\" />
   </ItemGroup>
 
 </Project>
