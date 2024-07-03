@@ -104,7 +104,7 @@ public class Program
             Console.WriteLine("Previous Records:");
             foreach (var record in records)
             {
-                Console.WriteLine($"Start Time: {record.StartTime}, End Time: {record.EndTime}, Duration: {record.Duration}");
+                Console.WriteLine($"Record no.{record.Id}| Start Time: {record.StartTime}, End Time: {record.EndTime}, Duration: {record.Duration}");
             }
         }
         Console.WriteLine("\nPress any key to return to the main menu...");
@@ -131,12 +131,12 @@ public class Program
         int selection;
         while (true)
         {
-            Console.Write("Enter the session number: ");
+            Console.Write("Enter the session id: ");
             if (int.TryParse(Console.ReadLine(), out selection) && selection >= 1 && selection <= sessions.Count)
             {
                 break;
             }
-            Console.WriteLine("Invalid input. Please try again.");
+            Console.WriteLine("You don't have that session in the database!");
         }
 
         var selectedSession = sessions[selection - 1];
