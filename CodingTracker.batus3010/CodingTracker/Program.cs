@@ -58,6 +58,14 @@ public class Program
     {
         var startTime = UserInput.GetDateTimeFromUser("Enter the start time (yyyy-MM-dd HH:mm):");
         var endTime = UserInput.GetDateTimeFromUser("Enter the end time (yyyy-MM-dd HH:mm):");
+        // check if the end time is after the start time
+        if (endTime <= startTime)
+        {
+            AnsiConsole.MarkupLine("[red]End time must be after the start time.[/]");
+            Console.WriteLine("\nPress any key to return to the main menu...");
+            Console.ReadKey(true);
+            return;
+        }
         codingController.AddSession(new CodingSession { StartTime = startTime, EndTime = endTime });
         AnsiConsole.MarkupLine("[green]Session added successfully.[/]");
         Console.WriteLine("\nPress any key to return to the main menu...");

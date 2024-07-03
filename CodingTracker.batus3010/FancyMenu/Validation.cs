@@ -10,7 +10,12 @@ namespace Services
     {
         public static bool IsValidDateTime(string input, string expectedFormat)
         {
-            return DateTime.TryParseExact(input, expectedFormat, null, System.Globalization.DateTimeStyles.None, out _);
+            DateTime parsedDate;
+            if (DateTime.TryParseExact(input, expectedFormat, null, System.Globalization.DateTimeStyles.None, out parsedDate))
+            {
+                return parsedDate <= DateTime.Now;
+            }
+            return false;
         }
     }
 }
