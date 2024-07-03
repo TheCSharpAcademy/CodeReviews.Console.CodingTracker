@@ -84,4 +84,20 @@ internal class DataAccess
 		}
 	}
 
+	internal void UpdateRecord(CodingRecord updatedRecord)
+	{
+		using (var connection = new SqliteConnection(ConnectionString))
+		{
+			connection.Open();
+
+			string updateQuery = @"
+			UPDATE records
+			SET DateStart = @DateStart, DateEnd = @DateEnd
+			WHERE Id = @Id";
+
+			var queryParams = new { updatedRecord.DateStart, updatedRecord.DateEnd, updatedRecord.Id };
+
+			connection.Execute(updateQuery, queryParams);
+		}
+	}
 }

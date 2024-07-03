@@ -55,7 +55,35 @@ internal static class UserInterface
 
 	private static void UpdateRecord()
 	{
+		var dataAccess = new DataAccess();
+		var records = dataAccess.GetAllRecords();
+		ViewRecords(records);
 
+		var id = GetNumber("Please type the id of the habit you want to update.");
+
+		var record = records.Where(x => x.Id == id).Single();
+		var dates = GetDateInputs();
+
+		record.DateStart = dates[0];
+		record.DateEnd = dates[1];
+
+		dataAccess.UpdateRecord(record);
+	}
+
+	private static int GetNumber(string message)
+	{
+		string numberInput = AnsiConsole.Ask<string>(message);
+
+		if (numberInput == "0")
+			MainMenu();
+
+		int output = 0;
+		while (!int.TryParse(numberInput, out output) || Convert.ToInt32(numberInput) < 0)
+		{
+			numberInput = AnsiConsole.Ask<string>("Invalid number: " + message);
+		}
+
+		return output;
 	}
 
 	private static void ViewRecords(IEnumerable<CodingRecord> records)
