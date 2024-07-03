@@ -21,6 +21,7 @@ Coding Tracker is a console application designed to help users track their codin
 
 ## Lessons Learned
 During the development of Coding Tracker, several key lessons were learned:
+- **Code structure**: Without a good code structure, my code would be a bunch of messy classes 
 - **The importance of user input validation**: Ensuring that the user inputs are valid before processing them prevents errors and improves the overall user experience.
 - **Simplifying user interaction**: Keeping the user interface simple and intuitive is crucial for user satisfaction and engagement.
 - **The value of clear documentation**: Writing clear and concise documentation helps users understand how to use the application and contributes to its overall success.
@@ -31,4 +32,5 @@ While Coding Tracker serves its primary purpose, there are several areas where i
 - Let the users filter their coding records per period (weeks, days, years) and/or order ascending or descending.
 - Create reports where the users can see their total and average coding session per period.
 - Create the ability to set coding goals and show how far the users are from reaching their goal, along with how many hours a day they would have to code to reach their goal. You can do it via SQL queries or with C#.
+
 
