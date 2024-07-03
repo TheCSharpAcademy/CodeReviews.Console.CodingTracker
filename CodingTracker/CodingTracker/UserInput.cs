@@ -18,7 +18,7 @@ namespace CodingTracker
 
         public void DateOfStart()
         {
-            AnsiConsole.MarkupLine("[green]Please type in the date of the start below in yyyy.mm.dd. format (like this: 2024.06.29.):[/]");
+            AnsiConsole.MarkupLine("[green]Please type in the date of the start below in yyyy.mm.dd. format (like this: 2024.06.29. separated by dots):[/]");
             helper1 = Console.ReadLine();
             if (validation.ValidString(helper1))
             {
@@ -33,7 +33,7 @@ namespace CodingTracker
         }
         public void DateOfEnd()
         {
-            AnsiConsole.MarkupLine("[green]Please type in the date of the end below in yyyy.mm.dd. format (like this: 2024.06.29.):[/]");
+            AnsiConsole.MarkupLine("[green]Please type in the date of the end below in yyyy.mm.dd. format (like this: 2024.06.29. separated by dots):[/]");
             helper2 = Console.ReadLine();
             if (validation.ValidString(helper2))
             {
