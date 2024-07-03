@@ -53,7 +53,7 @@ namespace CodingTracker
             using (var connection = new SQLiteConnection(Conn))
             {
                 connection.Open();
-                var records = connection.Query<CodingSession>("SELECT * FROM Sessions");
+                var records = connection.Query<CodingSession>("SELECT * FROM Sessions").ToList();
 
                 if (records.Any())
                 {
