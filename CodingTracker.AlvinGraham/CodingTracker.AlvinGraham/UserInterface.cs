@@ -50,7 +50,23 @@ internal static class UserInterface
 
 	private static void DeleteRecord()
 	{
+		var dataAccess = new DataAccess();
+		var records = dataAccess.GetAllRecords();
+		ViewRecords(records);
 
+		var id = GetNumber("Please type the id of the habit you want to delete.");
+
+		if (!AnsiConsole.Confirm("Are you sure?"))
+			return;
+
+		var response = dataAccess.DeleteRecord(id);
+
+		var responseMessage = response < 1
+			? $"Record with id {id} doesn't exit. Press any key to return to Main Menu."
+			: "Record deleted successfully. Press any key to return to Main Menu";
+
+		Console.WriteLine(responseMessage);
+		Console.ReadKey();
 	}
 
 	private static void UpdateRecord()

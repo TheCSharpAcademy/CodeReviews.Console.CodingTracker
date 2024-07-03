@@ -100,4 +100,19 @@ internal class DataAccess
 			connection.Execute(updateQuery, queryParams);
 		}
 	}
+
+	internal int DeleteRecord(int recordId)
+	{
+		using (var connection = new SqliteConnection(ConnectionString))
+		{
+			connection.Open();
+
+			string deleteQuery = "DELETE FROM records WHERE Id = @Id";
+			var queryParams = new { Id = recordId };
+
+			int rowsAffected = connection.Execute(deleteQuery, queryParams);
+
+			return rowsAffected;
+		}
+	}
 }
