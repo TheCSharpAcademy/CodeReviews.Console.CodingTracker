@@ -30,3 +30,5 @@ These instructions will guide you on how to set up the project on your pc.
    dotnet run
 
 3. **Choose an option from the menu**
+
+- The program will guide you through each option's steps.
