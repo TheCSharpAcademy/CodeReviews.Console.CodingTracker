@@ -2,8 +2,7 @@
 {
     public class Menu
     {
-        private static string[] options = { "New Coding session", "All coding sessions", "About", "Exit" };
-        private static int SelectedIndex = 0;
+        private static readonly string[] options = ["New Coding session", "All coding sessions", "About", "Exit"];
         private static string prefix = "*";
 
         private static readonly string WelcomeMessage = @"
@@ -47,7 +46,7 @@ Use the Up and Down arrow key to cycle through options, press Enter to select";
 
         private static void ExitProgram()
         {
-            string[] exitOptions = { "Yes", "No" };
+            string[] exitOptions = ["Yes", "No"];
             int exitSelectedIndex = Run(exitOptions, "Are you sure you want to exit?");
             if (exitSelectedIndex == 0)
             {
