@@ -1,14 +1,19 @@
 ﻿using Dapper;
 using Microsoft.Data.Sqlite;
+using Microsoft.Extensions.Configuration;
 
 namespace CodingTracker;
 
 internal class DataAccess
 {
+	IConfiguration configuration = new ConfigurationBuilder()
+	.AddJsonFile("appsettings.json")
+	.Build();
+
 	private string ConnectionString;
-	public DataAccess(string connectionString)
+	public DataAccess()
 	{
-		ConnectionString = connectionString;
+		ConnectionString = configuration.GetSection("ConnectionStrings")["DefaultConnection"]!;
 	}
 
 	internal void CreateDatabase()
@@ -27,4 +32,20 @@ internal class DataAccess
 			connection.Execute(createTableQuery);
 		}
 	}
+
+	internal void InsertRecord(CodingRecord record)
+	{
+		using (var connection = new SqliteConnection(ConnectionString))
+		{
+			connection.Open();
+
+			string insertQuery = @"
+			INSERT INTO records (DateStart, DateEnd)
+			VALUES (@DateStart, @DateEnd)";
+
+			connection.Execute(insertQuery, new { record.DateStart, record.DateEnd });
+		}
+	}
+
+
 }

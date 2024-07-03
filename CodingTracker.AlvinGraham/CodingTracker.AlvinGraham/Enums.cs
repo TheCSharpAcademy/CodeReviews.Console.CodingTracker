@@ -2,7 +2,7 @@
 
 namespace CodingTracker;
 
-internal class Enums
+internal static class Enums
 {
 	internal enum MainMenuChoices
 	{
