@@ -66,4 +66,22 @@ internal class DataAccess
 		}
 	}
 
+	internal void BulkInsertRecords(List<CodingRecord> records)
+	{
+		using (var connection = new SqliteConnection(ConnectionString))
+		{
+			connection.Open();
+
+			string insertQuery = @"
+			INSERT INTO records (DateStart, DateEnd)
+			VALUES (@DateStart, @DateEnd)";
+
+			connection.Execute(insertQuery, records.Select(record => new
+			{
+				record.DateStart,
+				record.DateEnd
+			}));
+		}
+	}
+
 }
