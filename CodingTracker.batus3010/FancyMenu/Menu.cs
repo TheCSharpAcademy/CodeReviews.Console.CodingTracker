@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace FancyMenu
+﻿namespace FancyMenu
 {
     public class Menu
     {
@@ -38,28 +36,24 @@ Use the Up and Down arrow key to cycle through options, press Enter to select";
                         About();
                         break;
                     case 3:
-                        // Confirm exit
-                        ConfirmExit();
+                        // Exit
+                        ExitProgram();
                         break;
                 }
             }
         }
 
-        private static void ExitProgram()
-        {
-            Console.Clear();
-            Console.WriteLine("\nPress any key to exit...");
-            Console.ReadKey(true);
-            Environment.Exit(0);
-        }
 
-        private static void ConfirmExit()
+
+        private static void ExitProgram()
         {
             string[] exitOptions = { "Yes", "No" };
             int exitSelectedIndex = Run(exitOptions, "Are you sure you want to exit?");
             if (exitSelectedIndex == 0)
             {
-                ExitProgram();
+                Console.WriteLine("\nPress any key to exit...");
+                Console.ReadKey(true);
+                Environment.Exit(0);
             }
         }
 
