@@ -38,9 +38,11 @@ public class Program
                     break;
                 case "Edit a record":
                     // Call method to edit a record
+                    EditRecord();
                     break;
                 case "Delete a record":
                     // Call method to delete a record
+                    DeleteRecord();
                     break;
                 case "About":
                     Services.DisplayInfo.About();
@@ -56,8 +58,8 @@ public class Program
 
     private static void EnterNewCodingSession()
     {
-        var startTime = UserInput.GetDateTimeFromUser("Enter the start time (yyyy-MM-dd HH:mm):");
-        var endTime = UserInput.GetDateTimeFromUser("Enter the end time (yyyy-MM-dd HH:mm):");
+        var startTime = UserInput.GetDateTimeFromUser("Enter the start time:");
+        var endTime = UserInput.GetDateTimeFromUser("Enter the end time:");
         // check if the end time is after the start time
         if (endTime <= startTime)
         {
@@ -111,12 +113,84 @@ public class Program
 
     private static void EditRecord()
     {
-        // Implementation depends on how you want to identify and edit records
-        // This could involve selecting a session by ID, then updating its details
+        var sessions = codingController.GetSessions(); // Retrieve the previous coding sessions from the controller
+        if (sessions.Count == 0)
+        {
+            Console.WriteLine("No previous records found.");
+            Console.WriteLine("\nPress any key to return to the main menu...");
+            Console.ReadKey(true);
+            return;
+        }
+
+        Console.WriteLine("Select a session to edit:");
+        for (int i = 0; i < sessions.Count; i++)
+        {
+            Console.WriteLine($"{i + 1}. Start Time: {sessions[i].StartTime}, End Time: {sessions[i].EndTime}, Duration: {sessions[i].Duration}");
+        }
+
+        int selection;
+        while (true)
+        {
+            Console.Write("Enter the session number: ");
+            if (int.TryParse(Console.ReadLine(), out selection) && selection >= 1 && selection <= sessions.Count)
+            {
+                break;
+            }
+            Console.WriteLine("Invalid input. Please try again.");
+        }
+
+        var selectedSession = sessions[selection - 1];
+
+        Console.WriteLine($"Selected session: Start Time: {selectedSession.StartTime}, End Time: {selectedSession.EndTime}, Duration: {selectedSession.Duration}");
+
+        var newStartTime = UserInput.GetDateTimeFromUser("Enter the new start time:");
+        var newEndTime = UserInput.GetDateTimeFromUser("Enter the new end time:");
+
+        if (newEndTime <= newStartTime)
+        {
+            AnsiConsole.MarkupLine("[red]End time must be after the start time.[/]");
+            Console.WriteLine("\nPress any key to return to the main menu...");
+            Console.ReadKey(true);
+            return;
+        }
+
+        selectedSession.StartTime = newStartTime;
+        selectedSession.EndTime = newEndTime;
+
+        codingController.UpdateSession(selectedSession);
+
+        AnsiConsole.MarkupLine("[green]Session updated successfully.[/]");
+        Console.WriteLine("\nPress any key to return to the main menu...");
+        Console.ReadKey(true);
     }
 
     private static void DeleteRecord()
     {
         // Similar to EditRecord, you would typically prompt the user to select a record by ID, then delete it
+        var sessions = codingController.GetSessions(); // Retrieve the previous coding sessions from the controller
+        if (sessions.Count == 0)
+        {
+            Console.WriteLine("No previous records found.");
+            Console.WriteLine("\nPress any key to return to the main menu...");
+            Console.ReadKey(true);
+            return;
+        }
+        foreach ( var session in sessions) {
+            Console.WriteLine($"ID: {session.Id}, Start Time: {session.StartTime}, End Time: {session.EndTime}, Duration: {session.Duration}");
+        }
+        int id;
+        while (true)
+        {
+            Console.Write("Enter the ID of the session to delete: ");
+            if (int.TryParse(Console.ReadLine(), out id))
+            {
+                break;
+            }
+            Console.WriteLine("Invalid input. Please try again.");
+        }
+        codingController.DeleteSession(id);
+        AnsiConsole.MarkupLine("[green]Session deleted successfully.[/]");
+        Console.WriteLine("\nPress any key to return to the main menu...");
+        Console.ReadKey(true);
     }
 }

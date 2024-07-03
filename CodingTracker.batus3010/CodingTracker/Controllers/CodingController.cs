@@ -51,5 +51,23 @@ namespace CodingTracker.Controllers
             return sessions;
         }
 
+        public void DeleteSession(int id)
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+            var sql = "DELETE FROM CodingSessions WHERE Id = @Id";
+            connection.Execute(sql, new { Id = id });
+            connection.Close();
+        }
+
+        public void UpdateSession(CodingSession session)
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+            var sql = "UPDATE CodingSessions SET StartTime = @StartTime, EndTime = @EndTime WHERE Id = @Id";
+            connection.Execute(sql, new { session.Id, session.StartTime, session.EndTime });
+            connection.Close();
+        }
+
     }
 }
