@@ -1,5 +1,4 @@
 ﻿using Spectre.Console;
-using System.Globalization;
 using static CodingTracker.Enums;
 
 namespace CodingTracker;
@@ -93,11 +92,7 @@ internal static class UserInterface
 		if (numberInput == "0")
 			MainMenu();
 
-		int output = 0;
-		while (!int.TryParse(numberInput, out output) || Convert.ToInt32(numberInput) < 0)
-		{
-			numberInput = AnsiConsole.Ask<string>("Invalid number: " + message);
-		}
+		var output = Validation.ValidateInt(numberInput, message);
 
 		return output;
 	}
@@ -137,32 +132,14 @@ internal static class UserInterface
 		if (startDateInput == "0")
 			MainMenu();
 
-		DateTime startDate;
-		while (!DateTime.TryParseExact(startDateInput, "dd-MM-yy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate))
-		{
-			startDateInput = AnsiConsole.Ask<string>("\n\nInvalid Date. Format: dd-mm-yy hh:mm (24 hour clock). Please try again.\n\n");
-		}
+		var startDate = Validation.ValidateStartDate(startDateInput);
 
 		var endDateInput = AnsiConsole.Ask<string>("Input End Date with the format: dd-mm-yy hh:mm (24 hour clock), or enter 0 to return to main menu.");
 
 		if (endDateInput == "0")
 			MainMenu();
 
-		DateTime endDate;
-		while (!DateTime.TryParseExact(endDateInput, "dd-MM-yy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDate))
-		{
-			endDateInput = AnsiConsole.Ask<string>("\n\nInvalid Date. Format: dd-mm-yy hh:mm (24 hour clock). Please try again.\n\n");
-		}
-
-		while (startDate > endDate)
-		{
-			endDateInput = AnsiConsole.Ask<string>("\n\nEnd date can't be before start date. Please try again\n\n");
-
-			while (!DateTime.TryParseExact(endDateInput, "dd-MM-yy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDate))
-			{
-				endDateInput = AnsiConsole.Ask<string>("\n\nInvalid Date. Format: dd-mm-yy hh:mm (24 hour clock). Please try again.\\n\\n\")");
-			}
-		}
+		var endDate = Validation.ValidateEndDate(startDate, endDateInput);
 
 		return [startDate, endDate];
 	}
