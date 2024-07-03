@@ -1,4 +1,6 @@
-﻿namespace FancyMenu
+﻿using System;
+
+namespace FancyMenu
 {
     public class Menu
     {
@@ -18,43 +20,89 @@ Use the Up and Down arrow key to cycle through options, press Enter to select";
 
         public static void RunMainMenu()
         {
-            int selectedIndex = Run();
-            switch (selectedIndex)
+            while (true)
             {
-                case 0:
-                    Console.WriteLine("New Coding session()");
-                    // Add new coding session
-                    break;
-                case 1:
-                    Console.WriteLine("All coding sessions()");
-                    // Display all coding sessions
-                    break;
-                case 2:
-                    // Display about information
-                    About();
-                    break;
-                case 3:
-                    // Exit
-                    ExitProgram();
-                    break;
-
+                int selectedIndex = Run(options);
+                switch (selectedIndex)
+                {
+                    case 0:
+                        Console.WriteLine("New Coding session()");
+                        // Add new coding session
+                        break;
+                    case 1:
+                        Console.WriteLine("All coding sessions()");
+                        // Display all coding sessions
+                        break;
+                    case 2:
+                        // Display about information
+                        About();
+                        break;
+                    case 3:
+                        // Confirm exit
+                        ConfirmExit();
+                        break;
+                }
             }
         }
 
         private static void ExitProgram()
         {
+            Console.Clear();
             Console.WriteLine("\nPress any key to exit...");
             Console.ReadKey(true);
             Environment.Exit(0);
         }
-        private static void Display()
+
+        private static void ConfirmExit()
         {
-            Console.WriteLine(WelcomeMessage);
+            string[] exitOptions = { "Yes", "No" };
+            int exitSelectedIndex = Run(exitOptions, "Are you sure you want to exit?");
+            if (exitSelectedIndex == 0)
+            {
+                ExitProgram();
+            }
+        }
+
+        private static void Display(string[] options, int selectedIndex, string prompt = "")
+        {
+            if (!string.IsNullOrEmpty(prompt))
+            {
+                Console.WriteLine(prompt);
+            }
+            else
+            {
+                string[] lines = WelcomeMessage.Split('\n');
+                int maxLength = 0;
+                foreach (string line in lines)
+                {
+                    if (line.Length > maxLength)
+                    {
+                        maxLength = line.Length;
+                    }
+                }
+
+                int windowWidth = Console.WindowWidth;
+                int padding = (windowWidth - maxLength) / 2;
+
+                Console.Clear();
+                foreach (string line in lines)
+                {
+                    if (padding > 0)
+                    {
+                        Console.WriteLine(line.PadLeft(line.Length + padding));
+                    }
+                    else
+                    {
+                        Console.WriteLine(line);
+                    }
+                }
+            }
+
             for (int i = 0; i < options.Length; i++)
             {
                 string currentOption = options[i];
 
-                if (i == SelectedIndex)
+                if (i == selectedIndex)
                 {
                     prefix = "*";
                     Console.ForegroundColor = ConsoleColor.Black;
@@ -72,36 +120,38 @@ Use the Up and Down arrow key to cycle through options, press Enter to select";
             Console.ResetColor();
         }
 
-        private static int Run()
+        private static int Run(string[] options, string prompt = "")
         {
+            int selectedIndex = 0;
             ConsoleKey keyPressed;
             do
             {
                 Console.Clear();
-                Display();
+                Display(options, selectedIndex, prompt);
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true);
                 keyPressed = keyInfo.Key;
 
-                // update SelectedIndex base on key pressed
+                // update selectedIndex based on key pressed
                 if (keyPressed == ConsoleKey.DownArrow)
                 {
-                    SelectedIndex++;
-                    if (SelectedIndex >= options.Length)
+                    selectedIndex++;
+                    if (selectedIndex >= options.Length)
                     {
-                        SelectedIndex = 0;
+                        selectedIndex = 0;
                     }
                 }
                 else if (keyPressed == ConsoleKey.UpArrow)
                 {
-                    SelectedIndex--;
-                    if (SelectedIndex < 0)
+                    selectedIndex--;
+                    if (selectedIndex < 0)
                     {
-                        SelectedIndex = options.Length - 1;
+                        selectedIndex = options.Length - 1;
                     }
                 }
             } while (keyPressed != ConsoleKey.Enter);
-            return SelectedIndex;
+            return selectedIndex;
         }
+
         private static void About()
         {
             Console.Clear();
@@ -109,10 +159,9 @@ Use the Up and Down arrow key to cycle through options, press Enter to select";
             Console.WriteLine("====================");
             Console.WriteLine("Version: 1.0.0");
             Console.WriteLine("Author: batus");
-            Console.WriteLine("Description: This application helps you track your coding sessions and manage your productivity efficiently.");
+            Console.WriteLine("Description: This application helps you track your coding sessions and manage your projects efficiently.");
             Console.WriteLine("\nPress any key to return to the main menu...");
             Console.ReadKey(true);
-            RunMainMenu();
         }
     }
 }
