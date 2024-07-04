@@ -11,6 +11,7 @@ internal static class UserInterface
 
 		while (isMenuRunning)
 		{
+			Utilities.ClearScreen(Utilities.titleText);
 			var userChoice = AnsiConsole.Prompt(
 				new SelectionPrompt<MainMenuChoices>()
 				.Title("What would you like to do?")
@@ -22,27 +23,39 @@ internal static class UserInterface
 					MainMenuChoices.Quit)
 				);
 
-			switch (userChoice)
+			try
 			{
-				case MainMenuChoices.AddRecord:
-					AddRecord();
-					break;
-				case MainMenuChoices.ViewRecords:
-					var dataAccess = new DataAccess();
-					var records = dataAccess.GetAllRecords();
-					ViewRecords(records);
-					break;
-				case MainMenuChoices.UpdateRecord:
-					UpdateRecord();
-					break;
-				case MainMenuChoices.DeleteRecord:
-					DeleteRecord();
-					break;
-				case MainMenuChoices.Quit:
-					Console.WriteLine("Goodbye");
-					isMenuRunning = false;
-					break;
+				switch (userChoice)
+				{
+					case MainMenuChoices.AddRecord:
+						Utilities.ClearScreen("Adding Record");
+						AddRecord();
+						break;
+					case MainMenuChoices.ViewRecords:
+						Utilities.ClearScreen("Viewing Records");
+						var dataAccess = new DataAccess();
+						var records = dataAccess.GetAllRecords();
+						ViewRecords(records);
+						break;
+					case MainMenuChoices.UpdateRecord:
+						Utilities.ClearScreen("Updating Record");
+						UpdateRecord();
+						break;
+					case MainMenuChoices.DeleteRecord:
+						Utilities.ClearScreen("Deleting Record");
+						DeleteRecord();
+						break;
+					case MainMenuChoices.Quit:
+						Console.WriteLine("Goodbye");
+						isMenuRunning = false;
+						break;
+				}
 			}
+			catch (ArgumentException)
+			{
+
+			}
+
 		}
 
 	}
@@ -90,7 +103,7 @@ internal static class UserInterface
 		string numberInput = AnsiConsole.Ask<string>(message);
 
 		if (numberInput == "0")
-			MainMenu();
+			throw new ArgumentException("Returning to Main Menu");
 
 		var output = Validation.ValidateInt(numberInput, message);
 
@@ -130,14 +143,14 @@ internal static class UserInterface
 		var startDateInput = AnsiConsole.Ask<string>("Input Start Date with the format: dd-mm-yy hh:mm (24 hour clock), or enter 0 to return to main menu.");
 
 		if (startDateInput == "0")
-			MainMenu();
+			throw new ArgumentException("Returning to Main Menu");
 
 		var startDate = Validation.ValidateStartDate(startDateInput);
 
 		var endDateInput = AnsiConsole.Ask<string>("Input End Date with the format: dd-mm-yy hh:mm (24 hour clock), or enter 0 to return to main menu.");
 
 		if (endDateInput == "0")
-			MainMenu();
+			throw new ArgumentException("Returning to Main Menu");
 
 		var endDate = Validation.ValidateEndDate(startDate, endDateInput);
 

@@ -115,4 +115,21 @@ internal class DataAccess
 			return rowsAffected;
 		}
 	}
+
+	internal bool IsDatabaseEmpty()
+	{
+		using (var connection = new SqliteConnection(ConnectionString))
+		{
+			connection.Open();
+
+			string queryText = "SELECT * FROM records";
+
+			var rowCount = connection.Query(queryText).Count();
+
+
+
+			return !(rowCount > 0);
+
+		}
+	}
 }
