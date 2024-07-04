@@ -110,7 +110,9 @@ internal static class UserInterface
 
 	private static void LiveTrack()
 	{
-		Console.WriteLine("Implementation in Progress. Press any key to continue.");
+		var trackingSession = new LiveTracker();
+		trackingSession.trackSession();
+		Console.WriteLine("Press any Key to Return to main menu.");
 		Console.ReadKey();
 	}
 
@@ -120,7 +122,7 @@ internal static class UserInterface
 		var records = dataAccess.GetAllRecords();
 		ViewRecords(records);
 
-		var id = GetNumber("Please type the id of the habit you want to delete.");
+		var id = Utilities.GetNumber("Please type the id of the habit you want to delete.");
 
 		if (!AnsiConsole.Confirm("Are you sure?"))
 			return;
@@ -141,10 +143,10 @@ internal static class UserInterface
 		var records = dataAccess.GetAllRecords();
 		ViewRecords(records);
 
-		var id = GetNumber("Please type the id of the habit you want to update.");
+		var id = Utilities.GetNumber("Please type the id of the habit you want to update.");
 
 		var record = records.Where(x => x.Id == id).Single();
-		var dates = GetDateInputs();
+		var dates = Utilities.GetDateInputs();
 
 		record.DateStart = dates[0];
 		record.DateEnd = dates[1];
@@ -152,17 +154,7 @@ internal static class UserInterface
 		dataAccess.UpdateRecord(record);
 	}
 
-	private static int GetNumber(string message)
-	{
-		string numberInput = AnsiConsole.Ask<string>(message);
 
-		if (numberInput == "0")
-			throw new ArgumentException("Returning to Main Menu");
-
-		var output = Validation.ValidateInt(numberInput, message);
-
-		return output;
-	}
 
 	private static void ViewRecords(IEnumerable<CodingRecord> records)
 	{
@@ -178,13 +170,16 @@ internal static class UserInterface
 		}
 
 		AnsiConsole.Write(table);
+
+		Console.WriteLine("Press any key to return to main menu.");
+		Console.ReadKey();
 	}
 
 	private static void AddRecord()
 	{
 		CodingRecord record = new();
 
-		var dateInputs = GetDateInputs();
+		var dateInputs = Utilities.GetDateInputs();
 		record.DateStart = dateInputs[0];
 		record.DateEnd = dateInputs[1];
 
@@ -192,22 +187,5 @@ internal static class UserInterface
 		dataAccess.InsertRecord(record);
 	}
 
-	private static DateTime[] GetDateInputs()
-	{
-		var startDateInput = AnsiConsole.Ask<string>("Input Start Date with the format: dd-mm-yy hh:mm (24 hour clock), or enter 0 to return to main menu.");
 
-		if (startDateInput == "0")
-			throw new ArgumentException("Returning to Main Menu");
-
-		var startDate = Validation.ValidateStartDate(startDateInput);
-
-		var endDateInput = AnsiConsole.Ask<string>("Input End Date with the format: dd-mm-yy hh:mm (24 hour clock), or enter 0 to return to main menu.");
-
-		if (endDateInput == "0")
-			throw new ArgumentException("Returning to Main Menu");
-
-		var endDate = Validation.ValidateEndDate(startDate, endDateInput);
-
-		return [startDate, endDate];
-	}
 }
