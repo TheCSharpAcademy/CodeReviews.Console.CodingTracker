@@ -1,6 +1,7 @@
 ﻿using Spectre.Console;
 using static CodingTracker.Enums;
 
+
 namespace CodingTracker;
 
 internal static class UserInterface
@@ -12,16 +13,28 @@ internal static class UserInterface
 		while (isMenuRunning)
 		{
 			Utilities.ClearScreen(Utilities.titleText);
-			var userChoice = AnsiConsole.Prompt(
-				new SelectionPrompt<MainMenuChoices>()
+			var selectionPrompt = new SelectionPrompt<MainMenuChoices>()
 				.Title("What would you like to do?")
 				.AddChoices(
 					MainMenuChoices.AddRecord,
 					MainMenuChoices.ViewRecords,
 					MainMenuChoices.UpdateRecord,
 					MainMenuChoices.DeleteRecord,
-					MainMenuChoices.Quit)
-				);
+					MainMenuChoices.Seperator,
+					MainMenuChoices.LiveTrack,
+					MainMenuChoices.FilterRecords,
+					MainMenuChoices.Reports,
+					MainMenuChoices.ManageGoals,
+					MainMenuChoices.Seperator,
+					MainMenuChoices.Quit);
+			selectionPrompt.PageSize = 12;
+			selectionPrompt.Converter = MenuChoiceConverter.ChoiceToString;
+
+			//var temp = EnumExtensions.GetAttributeOfType<DisplayAttribute>(MainMenuChoices.LiveTrack).GetName();
+			//Console.WriteLine(temp);
+
+			var userChoice = AnsiConsole.Prompt(selectionPrompt);
+
 
 			try
 			{
@@ -45,6 +58,22 @@ internal static class UserInterface
 						Utilities.ClearScreen("Deleting Record");
 						DeleteRecord();
 						break;
+					case MainMenuChoices.LiveTrack:
+						Utilities.ClearScreen("Recoring Live Tracking Session");
+						LiveTrack();
+						break;
+					case MainMenuChoices.FilterRecords:
+						Utilities.ClearScreen("Filtering Records");
+						FilterRecords();
+						break;
+					case MainMenuChoices.Reports:
+						Utilities.ClearScreen("Reports Menu");
+						RunReports();
+						break;
+					case MainMenuChoices.ManageGoals:
+						Utilities.ClearScreen("Managing Goals");
+						ManageGoals();
+						break;
 					case MainMenuChoices.Quit:
 						Console.WriteLine("Goodbye");
 						isMenuRunning = false;
@@ -53,11 +82,36 @@ internal static class UserInterface
 			}
 			catch (ArgumentException)
 			{
-
+				Console.WriteLine("Returning to Main Menu.  Press any key to continue...");
+				Console.ReadKey();
 			}
 
 		}
 
+	}
+
+	private static void ManageGoals()
+	{
+		Console.WriteLine("Implementation in Progress. Press any key to continue.");
+		Console.ReadKey();
+	}
+
+	private static void RunReports()
+	{
+		Console.WriteLine("Implementation in Progress. Press any key to continue.");
+		Console.ReadKey();
+	}
+
+	private static void FilterRecords()
+	{
+		Console.WriteLine("Implementation in Progress. Press any key to continue.");
+		Console.ReadKey();
+	}
+
+	private static void LiveTrack()
+	{
+		Console.WriteLine("Implementation in Progress. Press any key to continue.");
+		Console.ReadKey();
 	}
 
 	private static void DeleteRecord()
