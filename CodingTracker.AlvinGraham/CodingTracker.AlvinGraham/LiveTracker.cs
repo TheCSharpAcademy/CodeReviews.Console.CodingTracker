@@ -10,7 +10,6 @@ internal class LiveTracker
 	TimeSpan duration { get; set; }
 	public LiveTracker()
 	{
-
 	}
 
 	internal void trackSession()
@@ -63,6 +62,5 @@ internal class LiveTracker
 		{
 			Console.WriteLine("Session not recorded.");
 		}
-
 	}
 }

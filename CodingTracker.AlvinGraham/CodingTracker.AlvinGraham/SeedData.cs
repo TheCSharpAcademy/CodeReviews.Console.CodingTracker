@@ -21,7 +21,7 @@ internal static class SeedData
 				DateEnd = endDate,
 			});
 
-			currentDate = currentDate.AddDays(1);
+			currentDate = currentDate.AddDays(3);
 		}
 
 		var dataAccess = new DataAccess();

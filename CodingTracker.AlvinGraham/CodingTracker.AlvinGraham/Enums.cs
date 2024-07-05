@@ -38,14 +38,46 @@ internal static class Enums
 		Quit
 	}
 
+	internal enum FilterMenuChoices
+	{
+		[Display(Name = "Sessions by Day")]
+		DailySessions,
 
+		[Display(Name = "Sessions by Week")]
+		WeeklySessions,
+
+		[Display(Name = "Sessions by Month")]
+		MonthlySessions,
+
+		[Display(Name = "Sessions by Year")]
+		YearlySessions,
+
+		[Display(Name = "All Sessions")]
+		AllSessions,
+
+		[Display(Name = "Return to Main Menu")]
+		ReturnToMain
+	}
 }
+
 
 internal class MenuChoiceConverter : TypeConverter
 {
 
-	//selectionPrompt.Converter = <MainMenuChoices, EnumExtensions.GetAttributeOfType<DisplayAttribute>(MainMenuChoices.LiveTrack).GetName()>;
 	internal static string ChoiceToString(Enums.MainMenuChoices menuChoice)
+	{
+		try
+		{
+			var choiceString = EnumExtensions.GetAttributeOfType<DisplayAttribute>(menuChoice).GetName();
+			return choiceString!;
+		}
+		catch (NullReferenceException)
+		{
+			return menuChoice.ToString();
+		}
+	}
+
+	internal static string ChoiceToString(Enums.FilterMenuChoices menuChoice)
 	{
 		try
 		{
@@ -57,10 +89,5 @@ internal class MenuChoiceConverter : TypeConverter
 		{
 			return menuChoice.ToString();
 		}
-
-
-
-
-
 	}
 }

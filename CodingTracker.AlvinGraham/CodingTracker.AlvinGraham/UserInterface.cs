@@ -1,7 +1,6 @@
 ﻿using Spectre.Console;
 using static CodingTracker.Enums;
 
-
 namespace CodingTracker;
 
 internal static class UserInterface
@@ -30,11 +29,7 @@ internal static class UserInterface
 			selectionPrompt.PageSize = 12;
 			selectionPrompt.Converter = MenuChoiceConverter.ChoiceToString;
 
-			//var temp = EnumExtensions.GetAttributeOfType<DisplayAttribute>(MainMenuChoices.LiveTrack).GetName();
-			//Console.WriteLine(temp);
-
 			var userChoice = AnsiConsole.Prompt(selectionPrompt);
-
 
 			try
 			{
@@ -63,7 +58,6 @@ internal static class UserInterface
 						LiveTrack();
 						break;
 					case MainMenuChoices.FilterRecords:
-						Utilities.ClearScreen("Filtering Records");
 						FilterRecords();
 						break;
 					case MainMenuChoices.Reports:
@@ -82,12 +76,10 @@ internal static class UserInterface
 			}
 			catch (ArgumentException)
 			{
-				Console.WriteLine("Returning to Main Menu.  Press any key to continue...");
+				Console.WriteLine("\nReturning to Main Menu.  Press any key to continue...");
 				Console.ReadKey();
 			}
-
 		}
-
 	}
 
 	private static void ManageGoals()
@@ -104,7 +96,9 @@ internal static class UserInterface
 
 	private static void FilterRecords()
 	{
-		Console.WriteLine("Implementation in Progress. Press any key to continue.");
+		var filterSession = new RecordFilter();
+		filterSession.filterRecordsMenu();
+		Console.WriteLine("\nPress any Key to Return to main menu.");
 		Console.ReadKey();
 	}
 
@@ -112,7 +106,7 @@ internal static class UserInterface
 	{
 		var trackingSession = new LiveTracker();
 		trackingSession.trackSession();
-		Console.WriteLine("Press any Key to Return to main menu.");
+		Console.WriteLine("\nPress any Key to Return to main menu.");
 		Console.ReadKey();
 	}
 
@@ -154,8 +148,6 @@ internal static class UserInterface
 		dataAccess.UpdateRecord(record);
 	}
 
-
-
 	private static void ViewRecords(IEnumerable<CodingRecord> records)
 	{
 		var table = new Table();
@@ -186,6 +178,4 @@ internal static class UserInterface
 		var dataAccess = new DataAccess();
 		dataAccess.InsertRecord(record);
 	}
-
-
 }

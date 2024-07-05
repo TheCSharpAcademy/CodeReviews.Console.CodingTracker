@@ -43,6 +43,43 @@ internal static class Utilities
 		return [startDate, endDate];
 	}
 
+	internal static DateTime GetStartDate()
+	{
+		var startDateInput = AnsiConsole.Ask<string>("Enter the start day of the desired period with the format: dd-mm-yy: ");
+
+		var startDate = Validation.ValidateStartDay(startDateInput);
+
+		return startDate;
+	}
+
+	internal static string GetSortOrder()
+	{
+		var sortOrderPrompt = new TextPrompt<string>("Sort in Ascending or Descending order?")
+	.AddChoice<string>("ASC")
+	.AddChoice<string>("DESC")
+	.AddChoice<string>("NONE")
+	.DefaultValue<string>("ASC")
+	.ShowDefaultValue(true);
+
+		var sortOrder = AnsiConsole.Prompt(sortOrderPrompt);
+		return sortOrder;
+	}
+
+	internal static IEnumerable<CodingRecord> SortResults(string sortOrder, IEnumerable<CodingRecord> filteredResults)
+	{
+		switch (sortOrder)
+		{
+			case "ASC":
+				filteredResults = filteredResults.OrderBy(x => x.DateStart);
+				break;
+			case "DESC":
+				filteredResults = filteredResults.OrderByDescending(x => x.DateStart);
+				break;
+		}
+
+		return filteredResults;
+	}
+
 	internal static string titleText = @"
 ░░      ░░░░      ░░░       ░░░        ░░   ░░░  ░░░      ░░░░░░░░    
 ▒  ▒▒▒▒  ▒▒  ▒▒▒▒  ▒▒  ▒▒▒▒  ▒▒▒▒▒  ▒▒▒▒▒    ▒▒  ▒▒  ▒▒▒▒▒▒▒▒▒▒▒▒▒    

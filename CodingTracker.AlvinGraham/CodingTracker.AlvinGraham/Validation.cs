@@ -27,6 +27,17 @@ internal class Validation
 		return date;
 	}
 
+	internal static DateTime ValidateStartDay(string input)
+	{
+		DateTime date;
+		while (!DateTime.TryParseExact(input, "dd-MM-yy", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
+		{
+			input = AnsiConsole.Ask<string>("\n\nInvalid date. Format : dd-mm-yy. Please try again\n\n");
+		}
+
+		return date;
+	}
+
 	internal static DateTime ValidateEndDate(DateTime startDate, string endDateInput)
 	{
 		DateTime endDate;

@@ -66,6 +66,32 @@ internal class DataAccess
 		}
 	}
 
+	internal List<CodingRecord> GetRecordList()
+	{
+		List<CodingRecord> records = new List<CodingRecord>();
+
+		using (var connection = new SqliteConnection(ConnectionString))
+		{
+			connection.Open();
+
+			string selectQuery = "SELECT * FROM records";
+
+			var results = connection.Query<CodingRecord>(selectQuery);
+
+			foreach (var result in results)
+			{
+				records.Add(new CodingRecord
+				{
+					Id = result.Id,
+					DateStart = result.DateStart,
+					DateEnd = result.DateEnd,
+					Duration = result.DateEnd - result.DateStart
+				});
+			}
+		}
+		return records;
+	}
+
 	internal void BulkInsertRecords(List<CodingRecord> records)
 	{
 		using (var connection = new SqliteConnection(ConnectionString))
@@ -126,10 +152,7 @@ internal class DataAccess
 
 			var rowCount = connection.Query(queryText).Count();
 
-
-
 			return !(rowCount > 0);
-
 		}
 	}
 }
