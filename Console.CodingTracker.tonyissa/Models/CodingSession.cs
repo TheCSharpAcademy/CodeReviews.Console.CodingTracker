@@ -1,16 +1,14 @@
-﻿namespace CodingTracker.CodingSession
+﻿namespace CodingTracker.Model
 {
     public class CodingSession
     {
-        public int ID;
-        public DateTime Start;
-        public DateTime End;
+        public int? ID { get; set; }
+        public string? Start { get; set; }
+        public string? End { get; set; }
 
-        public CodingSession(int id, DateTime start, DateTime end)
+        public CodingSession()
         {
-            ID = id;
-            Start = start;
-            End = end;
+
         }
     }
 
