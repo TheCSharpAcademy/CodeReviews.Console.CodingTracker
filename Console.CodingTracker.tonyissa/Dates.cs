@@ -1,16 +1,17 @@
 using System.Globalization;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CodingTracker.Dates
 {
     public static class DateHelper
     {
 
-        public static bool ValidateDateInput(string input)
+        public static bool ValidateDateFormat(string input)
         {
             return DateTime.TryParseExact(input, "MM/dd/yyyy", CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out var result);
         }
 
-        public static bool ValidateTimeInput(string input)
+        public static bool ValidateTimeFormat(string input)
         {
             return DateTime.TryParseExact(input, "HH:mm", CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out var result);
         }
@@ -35,6 +36,11 @@ namespace CodingTracker.Dates
         public static string GetCurrentTime()
         {
             return DateTime.Now.TimeOfDay.ToString("t");
+        }
+
+        public static double GetTotalTime(DateTime start, DateTime end)
+        {
+            return (end - start).TotalHours;
         }
     }
 }
