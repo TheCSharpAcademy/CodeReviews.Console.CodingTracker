@@ -83,7 +83,6 @@ internal class MenuChoiceConverter : TypeConverter
 		{
 			var choiceString = EnumExtensions.GetAttributeOfType<DisplayAttribute>(menuChoice).GetName();
 			return choiceString!;
-
 		}
 		catch (NullReferenceException)
 		{

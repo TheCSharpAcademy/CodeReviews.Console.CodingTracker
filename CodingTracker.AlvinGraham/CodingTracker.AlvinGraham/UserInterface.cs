@@ -90,7 +90,9 @@ internal static class UserInterface
 
 	private static void RunReports()
 	{
-		Console.WriteLine("Implementation in Progress. Press any key to continue.");
+		var reportSession = new Reports();
+		reportSession.runReports();
+		Console.WriteLine("\nPress any Key to Return to main menu.");
 		Console.ReadKey();
 	}
 
