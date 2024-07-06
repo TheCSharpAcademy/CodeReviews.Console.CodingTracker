@@ -1,6 +1,7 @@
 using CodingTracker.Dates;
 using CodingTracker.Database;
 using CodingTracker.Input;
+using System.Diagnostics;
 
 namespace CodingTracker.UserInterface
 {
@@ -9,67 +10,43 @@ namespace CodingTracker.UserInterface
 
         public static void InitMainMenu()
         {
-            while (true)
-            {
-                Console.Clear();
-                Console.WriteLine("Welcome to my coding tracker!");
-                Console.WriteLine("Press C to create a record, U to update, D to delete, V to view all, R to record, and 0 to exit.");
-
-                var input = Console.ReadLine() ?? "0";
-                input = input.Trim().ToLower();
-
-                switch (input)
-                {
-                    case "0":
-                        break;
-                    case "c":
-                        InitCreateMenu();
-                        break;
-                    case "d":
-                        break;
-                    case "u":
-                        break;
-                    case "v":
-                        PrintAllEntries();
-                        break;
-                    case "r":
-                        break;
-                    default:
-                        Console.WriteLine("Input not recognized. Please try again.");
-                        continue;
-                }
-            }
-        }
-
-        public static void InitCreateMenu()
-        {
             Console.Clear();
-            
-            try
-            {
-                var result = GetAllDateTimes();
+            Console.WriteLine("Welcome to my coding tracker!");
+            Console.WriteLine("Press C to create a record, U to update, D to delete, V to view all, R to record, and 0 to exit.");
 
-                if (result == null) return;
+            var input = Console.ReadLine() ?? "0";
+            input = input.Trim().ToLower();
 
-                var (date1, date2) = result.Value;
-                DatabaseController.Insert(date1, date2);
-                Console.WriteLine("Item inserted successfully. Press any key to continue...");
-                Console.ReadKey();
-            }
-            catch (Exception ex)
+            switch (input)
             {
-                Console.WriteLine($"Error: {ex.Message}");
-                Console.WriteLine("Please try again. Press any key to continue.");
-                Console.ReadKey();
-                InitCreateMenu();
-                return;
+                case "0":
+                    Environment.Exit(0);
+                    break;
+                case "c":
+                    InitCreateMenu();
+                    break;
+                case "d":
+                    //InitDeleteMenu();
+                    break;
+                case "u":
+                    break;
+                case "v":
+                    Console.Clear();
+                    PrintAllEntries();
+                    Console.WriteLine("Press any key to continue...");
+                    Console.ReadKey();
+                    break;
+                case "r":
+                    break;
+                default:
+                    Console.WriteLine("Input not recognized. Please try again.");
+                    break;
             }
         }
 
         public static void PrintAllEntries()
         {
             var results = DatabaseController.GetList();
-            var index = 1;
 
             foreach (var result in results)
             {
@@ -77,12 +54,46 @@ namespace CodingTracker.UserInterface
                 var end = DateTime.Parse(result.End!);
                 var (hours, minutes) = DateHelper.GetTotalTime(start, end);
 
-                Console.WriteLine($"{index++}. Start: {start}, End: {end}, Total: {hours}H {minutes}M");
+                Console.WriteLine($"{result.ID}. Total: {hours} hours and {minutes} minutes, Start: {start}, End: {end}");
             }
+        }
 
-            Console.WriteLine("Press any key to continue...");
+        public static void InitCreateMenu()
+        {
+            Console.Clear();
+
+            var result = GetAllDateTimes();
+
+            if (result == null) return;
+
+            var (date1, date2) = result.Value;
+            DatabaseController.Insert(date1, date2);
+            Console.WriteLine("Item inserted successfully. Press any key to continue...");
             Console.ReadKey();
         }
+
+        //public static void InitDeleteMenu()
+        //{
+        //    while (true)
+        //    {
+        //        Console.Clear();
+        //        PrintAllEntries();
+        //        Console.WriteLine("Please input the number ID of the entry you would like to delete, or type 0 to quit.");
+        //        var input = Console.ReadLine() ?? "";
+        //        input = input.Trim().ToLower();
+
+        //        if (input == "0") return;
+
+        //        Console.WriteLine("Are you sure? Press Y to confirm or any other key to go back.");
+        //        var confirmation = Console.ReadKey();
+
+        //        if (confirmation.ToString().ToLower() == "y")
+        //        {
+        //            Console.WriteLine("yay");
+        //            Console.ReadKey();
+        //        }
+        //    }
+        //}
 
         public static (DateTime, DateTime)? GetAllDateTimes()
         {
