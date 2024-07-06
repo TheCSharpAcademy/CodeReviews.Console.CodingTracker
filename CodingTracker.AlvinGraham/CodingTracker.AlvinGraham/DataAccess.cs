@@ -30,6 +30,15 @@ internal class DataAccess
 			)";
 
 			connection.Execute(createTableQuery);
+
+			createTableQuery = @"
+			CREATE TABLE IF NOT EXISTS goals (
+				Id INTEGER PRIMARY KEY AUTOINCREMENT,
+				TotalMinutes INTEGER NOT NULL,
+				DateEnd TEXT NOT NULL
+			)";
+
+			connection.Execute(createTableQuery);
 		}
 	}
 

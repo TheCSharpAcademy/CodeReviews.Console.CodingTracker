@@ -24,6 +24,15 @@ internal static class Utilities
 		return output;
 	}
 
+	internal static int GetGoalNumber(string message)
+	{
+		string numberInput = AnsiConsole.Ask<string>(message);
+
+		var output = Validation.ValidateInt(numberInput, message);
+
+		return output;
+	}
+
 	internal static DateTime[] GetDateInputs()
 	{
 		var startDateInput = AnsiConsole.Ask<string>("Input Start Date with the format: dd-mm-yy hh:mm (24 hour clock), or enter 0 to return to main menu.");
@@ -46,6 +55,15 @@ internal static class Utilities
 	internal static DateTime GetStartDate()
 	{
 		var startDateInput = AnsiConsole.Ask<string>("Enter the start day of the desired period with the format: dd-mm-yy: ");
+
+		var startDate = Validation.ValidateStartDay(startDateInput);
+
+		return startDate;
+	}
+
+	internal static DateTime GetEndDate()
+	{
+		var startDateInput = AnsiConsole.Ask<string>("Enter the end day of the desired period with the format: dd-mm-yy: ");
 
 		var startDate = Validation.ValidateStartDay(startDateInput);
 

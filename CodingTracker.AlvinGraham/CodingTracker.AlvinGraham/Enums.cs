@@ -58,6 +58,27 @@ internal static class Enums
 		[Display(Name = "Return to Main Menu")]
 		ReturnToMain
 	}
+
+	internal enum GoalMenuChoices
+	{
+		[Display(Name = "View Goal Progress")]
+		GoalProgress,
+
+		[Display(Name = "Set a Goal")]
+		SetGoal,
+
+		[Display(Name = "View Current Goals")]
+		ViewGoals,
+
+		[Display(Name = "Delete a Goal")]
+		DeleteGoal,
+
+		[Display(Name = "Update a Goal")]
+		UpdateGoal,
+
+		[Display(Name = "Return to Main Menu")]
+		ReturnToMain
+	}
 }
 
 
@@ -78,6 +99,19 @@ internal class MenuChoiceConverter : TypeConverter
 	}
 
 	internal static string ChoiceToString(Enums.FilterMenuChoices menuChoice)
+	{
+		try
+		{
+			var choiceString = EnumExtensions.GetAttributeOfType<DisplayAttribute>(menuChoice).GetName();
+			return choiceString!;
+		}
+		catch (NullReferenceException)
+		{
+			return menuChoice.ToString();
+		}
+	}
+
+	internal static string ChoiceToString(Enums.GoalMenuChoices menuChoice)
 	{
 		try
 		{

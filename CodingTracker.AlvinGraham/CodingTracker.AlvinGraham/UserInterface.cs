@@ -84,8 +84,8 @@ internal static class UserInterface
 
 	private static void ManageGoals()
 	{
-		Console.WriteLine("Implementation in Progress. Press any key to continue.");
-		Console.ReadKey();
+		var goalsSession = new Goals();
+		goalsSession.goalsMenu();
 	}
 
 	private static void RunReports()
