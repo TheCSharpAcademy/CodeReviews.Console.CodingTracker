@@ -8,12 +8,13 @@ namespace CodingTracker.Dates
 
         public static bool ValidateDateFormat(string input)
         {
-            return DateTime.TryParseExact(input, "MM/dd/yyyy", CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out var result);
+            return DateTime.TryParseExact(input, "M/d/yyyy", CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out _);
         }
 
         public static bool ValidateTimeFormat(string input)
         {
-            return DateTime.TryParseExact(input, "HH:mm", CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out var result);
+            string[] formats = ["HH:mm", "hh:mm tt"];
+            return DateTime.TryParseExact(input, formats, CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out _);
         }
 
         public static bool CompareDates(DateTime date1, DateTime date2)
@@ -38,9 +39,10 @@ namespace CodingTracker.Dates
             return DateTime.Now.TimeOfDay.ToString("t");
         }
 
-        public static double GetTotalTime(DateTime start, DateTime end)
+        public static (int, int) GetTotalTime(DateTime start, DateTime end)
         {
-            return (end - start).TotalHours;
+            var total = end - start;
+            return ((int)total.TotalHours, (int)total.TotalMinutes);
         }
     }
 }

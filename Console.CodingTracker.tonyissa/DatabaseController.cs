@@ -7,7 +7,7 @@ namespace CodingTracker.Database
 {
     public static class DatabaseController
     {
-        private static readonly string? ConnectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
+        private static readonly string ConnectionString = ConfigurationManager.AppSettings.Get("ConnectionString")!;
 
         public static void CreateDb()
         {
