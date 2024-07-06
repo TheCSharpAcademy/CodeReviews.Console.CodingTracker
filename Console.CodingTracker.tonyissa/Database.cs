@@ -27,11 +27,11 @@ namespace CodingTracker.Database
             return db.Query<CodingSession>(sql);
         }
 
-        public static void Insert(DateTime start, DateTime end)
+        public static void Insert(string start, string end)
         {
             using var db = new SqliteConnection(ConnectionString);
             var sql = @"INSERT INTO coding_tracker (start, end) VALUES ($Start, $End)";
-            var parameters = new { Start = start.ToString(), End = end.ToString() };
+            var parameters = new { Start = start, End = end };
             db.Execute(sql, parameters);
         }
 

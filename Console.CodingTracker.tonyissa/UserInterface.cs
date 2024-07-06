@@ -3,6 +3,7 @@ using CodingTracker.Database;
 using CodingTracker.Input;
 using System.Diagnostics;
 using CodingTracker.Model;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CodingTracker.UserInterface
 {
@@ -37,6 +38,7 @@ namespace CodingTracker.UserInterface
                     PrintAllEntries(false);
                     break;
                 case "r":
+                    InitRecordMenu();
                     break;
                 default:
                     Console.WriteLine("Input not recognized. Please try again.");
@@ -78,8 +80,8 @@ namespace CodingTracker.UserInterface
             if (result == null) return;
 
             var (date1, date2) = result.Value;
-            DatabaseController.Insert(date1, date2);
-            Console.WriteLine("Item inserted successfully. Press any key to continue...");
+            DatabaseController.Insert(date1.ToString(), date2.ToString());
+            Console.WriteLine("Session inserted successfully. Press any key to continue...");
             Console.ReadKey();
         }
 
@@ -104,7 +106,7 @@ namespace CodingTracker.UserInterface
                 if (confirmation.Trim().ToLower() != "y") continue;
 
                 DatabaseController.Delete(index.Value);
-                Console.WriteLine("Item deleted successfully. Press any key to continue...");
+                Console.WriteLine("Session deleted successfully. Press any key to continue...");
                 Console.ReadKey();
             }
         }
@@ -135,9 +137,33 @@ namespace CodingTracker.UserInterface
 
                 var (date1, date2) = result.Value;
                 DatabaseController.Update(index.Value, date1.ToString(), date2.ToString());
-                Console.WriteLine("Item updated successfully. Press any key to continue...");
+                Console.WriteLine("Session updated successfully. Press any key to continue...");
                 Console.ReadKey();
             }
+        }
+
+        public static void InitRecordMenu()
+        {
+            Console.Clear();
+            Console.WriteLine("You can record your coding time here. Press any key to start the stopwatch, or press 0 to go back");
+            var result1 = Console.ReadKey();
+
+            if (result1.KeyChar == '0') return;
+
+            var startDate = DateHelper.GetCurrentDate();
+            var startTime = DateHelper.GetCurrentTime();
+
+            Console.WriteLine("Press any key to stop the stopwatch and record your results, or press 0 to go back.");
+            var result2 = Console.ReadKey();
+
+            if (result2.KeyChar == '0') return;
+
+            var endDate = DateHelper.GetCurrentDate();
+            var endTime = DateHelper.GetCurrentTime();
+
+            DatabaseController.Insert($"{startDate} {startTime}", $"{endDate} {endTime}");
+            Console.WriteLine("Session recorded successfully. Press any key to continue...");
+            Console.ReadKey();
         }
     }
 }
