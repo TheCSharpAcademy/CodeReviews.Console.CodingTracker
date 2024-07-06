@@ -91,9 +91,10 @@ namespace CodingTracker.Input
                 Console.WriteLine("Item not found.");
                 Console.WriteLine("Press any key to continue...");
                 Console.ReadKey();
+                return result;
             }
 
-            return result;
+            return list[result].ID;
         }
     }
 }

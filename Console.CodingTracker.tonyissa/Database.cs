@@ -20,6 +20,12 @@ namespace CodingTracker.Database
 
             db.Execute(sql);
         }
+        public static IEnumerable<CodingSession> GetList()
+        {
+            using var db = new SqliteConnection(ConnectionString);
+            var sql = "SELECT * FROM coding_tracker";
+            return db.Query<CodingSession>(sql);
+        }
 
         public static void Insert(DateTime start, DateTime end)
         {
@@ -29,18 +35,20 @@ namespace CodingTracker.Database
             db.Execute(sql, parameters);
         }
 
-        public static IEnumerable<CodingSession> GetList()
-        {
-            using var db = new SqliteConnection(ConnectionString);
-            var sql = "SELECT * FROM coding_tracker";
-            return db.Query<CodingSession>(sql);
-        }
-
         public static void Delete(int id)
         {
             using var db = new SqliteConnection(ConnectionString);
             var sql = "DELETE FROM coding_tracker WHERE id = $ID";
-            db.Execute(sql, new { ID = id });
+            var parameters = new { ID = id };
+            db.Execute(sql, parameters);
+        }
+
+        public static void Update(int id, string start, string end)
+        {
+            using var db = new SqliteConnection(ConnectionString);
+            var sql = "UPDATE coding_tracker SET start = $Start, end = $End WHERE id = $ID";
+            var parameters = new { ID = id, Start = start, End = end };
+            var result = db.Execute(sql, parameters);
         }
     }
 }

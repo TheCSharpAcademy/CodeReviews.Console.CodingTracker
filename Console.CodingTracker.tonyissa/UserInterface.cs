@@ -30,6 +30,7 @@ namespace CodingTracker.UserInterface
                     InitDeleteMenu();
                     break;
                 case "u":
+                    InitUpdateMenu();
                     break;
                 case "v":
                     Console.Clear();
@@ -60,8 +61,6 @@ namespace CodingTracker.UserInterface
             else if (!results.Any())
             {
                 Console.WriteLine("No entries found.");
-                Console.WriteLine("Press any key to continue...");
-                Console.ReadKey();
             }
 
             Console.WriteLine("Press any key to continue...");
@@ -106,6 +105,37 @@ namespace CodingTracker.UserInterface
 
                 DatabaseController.Delete(index.Value);
                 Console.WriteLine("Item deleted successfully. Press any key to continue...");
+                Console.ReadKey();
+            }
+        }
+
+        public static void InitUpdateMenu()
+        {
+            while (true)
+            {
+                Console.Clear();
+                var list = PrintAllEntries(true);
+
+                if (list == null) return;
+
+                Console.WriteLine("Please input the number ID of the entry you would like to update, or type 0 to quit.");
+                var index = InputHelper.CheckIndex(list);
+
+                if (index == null) return;
+                else if (index == -1) continue;
+
+                var result = InputHelper.GetAllDateTimes();
+
+                if (result == null) return;
+
+                Console.WriteLine("Are you sure? Enter Y to confirm or anything else to go back.");
+                var confirmation = Console.ReadLine() ?? "";
+
+                if (confirmation.Trim().ToLower() != "y") continue;
+
+                var (date1, date2) = result.Value;
+                DatabaseController.Update(index.Value, date1.ToString(), date2.ToString());
+                Console.WriteLine("Item updated successfully. Press any key to continue...");
                 Console.ReadKey();
             }
         }
