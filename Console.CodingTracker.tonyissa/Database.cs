@@ -36,15 +36,11 @@ namespace CodingTracker.Database
             return db.Query<CodingSession>(sql);
         }
 
-        public static bool Delete(string id)
+        public static void Delete(int id)
         {
             using var db = new SqliteConnection(ConnectionString);
             var sql = "DELETE FROM coding_tracker WHERE id = $ID";
-            var rows = db.Execute(sql, new { ID = id });
-
-            if (rows > 0) return true;
-
-            return false;
+            db.Execute(sql, new { ID = id });
         }
     }
 }

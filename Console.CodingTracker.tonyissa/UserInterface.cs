@@ -2,6 +2,7 @@ using CodingTracker.Dates;
 using CodingTracker.Database;
 using CodingTracker.Input;
 using System.Diagnostics;
+using CodingTracker.Model;
 
 namespace CodingTracker.UserInterface
 {
@@ -32,9 +33,7 @@ namespace CodingTracker.UserInterface
                     break;
                 case "v":
                     Console.Clear();
-                    PrintAllEntries();
-                    Console.WriteLine("Press any key to continue...");
-                    Console.ReadKey();
+                    PrintAllEntries(false);
                     break;
                 case "r":
                     break;
@@ -44,7 +43,7 @@ namespace CodingTracker.UserInterface
             }
         }
 
-        public static void PrintAllEntries()
+        public static List<CodingSession>? PrintAllEntries(bool returnList)
         {
             var results = DatabaseController.GetList();
 
@@ -56,6 +55,19 @@ namespace CodingTracker.UserInterface
 
                 Console.WriteLine($"{result.ID}. Total: {hours} hours and {minutes} minutes, Start: {start}, End: {end}");
             }
+
+            if (returnList && results.Any()) return results.ToList();
+            else if (!results.Any())
+            {
+                Console.WriteLine("No entries found.");
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadKey();
+            }
+
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey();
+
+            return null;
         }
 
         public static void InitCreateMenu()
@@ -77,27 +89,24 @@ namespace CodingTracker.UserInterface
             while (true)
             {
                 Console.Clear();
-                PrintAllEntries();
-                Console.WriteLine("Please input the number ID of the entry you would like to delete, or type 0 to quit.");
-                var input = Console.ReadLine() ?? "0";
+                var list = PrintAllEntries(true);
 
-                if (input == "0") return;
+                if (list == null) return;
+
+                Console.WriteLine("Please input the number ID of the entry you would like to delete, or type 0 to quit.");
+                var index = InputHelper.CheckIndex(list);
+
+                if (index == null) return;
+                else if (index == -1) continue;
 
                 Console.WriteLine("Are you sure? Enter Y to confirm or anything else to go back.");
                 var confirmation = Console.ReadLine() ?? "";
 
-                if (!(confirmation.Trim().ToLower() == "y")) continue;
-                else if (DatabaseController.Delete(input))
-                {
-                    Console.WriteLine("Item successfully deleted! Press any key to continue...");
-                    Console.ReadKey();
-                    return;
-                }
-                else
-                {
-                    Console.WriteLine("Input not a valid ID. Press any key to continue...");
-                    Console.ReadKey();
-                }
+                if (confirmation.Trim().ToLower() != "y") continue;
+
+                DatabaseController.Delete(index.Value);
+                Console.WriteLine("Item deleted successfully. Press any key to continue...");
+                Console.ReadKey();
             }
         }
     }

@@ -1,4 +1,6 @@
 ﻿using CodingTracker.Dates;
+using CodingTracker.Model;
+using System.Collections.Generic;
 
 namespace CodingTracker.Input
 {
@@ -69,6 +71,29 @@ namespace CodingTracker.Input
             }
 
             return (date1, date2);
+        }
+
+        public static int? CheckIndex(List<CodingSession> list)
+        {
+            if (!int.TryParse(Console.ReadLine(), out int index))
+            {
+                Console.WriteLine("Invalid input");
+                Console.WriteLine("Press any key to continue");
+                Console.ReadKey();
+                return null;
+            }
+            else if (index == 0) return null;
+
+            var result = list.FindIndex(item => item.ID == index);
+
+            if (result == -1)
+            {
+                Console.WriteLine("Item not found.");
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadKey();
+            }
+
+            return result;
         }
     }
 }

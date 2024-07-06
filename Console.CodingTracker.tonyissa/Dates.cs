@@ -13,7 +13,7 @@ namespace CodingTracker.Dates
 
         public static bool ValidateTimeFormat(string input)
         {
-            string[] formats = ["HH:mm", "hh:mm tt"];
+            string[] formats = ["HH:mm", "h:mm tt"];
             return DateTime.TryParseExact(input, formats, CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out _);
         }
 
@@ -35,7 +35,7 @@ namespace CodingTracker.Dates
         public static (int, int) GetTotalTime(DateTime start, DateTime end)
         {
             var total = end - start;
-            return ((int)total.TotalHours, (int)total.TotalMinutes);
+            return ((int)total.TotalHours, total.Minutes);
         }
     }
 }
