@@ -1,9 +1,8 @@
 ﻿using Microsoft.OpenApi.Extensions;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace CodingTracker;
-[TypeConverter(typeof(MenuChoiceConverter))]
+
 internal static class Enums
 {
 	internal enum MainMenuChoices
@@ -82,7 +81,7 @@ internal static class Enums
 }
 
 
-internal class MenuChoiceConverter : TypeConverter
+internal class MenuChoiceConverter
 {
 
 	internal static string ChoiceToString(Enums.MainMenuChoices menuChoice)
