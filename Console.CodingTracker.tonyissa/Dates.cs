@@ -19,14 +19,7 @@ namespace CodingTracker.Dates
 
         public static bool CompareDates(DateTime date1, DateTime date2)
         {
-            var comparison = DateTime.Compare(date1, date2);
-
-            if (comparison >= 0)
-            {
-                return false;
-            }
-
-            return true;
+            return DateTime.Compare(date1, date2) < 0;
         }
 
         public static string GetCurrentDate()
