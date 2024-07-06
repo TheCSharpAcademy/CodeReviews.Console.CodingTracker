@@ -13,7 +13,7 @@ internal class Goals
 		goalList = dataAccess.GetGoalList();
 	}
 
-	internal void goalsMenu()
+	internal void GoalsMenu()
 	{
 		var isMenuRunning = true;
 
@@ -185,7 +185,6 @@ internal class Goals
 		}
 		else
 		{
-			float percentageComplete = goal.TotalMinutes / (float)totalCodingMinutes;
 			TimeSpan timeLeft = goal.DateEnd - DateTime.Now;
 			int minutesLeft = goal.TotalMinutes - totalCodingMinutes;
 			int goalPerDay = minutesLeft / (int)timeLeft.Days;

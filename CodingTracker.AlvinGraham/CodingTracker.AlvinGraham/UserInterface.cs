@@ -85,13 +85,13 @@ internal static class UserInterface
 	private static void ManageGoals()
 	{
 		var goalsSession = new Goals();
-		goalsSession.goalsMenu();
+		goalsSession.GoalsMenu();
 	}
 
 	private static void RunReports()
 	{
 		var reportSession = new Reports();
-		reportSession.runReports();
+		reportSession.RunReports();
 		Console.WriteLine("\nPress any Key to Return to main menu.");
 		Console.ReadKey();
 	}
@@ -99,7 +99,7 @@ internal static class UserInterface
 	private static void FilterRecords()
 	{
 		var filterSession = new RecordFilter();
-		filterSession.filterRecordsMenu();
+		filterSession.FilterRecordsMenu();
 		Console.WriteLine("\nPress any Key to Return to main menu.");
 		Console.ReadKey();
 	}
@@ -107,7 +107,7 @@ internal static class UserInterface
 	private static void LiveTrack()
 	{
 		var trackingSession = new LiveTracker();
-		trackingSession.trackSession();
+		trackingSession.TrackSession();
 		Console.WriteLine("\nPress any Key to Return to main menu.");
 		Console.ReadKey();
 	}

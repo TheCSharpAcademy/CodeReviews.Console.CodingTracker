@@ -5,14 +5,14 @@ namespace CodingTracker;
 
 internal class RecordFilter
 {
-	private List<CodingRecord> recordList { get; set; }
+	private List<CodingRecord> RecordList { get; set; }
 	public RecordFilter()
 	{
 		var dataAccess = new DataAccess();
-		recordList = dataAccess.GetRecordList();
+		RecordList = dataAccess.GetRecordList();
 	}
 
-	internal void filterRecordsMenu()
+	internal void FilterRecordsMenu()
 	{
 		var isMenuRunning = true;
 
@@ -72,7 +72,7 @@ internal class RecordFilter
 		Console.WriteLine($"Filtering sessions between {startDay:dd-MM-yy} and {endDay:dd-MM-yy}.");
 
 		var sortOrder = Utilities.GetSortOrder();
-		var filteredResults = this.recordList.Where(x => x.DateStart > startDay && x.DateEnd < endDay);
+		var filteredResults = this.RecordList.Where(x => x.DateStart > startDay && x.DateEnd < endDay);
 
 		filteredResults = Utilities.SortResults(sortOrder, filteredResults);
 
@@ -86,7 +86,7 @@ internal class RecordFilter
 		Console.WriteLine($"Filtering all sessions.");
 
 		var sortOrder = Utilities.GetSortOrder();
-		var filteredResults = (IEnumerable<CodingRecord>)this.recordList;
+		var filteredResults = (IEnumerable<CodingRecord>)this.RecordList;
 
 		filteredResults = Utilities.SortResults(sortOrder, filteredResults);
 
@@ -103,7 +103,7 @@ internal class RecordFilter
 		Console.WriteLine($"Filtering sessions between {startDay:dd-MM-yy} and {endDay:dd-MM-yy}.");
 
 		var sortOrder = Utilities.GetSortOrder();
-		var filteredResults = this.recordList.Where(x => x.DateStart > startDay && x.DateEnd < endDay);
+		var filteredResults = this.RecordList.Where(x => x.DateStart > startDay && x.DateEnd < endDay);
 
 		filteredResults = Utilities.SortResults(sortOrder, filteredResults);
 
@@ -120,7 +120,7 @@ internal class RecordFilter
 		Console.WriteLine($"Filtering sessions between {startDay:dd-MM-yy} and {endDay:dd-MM-yy}.");
 
 		var sortOrder = Utilities.GetSortOrder();
-		var filteredResults = this.recordList.Where(x => x.DateStart > startDay && x.DateEnd < endDay);
+		var filteredResults = this.RecordList.Where(x => x.DateStart > startDay && x.DateEnd < endDay);
 
 		filteredResults = Utilities.SortResults(sortOrder, filteredResults);
 
@@ -137,7 +137,7 @@ internal class RecordFilter
 		Console.WriteLine($"Filtering sessions between {startDay:dd-MM-yy} and {endDay:dd-MM-yy}.");
 
 		var sortOrder = Utilities.GetSortOrder();
-		var filteredResults = this.recordList.Where(x => x.DateStart > startDay && x.DateEnd < endDay);
+		var filteredResults = this.RecordList.Where(x => x.DateStart > startDay && x.DateEnd < endDay);
 
 		filteredResults = Utilities.SortResults(sortOrder, filteredResults);
 

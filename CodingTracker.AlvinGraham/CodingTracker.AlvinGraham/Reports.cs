@@ -4,14 +4,14 @@ namespace CodingTracker;
 
 internal class Reports
 {
-	private List<CodingRecord> recordList { get; set; }
+	private List<CodingRecord> RecordList { get; set; }
 	public Reports()
 	{
 		var dataAccess = new DataAccess();
-		recordList = dataAccess.GetRecordList();
+		RecordList = dataAccess.GetRecordList();
 	}
 
-	internal void runReports()
+	internal void RunReports()
 	{
 		bool moreRports = true;
 
@@ -26,7 +26,7 @@ internal class Reports
 			var startDate = periodDates[0];
 			var endDate = periodDates[1];
 
-			var filteredResults = this.recordList.Where(x => x.DateStart > startDate && x.DateEnd < endDate);
+			var filteredResults = this.RecordList.Where(x => x.DateStart > startDate && x.DateEnd < endDate);
 			int periodCount = filteredResults.Count();
 
 			if (periodCount == 0)
