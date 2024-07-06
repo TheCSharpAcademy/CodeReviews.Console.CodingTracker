@@ -26,7 +26,7 @@ namespace CodingTracker.UserInterface
                     InitCreateMenu();
                     break;
                 case "d":
-                    //InitDeleteMenu();
+                    InitDeleteMenu();
                     break;
                 case "u":
                     break;
@@ -72,28 +72,34 @@ namespace CodingTracker.UserInterface
             Console.ReadKey();
         }
 
-        //public static void InitDeleteMenu()
-        //{
-        //    while (true)
-        //    {
-        //        Console.Clear();
-        //        PrintAllEntries();
-        //        Console.WriteLine("Please input the number ID of the entry you would like to delete, or type 0 to quit.");
-        //        var input = Console.ReadLine() ?? "";
-        //        input = input.Trim().ToLower();
+        public static void InitDeleteMenu()
+        {
+            while (true)
+            {
+                Console.Clear();
+                PrintAllEntries();
+                Console.WriteLine("Please input the number ID of the entry you would like to delete, or type 0 to quit.");
+                var input = Console.ReadLine() ?? "0";
 
-        //        if (input == "0") return;
+                if (input == "0") return;
 
-        //        Console.WriteLine("Are you sure? Press Y to confirm or any other key to go back.");
-        //        var confirmation = Console.ReadKey();
+                Console.WriteLine("Are you sure? Enter Y to confirm or anything else to go back.");
+                var confirmation = Console.ReadLine() ?? "";
 
-        //        if (confirmation.ToString().ToLower() == "y")
-        //        {
-        //            Console.WriteLine("yay");
-        //            Console.ReadKey();
-        //        }
-        //    }
-        //}
+                if (!(confirmation.Trim().ToLower() == "y")) continue;
+                else if (DatabaseController.Delete(input))
+                {
+                    Console.WriteLine("Item successfully deleted! Press any key to continue...");
+                    Console.ReadKey();
+                    return;
+                }
+                else
+                {
+                    Console.WriteLine("Input not a valid ID. Press any key to continue...");
+                    Console.ReadKey();
+                }
+            }
+        }
 
         public static (DateTime, DateTime)? GetAllDateTimes()
         {

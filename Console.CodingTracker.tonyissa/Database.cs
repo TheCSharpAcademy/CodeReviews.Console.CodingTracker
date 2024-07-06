@@ -32,8 +32,19 @@ namespace CodingTracker.Database
         public static IEnumerable<CodingSession> GetList()
         {
             using var db = new SqliteConnection(ConnectionString);
-            var sql = "Select * FROM coding_tracker";
+            var sql = "SELECT * FROM coding_tracker";
             return db.Query<CodingSession>(sql);
+        }
+
+        public static bool Delete(string id)
+        {
+            using var db = new SqliteConnection(ConnectionString);
+            var sql = "DELETE FROM coding_tracker WHERE id = $ID";
+            var rows = db.Execute(sql, new { ID = id });
+
+            if (rows > 0) return true;
+
+            return false;
         }
     }
 }
