@@ -8,7 +8,7 @@ internal class Reports
 	public Reports()
 	{
 		var dataAccess = new DataAccess();
-		RecordList = dataAccess.GetRecordList();
+		RecordList = dataAccess.GetAllRecords().ToList();
 	}
 
 	internal void RunReports()
@@ -21,7 +21,9 @@ internal class Reports
 			Console.WriteLine("\nView a report of number of coding sessions and average duration of"
 			+ " each coding session in a coding period.\n");
 
-			DateTime[] periodDates = Utilities.GetDateInputs();
+			DateTime[] periodDates = Utilities.GetDateInputs("Reports Menu");
+			if (periodDates == null)
+				continue;
 
 			var startDate = periodDates[0];
 			var endDate = periodDates[1];

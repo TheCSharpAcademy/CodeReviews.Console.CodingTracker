@@ -9,7 +9,7 @@ internal class RecordFilter
 	public RecordFilter()
 	{
 		var dataAccess = new DataAccess();
-		RecordList = dataAccess.GetRecordList();
+		RecordList = dataAccess.GetAllRecords().ToList();
 	}
 
 	internal void FilterRecordsMenu()

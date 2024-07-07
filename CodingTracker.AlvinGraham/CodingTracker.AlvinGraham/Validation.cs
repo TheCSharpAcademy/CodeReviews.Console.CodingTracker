@@ -46,9 +46,9 @@ internal class Validation
 			endDateInput = AnsiConsole.Ask<string>("\n\nInvalid date. Format: dd-mm-yy hh:mm (24 hour clock). Please try again\n\n");
 		}
 
-		while (startDate > endDate)
+		while (startDate >= endDate)
 		{
-			endDateInput = AnsiConsole.Ask<string>("\n\nEnd date can't be before start date. Please try again\n\n");
+			endDateInput = AnsiConsole.Ask<string>("\n\nEnd date can't be before or same as start date. Please try again\n\n");
 
 			while (!DateTime.TryParseExact(endDateInput, "dd-MM-yy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDate))
 			{

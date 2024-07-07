@@ -31,54 +31,59 @@ internal static class UserInterface
 
 			var userChoice = AnsiConsole.Prompt(selectionPrompt);
 
-			try
+
+			switch (userChoice)
 			{
-				switch (userChoice)
-				{
-					case MainMenuChoices.AddRecord:
-						Utilities.ClearScreen("Adding Record");
-						AddRecord();
-						break;
-					case MainMenuChoices.ViewRecords:
-						Utilities.ClearScreen("Viewing Records");
-						var dataAccess = new DataAccess();
+				case MainMenuChoices.AddRecord:
+					Utilities.ClearScreen("Adding Record");
+					AddRecord();
+					break;
+				case MainMenuChoices.ViewRecords:
+					Utilities.ClearScreen("Viewing Records");
+					var dataAccess = new DataAccess();
+					try
+					{
 						var records = dataAccess.GetAllRecords();
 						ViewRecords(records);
+					}
+					catch (InvalidOperationException)
+					{
+						Console.WriteLine("There are currently no records to display. Press any key to return to Main Menu");
+						Console.ReadKey(false);
 						break;
-					case MainMenuChoices.UpdateRecord:
-						Utilities.ClearScreen("Updating Record");
-						UpdateRecord();
-						break;
-					case MainMenuChoices.DeleteRecord:
-						Utilities.ClearScreen("Deleting Record");
-						DeleteRecord();
-						break;
-					case MainMenuChoices.LiveTrack:
-						Utilities.ClearScreen("Recoring Live Tracking Session");
-						LiveTrack();
-						break;
-					case MainMenuChoices.FilterRecords:
-						FilterRecords();
-						break;
-					case MainMenuChoices.Reports:
-						Utilities.ClearScreen("Reports Menu");
-						RunReports();
-						break;
-					case MainMenuChoices.ManageGoals:
-						Utilities.ClearScreen("Managing Goals");
-						ManageGoals();
-						break;
-					case MainMenuChoices.Quit:
-						Console.WriteLine("Goodbye");
-						isMenuRunning = false;
-						break;
-				}
+					}
+					Console.WriteLine("Press any key to continue.");
+					Console.ReadKey(false);
+					break;
+				case MainMenuChoices.UpdateRecord:
+					Utilities.ClearScreen("Updating Record");
+					UpdateRecord();
+					break;
+				case MainMenuChoices.DeleteRecord:
+					Utilities.ClearScreen("Deleting Record");
+					DeleteRecord();
+					break;
+				case MainMenuChoices.LiveTrack:
+					Utilities.ClearScreen("Recoring Live Tracking Session");
+					LiveTrack();
+					break;
+				case MainMenuChoices.FilterRecords:
+					FilterRecords();
+					break;
+				case MainMenuChoices.Reports:
+					Utilities.ClearScreen("Reports Menu");
+					RunReports();
+					break;
+				case MainMenuChoices.ManageGoals:
+					Utilities.ClearScreen("Managing Goals");
+					ManageGoals();
+					break;
+				case MainMenuChoices.Quit:
+					Console.WriteLine("Goodbye");
+					isMenuRunning = false;
+					break;
 			}
-			catch (ArgumentException)
-			{
-				Console.WriteLine("\nReturning to Main Menu.  Press any key to continue...");
-				Console.ReadKey();
-			}
+
 		}
 	}
 
@@ -116,9 +121,18 @@ internal static class UserInterface
 	{
 		var dataAccess = new DataAccess();
 		var records = dataAccess.GetAllRecords();
+
+
+		if (records.Count() == 0)
+		{
+			Console.WriteLine("There are currently no records to delete. Press any key to return to the Main Menu");
+			Console.ReadKey(false);
+			return;
+		}
+
 		ViewRecords(records);
 
-		var id = Utilities.GetNumber("Please type the id of the habit you want to delete.");
+		var id = Utilities.GetNumber("Please type the id of the record you want to delete.");
 
 		if (!AnsiConsole.Confirm("Are you sure?"))
 			return;
@@ -130,24 +144,44 @@ internal static class UserInterface
 			: "Record deleted successfully. Press any key to return to Main Menu";
 
 		Console.WriteLine(responseMessage);
-		Console.ReadKey();
+		Console.ReadKey(false);
 	}
 
 	private static void UpdateRecord()
 	{
 		var dataAccess = new DataAccess();
 		var records = dataAccess.GetAllRecords();
+
+		if (records.Count() == 0)
+		{
+			Console.WriteLine("There are currently no records to update. Press any key to return to the Main Menu");
+			Console.ReadKey(false);
+			return;
+		}
 		ViewRecords(records);
 
-		var id = Utilities.GetNumber("Please type the id of the habit you want to update.");
+		var id = Utilities.GetNumber("Please type the id of the record you want to update.");
 
-		var record = records.Where(x => x.Id == id).Single();
-		var dates = Utilities.GetDateInputs();
+		try
+		{
+			var record = records.Where(x => x.Id == id).Single();
+			var dates = Utilities.GetDateInputs("Main Menu");
+			if (dates == null)
+				return;
 
-		record.DateStart = dates[0];
-		record.DateEnd = dates[1];
+			record.DateStart = dates[0];
+			record.DateEnd = dates[1];
 
-		dataAccess.UpdateRecord(record);
+			dataAccess.UpdateRecord(record);
+
+			Console.WriteLine("Record Updated. Press any key to continue.");
+			Console.ReadKey(false);
+		}
+		catch (InvalidOperationException)
+		{
+			Console.WriteLine("No record with that ID exists. Press any key to return to Main Menu");
+			Console.ReadKey(false);
+		}
 	}
 
 	private static void ViewRecords(IEnumerable<CodingRecord> records)
@@ -165,15 +199,17 @@ internal static class UserInterface
 
 		AnsiConsole.Write(table);
 
-		Console.WriteLine("Press any key to return to main menu.");
-		Console.ReadKey();
+		Console.WriteLine();
+
 	}
 
 	private static void AddRecord()
 	{
 		CodingRecord record = new();
 
-		var dateInputs = Utilities.GetDateInputs();
+		var dateInputs = Utilities.GetDateInputs("Main Menu");
+		if (dateInputs == null)
+			return;
 		record.DateStart = dateInputs[0];
 		record.DateEnd = dateInputs[1];
 

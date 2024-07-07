@@ -8,6 +8,7 @@ internal static class Utilities
 	internal static void ClearScreen(string message)
 	{
 		Console.Clear();
+		AnsiConsole.Clear();
 		Console.WriteLine(message);
 		Console.WriteLine("--------------------------------------");
 	}
@@ -15,9 +16,6 @@ internal static class Utilities
 	internal static int GetNumber(string message)
 	{
 		string numberInput = AnsiConsole.Ask<string>(message);
-
-		if (numberInput == "0")
-			throw new ArgumentException("Returning to Main Menu");
 
 		var output = Validation.ValidateInt(numberInput, message);
 
@@ -33,19 +31,27 @@ internal static class Utilities
 		return output;
 	}
 
-	internal static DateTime[] GetDateInputs()
+	internal static DateTime[] GetDateInputs(string menuMessage)
 	{
-		var startDateInput = AnsiConsole.Ask<string>("Input Start Date with the format: dd-mm-yy hh:mm (24 hour clock), or enter 0 to return to main menu.");
+		var startDateInput = AnsiConsole.Ask<string>($"Input Start Date with the format: dd-mm-yy hh:mm (24 hour clock), or enter 0 to return to {menuMessage}.");
 
 		if (startDateInput == "0")
-			throw new ArgumentException("Returning to Main Menu");
+		{
+			Console.WriteLine($"Returning to {menuMessage}. Please press any key to continue.");
+			Console.ReadKey(false);
+			return null!;
+		}
 
 		var startDate = Validation.ValidateStartDate(startDateInput);
 
 		var endDateInput = AnsiConsole.Ask<string>("Input End Date with the format: dd-mm-yy hh:mm (24 hour clock), or enter 0 to return to main menu.");
 
 		if (endDateInput == "0")
-			throw new ArgumentException("Returning to Main Menu");
+		{
+			Console.WriteLine($"Returning to {menuMessage}. Please press any key to continue.");
+			Console.ReadKey(false);
+			return null!;
+		}
 
 		var endDate = Validation.ValidateEndDate(startDate, endDateInput);
 

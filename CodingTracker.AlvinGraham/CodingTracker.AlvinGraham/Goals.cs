@@ -67,13 +67,23 @@ internal class Goals
 
 	private void DeleteGoal()
 	{
+		var dataAccess = new GoalDataAccess();
+		goalList = dataAccess.GetGoalList();
+
+		if (goalList.Count() == 0)
+		{
+			Console.WriteLine("There are currently no goals to delete. Press any key to return to the Main Menu");
+			Console.ReadKey(false);
+			return;
+		}
+
 		ViewGoals();
 		var id = Utilities.GetGoalNumber("Please type the id of the goal you want to Delete.");
 
 		if (!AnsiConsole.Confirm("Are you sure?"))
 			return;
 
-		var dataAccess = new GoalDataAccess();
+
 		var response = dataAccess.DeleteGoal(id);
 
 		var responseMessage = response < 1
@@ -86,36 +96,54 @@ internal class Goals
 
 	private void UpdateGoal()
 	{
+		var dataAccess = new GoalDataAccess();
+		goalList = dataAccess.GetGoalList();
+
+		if (goalList.Count() == 0)
+		{
+			Console.WriteLine("There are currently no goals to update. Press any key to return to the Main Menu");
+			Console.ReadKey(false);
+			return;
+		}
+
 		ViewGoals();
 
 		var id = Utilities.GetGoalNumber("Please type the id of the goal you want to update.");
 
-		var goal = goalList.Where(x => x.Id == id).Single();
-
-		int goalHours = goal.TotalMinutes / 60;
-		int goalMinutes = goalHours % 60;
-		DateTime endDate = goal.DateEnd;
-
-		if (AnsiConsole.Confirm("Would you like to modify the coding time goal?"))
+		try
 		{
-			goalHours = Utilities.GetGoalNumber("Enter hours for your coding goal: ");
-			goalMinutes = Utilities.GetGoalNumber("Enter minutes for your coding goal: ");
-		}
+			var goal = goalList.Where(x => x.Id == id).Single();
 
-		if (AnsiConsole.Confirm("Would you like to modify the coding goal end date?"))
+			int goalHours = goal.TotalMinutes / 60;
+			int goalMinutes = goalHours % 60;
+			DateTime endDate = goal.DateEnd;
+
+			if (AnsiConsole.Confirm("Would you like to modify the coding time goal?"))
+			{
+				goalHours = Utilities.GetGoalNumber("Enter hours for your coding goal: ");
+				goalMinutes = Utilities.GetGoalNumber("Enter minutes for your coding goal: ");
+			}
+
+			if (AnsiConsole.Confirm("Would you like to modify the coding goal end date?"))
+			{
+				endDate = Utilities.GetEndDate();
+			}
+
+			goal.Id = id;
+			goal.TotalMinutes = goalHours * 60 + goalMinutes;
+			goal.DateEnd = endDate;
+
+
+			dataAccess.UpdateGoal(goal);
+
+			Console.WriteLine("\nPress any key to return to goals menu.");
+			Console.ReadKey();
+		}
+		catch (InvalidOperationException)
 		{
-			endDate = Utilities.GetEndDate();
+			Console.WriteLine("No record with that ID exists. Press any key to return to Goals Menu");
+			Console.ReadKey(false);
 		}
-
-		goal.Id = id;
-		goal.TotalMinutes = goalHours * 60 + goalMinutes;
-		goal.DateEnd = endDate;
-
-		var dataAccess = new GoalDataAccess();
-		dataAccess.UpdateGoal(goal);
-
-		Console.WriteLine("\nPress any key to return to goals menu.");
-		Console.ReadKey();
 	}
 
 
@@ -135,8 +163,7 @@ internal class Goals
 
 	private void ViewGoals()
 	{
-		var dataAccess = new GoalDataAccess();
-		goalList = dataAccess.GetGoalList();
+
 
 		var table = new Table();
 		table.AddColumns("Id", "Coding Goal", "Goal End Date");
@@ -154,7 +181,7 @@ internal class Goals
 		ViewGoals();
 
 		var recordDataAccess = new DataAccess();
-		var recordList = recordDataAccess.GetRecordList();
+		var recordList = recordDataAccess.GetAllRecords();
 
 		var id = Utilities.GetGoalNumber("Please enter the id of the goal you want to review: ");
 		var goal = goalList.Where(x => x.Id == id).Single();
