@@ -22,15 +22,6 @@ internal static class Utilities
 		return output;
 	}
 
-	internal static int GetGoalNumber(string message)
-	{
-		string numberInput = AnsiConsole.Ask<string>(message);
-
-		var output = Validation.ValidateInt(numberInput, message);
-
-		return output;
-	}
-
 	internal static DateTime[] GetDateInputs(string menuMessage)
 	{
 		var startDateInput = AnsiConsole.Ask<string>($"Input Start Date with the format: dd-mm-yy hh:mm (24 hour clock), or enter 0 to return to {menuMessage}.");

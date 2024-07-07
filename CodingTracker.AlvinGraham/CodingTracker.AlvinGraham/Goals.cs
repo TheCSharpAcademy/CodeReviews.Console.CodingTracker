@@ -78,7 +78,7 @@ internal class Goals
 		}
 
 		ViewGoals();
-		var id = Utilities.GetGoalNumber("Please type the id of the goal you want to Delete.");
+		var id = Utilities.GetNumber("Please type the id of the goal you want to Delete.");
 
 		if (!AnsiConsole.Confirm("Are you sure?"))
 			return;
@@ -108,7 +108,7 @@ internal class Goals
 
 		ViewGoals();
 
-		var id = Utilities.GetGoalNumber("Please type the id of the goal you want to update.");
+		var id = Utilities.GetNumber("Please type the id of the goal you want to update.");
 
 		try
 		{
@@ -120,8 +120,8 @@ internal class Goals
 
 			if (AnsiConsole.Confirm("Would you like to modify the coding time goal?"))
 			{
-				goalHours = Utilities.GetGoalNumber("Enter hours for your coding goal: ");
-				goalMinutes = Utilities.GetGoalNumber("Enter minutes for your coding goal: ");
+				goalHours = Utilities.GetNumber("Enter hours for your coding goal: ");
+				goalMinutes = Utilities.GetNumber("Enter minutes for your coding goal: ");
 			}
 
 			if (AnsiConsole.Confirm("Would you like to modify the coding goal end date?"))
@@ -151,8 +151,8 @@ internal class Goals
 	{
 		GoalRecord record = new();
 
-		int goalHours = Utilities.GetGoalNumber("Enter hours for your coding goal: ");
-		int goalMinutes = Utilities.GetGoalNumber("Enter minutes for your coding goal: ");
+		int goalHours = Utilities.GetNumber("Enter hours for your coding goal: ");
+		int goalMinutes = Utilities.GetNumber("Enter minutes for your coding goal: ");
 
 		record.TotalMinutes = 60 * goalHours + goalMinutes;
 		record.DateEnd = Utilities.GetEndDate();
@@ -183,7 +183,7 @@ internal class Goals
 		var recordDataAccess = new DataAccess();
 		var recordList = recordDataAccess.GetAllRecords();
 
-		var id = Utilities.GetGoalNumber("Please enter the id of the goal you want to review: ");
+		var id = Utilities.GetNumber("Please enter the id of the goal you want to review: ");
 		var goal = goalList.Where(x => x.Id == id).Single();
 		int totalCodingMinutes = 0;
 		foreach (var record in recordList)
