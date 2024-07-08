@@ -48,7 +48,7 @@ namespace CodingTracker.Database
             using var db = new SqliteConnection(ConnectionString);
             var sql = "UPDATE coding_tracker SET start = $Start, end = $End WHERE id = $ID";
             var parameters = new { ID = id, Start = start, End = end };
-            var result = db.Execute(sql, parameters);
+            db.Execute(sql, parameters);
         }
     }
 }
