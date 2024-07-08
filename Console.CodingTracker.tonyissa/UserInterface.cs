@@ -1,9 +1,8 @@
 using CodingTracker.Dates;
 using CodingTracker.Database;
 using CodingTracker.Input;
-using System.Diagnostics;
 using CodingTracker.Model;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using Spectre.Console;
 
 namespace CodingTracker.UserInterface
 {
@@ -13,10 +12,10 @@ namespace CodingTracker.UserInterface
         public static void InitMainMenu()
         {
             Console.Clear();
-            Console.WriteLine("Welcome to my coding tracker!");
-            Console.WriteLine("Press C to create a record, U to update, D to delete, V to view all, R to record, and 0 to exit.");
+            AnsiConsole.MarkupLine("[turquoise2]Welcome to my coding tracker![/]");
+            AnsiConsole.MarkupLine("Press [lime]C[/] to [lime]create a record[/], [lime]U[/] to [lime]update[/], [lime]D[/] to [lime]delete[/], [lime]V[/] to [lime]view all[/], [lime]R[/] to [lime]record[/], and [lime]0[/] to [lime]exit[/]");
 
-            var input = Console.ReadLine() ?? "0";
+            var input = AnsiConsole.Ask<string>("[silver]What do you want to do?[/]");
             input = input.Trim().ToLower();
 
             switch (input)
@@ -41,7 +40,7 @@ namespace CodingTracker.UserInterface
                     InitRecordMenu();
                     break;
                 default:
-                    Console.WriteLine("Input not recognized. Please try again.");
+                    AnsiConsole.MarkupLine("[red3_1]Input not recognized. Please try again[/]");
                     break;
             }
         }
@@ -50,22 +49,27 @@ namespace CodingTracker.UserInterface
         {
             var results = DatabaseController.GetList();
 
+            var table = new Table();
+            table.AddColumns(["ID", "Total", "Start", "End"]);
+
             foreach (var result in results)
             {
                 var start = DateTime.Parse(result.Start!);
                 var end = DateTime.Parse(result.End!);
                 var (hours, minutes) = DateHelper.GetTotalTime(start, end);
 
-                Console.WriteLine($"{result.ID}. Total: {hours} hours and {minutes} minutes, Start: {start}, End: {end}");
+                table.AddRow([result.ID.ToString()!, $"{hours}H {minutes}M", start.ToString(), end.ToString()]);
             }
+
+            AnsiConsole.Write(table);
 
             if (returnList && results.Any()) return results.ToList();
             else if (!results.Any())
             {
-                Console.WriteLine("No entries found.");
+                AnsiConsole.MarkupLine("[red3_1]No entries found[/]");
             }
 
-            Console.WriteLine("Press any key to continue...");
+            AnsiConsole.MarkupLine("[lime]Press any key to continue...[/]");
             Console.ReadKey();
 
             return null;
@@ -81,7 +85,7 @@ namespace CodingTracker.UserInterface
 
             var (date1, date2) = result.Value;
             DatabaseController.Insert(date1.ToString(), date2.ToString());
-            Console.WriteLine("Session inserted successfully. Press any key to continue...");
+            AnsiConsole.MarkupLine("[lime]Session inserted successfully. Press any key to continue...[/]");
             Console.ReadKey();
         }
 
@@ -94,19 +98,18 @@ namespace CodingTracker.UserInterface
 
                 if (list == null) return;
 
-                Console.WriteLine("Please input the number ID of the entry you would like to delete, or type 0 to quit.");
+                AnsiConsole.MarkupLine("Please [lime]input the number ID[/] of the entry you would like to [red3_1]delete[/], or type [lime]0[/] to [lime]quit[/]");
                 var index = InputHelper.CheckIndex(list);
 
                 if (index == null) return;
                 else if (index == -1) continue;
 
-                Console.WriteLine("Are you sure? Enter Y to confirm or anything else to go back.");
-                var confirmation = Console.ReadLine() ?? "";
+                AnsiConsole.MarkupLine("[silver]Are you sure you want to delete this entry?[/]");
 
-                if (confirmation.Trim().ToLower() != "y") continue;
+                if (!AnsiConsole.Confirm("[lime]Enter Y to confirm[/] or [red3_1]N to go back[/]")) continue;
 
                 DatabaseController.Delete(index.Value);
-                Console.WriteLine("Session deleted successfully. Press any key to continue...");
+                AnsiConsole.MarkupLine("[lime]Session deleted successfully. Press any key to continue...[/]");
                 Console.ReadKey();
             }
         }
@@ -120,7 +123,7 @@ namespace CodingTracker.UserInterface
 
                 if (list == null) return;
 
-                Console.WriteLine("Please input the number ID of the entry you would like to update, or type 0 to quit.");
+                AnsiConsole.MarkupLine("Please [lime]input the number ID[/] of the entry you would like to [turquoise2]update[/], or type [lime]0 to quit[/]");
                 var index = InputHelper.CheckIndex(list);
 
                 if (index == null) return;
@@ -130,14 +133,13 @@ namespace CodingTracker.UserInterface
 
                 if (result == null) return;
 
-                Console.WriteLine("Are you sure? Enter Y to confirm or anything else to go back.");
-                var confirmation = Console.ReadLine() ?? "";
+                AnsiConsole.MarkupLine("[silver]Are you sure you want to update this entry?[/]");
 
-                if (confirmation.Trim().ToLower() != "y") continue;
+                if (!AnsiConsole.Confirm("[lime]Enter Y to confirm[/] or [red3_1]N to go back[/]")) continue;
 
                 var (date1, date2) = result.Value;
                 DatabaseController.Update(index.Value, date1.ToString(), date2.ToString());
-                Console.WriteLine("Session updated successfully. Press any key to continue...");
+                AnsiConsole.MarkupLine("[lime]Session updated successfully. Press any key to continue...[/]");
                 Console.ReadKey();
             }
         }
@@ -145,24 +147,20 @@ namespace CodingTracker.UserInterface
         public static void InitRecordMenu()
         {
             Console.Clear();
-            Console.WriteLine("You can record your coding time here. Press any key to start the stopwatch, or press 0 to go back");
-            var result1 = Console.ReadKey();
+            AnsiConsole.MarkupLine("[turquoise2]You can record your coding time here.[/]");
 
-            if (result1.KeyChar == '0') return;
+            if (!AnsiConsole.Confirm("[lime]Select Y to start recording or N to return[/]")) return;
 
             var startDate = DateHelper.GetCurrentDate();
             var startTime = DateHelper.GetCurrentTime();
 
-            Console.WriteLine("Press any key to stop the stopwatch and record your results, or press 0 to go back.");
-            var result2 = Console.ReadKey();
-
-            if (result2.KeyChar == '0') return;
+            if (!AnsiConsole.Confirm("[lime]Select Y to stop recording or N to return without saving[/]")) return;
 
             var endDate = DateHelper.GetCurrentDate();
             var endTime = DateHelper.GetCurrentTime();
 
             DatabaseController.Insert($"{startDate} {startTime}", $"{endDate} {endTime}");
-            Console.WriteLine("Session recorded successfully. Press any key to continue...");
+            AnsiConsole.MarkupLine("[lime]Session recorded successfully. Press any key to continue...[/]");
             Console.ReadKey();
         }
     }

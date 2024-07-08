@@ -1,5 +1,6 @@
 ﻿using CodingTracker.Database;
 using CodingTracker.UserInterface;
+using Spectre.Console;
 
 DatabaseController.CreateDb();
 
@@ -11,8 +12,8 @@ while (true)
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"Error: {ex.Message}");
-        Console.WriteLine("Please try again. Press any key to continue.");
+        AnsiConsole.WriteException(ex, ExceptionFormats.ShortenEverything | ExceptionFormats.NoStackTrace);
+        AnsiConsole.MarkupLine("\n[red3_1]Please try again.[/] Press [lime]any key[/] to continue");
         Console.ReadKey();
     }
 }

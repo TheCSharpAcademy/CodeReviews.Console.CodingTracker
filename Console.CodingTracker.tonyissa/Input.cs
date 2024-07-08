@@ -1,6 +1,6 @@
 ﻿using CodingTracker.Dates;
 using CodingTracker.Model;
-using System.Collections.Generic;
+using Spectre.Console;
 
 namespace CodingTracker.Input
 {
@@ -9,11 +9,11 @@ namespace CodingTracker.Input
         public static string GetDateInput(bool start)
         {
             string s = start ? "start" : "end";
-            Console.WriteLine($"Please input the {s} date in the M/D/YYYY format, type 0 to quit, or press enter for the current date.");
+            AnsiConsole.MarkupLine($"Please input the [lime]{s} date[/] in the [lime]M/D/YYYY format[/], type [lime]0[/] to quit, or press [lime]enter[/] for the [lime]current date[/]");
 
             while (true)
             {
-                var input = Console.ReadLine() ?? "0";
+                var input = AnsiConsole.Prompt(new TextPrompt<string>("[silver]Date:[/]").AllowEmpty());
                 input = input.Trim().ToLower();
 
                 if (input == "0" || input == string.Empty || DateHelper.ValidateDateFormat(input))
@@ -21,18 +21,18 @@ namespace CodingTracker.Input
                     return input;
                 }
 
-                Console.WriteLine("Invalid date.");
+                AnsiConsole.MarkupLine("[red3_1]Invalid date[/]");
             }
         }
 
         public static string GetTimeInput(bool start)
         {
             string s = start ? "start" : "end";
-            Console.WriteLine($"Please input the {s} time in either hh:mm tt (12-hour time) format, HH:MM (24-hour time) format, type 0 to quit, or press enter for the current time.");
+            AnsiConsole.MarkupLine($"Please input the [lime]{s} time[/] in either [lime]hh:mm tt (12-hour time)[/] or [lime]HH:MM (24-hour time)[/] format, type [lime]0[/] to quit, or press [lime]enter[/] for the [lime]current time[/]");
 
             while (true)
             {
-                var input = Console.ReadLine() ?? "0";
+                var input = AnsiConsole.Prompt(new TextPrompt<string>("[silver]Time:[/]").AllowEmpty());
                 input = input.Trim().ToLower();
 
                 if (input == "0" || input == string.Empty || DateHelper.ValidateTimeFormat(input))
@@ -40,7 +40,7 @@ namespace CodingTracker.Input
                     return input;
                 }
 
-                Console.WriteLine("Invalid time.");
+                AnsiConsole.MarkupLine("[red3_1]Invalid time[/]");
             }
         }
 
@@ -77,10 +77,9 @@ namespace CodingTracker.Input
         {
             if (!int.TryParse(Console.ReadLine(), out int index))
             {
-                Console.WriteLine("Invalid input");
-                Console.WriteLine("Press any key to continue");
+                AnsiConsole.Markup("[red3_1]Invalid input.[/] Press [lime]any key[/] to continue");
                 Console.ReadKey();
-                return null;
+                return -1;
             }
             else if (index == 0) return null;
 
@@ -88,8 +87,7 @@ namespace CodingTracker.Input
 
             if (result == -1)
             {
-                Console.WriteLine("Item not found.");
-                Console.WriteLine("Press any key to continue...");
+                AnsiConsole.Markup("[red3_1]Session not found.[/] Press [lime]any key[/] to continue");
                 Console.ReadKey();
                 return result;
             }
