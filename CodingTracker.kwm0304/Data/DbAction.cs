@@ -16,9 +16,13 @@ public class DbAction
   //ON START
   public void CreateDatabaseIfNotExists()
   {
-    using SQLiteConnection connection = new(_connString);
-    connection.Open();
-    using var command = connection.CreateCommand();
+    if (!File.Exists(dbPath))
+    {
+      using (File.Create(dbPath))
+      {
+        //File created, don't take any more action
+      }
+    }
   }
   public void CreateTableIfNotExists()
   {
@@ -27,7 +31,7 @@ public class DbAction
     using var command = connection.CreateCommand();
   }
   //POST
-  public void InsertSession()
+  public void InsertSession(CodingSession session)
   {
     using SQLiteConnection connection = new(_connString);
     connection.Open();
@@ -61,7 +65,7 @@ public class DbAction
     return selectedSessions;
   }
   //EDIT
-  public void UpdateSession(int id)
+  public void UpdateSession(int id, string timeString)
   {
     using SQLiteConnection connection = new(_connString);
     connection.Open();

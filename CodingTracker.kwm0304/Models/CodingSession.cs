@@ -5,15 +5,11 @@ public class CodingSession
   public int Id { get; set; }
   public DateTime StartTime { get; set; }
   public DateTime EndTime { get; set; }
-  public CodingSession(DateTime startTime)
+  public TimeSpan SessionLength { get; set; }
+  public CodingSession(DateTime startTime, DateTime endTime)
   {
     StartTime = startTime;
-  }
-  public TimeSpan SessionLength
-  {
-    get
-    {
-      return EndTime - StartTime;
-    }
+    EndTime = endTime;
+    SessionLength = StartTime - EndTime;
   }
 }
