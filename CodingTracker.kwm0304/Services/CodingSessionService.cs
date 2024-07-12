@@ -1,4 +1,6 @@
+using CodingTracker.kwm0304.Data;
 using CodingTracker.kwm0304.Models;
+using CodingTracker.kwm0304.Models.Dtos;
 using CodingTracker.kwm0304.Repositories;
 using CodingTracker.kwm0304.Utils;
 using Spectre.Console;
@@ -16,24 +18,25 @@ public class CodingSessionService
   //GET 
   public CodingSession? GetCodingSession(int id)
   {
-    if (Validator.IsIdValid(id))
+    try
     {
-      try
+      if (Validator.IsIdValid(id))
       {
         return _repository.GetCodingSessionById(id);
       }
-      catch (Exception e)
+      else
       {
-        AnsiConsole.WriteException(e);
+        AnsiConsole.WriteLine("No session matches this id");
         return null;
       }
     }
-    else
+    catch (Exception e)
     {
-      AnsiConsole.WriteLine("No session matches this id");
+      AnsiConsole.WriteException(e);
       return null;
     }
   }
+
   public List<CodingSession>? GetAllSessions()
   {
     List<CodingSession>? allSessions = _repository.GelAllCodingSessions();
@@ -48,14 +51,57 @@ public class CodingSessionService
     }
   }
   //POST
+  //Called when session is complete
   public void CreateSession(StartSessionDto dto)
   {
-    if (Validator.IsValidTime(dto.DtoStartTime))
+    try
     {
-      DateTime endingTime = DateTime.Now;
-      CodingSession session = new(dto.DtoStartTime, endingTime);
-      _repository.CreateCodingSession(session);
+      if (Validator.IsValidTime(dto.DtoStartTime))
+      {
+        DateTime endingTime = DateTime.Now;
+        CodingSession session = new(dto.DtoStartTime, endingTime);
+        _repository.CreateCodingSession(session);
+      }
     }
+    catch (Exception e)
+    {
+      AnsiConsole.WriteException(e);
+    }
+  }
 
+  public void EditSession(int minAdjustment, int id)
+  {
+    try
+    {
+      if (Validator.IsIdValid(id))
+        _repository.UpdateCodingSessionById(id, minAdjustment);
+    }
+    catch (Exception e)
+    {
+      AnsiConsole.WriteException(e);
+    }
+  }
+  public void DeleteSessionById(int id)
+  {
+    try
+    {
+      if (Validator.IsIdValid(id))
+        _repository.DeleteCodingSessionById(id);
+    }
+    catch (Exception e)
+    {
+      AnsiConsole.WriteException(e);
+    }
+  }
+  public void DeleteAllSessions()
+  {
+    try
+    {
+      _repository.DeleteAllSessions();
+    }
+    catch (Exception e)
+    {
+      AnsiConsole.WriteException(e);
+    }
   }
 }

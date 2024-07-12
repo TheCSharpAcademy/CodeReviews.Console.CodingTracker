@@ -1,4 +1,4 @@
-namespace CodingTracker.kwm0304;
+namespace CodingTracker.kwm0304.Models.Dtos;
 
 public class StartSessionDto
 {

@@ -52,7 +52,7 @@ public class CodingSessionRepository
     }
   }
   //UPDATE
-  public void UpdateCodingSessionById(int id, string updatedTimeString)
+  public void UpdateCodingSessionById(int id, int updatedTimeString)
   {
     try
     {

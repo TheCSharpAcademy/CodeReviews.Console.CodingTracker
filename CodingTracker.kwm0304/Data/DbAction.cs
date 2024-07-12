@@ -65,7 +65,7 @@ public class DbAction
     return selectedSessions;
   }
   //EDIT
-  public void UpdateSession(int id, string timeString)
+  public void UpdateSession(int id, int newTime)
   {
     using SQLiteConnection connection = new(_connString);
     connection.Open();
