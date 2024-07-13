@@ -1,8 +1,7 @@
-using CodingTracker.kwm0304.Data;
 using CodingTracker.kwm0304.Models;
-using CodingTracker.kwm0304.Models.Dtos;
 using CodingTracker.kwm0304.Repositories;
 using CodingTracker.kwm0304.Utils;
+using CodingTracker.kwm0304.Views;
 using Spectre.Console;
 
 namespace CodingTracker.kwm0304.Services;
@@ -39,7 +38,7 @@ public class CodingSessionService
 
   public List<CodingSession>? GetAllSessions()
   {
-    List<CodingSession>? allSessions = _repository.GelAllCodingSessions();
+    List<CodingSession>? allSessions = _repository.GetAllCodingSessions();
     if (Validator.IsListValid(allSessions))
     {
       return allSessions;
@@ -52,16 +51,11 @@ public class CodingSessionService
   }
   //POST
   //Called when session is complete
-  public void CreateSession(StartSessionDto dto)
+  public void CreateSession(CodingSession session)
   {
     try
     {
-      if (Validator.IsValidTime(dto.DtoStartTime))
-      {
-        DateTime endingTime = DateTime.Now;
-        CodingSession session = new(dto.DtoStartTime, endingTime);
-        _repository.CreateCodingSession(session);
-      }
+      _repository.CreateCodingSession(session);
     }
     catch (Exception e)
     {

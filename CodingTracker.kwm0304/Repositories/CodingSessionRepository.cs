@@ -1,4 +1,5 @@
 using CodingTracker.kwm0304.Data;
+using CodingTracker.kwm0304.Enums;
 using CodingTracker.kwm0304.Models;
 using Spectre.Console;
 
@@ -11,7 +12,6 @@ public class CodingSessionRepository
   {
     _dbActions = new DbAction();
     _dbActions.CreateDatabaseIfNotExists();
-    _dbActions.CreateTableIfNotExists();
   }
   //GET
   public CodingSession? GetCodingSessionById(int id)
@@ -26,12 +26,24 @@ public class CodingSessionRepository
       return null;
     }
   }
-  public List<CodingSession>? GelAllCodingSessions()
+  public List<CodingSession>? GetAllCodingSessions()
   {
     try
     {
-      List<CodingSession> sessions = _dbActions.GetAllSessions();
+      List<CodingSession> sessions = _dbActions.GetAllSessions()!;
       return sessions;
+    }
+    catch (Exception e)
+    {
+      AnsiConsole.WriteException(e);
+      return null;
+    }
+  }
+  public List<CodingSession>? GetAllSessionsInDateRange(DateRange range)
+  {
+    try
+    {
+      return _dbActions.GetSessionsByDateRange(range);
     }
     catch (Exception e)
     {

@@ -1,4 +1,6 @@
 ﻿
+using CodingTracker.kwm0304.Views;
+
 namespace CodingTracker.kwm0304;
 
 /* 
@@ -23,6 +25,9 @@ class Program
 {
   static void Main(string[] args)
   {
-
+    while (true)
+    {
+      TableConfigurationEngine.MainMenu();
+    }
   }
 }
