@@ -8,7 +8,7 @@ public class CodingSession
   public DateTime StartTime { get; set; }
   public DateTime EndTime { get; set; }
   public TimeSpan SessionLength { get; set; }
-  private readonly Stopwatch _stopWatch;
+  private readonly Stopwatch? _stopWatch;
   
   public CodingSession()
   {
@@ -24,13 +24,13 @@ public class CodingSession
   public void StartSession()
   {
     StartTime = DateTime.Now;
-    _stopWatch.Reset();
+    _stopWatch!.Reset();
     _stopWatch.Start();
   }
 
   public void EndSession()
   {
-    _stopWatch.Stop();
+    _stopWatch!.Stop();
     EndTime = DateTime.Now;
     SessionLength = _stopWatch.Elapsed;
   }

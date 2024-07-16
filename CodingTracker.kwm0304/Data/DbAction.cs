@@ -57,8 +57,10 @@ public class DbAction
     GoalId INTEGER PRIMARY KEY,
     GoalName TEXT NOT NULL,
     TargetNumber INTEGER NOT NULL,
+    Progress INTEGER NOT NULL,
     AccomplishBy TEXT NOT NULL,
     CreatedOn TEXT NOT NULL,
+    EndDate TEXT NOT NULL,
     Accomplished INTEGER DEFAULT 1
     );";
     try
@@ -100,17 +102,18 @@ public class DbAction
     using IDbConnection connection = new SQLiteConnection(_connString);
 
     const string queryString = @"INSERT INTO Goals
-    (GoalName, TargetNumber, AccomplishBy, CreatedOn, Accomplished)
+    (GoalName, TargetNumber, Progress, CreatedOn, EndDate, Accomplished)
     VALUES
-    (@goalName, @targetNumber, @accomplishBy, @createdOn, @accomplished);";
+    (@goalName, @targetNumber, @progress,  @createdOn, @endDate, @accomplished);";
     try
     {
       connection.Execute(queryString, new
       {
-        GoalName = goal.GoalName,
-        TargetNumber = goal.TargetNumber,
-        AccomplishBy = goal.AccomplishBy.ToString(),
-        CreatedOn = DateTime.Now.ToString("O"),
+        goal.GoalName,
+        goal.TargetNumber,
+        goal.Progress,
+        CreatedOn = goal.CreatedOn.ToString("O"),
+        EndDate = goal.EndDate.ToString("O"),
         Accomplished = goal.Accomplished ? 0 : 1
       });
       AnsiConsole.WriteLine("Goal added successfully");
@@ -236,6 +239,35 @@ public class DbAction
       AnsiConsole.WriteException(e);
     }
   }
+  public void UpdateGoalProgress(int id, int update)
+  {
+    using IDbConnection connection = new SQLiteConnection(_connString);
+    const string queryString = "UPDATE Goals SET Progress = Progress + @update WHERE GoalId = @id";
+    try
+    {
+      connection.Execute(queryString, new { id, update });
+      AnsiConsole.WriteLine("Progress updated successfully");
+    }
+    catch (SQLiteException e)
+    {
+      AnsiConsole.WriteException(e);
+    }
+  }
+
+  public void UpdateGoalCompletion(bool accomplished, int id)
+  {
+    using IDbConnection connection = new SQLiteConnection(_connString);
+    const string queryString = "UPDATE Goals SET Accomplished = @accomplished WHERE GoalId = @id";
+    try
+    {
+      connection.Execute(queryString, new { Accomplished = accomplished.ToString(), id });
+      AnsiConsole.WriteLine("Goal status updated");
+    }
+    catch (SQLiteException e)
+    {
+      AnsiConsole.WriteException(e);
+    }
+  }
   //DELETE
   public void DeleteSession(int id)
   {
@@ -265,4 +297,64 @@ public class DbAction
       AnsiConsole.WriteException(e);
     }
   }
+
+  public List<Goal> GetCompletedGoals()
+  {
+    using IDbConnection connection = new SQLiteConnection(_connString);
+    const string queryString = "SELECT * FROM Goals WHERE Accomplished = 0";
+    try
+    {
+      return connection.Query<Goal>(queryString).ToList();
+    }
+    catch (SQLiteException e)
+    {
+      AnsiConsole.WriteException(e);
+      return [];
+    }
+  }
+
+  //(GoalName, TargetNumber, Progress, CreatedOn, EndDate, Accomplished)
+  public List<Goal> GetActiveGoals()
+  {
+    using IDbConnection connection = new SQLiteConnection(_connString);
+    string todayStr = DateTime.Today.AddDays(1).ToString("yyyy-MM-dd");
+    const string queryString = @"
+                SELECT GoalId, GoalName, TargetNumber, Progress, CreatedOn, EndDate, Accomplished
+                FROM Goals
+                WHERE EndDate > @Today";
+    try
+    {
+      return connection.Query<Goal>(queryString, new { Today = todayStr }).ToList();
+    }
+    catch (SQLiteException e)
+    {
+      AnsiConsole.WriteException(e);
+      return [];
+    }
+  }
+
+  public void SaveGoal(Goal goal)
+  {
+    using IDbConnection connection = new SQLiteConnection(_connString);
+    const string queryString = @"
+                UPDATE Goals
+                SET Progress = @Progress,
+                    Accomplished = @Accomplished
+                WHERE GoalId = @GoalId";
+    try
+    {
+      connection.Execute(queryString, new
+      {
+        goal.Progress,
+        goal.Accomplished,
+        goal.GoalId
+      });
+      AnsiConsole.WriteLine("Goal updated successfully");
+    }
+    catch (SQLiteException e)
+    {
+      AnsiConsole.WriteException(e);
+    }
+  }
+
 }

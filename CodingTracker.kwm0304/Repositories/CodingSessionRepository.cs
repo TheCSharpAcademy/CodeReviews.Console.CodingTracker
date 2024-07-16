@@ -39,7 +39,7 @@ public class CodingSessionRepository
       return null;
     }
   }
-  public List<CodingSession>? GetAllSessionsInDateRange(DateRange range)
+  public List<CodingSession>? GetAllCodingSessionsInDateRange(DateRange range)
   {
     try
     {

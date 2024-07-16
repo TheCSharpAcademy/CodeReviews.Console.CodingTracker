@@ -1,101 +1,42 @@
+using CodingTracker.kwm0304.Enums;
 using CodingTracker.kwm0304.Models;
 using CodingTracker.kwm0304.Repositories;
-using CodingTracker.kwm0304.Utils;
-using CodingTracker.kwm0304.Views;
-using Spectre.Console;
 
 namespace CodingTracker.kwm0304.Services;
 
 public class CodingSessionService
 {
-  private readonly CodingSessionRepository _repository;
-  public CodingSessionService()
-  {
-    _repository = new CodingSessionRepository();
-  }
-
-  //GET 
-  public CodingSession? GetCodingSession(int id)
-  {
-    try
+    private readonly CodingSessionRepository _repository;
+    public CodingSessionService()
     {
-      if (Validator.IsIdValid(id))
-      {
-        return _repository.GetCodingSessionById(id);
-      }
-      else
-      {
-        AnsiConsole.WriteLine("No session matches this id");
-        return null;
-      }
+      _repository = new CodingSessionRepository();
     }
-    catch (Exception e)
-    {
-      AnsiConsole.WriteException(e);
-      return null;
-    }
-  }
-
-  public List<CodingSession>? GetAllSessions()
-  {
-    List<CodingSession>? allSessions = _repository.GetAllCodingSessions();
-    if (Validator.IsListValid(allSessions))
-    {
-      return allSessions;
-    }
-    else
-    {
-      AnsiConsole.WriteLine("Unable to get sessions");
-      return null;
-    }
-  }
-  //POST
-  //Called when session is complete
-  public void CreateSession(CodingSession session)
-  {
-    try
+    public void CreateCodingSession(CodingSession session)
     {
       _repository.CreateCodingSession(session);
     }
-    catch (Exception e)
+    public CodingSession GetCodingSessionById(int id)
     {
-      AnsiConsole.WriteException(e);
+      return _repository.GetCodingSessionById(id)!;
     }
-  }
-
-  public void EditSession(int minAdjustment, int id)
-  {
-    try
+    public List<CodingSession> GetAllCodingSessions()
     {
-      if (Validator.IsIdValid(id))
-        _repository.UpdateCodingSessionById(id, minAdjustment);
+      return _repository.GetAllCodingSessions()!;
     }
-    catch (Exception e)
+    public List<CodingSession> GetAllCodingSessionsInDateRange(DateRange range)
     {
-      AnsiConsole.WriteException(e);
+      return _repository.GetAllCodingSessionsInDateRange(range)!;
     }
-  }
-  public void DeleteSessionById(int id)
-  {
-    try
+    public void UpdateCodingSessionById(int id, int numMinutes)
     {
-      if (Validator.IsIdValid(id))
-        _repository.DeleteCodingSessionById(id);
+      _repository.UpdateCodingSessionById(id, numMinutes);
     }
-    catch (Exception e)
+    public void DeleteCodingSessionById(int id)
     {
-      AnsiConsole.WriteException(e);
+      _repository.DeleteCodingSessionById(id);
     }
-  }
-  public void DeleteAllSessions()
-  {
-    try
+    public void DeleteAllCodingSessions()
     {
       _repository.DeleteAllSessions();
     }
-    catch (Exception e)
-    {
-      AnsiConsole.WriteException(e);
-    }
-  }
 }
