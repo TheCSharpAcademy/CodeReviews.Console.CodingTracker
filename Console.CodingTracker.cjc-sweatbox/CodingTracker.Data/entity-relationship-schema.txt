@@ -1,0 +1,13 @@
+erDiagram
+    CodingSession 
+    {
+        INTEGER Id PK
+        TEXT StartTime
+        TEXT EndTime
+        REAL Duration
+    }
+    CodingGoal 
+    {
+        INTEGER Id PK
+        REAL WeeklyDurationInHours
+    }
