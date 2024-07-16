@@ -5,23 +5,23 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.SQLite;
 
-namespace DatabaseManager
+namespace CodingTracker.DatabaseManager
 {
-    internal class DatabaseManager
+    internal class dbManager
     {
         string connString;
         string dbPath;
-        public DatabaseManager(string databasePath, string connectionString)
+        public dbManager(string databasePath, string connectionString)
         {
             this.dbPath = databasePath;
             this.connString = connectionString;
         } // end of DatabaseManager Constructor
 
-        void RunQuery(string query)
+        public void RunQuery(string query)
         {
             try
             {
-                using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                using (SQLiteConnection connection = new SQLiteConnection(connString))
                 {
                     connection.Open();
 
@@ -39,13 +39,13 @@ namespace DatabaseManager
             }
         } // end of RunQuery method
 
-        static Tuple<List<string>, List<string>> SelectData(string query)
+        public Tuple<List<string>, List<string>> SelectData(string query)
         {
             List<string> results1 = new List<string>();
             List<string> results2 = new List<string>();
             try
             {
-                using (var connection = new SQLiteConnection(connectionString))
+                using (var connection = new SQLiteConnection(connString))
                 {
                     connection.Open();
 
@@ -69,5 +69,5 @@ namespace DatabaseManager
             return new Tuple<List<string>, List<string>>(results1, results2);
         } // end of SelectData method
 
-    } // end of DatabaseManager Class
+    } // end of dbManager Class
 } // end of DatabaseManager Namespace
