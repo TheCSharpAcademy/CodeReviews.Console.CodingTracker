@@ -5,7 +5,6 @@ using CodingTracker.Enums;
 using CodingTracker.Models;
 using CodingTracker.Services;
 using Spectre.Console;
-using System.Runtime.Serialization;
 
 namespace CodingTracker.ConsoleApp.Views;
 

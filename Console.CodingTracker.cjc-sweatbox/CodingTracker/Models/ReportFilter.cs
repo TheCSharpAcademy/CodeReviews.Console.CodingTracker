@@ -1,6 +1,5 @@
 ﻿using CodingTracker.Constants;
 using CodingTracker.Enums;
-using System.ComponentModel;
 
 namespace CodingTracker.Models;
 
@@ -53,7 +52,7 @@ public class ReportFilter
         {
             ReportOrderByType.Ascending => groupedItems.OrderBy(o => o.StartDateTime),
             ReportOrderByType.Descending => groupedItems.OrderByDescending(o => o.StartDateTime),
-            _ => throw new InvalidEnumArgumentException()
+            _ => throw new Exception("Invalid ReportOrderByType")
         };
 
         // Return output.

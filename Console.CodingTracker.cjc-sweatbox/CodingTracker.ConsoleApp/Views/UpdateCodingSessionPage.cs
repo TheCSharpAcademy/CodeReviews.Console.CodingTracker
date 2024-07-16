@@ -4,7 +4,6 @@ using CodingTracker.Constants;
 using CodingTracker.Models;
 using CodingTracker.Services;
 using Spectre.Console;
-using System.Globalization;
 
 namespace CodingTracker.ConsoleApp.Views;
 
