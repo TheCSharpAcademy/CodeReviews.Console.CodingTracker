@@ -1,7 +1,6 @@
 ﻿using CodingTracker.ConsoleApp.Views;
 using CodingTracker.Controllers;
 using Spectre.Console;
-using System.Configuration;
 using CodingTracker.ConsoleApp.Extensions;
 
 namespace CodingTracker.ConsoleApp;
@@ -20,8 +19,8 @@ internal class Program
         try
         {
             // Read required configuration settings.
-            string databaseConnectionString = ConfigurationManager.AppSettings.GetString("DatabaseConnectionString");
-            bool seedDatabase = ConfigurationManager.AppSettings.GetBoolean("SeedDatabase");
+            string databaseConnectionString = System.Configuration.ConfigurationManager.AppSettings.GetString("DatabaseConnectionString");
+            bool seedDatabase = System.Configuration.ConfigurationManager.AppSettings.GetBoolean("SeedDatabase");
 
             // Create the required services.
             var codingSessionController = new CodingSessionController(databaseConnectionString);
