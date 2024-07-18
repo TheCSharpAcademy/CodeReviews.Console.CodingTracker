@@ -16,13 +16,15 @@ internal class Program
         {
             connection.Open(); 
 
-            var commandText =
+            var sql =
                 @$"CREATE TABLE IF NOT EXISTS {tableString} (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
                         StartTime TEXT NOT NULL,
                         EndTime TEXT NOT NULL,
                         Duration TEXT NOT NULL
                         )";
+
+            connection.Execute(sql);
 
             connection.Close();           
         }
