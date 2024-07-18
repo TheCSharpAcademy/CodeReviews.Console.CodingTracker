@@ -1,18 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+using System.Globalization;
 
 namespace CodingTracker;
 internal class CodingSession
 {
-    public DateTime start;
-    public DateTime end;
-    public TimeSpan duration;
+    public DateTime start { get; set; }
+    public DateTime end { get; set; }
+    public TimeSpan duration { get; set; }
 
-    public static List<CodingSession> sessions = new List<CodingSession>();
+    public static List<CodingSession> sessions { get; set; } = new List<CodingSession>();
 
     public CodingSession(DateTime start, DateTime end)
     {
@@ -20,7 +15,12 @@ internal class CodingSession
         this.end = end;
         this.duration = end - start;
         sessions.Add(this);
-    } // end of CodingSession Construction
-
-    
+    } // end of CodingSession Constructor
+    public CodingSession(string start, string end, string duration)
+    {
+        this.start = DateTime.Parse(start, CultureInfo.InvariantCulture);
+        this.end = DateTime.Parse(end, CultureInfo.InvariantCulture);
+        this.duration = TimeSpan.Parse(duration, CultureInfo.InvariantCulture);
+        sessions.Add(this);
+    } // end of CodingSession Constructor for DatabaseManager  
 } // end of CodingSession Class

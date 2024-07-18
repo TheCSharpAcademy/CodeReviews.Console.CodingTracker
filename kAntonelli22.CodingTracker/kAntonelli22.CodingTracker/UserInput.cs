@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Globalization;
+﻿using System.Globalization;
 
 namespace CodingTracker;
 internal class UserInput
@@ -43,7 +38,6 @@ internal class UserInput
     } // end of CleanInt Method
     public static DateTime GetDate(string? input)
     {
-        var culture = new CultureInfo("en-US");
         input = UserInput.CleanResponse(input);
         DateTime dateTime;
 
@@ -51,7 +45,7 @@ internal class UserInput
         {
             try
             {
-                dateTime = DateTime.Parse(input, culture);
+                dateTime = DateTime.Parse(input, CultureInfo.InvariantCulture);
                 break;
             }
             catch (Exception ex)

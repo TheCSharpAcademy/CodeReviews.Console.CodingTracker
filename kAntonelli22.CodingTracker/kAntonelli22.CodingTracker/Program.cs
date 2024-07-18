@@ -1,7 +1,5 @@
 ﻿using System.Configuration;
-using System.Collections.Specialized;
-using System.Data.SQLite;
-using CodingTracker.DatabaseManager;
+using CodingTracker.DatabaseUtilities;
 using System.Diagnostics;
 
 namespace CodingTracker;
@@ -9,28 +7,25 @@ namespace CodingTracker;
 class Program
 {
     static Stopwatch stopwatch = new Stopwatch();
+    public static string databasePath { get; set; } = ConfigurationManager.AppSettings.Get("DatabasePath") ?? "";
+    public static string connectionString { get; set; } = ConfigurationManager.AppSettings.Get("ConnectionString") ?? "";
     static void Main(string[] args)
     {
-        string? databasePath = ConfigurationManager.AppSettings.Get("DatabasePath");
-        string? connectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
-        if (databasePath == null || connectionString == null)
+        if (databasePath == "" || connectionString == "")
         {
             Console.WriteLine($"Database Path or Connection String not found. Please specify a path in the App configuration file.");
             Environment.Exit(0);
         }
-        dbManager database = new(databasePath, connectionString);
 
         string query = @"
-            CREATE TABLE IF NOT EXISTS Coding (
+            CREATE TABLE IF NOT EXISTS Sessions (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                Date TEXT NOT NULL,
-                Time TEXT NOT NULL
+                start TEXT NOT NULL,
+                end TEXT NOT NULL,
+                duration TEXT NOT NULL
             );";
-        database.RunQuery(query);
-
-        var session1 = new CodingSession(DateTime.Parse("07-14-24 02:30:30 PM"), DateTime.Parse("07-14-24 05:30:32 PM"));
-        var session2 = new CodingSession(DateTime.Parse("07-16-24 03:45:54 PM"), DateTime.Parse("07-16-24 05:10:00 PM"));
-        var session3 = new CodingSession(DateTime.Parse("07-17-24 01:15:00 PM"), DateTime.Parse("07-17-24 06:45:30 PM"));
+        DatabaseManager.RunQuery(query);
+        DatabaseManager.GetSessions();
         MainMenu();
     } // end of Main Method
 

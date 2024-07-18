@@ -6,12 +6,13 @@ using System.Net;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
+using CodingTracker.DatabaseUtilities;
 
 namespace CodingTracker;
 internal class Output
 {
-    public static Stopwatch stopwatch = new Stopwatch();
-    public static bool stopwatchRunning = false;
+    public static Stopwatch stopwatch  { get; set; } = new Stopwatch();
+    public static bool stopwatchRunning  { get; set; } = false;
     public static void StartTimed()
     {
         stopwatch.Start();
@@ -28,8 +29,9 @@ internal class Output
         DateTime start = end - stopwatch.Elapsed;
         stopwatch.Reset();
         stopwatchRunning = false;
+
         CodingSession newSession = new(start, end);
-        // insert session into Coding table
+        DatabaseManager.InsertSession(newSession);
         Console.WriteLine($"Session Logged. Session duration: {newSession.duration.ToString("g")}. ");
         ReturnToMenu("");
     } // end of EndSession Method
@@ -43,6 +45,7 @@ internal class Output
         DateTime end = UserInput.GetDate(Console.ReadLine());
 
         CodingSession newSession = new(start, end);
+        DatabaseManager.InsertSession(newSession);
         ReturnToMenu("Creating new session");
     } // end of NewSession Method
     
@@ -63,6 +66,9 @@ internal class Output
         session.end = end;
         session.duration = end - start;
 
+        int rowid = DatabaseManager.GetID(sessionNumber - 1);
+        string query = $"UPDATE Sessions SET start = '{start}', end = '{end}', duration = '{end - start}' WHERE Id = {rowid}";
+        DatabaseManager.RunQuery(query);
         ReturnToMenu("Session Modified");
     } // end of ModifySession Method
     
@@ -72,16 +78,21 @@ internal class Output
         ViewSessions(false);
         Console.WriteLine("Which Session would you like to remove?");
         int sessionNumber = UserInput.CleanInt(Console.ReadLine());
+        
+        int rowid = DatabaseManager.GetID(sessionNumber - 1);
+        string query = $"DELETE FROM Sessions WHERE Id = {rowid}";
+        DatabaseManager.RunQuery(query);
         CodingSession.sessions.Remove(CodingSession.sessions[sessionNumber - 1]);
+
         ReturnToMenu("Session Removed");
     } // end of RemoveSession Method
     
     public static void ViewSessions(bool calledByMenu)
     {
         Console.Clear();
-        Console.WriteLine("    Coding Sessions:");
+        Console.WriteLine("    Coding Sessions:\n            Start         |        End        | Duration");
         for (int i = 0; i < CodingSession.sessions.Count; i++)
-            Console.WriteLine($"     {i + 1}. {CodingSession.sessions[i].start.ToString("g")} | {CodingSession.sessions[i].end.ToString("g")} | {CodingSession.sessions[i].duration.ToString("G")}");
+            Console.WriteLine($"     {i + 1}. {CodingSession.sessions[i].start.ToString("g")} | {CodingSession.sessions[i].end.ToString("g")} | {CodingSession.sessions[i].duration.ToString("c")}");
         Console.WriteLine($"    -------------------------------------------------------");
         if (calledByMenu)
             ReturnToMenu("");
