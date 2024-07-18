@@ -1,5 +1,4 @@
-﻿using CodingTracker.Models;
-using Spectre.Console;
+﻿using Spectre.Console;
 
 namespace CodingTracker;
 

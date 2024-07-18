@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace CodingTracker.Models;
 
-namespace CodingTracker.Models;
 internal class CodingSessions
 {
     internal int ID { get; set; }

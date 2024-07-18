@@ -3,8 +3,7 @@ using System.Configuration;
 using Dapper;
 using System.Data;
 using CodingTracker.Models;
-using System.Globalization;
-using Spectre.Console;
+
 namespace CodingTracker;
 
 internal class Program
@@ -24,8 +23,6 @@ internal class Program
                         EndTime TEXT NOT NULL,
                         Duration TEXT NOT NULL
                         )";
-
-            var tableName = connection.Query<CodingSessions>(commandText);
 
             connection.Close();           
         }
