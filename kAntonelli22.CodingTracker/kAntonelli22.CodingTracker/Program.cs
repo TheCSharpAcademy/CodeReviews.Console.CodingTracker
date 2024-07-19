@@ -62,7 +62,7 @@ class Program
     ------------------------");
         }
 
-        string response = UserInput.CleanString(Console.ReadLine());
+        string response = InputValidator.CleanString(Console.ReadLine());
 
         if (response == "1")
             Output.StartTimed();
@@ -78,7 +78,7 @@ class Program
         else if (response == "5")
             Output.RemoveSession();
         else if (response == "6")
-            Output.ViewSessions(true);
+            SessionViewer.ViewSessions(true, CodingSession.sessions);
         
         MainMenu();
     } // end of MainMenu Method

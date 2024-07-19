@@ -1,56 +1,48 @@
 ﻿using System.Globalization;
 
 namespace CodingTracker;
-internal class UserInput
+internal class InputValidator
 {
-    private static string CleanResponse(string? input)
+    public static string CleanString(string? input)
     {
         while (true)
         {
             if (input == null)
                 input = "";
+            
             input = input.Trim();
+
             if (input.Length < 0)
-            {
                 Console.WriteLine("Please provide a valid response");
-            }
             else if (input == "0")
-            {
                 Environment.Exit(0);
-            }
             else
-            {
                 break;
-            }
         }
-        return input;
-    } // end of CleanResponse Method
-    public static string CleanString(string? input)
-    {
-        input = UserInput.CleanResponse(input);
         return input;
     } // end of CleanString Method
     public static int CleanInt(string? input)
     {
-        input = UserInput.CleanResponse(input);
+        input = CleanString(input);
         Int32.TryParse(input, out int output);
         return output;
     } // end of CleanInt Method
     public static DateTime GetDate(string? input)
     {
-        input = UserInput.CleanResponse(input);
         DateTime dateTime;
-
+        bool firstTime = true;
         while (true)
         {
             try
             {
-                dateTime = DateTime.Parse(input, CultureInfo.InvariantCulture);
+                input = firstTime ? CleanString(input) : CleanString(Console.ReadLine());
+                dateTime = DateTime.ParseExact(input, "MM/dd/yy hh:mm tt", CultureInfo.InvariantCulture);
                 break;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"{ex.Message}. Reenter in correct format: (mm-dd-yy H:mm:ss AM/PM)");
+                Console.WriteLine($"{ex.Message} Reenter in correct format:  (MM/dd/yy hh:mm tt)");
+                firstTime = false;
             }
         }
         return dateTime;
