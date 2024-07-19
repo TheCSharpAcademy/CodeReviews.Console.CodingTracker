@@ -1,6 +1,7 @@
 ﻿using System.Configuration;
 using CodingTracker.DatabaseUtilities;
 using System.Diagnostics;
+using Spectre.Console;
 
 namespace CodingTracker;
 
@@ -32,52 +33,34 @@ class Program
     static void MainMenu()
     {
         Console.Clear();
+        AnsiConsole.WriteLine(@"    Coding Tracker Main Menu
+    ------------------------");
         if (Output.stopwatchRunning)
-        {
-            Console.WriteLine(@"
-    Coding Tracker Main Menu
-    ------------------------
-       * Timer Running *
-    0. Exit Coding Tracker
-    1. Start Timed Session
-    2. End Timed Session
-    3. Create New Session
-    4. Modify Session
-    5. Remove Session
-    6. View Sessions
-    ------------------------");
-        }
-        else
-        {
-            Console.WriteLine(@"
-    Coding Tracker Main Menu
-    ------------------------
-    0. Exit Coding Tracker
-    1. Start Timed Session
-    2. End Timed Session
-    3. Create New Session
-    4. Modify Session
-    5. Remove Session
-    6. View Sessions
-    ------------------------");
-        }
-
-        string response = InputValidator.CleanString(Console.ReadLine());
-
-        if (response == "1")
+            AnsiConsole.WriteLine("   * Timer Running *");
+        var menu = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+            .AddChoices(new[] {
+                "Exit Coding Tracker", "Start Timed Session", "End Timed Session",
+                "Create New Session", "Modify Session", "Remove Session", "View Sessions"
+                }));
+        AnsiConsole.WriteLine("------------------------");
+        
+        if (menu == "Exit Coding Tracker")
+            Environment.Exit(0);
+        else if (menu == "Start Timed Session")
             Output.StartTimed();
-        else if (response == "2")
+        else if (menu == "End Timed Session")
             if (Output.stopwatchRunning)
                 Output.EndTimed();
             else
                 Console.WriteLine("You must start a Coding Session first");
-        else if (response == "3")
+        else if (menu == "Create New Session")
             Output.NewSession();
-        else if (response == "4")
+        else if (menu == "Modify Session")
             Output.ModifySession();
-        else if (response == "5")
+        else if (menu == "Remove Session")
             Output.RemoveSession();
-        else if (response == "6")
+        else if (menu == "View Sessions")
             SessionViewer.ViewSessions(true, CodingSession.sessions);
         
         MainMenu();

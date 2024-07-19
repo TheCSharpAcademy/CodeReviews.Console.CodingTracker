@@ -1,39 +1,53 @@
+using Spectre.Console;
+
 namespace CodingTracker;
 internal class SessionViewer
 {
     public static void ViewSessions(bool displayOptions, List<CodingSession> sessions)
     {
         Console.Clear();
-        Console.WriteLine("    Coding Sessions:\n            Start         |        End        | Duration");
+        var table = new Table();
+        table.Border = TableBorder.Horizontal;
+        table.Title = new("Coding Sessions:");
+        TableColumn[] columns = {new TableColumn(""), new TableColumn("[blue]Start[/]"), new TableColumn("[blue]End[/]"), new TableColumn("[blue]Duration[/]")};
+        table.AddColumns(columns);
         for (int i = 0; i < sessions.Count; i++)
-            Console.WriteLine($"     {i + 1}. {sessions[i].start.ToString("MM/dd/yy hh:mm tt")} | {sessions[i].end.ToString("MM/dd/yy hh:mm tt")} | {sessions[i].duration.ToString(@"hh\:mm\:ss")}");
-        Console.WriteLine($"    -------------------------------------------------------");
+            table.AddRow(
+            $"{i + 1}.",
+            $"{sessions[i].start.ToString("MM/dd/yy hh:mm tt")}",
+            $"{sessions[i].end.ToString("MM/dd/yy hh:mm tt")}",
+            $"{sessions[i].duration.ToString(@"hh\:mm\:ss")}"
+            );
+        AnsiConsole.Write(table);
+
         if (displayOptions)
             ViewingOptions();
     } // end of ViewSessions Method
 
     public static void ViewingOptions()
     {
-        Console.WriteLine(@"
+        AnsiConsole.WriteLine(@"
     Viewing Options
-    ------------------------
-    0. Exit Coding Tracker
-    1. Sort By Start Date
-    2. Sort By End Date
-    3. Sort By Duration
-    4. Sort By Time Span
-    5. Return To Menu
     ------------------------");
-        string input = InputValidator.CleanString(Console.ReadLine());
-        if (input == "1")
+        var menu = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+            .AddChoices(new[] {
+                "    Exit Coding Tracker", "    Sort By Start Date", "    Sort By End Date",
+                "    Sort By Duration", "    Sort By Time Span", "    Return To Menu"
+                }));
+        AnsiConsole.WriteLine("\n\n\n\n------------------------");
+
+        if (menu == "Exit Coding Tracker")
+            Environment.Exit(0);
+        else if (menu == "Sort By Start Date")
             SortBy("start");
-        else if (input == "2")
+        else if (menu == "Sort By End Date")
             SortBy("end");
-        else if (input == "3")
+        else if (menu == "Sort By Duration")
             SortBy("duration");
-        else if (input == "4")
+        else if (menu == "Sort By Time Span")
             TimeSpan();
-        else if (input == "5")
+        else if (menu == "Return To Menu")
             return;
         
         ViewSessions(true, CodingSession.sessions);
@@ -41,10 +55,7 @@ internal class SessionViewer
 
     public static void SortBy(string sortType)
     {
-        Console.WriteLine("Sort in ascending order? (y/n)");
-        string input = InputValidator.CleanString(Console.ReadLine());
-        bool ascending = input.Equals("n") ? false : true;
-
+        bool ascending = AnsiConsole.Confirm("Sort in ascending order?");
         switch (sortType)
         {
             case "start":
@@ -65,9 +76,12 @@ internal class SessionViewer
         DateTime start = InputValidator.GetDate(Console.ReadLine());
         Console.WriteLine("What is the end of the time frame? (MM/dd/yy hh:mm tt)");
         DateTime end = InputValidator.GetDate(Console.ReadLine());
+
+        bool ascending = AnsiConsole.Confirm("Sort in ascending order?");
         List<CodingSession> filteredSessions = CodingSession.sessions
         .Where(session => session.start > start && session.end > end).ToList();
 
+        filteredSessions.Sort((x, y) => ascending ? x.start.CompareTo(y.start) : y.start.CompareTo(x.start));
         ViewSessions(true, filteredSessions);
     } // end of TimeSpan Method
 } // end of SessionViewer Class
