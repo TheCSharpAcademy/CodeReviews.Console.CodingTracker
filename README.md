@@ -26,7 +26,7 @@
       * ![image](https://github.com/user-attachments/assets/8c9bcbde-d8ed-41bc-ba97-cae3339ada79)
 
   * DatabaseUtilities Namespace that handles all CRUD Operations using [Dapper ORM](https://www.learndapper.com/)
-  * Ouputs data to console in easy to read way using [Spectre.Console]((https://spectreconsole.net/))
+  * Ouputs data to console in a table using [Spectre.Console](https://spectreconsole.net/)
 
 # Challenges
   * Had some issues with the SQL database and config file at first but was able to get everything figured out pretty quickly
@@ -42,6 +42,6 @@
 # Resources Used
   * Reused and optimized HabitTracker code
   * [Dapper ORM](https://www.learndapper.com/) documentation
-  * [Spectre.Console]((https://spectreconsole.net/)) documentation
+  * [Spectre.Console](https://spectreconsole.net/) documentation
   * Multiple Stack Overflow articles for different issues I ran into with C#, Dapper, and Spectre.Console
   * SQLite and C# documentation
