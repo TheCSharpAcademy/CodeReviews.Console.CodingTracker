@@ -26,18 +26,15 @@ public class GoalService
   {
     return _repository.GetCompletedGoals();
   }
-  public void UpdateGoalById(int id)
-  {
-
-  }
+  
   public List<Goal> GetActiveGoals()
   {
-    return _repository.GetActiveGoals();
+    return _repository.GetActiveGoals()!;
   }
 
   public void UpdateActiveGoals(TimeSpan sessionLength)
   {
-    List<Goal> goals = _repository.GetActiveGoals();
+    List<Goal> goals = _repository.GetActiveGoals()!;
 
     foreach (Goal goal in goals)
     {
@@ -54,7 +51,6 @@ public class GoalService
 
   public void SaveGoal(Goal goal)
   {
-    throw new NotImplementedException();
+    _repository.SaveGoal(goal);
   }
-
 }

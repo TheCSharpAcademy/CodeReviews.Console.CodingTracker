@@ -11,6 +11,9 @@ public class GoalRepository
   public GoalRepository()
   {
     _dbAction = new DbAction();
+    _dbAction.CreateDatabaseIfNotExists();
+    _dbAction.CreateGoalTableIfNotExists();
+    _dbAction.CreateHabitTableIfNotExists();
   }
 
   public Goal? GetGoalById(int id)
@@ -78,7 +81,7 @@ public class GoalRepository
     return _dbAction.GetCompletedGoals();
   }
 
-  public List<Goal> GetActiveGoals()
+  public List<Goal>? GetActiveGoals()
   {
     try
     {

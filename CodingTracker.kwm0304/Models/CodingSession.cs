@@ -8,7 +8,7 @@ public class CodingSession
   public DateTime StartTime { get; set; }
   public DateTime EndTime { get; set; }
   public TimeSpan SessionLength { get; set; }
-  private readonly Stopwatch? _stopWatch;
+  public Stopwatch? _stopWatch;
   
   public CodingSession()
   {
@@ -19,6 +19,7 @@ public class CodingSession
     StartTime = startTime;
     EndTime = endTime;
     SessionLength = sessionLength;
+    _stopWatch = new Stopwatch();
   }
 
   public void StartSession()

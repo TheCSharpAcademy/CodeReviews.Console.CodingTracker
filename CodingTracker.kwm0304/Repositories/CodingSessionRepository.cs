@@ -12,6 +12,8 @@ public class CodingSessionRepository
   {
     _dbActions = new DbAction();
     _dbActions.CreateDatabaseIfNotExists();
+    _dbActions.CreateGoalTableIfNotExists();
+    _dbActions.CreateHabitTableIfNotExists();
   }
   //GET
   public CodingSession? GetCodingSessionById(int id)
@@ -26,6 +28,7 @@ public class CodingSessionRepository
       return null;
     }
   }
+
   public List<CodingSession>? GetAllCodingSessions()
   {
     try
@@ -39,6 +42,7 @@ public class CodingSessionRepository
       return null;
     }
   }
+
   public List<CodingSession>? GetAllCodingSessionsInDateRange(DateRange range)
   {
     try
@@ -87,6 +91,7 @@ public class CodingSessionRepository
       AnsiConsole.WriteException(e);
     }
   }
+
   public void DeleteAllSessions()
   {
     try

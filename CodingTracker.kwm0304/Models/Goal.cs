@@ -1,56 +1,64 @@
 using CodingTracker.kwm0304.Enums;
 
-namespace CodingTracker.kwm0304.Models;
-
-public class Goal
+namespace CodingTracker.kwm0304.Models
 {
-  public int GoalId { get; set; }
-  public string GoalName { get; set; }
-  public int TargetNumber { get; set; }
-  public int Progress { get; set; }
-  public DateTime CreatedOn { get; set; } = DateTime.Now;
-  public DateRange AccomplishBy { get; set; }
-  public List<CodingSession> Sessions { get; private set; } = [];
-  public Goal(string name, int target, DateRange range, int progress)
+  public class Goal
   {
-    GoalName = name;
-    TargetNumber = target;
-    Progress = progress;
-    AccomplishBy = range;
-    CreatedOn = DateTime.Now;
-    Sessions = [];
-  }
+    public int GoalId { get; set; }
+    public string GoalName { get; set; }
+    public int TargetNumber { get; set; }
+    public int Progress { get; set; }
+    public DateTime CreatedOn { get; set; }
+    public DateRange AccomplishBy { get; set; }
+    public List<CodingSession> Sessions { get; private set; }
 
-  public DateTime EndDate
-  {
-    get
+    public Goal()
     {
-      return AccomplishBy switch
+      Sessions = [];
+    }
+
+    public Goal(string name, int target, DateRange range, int progress)
+    {
+      GoalName = name;
+      TargetNumber = target;
+      Progress = progress;
+      AccomplishBy = range;
+      CreatedOn = DateTime.Now;
+      Sessions = [];
+    }
+
+    public DateTime EndDate
+    {
+      get
       {
-        DateRange.Week => CreatedOn.AddDays(7),
-        DateRange.Month => CreatedOn.AddMonths(1),
-        DateRange.Year => CreatedOn.AddYears(1),
-        _ => CreatedOn
-      };
+        return AccomplishBy switch
+        {
+          DateRange.Week => CreatedOn.AddDays(7),
+          DateRange.Month => CreatedOn.AddMonths(1),
+          DateRange.Year => CreatedOn.AddYears(1),
+          _ => CreatedOn
+        };
+      }
+    }
+
+    private bool _accomplished;
+    public bool Accomplished
+    {
+      get { return CalculateProgressPercentage() >= 100; }
+      set { _accomplished = value; }
+    }
+
+    public void AddSession(CodingSession session)
+    {
+      Sessions.Add(session);
+      Progress += (int)session.SessionLength.TotalHours;
+      Accomplished = CalculateProgressPercentage() >= 100;
+    }
+
+    public double CalculateProgressPercentage()
+    {
+      var totalTime = Sessions.Sum(session => session.SessionLength.TotalHours);
+      return (totalTime / TargetNumber) * 100;
     }
   }
-  private bool _accomplished;
-  public bool Accomplished
-  {
-    get { return CalculateProgressPercentage() >= 100; }
-    set { _accomplished = value; }
-  }
-  public void AddSession(CodingSession session)
-  {
-    Sessions.Add(session);
-    Progress += (int)session.SessionLength.TotalHours;
-    Accomplished = CalculateProgressPercentage() >= 100;
-  }
-
-  public double CalculateProgressPercentage()
-  {
-    var totalTime = Sessions.Sum(session => session.SessionLength.TotalHours);
-    return (totalTime / TargetNumber) * 100;
-  }
-
 }

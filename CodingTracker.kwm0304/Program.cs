@@ -25,9 +25,11 @@ class Program
 {
   static void Main(string[] args)
   {
+    
     while (true)
     {
-      TableConfigurationEngine.MainMenu();
+      SessionLoop loop = new();
+      loop.OnStart();
     }
   }
 }

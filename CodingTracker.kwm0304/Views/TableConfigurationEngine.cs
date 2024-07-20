@@ -1,86 +1,62 @@
 using System.Diagnostics;
 using CodingTracker.kwm0304.Enums;
 using CodingTracker.kwm0304.Models;
-using CodingTracker.kwm0304.Repositories;
-using CodingTracker.kwm0304.Services;
 using Spectre.Console;
+using System.Threading;
 
 namespace CodingTracker.kwm0304.Views;
 
 public class TableConfigurationEngine
 {
-  private static readonly string header = @"
-   ______          ___                ______                __            
-  / ____/___  ____/ (_)___  ____ _   /_  __/________ ______/ /_____  _____
- / /   / __ \/ __  / / __ \/ __ `/    / / / ___/ __ `/ ___/ //_/ _ \/ ___/
-/ /___/ /_/ / /_/ / / / / / /_/ /    / / / /  / /_/ / /__/ ,< /  __/ /    
-\____/\____/\__,_/_/_/ /_/\__, /    /_/ /_/   \__,_/\___/_/|_|\___/_/     
-                         /____/                                           
-"
-;
-
-  public static string MainMenu()
+  public static void LiveSessionDisplay(CodingSession session)
   {
-    AnsiConsole.WriteLine(header);
-    return AnsiConsole.Prompt(
-      new SelectionPrompt<string>()
-      .AddChoices("Start a new session", "View past sessions", "Generate reports", "Exit")
-    );
+    Console.Clear();
+    var timer = new Timer(TimerCallback!, session, 0, 1000);
+    Console.ReadKey(true);
+    timer.Dispose();
+    AnsiConsole.MarkupLine($"[green]Timer stopped at: {session.SessionLength:hh\\:mm\\:ss}[/]");
   }
 
-  public static async Task LiveSessionDisplay()
+  public static void TimerCallback(object? state)
   {
-    var stopWatch = new Stopwatch();
-    stopWatch.Start();
-
-    await AnsiConsole.Live(new Panel(new Markup("[bold]Timer:[/] [yellow]0:00:00[/]"))
-      .Header("[green]Coding Session Timer[/]")
-      .Collapse()
-      .RoundedBorder())
-      .StartAsync(async ctx =>
+    if (state is CodingSession session)
+    {
+      var elapsed = session._stopWatch!.Elapsed;
+      var dateNow = DateOnly.FromDateTime(DateTime.Now);
+      var timerDisplay = new Panel($"[bold yellow2]{elapsed:hh\\:mm\\:ss} [bold blue]{dateNow}[/][/]")
       {
-        while (true)
-        {
-          var elapsed = stopWatch.Elapsed;
-          ctx.UpdateTarget(new Panel(new Markup($"[bold]Timer:[/] [yellow]{elapsed:hh\\:mm\\:ss}[/]"))
-          .Header("[green]Coding Session Timer[/]")
-          .Collapse()
-          .RoundedBorder());
-          await Task.Delay(1000);
-          if (Console.KeyAvailable)
-          {
-            var selection = AnsiConsole.Prompt(
-              new SelectionPrompt<string>()
-              .AddChoices("Done"));
-            if (selection == "Done")
-            {
-              stopWatch.Stop();
-            }
-          }
-        }
-      });
-    var total = stopWatch.Elapsed;
-    AnsiConsole.WriteLine($"Session ended. Duration: {total:hh\\:mm\\:ss}");
+        Border = BoxBorder.Double,
+        Padding = new Padding(6, 3, 6, 3),
+        BorderStyle = new Style(Color.Chartreuse3_1),
+        Header = new PanelHeader("[bold yellow2]Session Timer[/]").Centered()
+      };
+      AnsiConsole.Cursor.SetPosition(0, 6);
+      AnsiConsole.MarkupLine("[chartreuse3_1]Press any key to stop the timer and end the session.[/]");
+      AnsiConsole.Write(timerDisplay);
+      AnsiConsole.Cursor.SetPosition(0, 11);
+    }
   }
 
-  public static DateRange DisplayReportOptions()
+  public static Goal CreateNewGoal()
   {
-    DateRange choice = AnsiConsole.Prompt(
-      new SelectionPrompt<DateRange>()
-      .Title("Choose a range you would like the report to cover: ")
-      .AddChoices(Global.RangeList)
-    );
-    return choice;
+    Console.Clear();
+    string name = AnsiConsole.Ask<string>("What label would you like to give this goal?");
+    DateRange range = SelectionPrompt.SelectGoalType();
+    int target = AnsiConsole.Ask<int>("How many hours should this be?");
+    Goal goal = new(name, target, range, 0);
+    return goal;
   }
 
   public static void CreateReports(TimeSpan total, TimeSpan average)
   {
+    Console.Clear();
     AnsiConsole.WriteLine($"[green[Total time:[/] {total}");
     AnsiConsole.WriteLine($"[green[Average time per session:[/] {average}");
   }
-  public  void ViewGoals(List<Goal> goals)
+  public static void ViewGoals(List<Goal> goals)
   {
     var table = new Table();
+    table.Title("Goal Table");
     table.AddColumns("GoalId", "Name", "Target", "Progress", "Percentage", "Accomplished", "CreatedOn", "EndDate");
     foreach (var goal in goals)
     {
@@ -89,10 +65,28 @@ public class TableConfigurationEngine
         goal.GoalName,
         goal.TargetNumber.ToString(),
         goal.Progress.ToString(),
-        goal.CalculateProgressPercentage().ToString(),
+        goal.CalculateProgressPercentage().ToString() + "%",
         goal.Accomplished.ToString(),
         goal.CreatedOn.ToString("yyyy-MM-dd"),
         goal.EndDate.ToString("yyyy-MM-dd")
+      );
+    }
+    AnsiConsole.Write(table);
+  }
+
+  public static void ViewSessions(List<CodingSession> sessions)
+  {
+    Console.Clear();
+    var table = new Table();
+    table.Title("Coding Sessions");
+    table.AddColumns("Id", "Start Time", "End Time", "Hours");
+    foreach (var session in sessions)
+    {
+      table.AddRow(
+        session.Id.ToString(),
+        session.StartTime.ToString("yyyy-MM-dd HH:mm:ss"),
+        session.EndTime.ToString("yyyy-MM-dd HH:mm:ss"),
+        session.SessionLength.TotalHours.ToString()
       );
     }
     AnsiConsole.Write(table);
