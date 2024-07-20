@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using Spectre.Console;
 
 namespace CodingTracker;
 internal class InputValidator
@@ -13,7 +14,7 @@ internal class InputValidator
             input = input.Trim();
 
             if (input.Length < 0)
-                Console.WriteLine("Please provide a valid response");
+                AnsiConsole.MarkupLine("[red]Please provide a valid response[/]");
             else if (input == "0")
                 Environment.Exit(0);
             else
@@ -41,7 +42,7 @@ internal class InputValidator
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"{ex.Message} Reenter in correct format:  (MM/dd/yy hh:mm tt)");
+                AnsiConsole.MarkupLineInterpolated($"[red]{ex.Message} Reenter in [blue](MM/dd/yy hh:mm tt)[/] format[/]");
                 firstTime = false;
             }
         }

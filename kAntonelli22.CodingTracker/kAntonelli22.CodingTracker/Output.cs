@@ -1,6 +1,7 @@
 using System.Data.Common;
 using System.Diagnostics;
 using CodingTracker.DatabaseUtilities;
+using Spectre.Console;
 
 namespace CodingTracker;
 internal class Output
@@ -26,7 +27,7 @@ internal class Output
 
         CodingSession newSession = new(start, end);
         DatabaseManager.InsertSession(newSession);
-        Console.WriteLine($"Session Logged. Session duration: {newSession.duration.ToString(@"hh\:mm")}. ");
+        AnsiConsole.MarkupLineInterpolated($"Session Logged. Session duration: [blue]{newSession.duration.ToString(@"hh\:mm")}[/]. ");
         ReturnToMenu("");
     } // end of EndSession Method
     

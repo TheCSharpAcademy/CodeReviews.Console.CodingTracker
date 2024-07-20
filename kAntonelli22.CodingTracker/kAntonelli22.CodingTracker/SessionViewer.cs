@@ -26,16 +26,13 @@ internal class SessionViewer
 
     public static void ViewingOptions()
     {
-        AnsiConsole.WriteLine(@"
-    Viewing Options
-    ------------------------");
+        AnsiConsole.WriteLine("Viewing Options\n------------------------");
         var menu = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
             .AddChoices(new[] {
-                "    Exit Coding Tracker", "    Sort By Start Date", "    Sort By End Date",
-                "    Sort By Duration", "    Sort By Time Span", "    Return To Menu"
+                "Exit Coding Tracker", "Sort By Start Date", "Sort By End Date",
+                "Sort By Duration", "Sort By Time Span", "Return To Menu"
                 }));
-        AnsiConsole.WriteLine("\n\n\n\n------------------------");
 
         if (menu == "Exit Coding Tracker")
             Environment.Exit(0);

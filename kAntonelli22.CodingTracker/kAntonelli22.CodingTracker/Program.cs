@@ -33,10 +33,9 @@ class Program
     static void MainMenu()
     {
         Console.Clear();
-        AnsiConsole.WriteLine(@"    Coding Tracker Main Menu
-    ------------------------");
+        AnsiConsole.WriteLine("Coding Tracker Main Menu\n------------------------");
         if (Output.stopwatchRunning)
-            AnsiConsole.WriteLine("   * Timer Running *");
+            AnsiConsole.MarkupLine("   [blue]* Timer Running *[/]");
         var menu = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
             .AddChoices(new[] {
@@ -53,7 +52,10 @@ class Program
             if (Output.stopwatchRunning)
                 Output.EndTimed();
             else
-                Console.WriteLine("You must start a Coding Session first");
+            {
+                AnsiConsole.MarkupLine("[red]You must start a Coding Session first[/]");
+                Output.ReturnToMenu("");
+            }
         else if (menu == "Create New Session")
             Output.NewSession();
         else if (menu == "Modify Session")

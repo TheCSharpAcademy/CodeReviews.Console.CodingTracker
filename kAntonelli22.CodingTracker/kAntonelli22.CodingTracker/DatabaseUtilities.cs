@@ -1,7 +1,7 @@
 ﻿using System.Data.SQLite;
 using Dapper;
 using System.Data;
-using System.Data.Entity;
+using Spectre.Console;
 
 namespace CodingTracker.DatabaseUtilities;
 internal class DatabaseManager
@@ -15,7 +15,7 @@ internal class DatabaseManager
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error has occured: {ex.Message} while connecting to the database");
+            AnsiConsole.MarkupLineInterpolated($"[red]An error has occured: {ex.Message} while connecting to the database[/]");
             dbConnection = null;
         }
     }
