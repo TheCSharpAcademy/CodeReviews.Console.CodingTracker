@@ -1,8 +1,6 @@
-using System.Diagnostics;
 using CodingTracker.kwm0304.Enums;
 using CodingTracker.kwm0304.Models;
 using Spectre.Console;
-using System.Threading;
 
 namespace CodingTracker.kwm0304.Views;
 
@@ -49,9 +47,8 @@ public class TableConfigurationEngine
 
   public static void CreateReports(TimeSpan total, TimeSpan average)
   {
-    Console.Clear();
-    AnsiConsole.WriteLine($"[green[Total time:[/] {total}");
-    AnsiConsole.WriteLine($"[green[Average time per session:[/] {average}");
+    AnsiConsole.MarkupLine($"[bold green]Total time:[/] {total}");
+    AnsiConsole.MarkupLine($"[bold green]Average time per session:[/] {average}");
   }
   public static void ViewGoals(List<Goal> goals)
   {

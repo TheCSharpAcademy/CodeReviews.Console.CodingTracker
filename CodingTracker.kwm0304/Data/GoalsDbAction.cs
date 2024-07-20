@@ -32,7 +32,7 @@ public partial class DbAction
       }
       else
       {
-        AnsiConsole.MarkupLine("[red]Table 'Goals' does not exist and was not created**************************************.[/]");
+        AnsiConsole.MarkupLine("[red]Table 'Goals' does not exist and was not created*****************************************.[/]");
       }
     }
     catch (SQLiteException e)
@@ -156,13 +156,20 @@ public partial class DbAction
   {
     using IDbConnection connection = new SQLiteConnection(_connString);
     string todayStr = DateTime.Today.AddDays(1).ToString("yyyy-MM-dd");
-    const string queryString = @"
-                SELECT GoalId, GoalName, TargetNumber, Progress, CreatedOn, EndDate, Accomplished
-                FROM Goals
-                WHERE EndDate > @Today";
+    const string queryString = @"SELECT GoalId, GoalName, TargetNumber, Progress, CreatedOn, AccomplishBy, Accomplished
+                FROM Goals";
     try
     {
-      return connection.Query<Goal>(queryString, new { Today = todayStr }).ToList();
+      var goals = GetAllGoals();
+      DateTime today = DateTime.Today.AddDays(1);
+      
+      var active = goals!.Where(g =>
+      {
+        int days = Utils.Validator.ToDays(g.AccomplishBy);
+        DateTime endDate = g.CreatedOn.AddDays(days);
+        return endDate > today;
+      }).ToList();
+      return active;
     }
     catch (SQLiteException e)
     {

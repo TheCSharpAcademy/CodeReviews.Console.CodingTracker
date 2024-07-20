@@ -1,19 +1,14 @@
 using Spectre.Console;
 
-public class Menu<T> where T : notnull
+//Generic class for all of the SelectionPrompts
+public class Menu<T>(string title, List<T> choices) where T : notnull
 {
-  public string Title { get; set; }
-  public List<T> Choices { get; set; }
+    public string Title { get; set; } = title;
+    public List<T> Choices { get; set; } = choices;
 
-  public Menu(string title, List<T> choices)
+    public T Show()
   {
-    Title = title;
-    Choices = choices;
-  }
-
-  public T Show()
-  {
-    AnsiConsole.WriteLine("[blue]Press Escape to return[/]");
+    AnsiConsole.MarkupLine("[blue]Press Escape to return[/]");
     return AnsiConsole.Prompt(
         new SelectionPrompt<T>()
             .Title(Title)

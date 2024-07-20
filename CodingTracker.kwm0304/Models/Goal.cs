@@ -57,8 +57,7 @@ namespace CodingTracker.kwm0304.Models
 
     public double CalculateProgressPercentage()
     {
-      var totalTime = Sessions.Sum(session => session.SessionLength.TotalHours);
-      return (totalTime / TargetNumber) * 100;
+      return (Progress / (double)TargetNumber) * 100;
     }
   }
 }

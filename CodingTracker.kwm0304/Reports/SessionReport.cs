@@ -23,6 +23,7 @@ public class SessionReport
 public void CreateReportNumbers(DateRange range)
 {
   List<CodingSession>? sessions = _sessionService?.GetAllCodingSessionsInDateRange(range);
+  TableConfigurationEngine.ViewSessions(sessions!);
   if (sessions == null || sessions.Count == 0)
   {
     totalTime = TimeSpan.Zero;
@@ -46,10 +47,5 @@ public void CreateReportNumbers(DateRange range)
   public TimeSpan GetAverageTime(int count)
   {
     return count > 0 ? totalTime / count : TimeSpan.Zero;
-  }
-
-  public List<Goal> GetAllGoals()
-  {
-    return _goalService.GetAllGoals()!;
   }
 }

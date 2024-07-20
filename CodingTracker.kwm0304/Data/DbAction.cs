@@ -120,30 +120,14 @@ public partial class DbAction
   {
     using IDbConnection connection = new SQLiteConnection(_connString);
     DateTime today = DateTime.Now;
-    DateTime begenningAt = DateTime.MinValue;
-    switch (range)
-    {
-      case DateRange.Week:
-        begenningAt = today.AddDays(-7);
-        break;
-      case DateRange.Month:
-        begenningAt = today.AddMonths(-1);
-        break;
-      case DateRange.Year:
-        begenningAt = today.AddYears(-1);
-        break;
-      default:
-        break;
-    }
-    string rangeStr = begenningAt.ToString("O");
-    string todayStr = today.ToString("O");
-    const string queryString = @"
-    SELECT * FROM CodingSessions
-    WHERE StartTime >= @begenningAt AND StartTime <= @today;";
+    int days = Utils.Validator.ToDays(range);
     try
     {
-      var sessions = connection.Query<CodingSession>(queryString, new { begenningAt = range, today = todayStr }).ToList();
-      return sessions;
+      var sessions = GetAllSessions();
+      DateTime beginningAt = today.AddDays(-days);
+      var inRange = sessions.Where(s => s.StartTime >= beginningAt && s.EndTime <= today).ToList();
+      AnsiConsole.WriteLine(inRange.Count + "*****************************");
+      return inRange;
     }
     catch (SQLiteException e)
     {
