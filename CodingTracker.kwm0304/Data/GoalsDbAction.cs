@@ -52,7 +52,6 @@ public partial class DbAction
 
     try
     {
-      int accomplishBy = goal.AccomplishBy == Enums.DateRange.Week ? 7 : goal.AccomplishBy == Enums.DateRange.Month ? 30 : 365;
       connection.Execute(queryString, new
       {
         goal.GoalName,
@@ -155,7 +154,6 @@ public partial class DbAction
   public List<Goal>? GetActiveGoals()
   {
     using IDbConnection connection = new SQLiteConnection(_connString);
-    string todayStr = DateTime.Today.AddDays(1).ToString("yyyy-MM-dd");
     try
     {
       var goals = GetAllGoals();

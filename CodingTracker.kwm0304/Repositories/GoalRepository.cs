@@ -91,7 +91,7 @@ public class GoalRepository
     {
       AnsiConsole.WriteException(e);
       return [];
-    };
+    }
   }
   public void SaveGoal(Goal goal)
   {

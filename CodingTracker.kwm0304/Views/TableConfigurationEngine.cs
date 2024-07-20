@@ -55,14 +55,21 @@ public class TableConfigurationEngine
     Console.Clear();
     var table = new Table();
     table.Title("Goal Table");
-    table.AddColumns("GoalId", "Name", "Target", "Progress", "Percentage", "Accomplished", "CreatedOn", "EndDate");
+    
+    table.AddColumns("GoalId", "Name", "Target", "Progress", "Hours/Day Needed", "Percentage", "Accomplished", "CreatedOn", "EndDate");
     foreach (var goal in goals)
     {
+      int dayDifference = (goal.EndDate - DateTime.Today).Days;
+      double hoursRemaining = goal.TargetNumber - goal.Progress;
+      double hoursPerDay = dayDifference > 0 ? Math.Round(hoursRemaining / dayDifference, 2) : 0;
+      string hoursString = dayDifference > 0 ? hoursPerDay.ToString("F2") : "N/A";
+      
       table.AddRow(
         goal.GoalId.ToString(),
         goal.GoalName,
         goal.TargetNumber.ToString(),
         goal.Progress.ToString(),
+        hoursString,
         goal.CalculateProgressPercentage().ToString() + "%",
         goal.Accomplished.ToString(),
         goal.CreatedOn.ToString("yyyy-MM-dd"),

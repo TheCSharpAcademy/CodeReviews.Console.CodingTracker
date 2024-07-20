@@ -41,11 +41,9 @@ public partial class DbAction
     EndTime TEXT NOT NULL,
     SessionLength INTEGER NOT NULL
     );";
-    const string checkTableQuery = @"SELECT name FROM sqlite_master WHERE type='table' AND name='CodingSessions';";
     try
     {
       connection.Execute(queryString);
-      var tableName = connection.QueryFirstOrDefault<string>(checkTableQuery);
     }
     catch (SQLiteException e)
     {
