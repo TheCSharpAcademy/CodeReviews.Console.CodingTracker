@@ -103,7 +103,6 @@ public partial class DbAction
       AccomplishBy = Utils.Validator.ToDateRange(Convert.ToInt32(g.AccomplishBy)),
       Accomplished = Convert.ToBoolean(g.Accomplished)
     }).ToList();
-
     return goals;
   }
 
@@ -115,6 +114,7 @@ public partial class DbAction
     {
       connection.Execute(queryString, new { id, update });
       AnsiConsole.WriteLine("Progress updated successfully");
+      Thread.Sleep(1500);
     }
     catch (SQLiteException e)
     {
@@ -156,13 +156,10 @@ public partial class DbAction
   {
     using IDbConnection connection = new SQLiteConnection(_connString);
     string todayStr = DateTime.Today.AddDays(1).ToString("yyyy-MM-dd");
-    const string queryString = @"SELECT GoalId, GoalName, TargetNumber, Progress, CreatedOn, AccomplishBy, Accomplished
-                FROM Goals";
     try
     {
       var goals = GetAllGoals();
       DateTime today = DateTime.Today.AddDays(1);
-      
       var active = goals!.Where(g =>
       {
         int days = Utils.Validator.ToDays(g.AccomplishBy);

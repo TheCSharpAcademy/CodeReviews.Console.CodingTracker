@@ -68,11 +68,11 @@ public class CodingSessionRepository
     }
   }
   //UPDATE
-  public void UpdateCodingSessionById(int id, int updatedTimeString)
+  public void UpdateCodingSession(int id, DateTime newEnd, int durationChange)
   {
     try
     {
-      _dbActions.UpdateSession(id, updatedTimeString);
+      _dbActions.UpdateSession(id, newEnd, durationChange);
     }
     catch (Exception e)
     {
@@ -80,11 +80,11 @@ public class CodingSessionRepository
     }
   }
   //DELETE
-  public void DeleteCodingSessionById(int id)
+  public void DeleteCodingSession(CodingSession session)
   {
     try
     {
-      _dbActions.DeleteSession(id);
+      _dbActions.DeleteSession(session);
     }
     catch (Exception e)
     {

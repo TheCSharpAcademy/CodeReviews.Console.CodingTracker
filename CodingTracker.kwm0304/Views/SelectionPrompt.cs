@@ -15,7 +15,7 @@ public class SelectionPrompt
 
   public static string CodingSessionsMenu()
   {
-    var menuOptions = new List<string> { "Create new session", "View past sessions" };
+    var menuOptions = new List<string> { "Create", "View", "Edit", "Delete", "Back" };
     var menu = new Menu<string>(genericPrompt, menuOptions);
     return menu.Show();
   }
@@ -25,16 +25,31 @@ public class SelectionPrompt
     var menu = new Menu<CodingSession>("Select a coding session if you want to edit or delete", sessions);
     return menu.Show();
   }
+
   public static string ViewGoalsOptions()
   {
-    var menuOptions = new List<string>{"View all goals", "View active goals"};
+    var menuOptions = new List<string> { "View all goals", "View active goals", "Back" };
     var menu = new Menu<string>(genericPrompt, menuOptions);
+    return menu.Show();
+  }
+
+  public static string ChangeEndTimeOptions()
+  {
+    var menuOptions = new List<string> { "Increase", "Decrease" };
+    var menu = new Menu<string>("Dou you need to increase or decrease your previous ending time?", menuOptions);
+    return menu.Show();
+  }
+
+  public static string TimeOptions()
+  {
+    var menuOptions = new List<string> { "Seconds", "Minutes", "Hours" };
+    var menu = new Menu<string>("", menuOptions);
     return menu.Show();
   }
 
   public static string GoalsMenu()
   {
-    var menuOptions = new List<string> {"Create new goal", "View goals"};
+    var menuOptions = new List<string> { "Create new goal", "View goals", "Back" };
     var menu = new Menu<string>(genericPrompt, menuOptions);
     return menu.Show();
   }

@@ -18,7 +18,7 @@ public partial class DbAction
     _connString = ConfigurationManager.ConnectionStrings["CodingTrackerDb"].ConnectionString;
     _dbPath = ConfigurationManager.AppSettings["DbFilePath"]!;
   }
-  //ON START
+  
   public void CreateDatabaseIfNotExists()
   {
     if (!File.Exists(_dbPath))
@@ -31,6 +31,7 @@ public partial class DbAction
     CreateGoalTableIfNotExists();
     CreateHabitTableIfNotExists();
   }
+
   public void CreateHabitTableIfNotExists()
   {
     using IDbConnection connection = new SQLiteConnection(_connString);
@@ -39,7 +40,7 @@ public partial class DbAction
     StartTime TEXT NOT NULL,
     EndTime TEXT NOT NULL,
     SessionLength INTEGER NOT NULL
-);";
+    );";
     const string checkTableQuery = @"SELECT name FROM sqlite_master WHERE type='table' AND name='CodingSessions';";
     try
     {
@@ -51,7 +52,7 @@ public partial class DbAction
       AnsiConsole.WriteException(e);
     }
   }
-  //POST
+  
   public void InsertSession(CodingSession session)
   {
     using IDbConnection connection = new SQLiteConnection(_connString);
@@ -80,7 +81,6 @@ public partial class DbAction
     }
   }
 
-  //GET ONE
   public CodingSession? GetSessionById(int id)
   {
     using IDbConnection connection = new SQLiteConnection(_connString);
@@ -96,7 +96,7 @@ public partial class DbAction
       return default;
     }
   }
-  //GET ALL
+  
   public List<CodingSession> GetAllSessions()
   {
     using var connection = new SQLiteConnection(_connString);
@@ -115,7 +115,7 @@ public partial class DbAction
     }).ToList();
     return sessions;
   }
-  //GET BY DATE
+  
   public List<CodingSession> GetSessionsByDateRange(DateRange range)
   {
     using IDbConnection connection = new SQLiteConnection(_connString);
@@ -135,25 +135,19 @@ public partial class DbAction
       return [];
     }
   }
-  //EDIT
-  public void UpdateSession(int id, int newTime)
+  
+  public void UpdateSession(int sessionId, DateTime newEndTime, int newSessionLength)
   {
     using IDbConnection connection = new SQLiteConnection(_connString);
-    const string queryString = "UPDATE CodingSessions SET EndTime = @newTime WHERE Id = @id";
-    try
-    {
-      //??
-      connection.Execute(queryString, new { newTime, id });
-      AnsiConsole.WriteLine("Session updated successfully");
-    }
-    catch (SQLiteException e)
-    {
-      AnsiConsole.WriteException(e);
-    }
+    const string queryString = @"UPDATE CodingSessions 
+                                 SET EndTime = @EndTime, SessionLength = @SessionLength 
+                                 WHERE Id = @SessionId";
+    connection.Execute(queryString, new { EndTime = newEndTime, SessionLength = newSessionLength, SessionId = sessionId });
   }
-  //DELETE
-  public void DeleteSession(int id)
+  
+  public void DeleteSession(CodingSession session)
   {
+    long id = session.Id;
     using IDbConnection connection = new SQLiteConnection(_connString);
     const string queryString = "DELETE FROM CodingSessions WHERE Id = @id";
     try

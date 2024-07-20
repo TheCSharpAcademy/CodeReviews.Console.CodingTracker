@@ -52,6 +52,7 @@ public class TableConfigurationEngine
   }
   public static void ViewGoals(List<Goal> goals)
   {
+    Console.Clear();
     var table = new Table();
     table.Title("Goal Table");
     table.AddColumns("GoalId", "Name", "Target", "Progress", "Percentage", "Accomplished", "CreatedOn", "EndDate");
@@ -76,14 +77,19 @@ public class TableConfigurationEngine
     Console.Clear();
     var table = new Table();
     table.Title("Coding Sessions");
-    table.AddColumns("Id", "Start Time", "End Time", "Hours");
+    table.AddColumns("Id", "Start Time", "End Time", "Hours", "Minutes", "Seconds");
     foreach (var session in sessions)
     {
+      int hours = session.SessionLength.Hours;
+      int minutes = session.SessionLength.Minutes;
+      int seconds = session.SessionLength.Seconds;
       table.AddRow(
         session.Id.ToString(),
         session.StartTime.ToString("yyyy-MM-dd HH:mm:ss"),
         session.EndTime.ToString("yyyy-MM-dd HH:mm:ss"),
-        session.SessionLength.TotalHours.ToString()
+        hours.ToString(),
+        minutes.ToString(),
+        seconds.ToString()
       );
     }
     AnsiConsole.Write(table);

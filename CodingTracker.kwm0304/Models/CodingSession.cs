@@ -9,7 +9,7 @@ public class CodingSession
   public DateTime EndTime { get; set; }
   public TimeSpan SessionLength { get; set; }
   public Stopwatch? _stopWatch;
-  
+
   public CodingSession()
   {
     _stopWatch = new Stopwatch();
@@ -34,5 +34,10 @@ public class CodingSession
     _stopWatch!.Stop();
     EndTime = DateTime.Now;
     SessionLength = _stopWatch.Elapsed;
+  }
+
+  public override string ToString()
+  {
+    return $"Session ID: {Id}, Start: {StartTime}, End: {EndTime}, Duration: {SessionLength}";
   }
 }

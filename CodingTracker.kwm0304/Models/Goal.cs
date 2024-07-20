@@ -14,6 +14,7 @@ namespace CodingTracker.kwm0304.Models
 
     public Goal()
     {
+      GoalName = string.Empty;
       Sessions = [];
     }
 
@@ -50,9 +51,26 @@ namespace CodingTracker.kwm0304.Models
 
     public void AddSession(CodingSession session)
     {
+      var exists = Sessions.FirstOrDefault(s => s.Id == session.Id);
+      if (exists != null)
+      {
+        Sessions.Remove(exists);
+        Progress -= (int)exists.SessionLength.TotalHours;
+      }
       Sessions.Add(session);
       Progress += (int)session.SessionLength.TotalHours;
       Accomplished = CalculateProgressPercentage() >= 100;
+    }
+
+    public void DeleteSession(CodingSession session)
+    {
+      var exists = Sessions.FirstOrDefault(s => s.Id == session.Id);
+      if (exists != null)
+      {
+        Sessions.Remove(exists);
+        Progress -= (int)exists.SessionLength.TotalHours;
+        Accomplished = CalculateProgressPercentage() >= 100;
+      }
     }
 
     public double CalculateProgressPercentage()
