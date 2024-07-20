@@ -25,8 +25,10 @@ internal class InputValidator
     public static int CleanInt(string? input)
     {
         input = CleanString(input);
-        Int32.TryParse(input, out int output);
-        return output;
+        if (int.TryParse(input, out int output))
+            return output;
+        else
+            return -1;
     } // end of CleanInt Method
     public static DateTime GetDate(string? input)
     {

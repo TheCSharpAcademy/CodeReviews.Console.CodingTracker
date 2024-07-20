@@ -35,7 +35,7 @@ class Program
         Console.Clear();
         AnsiConsole.WriteLine("Coding Tracker Main Menu\n------------------------");
         if (Output.stopwatchRunning)
-            AnsiConsole.MarkupLine("   [blue]* Timer Running *[/]");
+            AnsiConsole.MarkupLine("   [gray]* Timer Running *[/]");
         var menu = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
             .AddChoices(new[] {
@@ -43,27 +43,49 @@ class Program
                 "Create New Session", "Modify Session", "Remove Session", "View Sessions"
                 }));
         AnsiConsole.WriteLine("------------------------");
-        
-        if (menu == "Exit Coding Tracker")
-            Environment.Exit(0);
-        else if (menu == "Start Timed Session")
-            Output.StartTimed();
-        else if (menu == "End Timed Session")
-            if (Output.stopwatchRunning)
-                Output.EndTimed();
-            else
-            {
-                AnsiConsole.MarkupLine("[red]You must start a Coding Session first[/]");
-                Output.ReturnToMenu("");
-            }
-        else if (menu == "Create New Session")
-            Output.NewSession();
-        else if (menu == "Modify Session")
-            Output.ModifySession();
-        else if (menu == "Remove Session")
-            Output.RemoveSession();
-        else if (menu == "View Sessions")
-            SessionViewer.ViewSessions(true, CodingSession.sessions);
+
+        switch (menu)
+        {
+            case "Exit Coding Tracker":
+                Environment.Exit(0);
+                break;
+            case "Start Timed Session":
+                Output.StartTimed();
+                break;
+            case "End Timed Session":
+                if (Output.stopwatchRunning)
+                    Output.EndTimed();
+                else
+                {
+                    AnsiConsole.MarkupLine("[red]You must start a Coding Session first[/]");
+                    Output.ReturnToMenu("");
+                }
+                break;
+            case "Create New Session":
+                Output.NewSession();
+                break;
+            case "Modify Session":
+                if (CodingSession.sessions.Count == 0)
+                {
+                    AnsiConsole.MarkupLine("[red]You don't have any sessions to modify[/]");
+                    Output.ReturnToMenu("");
+                }
+                else
+                    Output.ModifySession();
+                break;
+            case "Remove Session":
+                if (CodingSession.sessions.Count == 0)
+                {
+                    AnsiConsole.MarkupLine("[red]You don't have any sessions to remove[/]");
+                    Output.ReturnToMenu("");
+                }
+                else
+                    Output.RemoveSession();
+                break;
+            case "View Sessions":
+                SessionViewer.ViewSessions(true, CodingSession.sessions);
+                break;
+        }
         
         MainMenu();
     } // end of MainMenu Method

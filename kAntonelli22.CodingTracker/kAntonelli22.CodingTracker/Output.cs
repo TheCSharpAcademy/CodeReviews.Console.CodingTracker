@@ -1,4 +1,3 @@
-using System.Data.Common;
 using System.Diagnostics;
 using CodingTracker.DatabaseUtilities;
 using Spectre.Console;
