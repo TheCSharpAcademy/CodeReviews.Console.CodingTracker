@@ -452,6 +452,9 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+# configuration file
+/CodingTracker.Console/App.config
+
 # content below from: https://github.com/github/gitignore/blob/master/Global/Windows.gitignore
 # Windows thumbnail cache files
 Thumbs.db
