@@ -1,6 +1,7 @@
 ﻿using DB;
+using Models.Entities;
 
-namespace CodingTracker.Console;
+namespace CodingTracker;
 
 public class App(CodingTimeDBContext dbContext)
 {

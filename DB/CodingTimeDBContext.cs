@@ -56,16 +56,52 @@ public class CodingTimeDBContext(string sqlConnectionString)
                 (@Task, @StartTime, @EndTime);
         ";
 
-        object[] parameters = { new { Task = codingTime.Task, StartTime = codingTime.StartTime, EndTime = codingTime.EndTime } };
-
-        conn.Execute(sql, parameters);
+        conn.Execute(sql, codingTime);
 
         conn.Close();
     }
 
-    // read
+    public List<CodingTime> GetAllCodingTimes()
+    {
+        using var conn = new SqliteConnection(sqlConnectionString);
+        conn.Open();
 
-    // update
+        var sql = "SELECT * FROM codingTimes";
 
-    // delete
+        var codingTimes = conn.Query<CodingTime>(sql);
+
+        conn.Close();
+
+        return codingTimes.AsList();
+    }
+
+    public void UpdateCodingTime(CodingTime codingTime)
+    {
+        using var conn = new SqliteConnection(sqlConnectionString);
+        conn.Open();
+
+        var sql = @"
+            UPDATE codingTimes
+            SET task = @Task,
+                startTime = @StartTime,
+                endTime = @EndTime
+            WHERE
+                id = @Id;
+        ";
+
+        conn.Execute(sql, codingTime);
+        conn.Close();
+    }
+
+    public void DeleteCodingTime(int id)
+    {
+        using var conn = new SqliteConnection(sqlConnectionString);
+        conn.Open();
+
+        var sql = @"
+            DELETE FROM codingTimes WHERE id=@Id;
+        ";
+
+        conn.Execute(sql, new { Id = id });
+    }
 }

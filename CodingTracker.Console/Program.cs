@@ -1,5 +1,5 @@
 ﻿using System.Configuration;
-using CodingTracker.Console;
+using CodingTracker;
 using DB;
 
 var dbConnString = ConfigurationManager.AppSettings
