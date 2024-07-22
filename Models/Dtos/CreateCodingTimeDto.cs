@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Models.Dtos;
+﻿namespace Models.Dtos;
 
 public record class CreateCodingTimeDto(string Task, string StartTime, string EndTime)
 {

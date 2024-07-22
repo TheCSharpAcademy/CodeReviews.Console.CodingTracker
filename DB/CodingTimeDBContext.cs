@@ -35,9 +35,9 @@ public class CodingTimeDBContext(string sqlConnectionString)
                 INSERT INTO codingTimes
                     (task, startTime, endTime)
                 VALUES
-                    ('Coding Tracker', '0930 22-07-24', '1230 22-07-24'),
-                    ('Coding Tracker', '0930 21-07-24', '1230 21-07-24'),
-                    ('Coding Tracker', '0930 20-07-24', '1230 20-07-24');
+                    ('Coding Tracker', '09:30 22-07-24', '12:30 22-07-24'),
+                    ('Coding Tracker', '09:30 21-07-24', '12:30 21-07-24'),
+                    ('Coding Tracker', '09:30 20-07-24', '12:30 20-07-24');
             ";
 
             conn.Execute(sql);
@@ -59,6 +59,21 @@ public class CodingTimeDBContext(string sqlConnectionString)
         conn.Execute(sql, codingTime);
 
         conn.Close();
+    }
+
+    public CodingTime? GetCodingTimeById(long id)
+    {
+
+        using var conn = new SqliteConnection(sqlConnectionString);
+        conn.Open();
+
+        var sql = "SELECT * FROM codingTimes WHERE id=@Id";
+
+        var codingTime = conn.QuerySingleOrDefault<CodingTime>(sql, new { Id = id });
+
+        conn.Close();
+
+        return codingTime;
     }
 
     public List<CodingTime> GetAllCodingTimes()
@@ -93,7 +108,7 @@ public class CodingTimeDBContext(string sqlConnectionString)
         conn.Close();
     }
 
-    public void DeleteCodingTime(int id)
+    public void DeleteCodingTime(long id)
     {
         using var conn = new SqliteConnection(sqlConnectionString);
         conn.Open();
