@@ -25,3 +25,6 @@ A C# application used to track coding time. Console based and uses a SQLite data
 
 - Basic reports of coding session data
   Displays a table containing coding session data.
+
+- Quickstart mode
+  Users can quickly start a coding session by using the quick start option in the main menu. After users are finished coding they can stop the session with another option. Users can also view how long a current session has been active.
