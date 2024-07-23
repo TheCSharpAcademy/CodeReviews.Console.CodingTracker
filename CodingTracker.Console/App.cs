@@ -15,7 +15,7 @@ public class App(CodingTimeDBContext dbContext)
         bool continueRunning = true;
         while (continueRunning)
         {
-            string[] options = ["Exit", "Log a session", "Update a session", "View sessions", "Delete session"];
+            string[] options = ["Exit", "Log a session", "Update a session", "View sessions", "Delete session", "Quick log"];
             var choice = UI.MenuSelection("[green]Coding[/] [red]Tracker[/] [blue]Menu[/]. Select an option below:", options);
 
             switch (choice)
@@ -128,16 +128,10 @@ public class App(CodingTimeDBContext dbContext)
 
     private void LogSession()
     {
-        // get task
         string task = UI.StringResponse("Enter the [blue]task[/] name");
-
-        // get start time
         string startTime = UI.TimeResponse("Enter the [blue]start time[/]");
-
-        // get end time 
         string endTime = UI.TimeResponse("Enter the [blue]end time[/]");
 
-        // save into database
         var codingTime = new CreateCodingTimeDto(task, startTime, endTime);
         db.CreateCodingTime(codingTime);
 
