@@ -76,6 +76,20 @@ public class CodingTimeDBContext(string sqlConnectionString)
         return codingTime;
     }
 
+    public CodingTime? GetOpenCodingSession()
+    {
+        using var conn = new SqliteConnection(sqlConnectionString);
+        conn.Open();
+
+        var sql = "SELECT * FROM codingTimes WHERE endTime= ''";
+
+        var codingTime = conn.QuerySingleOrDefault<CodingTime>(sql);
+
+        conn.Close();
+
+        return codingTime;
+    }
+
     public List<CodingTime> GetAllCodingTimes()
     {
         using var conn = new SqliteConnection(sqlConnectionString);

@@ -1,4 +1,5 @@
-﻿using DB;
+﻿using System.Diagnostics;
+using DB;
 using Models.Dtos;
 using Models.Entities;
 
@@ -7,7 +8,7 @@ namespace CodingTracker;
 public class App(CodingTimeDBContext dbContext)
 {
     private readonly CodingTimeDBContext db = dbContext;
-
+    private readonly Stopwatch watch = new();
     public void Run()
     {
         db.SeedDatabase();
@@ -15,13 +16,26 @@ public class App(CodingTimeDBContext dbContext)
         bool continueRunning = true;
         while (continueRunning)
         {
-            string[] options = ["Exit", "Log a session", "Update a session", "View sessions", "Delete session", "Quick log"];
+            string quickSessionOpt = "Quickstart a session";
+            if (watch.ElapsedTicks > 0)
+            {
+                quickSessionOpt = "Stop current session";
+            }
+
+            string[] options = ["Exit", "Log a session", "Update a session", "View sessions", "Delete session", quickSessionOpt, "Time in current session"];
             var choice = UI.MenuSelection("[green]Coding[/] [red]Tracker[/] [blue]Menu[/]. Select an option below:", options);
 
             switch (choice)
             {
                 case 0:
-                    continueRunning = false;
+                    if (CheckForOpenSession())
+                    {
+                        UI.ConfirmationMessage("You have an active coding session open. End the session first!");
+                    }
+                    else
+                    {
+                        continueRunning = false;
+                    }
                     break;
                 case 1:
                     LogSession();
@@ -35,11 +49,88 @@ public class App(CodingTimeDBContext dbContext)
                 case 4:
                     DeleteSession();
                     break;
+                case 5:
+                    QuickLog();
+                    break;
+                case 6:
+                    TimeInCurrentSession();
+                    break;
             }
 
             if (!continueRunning)
             {
                 break;
+            }
+        }
+    }
+
+    private bool CheckForOpenSession()
+    {
+        var openSession = db.GetOpenCodingSession();
+        return openSession != null;
+    }
+
+    private void TimeInCurrentSession()
+    {
+        if (watch.ElapsedTicks > 0)
+        {
+            string elapsedMinutesString = (watch.ElapsedMilliseconds / 1000 / 60).ToString();
+            UI.ConfirmationMessage("Current session has been [green]" + elapsedMinutesString + "[/] minutes long.");
+        }
+        else
+        {
+            UI.ConfirmationMessage("No session is being tracked right now.");
+        }
+    }
+
+    private void QuickLog()
+    {
+        if (watch.ElapsedTicks > 0)
+        {
+            var choice = UI.MenuSelection("Stop current session?", ["yes", "no"]);
+
+            switch (choice)
+            {
+                case 0:
+                    var codingTime = db.GetOpenCodingSession();
+
+                    var now = DateTime.Now;
+                    var endTime = now.ToString("HH:mm dd-MM-yy");
+                    string elapsedMinutesString = (watch.ElapsedMilliseconds / 1000 / 60).ToString();
+
+                    var endCodingTime = new CodingTime(codingTime!.Id, codingTime.Task, codingTime.StartTime, endTime);
+
+                    db.UpdateCodingTime(endCodingTime);
+
+                    UI.ConfirmationMessage("Ended " + elapsedMinutesString + " minute(s) session.");
+                    watch.Reset();
+                    break;
+                case 1:
+                    UI.ConfirmationMessage("Happy coding :).");
+                    break;
+            }
+        }
+        else
+        {
+            var choice = UI.MenuSelection("Start a coding session?", ["yes", "no"]);
+
+            switch (choice)
+            {
+                case 0:
+                    string task = UI.StringResponse("Enter the [blue]task[/] name");
+                    var now = DateTime.Now;
+                    var startTime = now.ToString("HH:mm dd-MM-yy");
+                    var endTime = "";
+
+                    var newCodingTime = new CreateCodingTimeDto(task, startTime, endTime);
+
+                    db.CreateCodingTime(newCodingTime);
+                    watch.Start();
+                    UI.ConfirmationMessage("Happy coding :).");
+                    break;
+                case 1:
+                    UI.ConfirmationMessage("Coding session has [red]not[/] been started.");
+                    break;
             }
         }
     }
