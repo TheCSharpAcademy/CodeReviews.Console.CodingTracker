@@ -32,16 +32,12 @@
   * Had some issues with the SQL database and config file at first but was able to get everything figured out pretty quickly
 
 # Lessions Learned
-  * Look into the tool you are going to use before you complete most of the program. I did not realize how much I could do with Spectre.Console and if I had been when I started coding I would have been able to make a much nicer application without having to spend extra time changing things.
+  * I did not realize how much I could do with Spectre.Console and if I had been when I started coding I would have been able to make a much nicer application without wasting so much time rewriting code
   * Use things like Dapper and Spectre.Console as they make things a lot easier
-
-# Areas To Improve
-  * More could have been done with the UI but it works and looks ok
-  * Some of the code is hard to read
 
 # Resources Used
   * Reused and optimized HabitTracker code
-  * [Dapper ORM](https://www.learndapper.com/) documentation
-  * [Spectre.Console](https://spectreconsole.net/) documentation
+  * Dapper ORM documentation
+  * Spectre.Console documentation
   * Multiple Stack Overflow articles for different issues I ran into with C#, Dapper, and Spectre.Console
   * SQLite and C# documentation
