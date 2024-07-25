@@ -18,13 +18,17 @@ A C# application used to track coding time. Console based and uses a SQLite data
 # Features
 
 - SQLite database connection
+
   The program uses a SQLite database to store coding session data. Upon launch, the program checks if a database has been created and creates one if not.
 
 - A console based UI
+
   The user interface is developed using the [Spectre.Console](https://spectreconsole.net/) library. The UI displays options for creating, updating, reading, and deleting session data. Validation is also performed on all inputs.
 
 - Basic reports of coding session data
+
   Displays a table containing coding session data.
 
 - Quickstart mode
+
   Users can quickly start a coding session by using the quick start option in the main menu. After users are finished coding they can stop the session with another option. Users can also view how long a current session has been active.
