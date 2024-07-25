@@ -42,6 +42,7 @@ public class CodingTimeDBContext(string sqlConnectionString)
 
             conn.Execute(sql);
         }
+        conn.Close();
     }
 
     public void CreateCodingTime(CreateCodingTimeDto codingTime)
@@ -132,5 +133,6 @@ public class CodingTimeDBContext(string sqlConnectionString)
         ";
 
         conn.Execute(sql, new { Id = id });
+        conn.Close();
     }
 }

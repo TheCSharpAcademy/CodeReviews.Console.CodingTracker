@@ -182,8 +182,8 @@ public class App(CodingTimeDBContext dbContext)
         }
 
         var updatedName = UI.StringResponseWithDefault("Enter the [blue]task name[/]", codingTime.Task);
-        var updatedStartTime = UI.StringResponseWithDefault("Enter the [blue]start time[/]", codingTime.StartTime);
-        var updatedEndTime = UI.StringResponseWithDefault("Enter the [blue]end time[/]", codingTime.EndTime);
+        var updatedStartTime = UI.TimeResponseWithDefault("Enter the [blue]start time[/]", codingTime.StartTime);
+        var updatedEndTime = UI.TimeResponseWithDefault("Enter the [blue]end time[/]", codingTime.EndTime);
 
         var updatedCodingTime = new CodingTime(id, updatedName, updatedStartTime, updatedEndTime);
 
