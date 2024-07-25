@@ -6,14 +6,14 @@ internal class CodingSession
     public DateTime Start { get; set; }
     public DateTime End { get; set; }
     public TimeSpan Duration { get; set; }
-    public static List<CodingSession> sessions { get; set; } = new List<CodingSession>();
+    public static List<CodingSession> Sessions { get; set; } = new List<CodingSession>();
 
     public CodingSession(DateTime Start, DateTime End)
     {
         this.Start = Start;
         this.End = End;
         Duration = CalcDuration();
-        sessions.Add(this);
+        Sessions.Add(this);
     } // end of CodingSession Constructor
 
     public CodingSession(string Start, string End, string Duration)

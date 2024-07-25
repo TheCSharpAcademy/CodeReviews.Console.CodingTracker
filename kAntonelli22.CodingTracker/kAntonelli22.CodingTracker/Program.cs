@@ -68,7 +68,7 @@ class Program
                 Output.NewSession();
                 break;
             case "Modify Session":
-                if (CodingSession.sessions.Count == 0)
+                if (CodingSession.Sessions.Count == 0)
                 {
                     AnsiConsole.MarkupLine("[red]You don't have any sessions to modify[/]");
                     Output.ReturnToMenu("");
@@ -77,7 +77,7 @@ class Program
                     Output.ModifySession();
                 break;
             case "Remove Session":
-                if (CodingSession.sessions.Count == 0)
+                if (CodingSession.Sessions.Count == 0)
                 {
                     AnsiConsole.MarkupLine("[red]You don't have any sessions to remove[/]");
                     Output.ReturnToMenu("");
@@ -86,7 +86,7 @@ class Program
                     Output.RemoveSession();
                 break;
             case "View Sessions":
-                SessionViewer.ViewSessions(true, CodingSession.sessions);
+                SessionViewer.ViewSessions(true, CodingSession.Sessions);
                 break;
         }
         

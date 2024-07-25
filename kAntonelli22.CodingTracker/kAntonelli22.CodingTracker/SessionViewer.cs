@@ -56,9 +56,9 @@ internal class SessionViewer
         bool ascEnding = AnsiConsole.Confirm("Sort in ascending order?");
 
         if (sortType == "date")
-            CodingSession.sessions.Sort((x, y) => ascEnding ? x.Start.CompareTo(y.Start) : y.Start.CompareTo(x.Start));
+            CodingSession.Sessions.Sort((x, y) => ascEnding ? x.Start.CompareTo(y.Start) : y.Start.CompareTo(x.Start));
         else if (sortType == "duration")
-            CodingSession.sessions.Sort((x, y) => ascEnding ? x.Duration.CompareTo(y.Duration) : y.Duration.CompareTo(x.Duration));
+            CodingSession.Sessions.Sort((x, y) => ascEnding ? x.Duration.CompareTo(y.Duration) : y.Duration.CompareTo(x.Duration));
     } // End of SortBy Method
 
     public static void SortByTimeSpan()
@@ -69,7 +69,7 @@ internal class SessionViewer
         DateTime End = InputValidator.GetDate();
 
         bool ascending = AnsiConsole.Confirm("Sort in ascending order?");
-        List<CodingSession> filteredSessions = CodingSession.sessions
+        List<CodingSession> filteredSessions = CodingSession.Sessions
         .Where(session => session.Start > Start && session.End < End).ToList();
 
         filteredSessions.Sort((x, y) => ascending ? x.Start.CompareTo(y.Start) : y.Start.CompareTo(x.Start));

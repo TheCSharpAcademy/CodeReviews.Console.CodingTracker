@@ -28,7 +28,7 @@ internal class DatabaseManager
 
         string query = "SELECT Start, End, Duration FROM Sessions";
         List<CodingSession> sessions = connection.Query<CodingSession>(query).ToList();
-        CodingSession.sessions = sessions;
+        CodingSession.Sessions = sessions;
         connection.Close();
     } // end of GetSessions method
 
