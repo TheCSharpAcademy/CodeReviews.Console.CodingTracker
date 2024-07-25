@@ -1,6 +1,4 @@
-﻿using System.Net.WebSockets;
-using Spectre.Console;
-using SQLitePCL;
+﻿using Spectre.Console;
 
 namespace CodingTracker;
 

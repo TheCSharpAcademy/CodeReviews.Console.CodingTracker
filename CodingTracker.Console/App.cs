@@ -16,13 +16,13 @@ public class App(CodingTimeDBContext dbContext)
         bool continueRunning = true;
         while (continueRunning)
         {
-            string quickSessionOpt = "Quickstart a session";
+            string quickSessionOption = "Quickstart a session";
             if (watch.ElapsedTicks > 0)
             {
-                quickSessionOpt = "Stop current session";
+                quickSessionOption = "Stop current session";
             }
 
-            string[] options = ["Exit", "Log a session", "Update a session", "View sessions", "Delete session", quickSessionOpt, "Time in current session"];
+            string[] options = ["Exit", "Log a session", "Update a session", "View sessions", "Delete session", quickSessionOption, "Time in current session"];
             var choice = UI.MenuSelection("[green]Coding[/] [red]Tracker[/] [blue]Menu[/]. Select an option below:", options);
 
             switch (choice)
