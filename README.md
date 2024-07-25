@@ -2,6 +2,12 @@
 
 A C# application used to track coding time. Console based and uses a SQLite database to store coding sessions.
 
+# Running the Application
+
+Ensure you have the .NET 8 SDK installed on your machine. While inside `CodingTracker.Console` directory copy the `example.App.config` file, rename is to `App.config` and replace your desired name of the database for the `sqliteConnString`.
+
+While still in `CodingTracker.Console` use the command `dotnet run` to run the application.
+
 # Requirements
 
 - Keep track of coding sessions with a start date, end date, and name of task worked on.
