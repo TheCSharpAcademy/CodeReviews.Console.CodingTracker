@@ -3,28 +3,28 @@ using System.Globalization;
 namespace CodingTracker;
 internal class CodingSession
 {
-    public DateTime start { get; set; }
-    public DateTime end { get; set; }
-    public TimeSpan duration { get; set; }
+    public DateTime Start { get; set; }
+    public DateTime End { get; set; }
+    public TimeSpan Duration { get; set; }
     public static List<CodingSession> sessions { get; set; } = new List<CodingSession>();
 
-    public CodingSession(DateTime start, DateTime end)
+    public CodingSession(DateTime Start, DateTime End)
     {
-        this.start = start;
-        this.end = end;
-        this.duration = CalcDuration();
+        this.Start = Start;
+        this.End = End;
+        Duration = CalcDuration();
         sessions.Add(this);
     } // end of CodingSession Constructor
-    public CodingSession(string start, string end, string duration)
+
+    public CodingSession(string Start, string End, string Duration)
     {
-        this.start = DateTime.Parse(start, CultureInfo.InvariantCulture);
-        this.end = DateTime.Parse(end, CultureInfo.InvariantCulture);
-        this.duration = TimeSpan.Parse(duration, CultureInfo.InvariantCulture);
-        // sessions.Add(this); 
+        this.Start = DateTime.Parse(Start, CultureInfo.InvariantCulture);
+        this.End = DateTime.Parse(End, CultureInfo.InvariantCulture);
+        this.Duration = TimeSpan.Parse(Duration, CultureInfo.InvariantCulture);
     } // end of CodingSession Constructor for DatabaseManager  
 
     private TimeSpan CalcDuration()
     {
-        return end - start;
+        return End - Start;
     }
 } // end of CodingSession Class

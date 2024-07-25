@@ -10,7 +10,7 @@ internal class DatabaseManager
     {
         try
         {
-            IDbConnection connection = new SQLiteConnection(Program.connectionString);
+            IDbConnection connection = new SQLiteConnection(Program.ConnectionString);
             dbConnection = connection;
         }
         catch (Exception ex)
@@ -21,37 +21,34 @@ internal class DatabaseManager
     }
     public static void GetSessions()
     {
-        IDbConnection? connection;
-        DatabaseConnection(out connection);
+        DatabaseConnection(out IDbConnection? connection);
         if (connection == null)
             return;
         connection.Open();
 
-        string query = "SELECT start, end, duration FROM Sessions";
-        List<CodingSession> sessions = connection.Query<CodingSession>(query).ToList(); // extra step here for project requirments
+        string query = "SELECT Start, End, Duration FROM Sessions";
+        List<CodingSession> sessions = connection.Query<CodingSession>(query).ToList();
         CodingSession.sessions = sessions;
         connection.Close();
     } // end of GetSessions method
 
     public static void InsertSession(CodingSession session)
     {
-        IDbConnection? connection;
-        DatabaseConnection(out connection);
+        DatabaseConnection(out IDbConnection? connection);
         if (connection == null)
             return;
         connection.Open();
 
         string query = @"
-        INSERT INTO Sessions (start, end, duration)
-        VALUES (@start, @end, @duration)";
+        INSERT INTO Sessions (Start, End, Duration)
+        VALUES (@Start, @End, @Duration)";
         connection.Execute(query, session);
         connection.Close();
     } // end of InsertSession method
 
     public static void RunQuery(string query)
     {
-        IDbConnection? connection;
-        DatabaseConnection(out connection);
+        DatabaseConnection(out IDbConnection? connection);
         if (connection == null)
             return;
 
@@ -64,14 +61,13 @@ internal class DatabaseManager
     {
         int id = -1;
         string query = $"SELECT Id FROM Sessions LIMIT 1 OFFSET {offset}";
-        IDbConnection? connection;
-        DatabaseConnection(out connection);
+
+        DatabaseConnection(out IDbConnection? connection);
         if (connection == null)
             return id;
         connection.Open();
 
         id = connection.QuerySingle<int>(query);
-        Console.WriteLine("id: " + id);
         connection.Close();
         return id;
     } // end of GetID method

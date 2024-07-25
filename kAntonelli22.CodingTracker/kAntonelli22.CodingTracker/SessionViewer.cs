@@ -10,29 +10,30 @@ internal class SessionViewer
         table.Border = TableBorder.Markdown;
         table.Title = new("Coding Sessions:");
 
-        TableColumn[] columns = {new TableColumn("[blue]Start[/]"), new TableColumn("[blue]End[/]"), new TableColumn("[blue]Duration[/]")};
+        TableColumn[] columns = [new("[blue]ID[/]"), new("[blue]Start[/]"), new("[blue]End[/]"), new("[blue]Duration[/]")];
         table.AddColumns(columns);
         for (int i = 0; i < sessions.Count; i++)
             table.AddRow(
-            $"{sessions[i].start.ToString("MM/dd/yy hh:mm tt")}",
-            $"{sessions[i].end.ToString("MM/dd/yy hh:mm tt")}",
-            $"{sessions[i].duration.ToString(@"hh\:mm\:ss")}"
+            $"{i + 1}",
+            $"{sessions[i].Start:MM/dd/yy hh:mm tt}",
+            $"{sessions[i].End:MM/dd/yy hh:mm tt}",
+            $"{sessions[i].Duration:hh\\:mm\\:ss}"
             );
         AnsiConsole.Write(table);
 
         if (displayOptions)
             ViewingOptions(sessions);
-    } // end of ViewSessions Method
+    } // End of ViewSessions Method
 
     public static void ViewingOptions(List<CodingSession> sessions)
     {
         AnsiConsole.WriteLine("Viewing Options\n------------------------");
         var menu = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
-            .AddChoices(new[] {
+            .AddChoices([
                 "Exit Coding Tracker", "Sort By Date", "Sort By Duration", 
                 "Sort By Time Span", "Session Stats", "<-- Back"
-                }));
+                ]));
 
         if (menu == "Exit Coding Tracker")
             Environment.Exit(0);
@@ -48,41 +49,41 @@ internal class SessionViewer
             return;
         
         ViewSessions(true, sessions);
-    } // end of ViewingOptions Method
+    } // End of ViewingOptions Method
 
     public static void SortBy(string sortType)
     {
-        bool ascending = AnsiConsole.Confirm("Sort in ascending order?");
+        bool ascEnding = AnsiConsole.Confirm("Sort in ascending order?");
 
         if (sortType == "date")
-            CodingSession.sessions.Sort((x, y) => ascending ? x.start.CompareTo(y.start) : y.start.CompareTo(x.start));
+            CodingSession.sessions.Sort((x, y) => ascEnding ? x.Start.CompareTo(y.Start) : y.Start.CompareTo(x.Start));
         else if (sortType == "duration")
-            CodingSession.sessions.Sort((x, y) => ascending ? x.duration.CompareTo(y.duration) : y.duration.CompareTo(x.duration));
-    } // end of SortBy Method
+            CodingSession.sessions.Sort((x, y) => ascEnding ? x.Duration.CompareTo(y.Duration) : y.Duration.CompareTo(x.Duration));
+    } // End of SortBy Method
 
     public static void SortByTimeSpan()
     {
-        Console.WriteLine("What is the start of the time frame? (MM/dd/yy hh:mm tt)");
-        DateTime start = InputValidator.GetDate(Console.ReadLine());
-        Console.WriteLine("What is the end of the time frame? (MM/dd/yy hh:mm tt)");
-        DateTime end = InputValidator.GetDate(Console.ReadLine());
+        Console.WriteLine("What is the Start of the time frame? (MM/dd/yy hh:mm tt)");
+        DateTime Start = InputValidator.GetDate();
+        Console.WriteLine("What is the End of the time frame? (MM/dd/yy hh:mm tt)");
+        DateTime End = InputValidator.GetDate();
 
         bool ascending = AnsiConsole.Confirm("Sort in ascending order?");
         List<CodingSession> filteredSessions = CodingSession.sessions
-        .Where(session => session.start > start && session.end < end).ToList();
+        .Where(session => session.Start > Start && session.End < End).ToList();
 
-        filteredSessions.Sort((x, y) => ascending ? x.start.CompareTo(y.start) : y.start.CompareTo(x.start));
+        filteredSessions.Sort((x, y) => ascending ? x.Start.CompareTo(y.Start) : y.Start.CompareTo(x.Start));
         ViewSessions(true, filteredSessions);
-    } // end of TimeSpan Method
+    } // End of TimeSpan Method
 
     public static void DisplayStats(List<CodingSession> sessions)
     {
         TimeSpan totalHours = new();
         foreach (var session in sessions)
-            totalHours += session.duration;
+            totalHours += session.Duration;
         TimeSpan avgHours = totalHours / sessions.Count;
-        AnsiConsole.MarkupLineInterpolated($"Total hours spent coding: [blue]{totalHours.ToString(@"hh\:mm\:ss")}[/].");
-        AnsiConsole.MarkupLineInterpolated($"Average hours per session: [blue]{avgHours.ToString(@"hh\:mm\:ss")}[/].");
+        AnsiConsole.MarkupLineInterpolated($"Total hours spent coding: [blue]{totalHours.TotalHours} hours[/].");
+        AnsiConsole.MarkupLineInterpolated($"Average hours per session: [blue]{avgHours:hh\\:mm\\:ss}[/].");
         Output.ReturnToMenu("");
     }
-} // end of SessionViewer Class
+} // End of SessionViewer Class

@@ -1,29 +1,26 @@
-﻿using System.Configuration;
-using CodingTracker.DatabaseUtilities;
-using System.Diagnostics;
+﻿using CodingTracker.DatabaseUtilities;
 using Spectre.Console;
 
 namespace CodingTracker;
 
 class Program
 {
-    static Stopwatch stopwatch = new Stopwatch();
-    public static string databasePath { get; set; } = ConfigurationManager.AppSettings.Get("DatabasePath") ?? "";
-    public static string connectionString { get; set; } = ConfigurationManager.AppSettings.Get("ConnectionString") ?? "";
+    public static string DatabasePath { get; set; } = System.Configuration.ConfigurationManager.AppSettings.Get("DatabasePath") ?? "";
+    public static string ConnectionString { get; set; } = System.Configuration.ConfigurationManager.AppSettings.Get("ConnectionString") ?? "";
     static void Main(string[] args)
     {
-        if (databasePath == "" || connectionString == "")
+        if (DatabasePath == "" || ConnectionString == "")
         {
-            Console.WriteLine($"Database Path or Connection String not found. Please specify a path in the App configuration file.");
+            AnsiConsole.MarkupLine("[red]Database Path or Connection String not found. Please specify a path in the App configuration file.[/]");
             Environment.Exit(0);
         }
 
         string query = @"
             CREATE TABLE IF NOT EXISTS Sessions (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                start TEXT NOT NULL,
-                end TEXT NOT NULL,
-                duration TEXT NOT NULL
+                Start TEXT NOT NULL,
+                End TEXT NOT NULL,
+                Duration TEXT NOT NULL
             );";
         DatabaseManager.RunQuery(query);
         DatabaseManager.GetSessions();
@@ -34,14 +31,14 @@ class Program
     {
         Console.Clear();
         AnsiConsole.WriteLine("Coding Tracker Main Menu\n------------------------");
-        if (Output.stopwatchRunning)
+        if (Output.StopwatchRunning)
             AnsiConsole.MarkupLine("   [gray]* Timer Running *[/]");
         var menu = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
-            .AddChoices(new[] {
+            .AddChoices([
                 "Exit Coding Tracker", "Start Timed Session", "End Timed Session",
                 "Create New Session", "Modify Session", "Remove Session", "View Sessions"
-                }));
+                ]));
         AnsiConsole.WriteLine("------------------------");
 
         switch (menu)
@@ -50,14 +47,20 @@ class Program
                 Environment.Exit(0);
                 break;
             case "Start Timed Session":
-                Output.StartTimed();
+                if (!Output.StopwatchRunning)
+                    Output.StartTimed();
+                else
+                {
+                    AnsiConsole.MarkupLine("[red]You must end your current session first[/]");
+                    Output.ReturnToMenu("");
+                }
                 break;
             case "End Timed Session":
-                if (Output.stopwatchRunning)
+                if (Output.StopwatchRunning)
                     Output.EndTimed();
                 else
                 {
-                    AnsiConsole.MarkupLine("[red]You must start a Coding Session first[/]");
+                    AnsiConsole.MarkupLine("[red]You must start a coding session first[/]");
                     Output.ReturnToMenu("");
                 }
                 break;
