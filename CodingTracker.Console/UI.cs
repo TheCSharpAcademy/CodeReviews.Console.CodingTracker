@@ -1,6 +1,4 @@
-﻿using System.Net.WebSockets;
-using Spectre.Console;
-using SQLitePCL;
+﻿using Spectre.Console;
 
 namespace CodingTracker;
 
@@ -72,6 +70,35 @@ public static class UI
                     return DateTime.TryParseExact(time, "HH:mm dd-MM-yy", null, System.Globalization.DateTimeStyles.None, out DateTime dateTime);
                 })
         );
+    }
+
+    public static string TimeResponseWithDefault(string question, string defaultTimeString)
+    {
+        var prompt = question + " formatted like [yellow]23:59 dd-MM-yy[/]" + " (Press 'enter' to leave as " + defaultTimeString + "):";
+
+        var response = AnsiConsole.Prompt(
+            new TextPrompt<string>(prompt)
+                .PromptStyle("green")
+                .ValidationErrorMessage("format times like [red]23:59 dd-MM-yy[/]")
+                .AllowEmpty()
+                .Validate(time =>
+                {
+                    if (time == null || time == "")
+                    {
+                        return true;
+                    }
+                    return DateTime.TryParseExact(time, "HH:mm dd-MM-yy", null, System.Globalization.DateTimeStyles.None, out DateTime dateTime);
+                })
+        );
+
+        if (response == null || response == "")
+        {
+            return defaultTimeString;
+        }
+        else
+        {
+            return response;
+        }
     }
 
     public static void ConfirmationMessage(string message)

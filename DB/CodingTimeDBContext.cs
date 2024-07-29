@@ -42,6 +42,7 @@ public class CodingTimeDBContext(string sqlConnectionString)
 
             conn.Execute(sql);
         }
+        conn.Close();
     }
 
     public void CreateCodingTime(CreateCodingTimeDto codingTime)
@@ -70,6 +71,20 @@ public class CodingTimeDBContext(string sqlConnectionString)
         var sql = "SELECT * FROM codingTimes WHERE id=@Id";
 
         var codingTime = conn.QuerySingleOrDefault<CodingTime>(sql, new { Id = id });
+
+        conn.Close();
+
+        return codingTime;
+    }
+
+    public CodingTime? GetOpenCodingSession()
+    {
+        using var conn = new SqliteConnection(sqlConnectionString);
+        conn.Open();
+
+        var sql = "SELECT * FROM codingTimes WHERE endTime= ''";
+
+        var codingTime = conn.QuerySingleOrDefault<CodingTime>(sql);
 
         conn.Close();
 
@@ -118,5 +133,6 @@ public class CodingTimeDBContext(string sqlConnectionString)
         ";
 
         conn.Execute(sql, new { Id = id });
+        conn.Close();
     }
 }
