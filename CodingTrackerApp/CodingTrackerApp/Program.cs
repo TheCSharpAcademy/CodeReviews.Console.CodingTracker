@@ -1,8 +1,4 @@
-﻿using DataAcess;
-using Spectre.Console;
-using System.Text;
-
-namespace CodingTrackerApp;
+﻿namespace CodingTrackerApp;
 
 internal class Program
 {
