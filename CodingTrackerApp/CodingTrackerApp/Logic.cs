@@ -1,7 +1,7 @@
-﻿using DataAcess;
+﻿using System.Numerics;
+using DataAcess;
 using Model;
 using System.Globalization;
-using System.Numerics;
 using Spectre.Console;
 
 namespace CodingTrackerApp
