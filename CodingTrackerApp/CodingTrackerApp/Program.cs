@@ -6,7 +6,7 @@ namespace CodingTrackerApp;
 
 internal class Program
 {
-    static async Task Main(string[] args)
+    static async Task Main()
     {
         bool openApp = true;
         await Spin.Check(openApp);

@@ -1,13 +1,7 @@
 ﻿using DataAcess;
 using Model;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 using Spectre.Console;
 
 namespace CodingTrackerApp
@@ -48,7 +42,7 @@ namespace CodingTrackerApp
 
             using (MyDbContext db = new MyDbContext())
             {
-                IQueryable<CodingSession> codingSession = db.codingSessions;
+                IQueryable<CodingSession> codingSession = db.CodingSessions;
 
                 if (!codingSession.Any()) AnsiConsole.Write(new Markup("\n[red]Database is Empty[/]\n"));
                 else
@@ -108,7 +102,7 @@ namespace CodingTrackerApp
                             End = endInput,
                             Duration = duration
                         };
-                        db.codingSessions.Add(codingSession);
+                        db.CodingSessions.Add(codingSession);
                         db.SaveChanges();
                         AnsiConsole.Write(new Markup("[red]Added[/]\n"));
                     }
@@ -138,7 +132,7 @@ namespace CodingTrackerApp
 
             using (MyDbContext db = new MyDbContext())
             {
-                if (db.codingSessions.Find(updateKey) == null) AnsiConsole.Write(new Markup("[red]Session not found[/]\n"));
+                if (db.CodingSessions.Find(updateKey) == null) AnsiConsole.Write(new Markup("[red]Session not found[/]\n"));
                 else
                 {
                     Dictionary<string, int> choices = new Dictionary<string, int>
@@ -163,7 +157,7 @@ namespace CodingTrackerApp
 
                             if (isStartValid)
                             {
-                                CodingSession? codingSession = db.codingSessions.Find(updateKey);
+                                CodingSession? codingSession = db.CodingSessions.Find(updateKey);
                                 if (codingSession != null)
                                 {
                                     DateTime newStart = DateTimeConstruct(start);
@@ -194,7 +188,7 @@ namespace CodingTrackerApp
 
                             if (isEndValid)
                             {
-                                CodingSession? codingSession = db.codingSessions.Find(updateKey);
+                                CodingSession? codingSession = db.CodingSessions.Find(updateKey);
                                 if (codingSession != null)
                                 {
                                     DateTime newEnd = DateTimeConstruct(end);
@@ -241,19 +235,19 @@ namespace CodingTrackerApp
 
             using (MyDbContext db = new MyDbContext())
             {
-                IQueryable<CodingSession> codingSession = db.codingSessions;
+                IQueryable<CodingSession> codingSession = db.CodingSessions;
                 if (!codingSession.Any()) return;
                 else
                 {
                     Console.Write($"\nSession Count: {codingSession.Count()}\n");
                     Console.Write($"Delete Session (Enter ID): ");
                     primaryKey = (int)UserInput.NumericInputOnly();
-                    toBeDeleted = db.codingSessions.Find(primaryKey);
+                    toBeDeleted = db.CodingSessions.Find(primaryKey);
                 }
                 if (toBeDeleted == null) AnsiConsole.Write(new Markup("\n[red]Session not found[/]\n"));
                 else
                 {
-                     db.codingSessions.Remove(toBeDeleted);
+                     db.CodingSessions.Remove(toBeDeleted);
                     db.SaveChanges();
                     AnsiConsole.Write(new Markup("\n[red]Deleted[/]\n"));
                 }
@@ -316,7 +310,7 @@ namespace CodingTrackerApp
                 case 1:
                     using (MyDbContext db = new MyDbContext())
                     {
-                        IQueryable<CodingSession> codingSession = db.codingSessions;
+                        IQueryable<CodingSession> codingSession = db.CodingSessions;
                         if (!codingSession.Any()) AnsiConsole.Write(new Markup("\n[red]Database is Empty[/]\n"));
                         else
                         {
@@ -345,9 +339,9 @@ namespace CodingTrackerApp
                 case 2:
                     using (MyDbContext db = new MyDbContext())
                     {
-                        double totalMinutes = db.codingSessions.Sum(x => x.Duration);
-                        double avgMinutes = db.codingSessions.Average(x => x.Duration);
-                        int count = db.codingSessions.Count();
+                        double totalMinutes = db.CodingSessions.Sum(x => x.Duration);
+                        double avgMinutes = db.CodingSessions.Average(x => x.Duration);
+                        int count = db.CodingSessions.Count();
 
                         Panel panel = new Panel($"Total number of sessions: {count}" +
                             $"\nTotal session minutes: {totalMinutes}" +

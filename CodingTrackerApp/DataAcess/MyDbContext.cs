@@ -5,7 +5,7 @@ namespace DataAcess;
 
 public class MyDbContext : DbContext
 {
-    public DbSet<CodingSession> codingSessions {  get; set; }
+    public DbSet<CodingSession> CodingSessions {  get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
