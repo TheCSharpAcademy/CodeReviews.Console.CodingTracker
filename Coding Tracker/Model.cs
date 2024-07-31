@@ -81,7 +81,7 @@ public class Model
             {
                 var rowsAffected = connection.Execute(sql);
 
-                // Calculates new updated duration
+                // Updates with new duration
                 if (column == "StartTime" || column == "EndTime")
                 {
                     sql = @$"UPDATE coding_sessions
