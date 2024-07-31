@@ -84,12 +84,6 @@ public class Model
                 // Calculates new updated duration
                 if (column == "StartTime" || column == "EndTime")
                 {
-                    string? newTime = value;
-                    string unchangedTimeColumn = (column == "StartTime") ? "EndTime" : "StartTime";
-
-                    sql = $"SELECT {unchangedTimeColumn} FROM coding_sessions WHERE Id = {id}";
-                    string? unchangedTime = connection.ExecuteScalar(sql)?.ToString();
-
                     sql = @$"UPDATE coding_sessions
                         SET Duration = '{duration}'
                         Where Id = {id}";
