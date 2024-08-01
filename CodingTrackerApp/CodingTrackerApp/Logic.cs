@@ -36,7 +36,7 @@ namespace CodingTrackerApp
                     break;
             }
         }
-        private static void GetAllSession()
+        internal static void GetAllSession()
         {
             Console.Clear();
 
@@ -67,14 +67,12 @@ namespace CodingTrackerApp
                 }
             }
         }
-        private static void InsertSession()
+        internal static void InsertSession()
         {
             Console.Clear();
 
             string strStartInput, strEndInput;
-            DateTime startInput, endInput;
             bool isStartValid, isEndValid;
-            double duration;
 
             Console.Write("Enter Start (yyyyMMddHHmm): ");
             strStartInput = UserInput.NumericInputOnly().ToString();
@@ -86,40 +84,9 @@ namespace CodingTrackerApp
             isEndValid = IsValidDateTime(strEndInput, "yyyyMMddHHmm");
             Console.WriteLine();
 
-            if (isStartValid && isEndValid)
-            {
-                startInput = DateTimeConstruct(strStartInput);
-                endInput = DateTimeConstruct(strEndInput);
-                duration = CalculateDuration(startInput, endInput);
-
-                if (duration > 0)
-                {
-                    using (MyDbContext db = new MyDbContext())
-                    {
-                        CodingSession codingSession = new CodingSession
-                        {
-                            Start = startInput,
-                            End = endInput,
-                            Duration = duration
-                        };
-                        db.CodingSessions.Add(codingSession);
-                        db.SaveChanges();
-                        AnsiConsole.Write(new Markup("[red]Added[/]\n"));
-                    }
-                } else
-                {
-                    AnsiConsole.Write(new Markup("\n[red]End < Start. Try again![/]\n"));
-                    Thread.Sleep(1000);
-                    InsertSession();
-                }
-            } else
-            {
-                AnsiConsole.Write(new Markup("\n[red]Invalid Entry. Try again![/]\n"));
-                Thread.Sleep(1000); 
-                InsertSession();
-            }  
+            Validation.StartEndValidation(isStartValid, isEndValid, strStartInput, strEndInput);    
         }
-        private static void UpdateSession()
+        internal static void UpdateSession()
         {
             Console.Clear();
             GetAllSession();
@@ -155,71 +122,14 @@ namespace CodingTrackerApp
                             string start = UserInput.NumericInputOnly().ToString();
                             bool isStartValid = IsValidDateTime(start, "yyyyMMddHHmm");
 
-                            if (isStartValid)
-                            {
-                                CodingSession? codingSession = db.CodingSessions.Find(updateKey);
-                                if (codingSession != null)
-                                {
-                                    DateTime newStart = DateTimeConstruct(start);
-                                    codingSession.Start = newStart;
-
-                                    double newDuration = CalculateDuration(newStart, codingSession.End);
-                                    codingSession.Duration = newDuration;
-
-                                    db.SaveChanges();
-
-                                    AnsiConsole.Write(new Markup("\n[red]Updated[/]\n"));
-                                    Thread.Sleep(1000);
-                                    GetAllSession();
-                                }
-                            }
-                            else
-                            {
-                                AnsiConsole.Write(new Markup("\n[red]Invalid Entry. Try again![/]\n"));
-                                Thread.Sleep(1000);
-                                UpdateSession();
-                                return;
-                            }
+                            Validation.StartValidation(db, isStartValid, updateKey, start);                          
                             break;
                         case 2:
                             Console.Write("Enter New End Time (yyyyMMddHHmm): ");
                             string end = UserInput.NumericInputOnly().ToString();
                             bool isEndValid = IsValidDateTime(end, "yyyyMMddHHmm");
 
-                            if (isEndValid)
-                            {
-                                CodingSession? codingSession = db.CodingSessions.Find(updateKey);
-                                if (codingSession != null)
-                                {
-                                    DateTime newEnd = DateTimeConstruct(end);
-                                    codingSession.End = newEnd;
-
-                                    double newDuration = CalculateDuration(codingSession.Start, newEnd);
-                                    if (newDuration > 0)
-                                    {
-                                        codingSession.Duration = newDuration;
-                                        db.SaveChanges();
-
-                                        AnsiConsole.Write(new Markup("\n[red]Updated[/]\n"));
-                                        Thread.Sleep(1000);
-                                        GetAllSession();
-                                    }
-                                    else
-                                    {
-                                        AnsiConsole.Write(new Markup("\n[red]End < Start. Try again![/]\n"));
-                                        Thread.Sleep(1000);
-                                        UpdateSession();
-                                        return;
-                                    }   
-                                }
-                            }
-                            else
-                            {
-                                AnsiConsole.Write(new Markup("\n[red]Invalid Entry. Try again![/]\n"));
-                                Thread.Sleep(1000);
-                                UpdateSession();
-                                return;
-                            }
+                            Validation.EndValidation(db, isEndValid, updateKey, end);
                             break;
                     }
                 }
@@ -253,12 +163,12 @@ namespace CodingTrackerApp
                 }
             }
         }
-        private static double CalculateDuration(DateTime start, DateTime end)
+        internal static double CalculateDuration(DateTime start, DateTime end)
         {
             TimeSpan duration = end - start;
             return duration.TotalMinutes;
         }
-        private static DateTime DateTimeConstruct(string dateTime)
+        internal static DateTime DateTimeConstruct(string dateTime)
         {
             List<string> dateTimeString = new List<string>();
 
