@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "MyCodingTrack": {
+      "commandName": "Project",
+      "workingDirectory": "C:\\Users\\marti\\_CodeReviews.Console.CodingTracker\\CodingTracker.DreamFXX",
+      "sqlDebugging": true,
+      "nativeDebugging": true
+    }
+  }
+}
