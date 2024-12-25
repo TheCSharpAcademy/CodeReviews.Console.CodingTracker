@@ -1,4 +1,4 @@
-﻿using static weakiepedia.CodingTracker.ConfigurationHelper;
+using static weakiepedia.CodingTracker.ConfigurationHelper;
 using System.Data.SQLite;
 using System.Diagnostics;
 using System.Globalization;
@@ -115,9 +115,22 @@ internal class DatabaseManager
 
         if (choice == "Enter time manually")
         {
-            startTime = TimeHelper.GetUserTimeManually("Enter start time (HH:mm): ", 1);
-            endTime = TimeHelper.GetUserTimeManually("Enter end time (HH:mm): ", 2);
-            duration = TimeHelper.CalculateDuration(startTime, endTime);
+            bool validation = false;
+            do
+            {
+                startTime = TimeHelper.GetUserTimeManually("Enter start time (HH:mm): ", 1);
+                endTime = TimeHelper.GetUserTimeManually("Enter end time (HH:mm): ", 2);
+                duration = TimeHelper.CalculateDuration(startTime, endTime);
+                if (startTime < endTime)
+                {
+                    validation = true;
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine("Start time can't be later than end time");
+                    AnsiConsole.MarkupLine("");
+                }
+            } while (validation == false);
             
             try
             {
