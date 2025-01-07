@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CodingTracker": {
+      "commandName": "Project",
+      "workingDirectory": "C:\\Users\\admin\\Desktop\\CSharpAcademy\\CodeReviews.Console.CodingTracker\\CodingTracker"
+    }
+  }
+}
