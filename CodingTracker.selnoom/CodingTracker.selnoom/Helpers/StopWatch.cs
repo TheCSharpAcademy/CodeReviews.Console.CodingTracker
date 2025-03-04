@@ -1,7 +1,6 @@
 ﻿using CodingTracker.selnoom.Data;
 using Spectre.Console;
 using System.Diagnostics;
-using System.Diagnostics.Metrics;
 
 namespace CodingTracker.selnoom.Helpers;
 
@@ -26,7 +25,6 @@ internal static class StopWatch
 
         DateTime endTime = DateTime.Now;
         stopwatch.Stop();
-        TimeSpan elapsed = stopwatch.Elapsed;
 
         string formattedStartTime = startTime.ToString("yyyy-MM-dd HH:mm:ss");
         string formattedEndTime = endTime.ToString("yyyy-MM-dd HH:mm:ss");
