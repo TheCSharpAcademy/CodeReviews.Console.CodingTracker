@@ -1,5 +1,4 @@
 ﻿using Spectre.Console;
-using System.Text.RegularExpressions;
 
 namespace CodingTracker.selnoom.Helpers;
 
@@ -12,18 +11,18 @@ internal static class Validation
 
     internal static string ValidateTimeInput()
     {
-        string startTimeInput = AnsiConsole.Ask<string>("");
-        while (!DateTime.TryParseExact(startTimeInput, "yyyy-MM-dd HH:mm", null, System.Globalization.DateTimeStyles.None, out DateTime startTime))
+        string timeInput = AnsiConsole.Ask<string>("");
+        while (!DateTime.TryParseExact(timeInput, "yyyy-MM-dd HH:mm", null, System.Globalization.DateTimeStyles.None, out DateTime startTime))
         {
-            if (ReturnToMenu(startTimeInput))
+            if (ReturnToMenu(timeInput))
             {
                 return "0";
             }
 
             AnsiConsole.MarkupLine("[bold red]Invalid input. Please try again.[/]\n");
-            startTimeInput = AnsiConsole.Ask<string>("Enter date (yyyy-MM-dd HH:mm):\n\n");
+            timeInput = AnsiConsole.Ask<string>("Enter date (yyyy-MM-dd HH:mm):\n\n");
         }
-        return startTimeInput;
+        return timeInput;
     }
 
     internal static string ValidateEndTimeInput(string startTime)
@@ -62,9 +61,9 @@ internal static class Validation
         }
     }
 
-    internal static bool ReturnToMenu(string timeInput)
+    internal static bool ReturnToMenu(string input)
     {
-        return timeInput.Trim() == "0";
+        return input.Trim() == "0";
     }
 
     internal static string FormatDuration(TimeSpan duration)
@@ -73,29 +72,22 @@ internal static class Validation
 
         
         return formattedDuration = $"{(int)duration.TotalDays} days, {duration.Hours:D2} hours, {duration.Minutes:D2} minutes";
-        
     }
 
-    //internal static int ValidateMainMenuInput (string userInput)
-    //{
-    //    int validatedInput;
-    //    userInput = userInput.Trim();
+    internal static int FormatInputToInt(string input)
+    {
+        int formattedInput;
 
-    //    while (true)
-    //    {
-    //        if (!int.TryParse(userInput, out validatedInput))
-    //        {
-    //            userInput = AnsiConsole.Ask<string>("[bold red]Invalid input. Please try again.[/]");
-    //            continue;
-    //        }
+        while(!int.TryParse(input, out formattedInput))
+        {
+            input = AnsiConsole.Ask<string>(("[bold red]Invalid input. Please try again.[/]\n"));
+        }
 
-    //        if (validatedInput < 0 || validatedInput > 4)
-    //        {
-    //            userInput = AnsiConsole.Ask<string>("[bold red]The selected option does not exist. Please try again.[/]");
-    //            continue;
-    //        }
+        return formattedInput;
+    }
 
-    //        return validatedInput;
-    //    }
-    //}
+    internal static bool CheckIfIdExists(List<int> ids, int input)
+    {
+        return ids.Contains(input);
+    }
 }
