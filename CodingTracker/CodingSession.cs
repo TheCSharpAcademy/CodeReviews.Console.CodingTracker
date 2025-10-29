@@ -1,28 +1,23 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace CodingTracker;
-
-public class CodingSession
+﻿namespace CodingTracker
 {
-    public CodingSession() { }
-    public CodingSession(DateTime start, DateTime end)
+    public class CodingSession
     {
-        Start = start;
-        End = end;
-        UpdateDuration();
-    }
+        public int Id { get; set; }
+        public DateTime Start { get; set; }
+        public DateTime End { get; set; }
+        public double Duration { get; set; }
 
-    public int Id { get; set; }
+        public CodingSession() { }
+        public CodingSession(DateTime start, DateTime end)
+        {
+            Start = start;
+            End = end;
+            UpdateDuration();
+        }
 
-    [Column("start_time")]
-    public DateTime Start { get; set; }
-
-    [Column("end_time")]
-    public DateTime End { get; set; }
-    public double Duration { get; set; }
-
-    public void UpdateDuration()
-    {
-        Duration = (End - Start).TotalSeconds;
+        public void UpdateDuration()
+        {
+            Duration = (End - Start).TotalSeconds;
+        }
     }
 }
