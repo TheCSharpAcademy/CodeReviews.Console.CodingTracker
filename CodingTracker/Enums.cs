@@ -7,8 +7,24 @@
             Create,
             Read,
             Update,
-            Delete
+            Delete,
+            Start,
+            Report,
+            SetGoal,
+            ShowGoalStatus,
         };
 
+        public enum SessionFilter
+        {
+            Week,
+            Day,
+            Year
+        }
+
+        public enum SessionOrder
+        {
+            Ascending,
+            Descending
+        }
     }
 }

@@ -50,6 +50,30 @@ namespace CodingTracker
             AnsiConsole.WriteLine(confirmation);
         }
 
+        public void Start()
+        {
+            CodingSession? codingSession = null;
+            DateTime start = DateTime.Now;
+
+            bool confirmation = false;
+            while (!confirmation)
+            {
+                AnsiConsole.WriteLine("Happy Coding");
+                AnsiConsole.WriteLine("Press any key to stop");
+                _ = Console.ReadKey();
+
+                DateTime end = DateTime.Now;
+                codingSession = new(start, end);
+                AnsiConsole.WriteLine($"You have coded for {codingSession.DurationToString()}, Confirm to stop");
+                confirmation = UserInput.Confirm();
+            }
+
+            if (codingSession != null)
+            {
+                database.Save(codingSession);
+            }
+        }
+
         private static void ShowCodingSessionTable(List<CodingSession> codingSessions)
         {
             Table readTable = new();
@@ -60,6 +84,7 @@ namespace CodingTracker
             foreach (CodingSession cs in codingSessions)
             {
                 // TODO: handle locale thing in one place
+                // TODO: format duration, add second and round
                 _ = readTable.AddRow(new Text(cs.Id.ToString()), new Text(cs.Start.ToString()), new Text(cs.End.ToString()), new Text(cs.Duration.ToString()));
             }
 

@@ -35,6 +35,9 @@ namespace CodingTracker
                     case Enums.MenuOption.Delete:
                         codingController.Delete();
                         break;
+                    case Enums.MenuOption.Start:
+                        codingController.Start();
+                        break;
                     default:
                         AnsiConsole.WriteLine("invalid");
                         break;

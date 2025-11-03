@@ -18,7 +18,7 @@ namespace CodingTracker
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         start_time TEXT,
         end_time TEXT,
-        duration INTEGER
+        duration REAL
         )";
 
             _ = tableCmd.ExecuteNonQuery();
