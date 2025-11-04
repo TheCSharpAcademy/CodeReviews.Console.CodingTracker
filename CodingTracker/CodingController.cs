@@ -108,6 +108,22 @@ namespace CodingTracker
             }
         }
 
+        public void Report()
+        {
+            Report report = database.GetReport();
+            Table readTable = new();
+            _ = readTable.AddColumn("period")
+                .AddColumn("total session")
+                .AddColumn("total duration");
+
+            _ = readTable.AddRow(new Text("Today"), new Text(report.CountToday.ToString()), new Text(report.TodayDurationToString()));
+            _ = readTable.AddRow(new Text("This Week"), new Text(report.CountWeek.ToString()), new Text(report.WeekDurationToString()));
+            _ = readTable.AddRow(new Text("This Year"), new Text(report.CountYear.ToString()), new Text(report.YearDurationToString()));
+            _ = readTable.AddRow(new Text("All Time"), new Text(report.Count.ToString()), new Text(report.TotalDurationToString()));
+
+            AnsiConsole.Write(readTable);
+        }
+
         private static void ShowCodingSessionTable(List<CodingSession> codingSessions)
         {
             Table readTable = new();

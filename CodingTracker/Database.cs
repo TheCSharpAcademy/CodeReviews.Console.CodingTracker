@@ -127,6 +127,28 @@ namespace CodingTracker
             return records;
         }
 
+        public Report GetReport()
+        {
+            string query = @"SELECT
+  COUNT(CASE WHEN date(start_time) = date('now', 'localtime') THEN 1 END) AS counttoday,
+  COALESCE(SUM(CASE WHEN date(start_time) = date('now', 'localtime') THEN duration END), 0) AS totaltoday,
+
+  COUNT(CASE WHEN strftime('%Y-%W', start_time) = strftime('%Y-%W', 'now', 'localtime') THEN 1 END) AS countweek,
+  COALESCE(SUM(CASE WHEN strftime('%Y-%W', start_time) = strftime('%Y-%W', 'now', 'localtime') THEN duration END), 0) AS totalweek,
+
+  COUNT(CASE WHEN strftime('%Y', start_time) = strftime('%Y', 'now', 'localtime') THEN 1 END) AS countyear,
+  COALESCE(SUM(CASE WHEN strftime('%Y', start_time) = strftime('%Y', 'now', 'localtime') THEN duration END), 0) AS totalyear,
+
+  COUNT(*) AS count,
+  COALESCE(SUM(duration), 0) AS total
+
+FROM coding_sessions;
+";
+            connection.Open();
+            Report report = connection.QuerySingle<Report>(query);
+            return report;
+        }
+
         public void Dispose()
         {
             GC.SuppressFinalize(this);

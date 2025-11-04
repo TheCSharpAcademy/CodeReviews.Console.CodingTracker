@@ -38,6 +38,9 @@ namespace CodingTracker
                     case Enums.MenuOption.Start:
                         codingController.Start();
                         break;
+                    case Enums.MenuOption.Report:
+                        codingController.Report();
+                        break;
                     default:
                         AnsiConsole.WriteLine("invalid");
                         break;
