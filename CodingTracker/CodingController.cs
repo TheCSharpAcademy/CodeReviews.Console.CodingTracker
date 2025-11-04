@@ -16,8 +16,42 @@ namespace CodingTracker
 
         public void Read()
         {
-            List<CodingSession> codingSessions = database.Get();
-            ShowCodingSessionTable(codingSessions);
+            AnsiConsole.WriteLine("filter?");
+            bool confirmation = UserInput.Confirm();
+            Enums.SessionFilter? filter = null;
+            if (confirmation)
+            {
+                filter = UserInput.SelectFilter();
+            }
+
+            AnsiConsole.WriteLine("order?");
+            confirmation = UserInput.Confirm();
+            Enums.SessionOrder? order = null;
+            if (confirmation)
+            {
+                order = UserInput.SelectOrder();
+            }
+
+            List<FilteredCodingSession> filteredCodingSessions;
+            switch (filter)
+            {
+                case Enums.SessionFilter.Day:
+                    filteredCodingSessions = database.GetGroupByDay(order);
+                    ShowFilteredCodingSessionTable(filteredCodingSessions);
+                    break;
+                case Enums.SessionFilter.Week:
+                    filteredCodingSessions = database.GetGroupByWeek(order);
+                    ShowFilteredCodingSessionTable(filteredCodingSessions);
+                    break;
+                case Enums.SessionFilter.Year:
+                    filteredCodingSessions = database.GetGroupByYear(order);
+                    ShowFilteredCodingSessionTable(filteredCodingSessions);
+                    break;
+                default:
+                    List<CodingSession> codingSessions = database.Get(order);
+                    ShowCodingSessionTable(codingSessions);
+                    break;
+            }
         }
 
         public void Update()
@@ -84,8 +118,22 @@ namespace CodingTracker
             foreach (CodingSession cs in codingSessions)
             {
                 // TODO: handle locale thing in one place
-                // TODO: format duration, add second and round
-                _ = readTable.AddRow(new Text(cs.Id.ToString()), new Text(cs.Start.ToString()), new Text(cs.End.ToString()), new Text(cs.Duration.ToString()));
+                cs.UpdateDuration();
+                _ = readTable.AddRow(new Text(cs.Id.ToString()), new Text(cs.Start.ToString()), new Text(cs.End.ToString()), new Text(cs.DurationToStringComplete()));
+            }
+
+            AnsiConsole.Write(readTable);
+        }
+
+        private static void ShowFilteredCodingSessionTable(List<FilteredCodingSession> filteredCodingSessions)
+        {
+            Table readTable = new();
+            _ = readTable.AddColumn("filter id")
+                .AddColumn("total duration");
+            foreach (FilteredCodingSession fcs in filteredCodingSessions)
+            {
+                // TODO: handle locale thing in one place
+                _ = readTable.AddRow(new Text(fcs.FilterId), new Text(fcs.DurationToStringComplete()));
             }
 
             AnsiConsole.Write(readTable);

@@ -35,10 +35,23 @@ namespace CodingTracker
             _ = connection.Execute(query, session);
         }
 
-        public List<CodingSession> Get()
+        public List<CodingSession> Get(Enums.SessionOrder? order = null)
         {
+            string query = "select id, start_time as start, end_time as end, duration from coding_sessions";
+            switch (order)
+            {
+                case Enums.SessionOrder.Ascending:
+                    query += " order by id asc";
+                    break;
+                case Enums.SessionOrder.Descending:
+                    query += " order by id desc";
+                    break;
+                default:
+                    break;
+            }
+
             connection.Open();
-            List<CodingSession> records = [.. connection.Query<CodingSession>("select id, start_time as start, end_time as end, duration from coding_sessions")];
+            List<CodingSession> records = [.. connection.Query<CodingSession>(query)];
             return records;
         }
 
@@ -55,6 +68,63 @@ namespace CodingTracker
             string query = "delete from coding_sessions where id = @Id";
             _ = connection.Execute(query, session);
 
+        }
+
+        public List<FilteredCodingSession> GetGroupByDay(Enums.SessionOrder? order = null)
+        {
+            string query = "select strftime('%Y-%j', start_time) as filterid, sum(duration) as duration from coding_sessions group by filterid";
+            switch (order)
+            {
+                case Enums.SessionOrder.Ascending:
+                    query += " order by filterid asc";
+                    break;
+                case Enums.SessionOrder.Descending:
+                    query += " order by filterid desc";
+                    break;
+                default:
+                    break;
+            }
+            connection.Open();
+            List<FilteredCodingSession> records = [.. connection.Query<FilteredCodingSession>(query)];
+            return records;
+        }
+
+        public List<FilteredCodingSession> GetGroupByWeek(Enums.SessionOrder? order = null)
+        {
+            string query = "select printf('%s-%02d', strftime('%Y', start_time), cast(strftime('%W', start_time) as integer) + 1) as filterid, sum(duration) as duration from coding_sessions group by filterid";
+            switch (order)
+            {
+                case Enums.SessionOrder.Ascending:
+                    query += " order by filterid asc";
+                    break;
+                case Enums.SessionOrder.Descending:
+                    query += " order by filterid desc";
+                    break;
+                default:
+                    break;
+            }
+            connection.Open();
+            List<FilteredCodingSession> records = [.. connection.Query<FilteredCodingSession>(query)];
+            return records;
+        }
+
+        public List<FilteredCodingSession> GetGroupByYear(Enums.SessionOrder? order = null)
+        {
+            string query = "select strftime('%Y', start_time) as filterid, sum(duration) as duration from coding_sessions group by filterid";
+            switch (order)
+            {
+                case Enums.SessionOrder.Ascending:
+                    query += " order by filterid asc";
+                    break;
+                case Enums.SessionOrder.Descending:
+                    query += " order by filterid desc";
+                    break;
+                default:
+                    break;
+            }
+            connection.Open();
+            List<FilteredCodingSession> records = [.. connection.Query<FilteredCodingSession>(query)];
+            return records;
         }
 
         public void Dispose()

@@ -53,5 +53,29 @@ namespace CodingTracker
                     );
             return confirmation;
         }
+
+        public static Enums.SessionFilter SelectFilter()
+        {
+            Enums.SessionFilter filter = AnsiConsole.Prompt(
+                    new SelectionPrompt<Enums.SessionFilter>()
+                    .Title("what filter")
+                    .PageSize(10)
+                    .MoreChoicesText("move up or down to choose")
+                    .AddChoices(Enum.GetValues<Enums.SessionFilter>())
+                    );
+            return filter;
+        }
+
+        public static Enums.SessionOrder SelectOrder()
+        {
+            Enums.SessionOrder order = AnsiConsole.Prompt(
+                    new SelectionPrompt<Enums.SessionOrder>()
+                    .Title("what order")
+                    .PageSize(10)
+                    .MoreChoicesText("move up or down to choose")
+                    .AddChoices(Enum.GetValues<Enums.SessionOrder>())
+                    );
+            return order;
+        }
     }
 }
