@@ -11,12 +11,12 @@ namespace CodingTracker
             CodingSession obj = UserInput.PromptNewCodingSession();
             database.Save(obj);
 
-            AnsiConsole.WriteLine("saved");
+            AnsiConsole.WriteLine("Saved");
         }
 
         public void Read()
         {
-            AnsiConsole.WriteLine("filter?");
+            AnsiConsole.WriteLine("Use Filter?");
             bool confirmation = UserInput.Confirm();
             Enums.SessionFilter? filter = null;
             if (confirmation)
@@ -24,7 +24,7 @@ namespace CodingTracker
                 filter = UserInput.SelectFilter();
             }
 
-            AnsiConsole.WriteLine("order?");
+            AnsiConsole.WriteLine("Use Order?");
             confirmation = UserInput.Confirm();
             Enums.SessionOrder? order = null;
             if (confirmation)
@@ -93,7 +93,7 @@ namespace CodingTracker
             while (!confirmation)
             {
                 AnsiConsole.WriteLine("Happy Coding");
-                AnsiConsole.WriteLine("Press any key to stop");
+                AnsiConsole.WriteLine("Press Any Key To Stop");
                 _ = Console.ReadKey();
 
                 DateTime end = DateTime.Now;
@@ -112,9 +112,9 @@ namespace CodingTracker
         {
             Report report = database.GetReport();
             Table readTable = new();
-            _ = readTable.AddColumn("period")
-                .AddColumn("total session")
-                .AddColumn("total duration");
+            _ = readTable.AddColumn("Period")
+                .AddColumn("Total Session")
+                .AddColumn("Total Duration");
 
             _ = readTable.AddRow(new Text("Today"), new Text(report.CountToday.ToString()), new Text(report.TodayDurationToString()));
             _ = readTable.AddRow(new Text("This Week"), new Text(report.CountWeek.ToString()), new Text(report.WeekDurationToString()));
@@ -173,7 +173,7 @@ namespace CodingTracker
                 goal.IsFinished = 1;
                 goal.IsAchieved = 1;
                 database.UpdateCodingGoal(goal);
-                AnsiConsole.WriteLine("congrats, goal achieved");
+                AnsiConsole.WriteLine("Congratulation, Goal Achieved");
                 return;
             }
 
@@ -182,14 +182,14 @@ namespace CodingTracker
                 goal.IsFinished = 1;
                 goal.IsAchieved = 0;
                 database.UpdateCodingGoal(goal);
-                AnsiConsole.WriteLine("time out");
+                AnsiConsole.WriteLine("You Ran Out of Time");
                 return;
             }
             // TODO: change duration to readable format
-            AnsiConsole.WriteLine($"you did {totalDuration} sec, remaining duration {remainingDuration}");
+            AnsiConsole.WriteLine($"You coded for {totalDuration} seconds, remaining duration {remainingDuration}");
             int remainingDays = goal.RemainingDays;
             double dailyAverageNeeded = goal.GetDailyAverageNeeded(remainingDuration);
-            AnsiConsole.WriteLine($"you need to do {dailyAverageNeeded} for {remainingDays} days to achieve your goal");
+            AnsiConsole.WriteLine($"You need to do {dailyAverageNeeded} for {remainingDays} days to achieve your goal");
 
             return;
         }
@@ -197,10 +197,10 @@ namespace CodingTracker
         private static void ShowCodingSessionTable(List<CodingSession> codingSessions)
         {
             Table readTable = new();
-            _ = readTable.AddColumn("id")
-            .AddColumn("start")
-            .AddColumn("end")
-            .AddColumn("duration");
+            _ = readTable.AddColumn("Id")
+            .AddColumn("Start")
+            .AddColumn("End")
+            .AddColumn("Duration");
             foreach (CodingSession cs in codingSessions)
             {
                 // TODO: handle locale thing in one place
@@ -214,8 +214,8 @@ namespace CodingTracker
         private static void ShowFilteredCodingSessionTable(List<FilteredCodingSession> filteredCodingSessions)
         {
             Table readTable = new();
-            _ = readTable.AddColumn("filter id")
-                .AddColumn("total duration");
+            _ = readTable.AddColumn("Period")
+                .AddColumn("Total Duration");
             foreach (FilteredCodingSession fcs in filteredCodingSessions)
             {
                 // TODO: handle locale thing in one place

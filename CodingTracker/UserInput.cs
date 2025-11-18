@@ -6,8 +6,12 @@ namespace CodingTracker
     {
         public static CodingSession PromptNewCodingSession(CodingSession? oldValue = null)
         {
-            TextPrompt<DateTime> startPrompt = new("start date(dd/mm/yy hh:ii)");
-            TextPrompt<DateTime> endPrompt = new("start date(mm/dd/yy hh:ii)");
+            TextPrompt<DateTime> startPrompt = new("Enter Start Date Time (mm/dd/yy hh:ii)");
+            TextPrompt<DateTime> endPrompt = new("Enter End Date Time (mm/dd/yy hh:ii)");
+
+            DateOnly today = DateOnly.FromDateTime(DateTime.Today);
+            _ = startPrompt.DefaultValue(today.ToDateTime(TimeOnly.MinValue));
+            _ = endPrompt.DefaultValue(today.ToDateTime(TimeOnly.MaxValue));
 
             if (oldValue != null)
             {
@@ -32,9 +36,9 @@ namespace CodingTracker
         {
             CodingSession updateId = AnsiConsole.Prompt(
                     new SelectionPrompt<CodingSession>()
-                    .Title("what do?")
+                    .Title("Select Coding Session")
                     .PageSize(10)
-                    .MoreChoicesText("move up or down to choose")
+                    .MoreChoicesText("Move Up Or Down to Choose")
                     .UseConverter(static a => $"{a.Id} {a.Start} {a.Duration}")
                     .AddChoices(selections)
                     );
@@ -44,7 +48,7 @@ namespace CodingTracker
         public static bool Confirm()
         {
             bool confirmation = AnsiConsole.Prompt(
-                    new TextPrompt<bool>("u sure?")
+                    new TextPrompt<bool>("Confirm?")
                     .AddChoice(true)
                     .AddChoice(false)
                     .DefaultValue(true)
@@ -58,9 +62,9 @@ namespace CodingTracker
         {
             Enums.SessionFilter filter = AnsiConsole.Prompt(
                     new SelectionPrompt<Enums.SessionFilter>()
-                    .Title("what filter")
+                    .Title("Choose Filter")
                     .PageSize(10)
-                    .MoreChoicesText("move up or down to choose")
+                    .MoreChoicesText("Move Up Or Down to Choose")
                     .AddChoices(Enum.GetValues<Enums.SessionFilter>())
                     );
             return filter;
@@ -70,9 +74,9 @@ namespace CodingTracker
         {
             Enums.SessionOrder order = AnsiConsole.Prompt(
                     new SelectionPrompt<Enums.SessionOrder>()
-                    .Title("what order")
+                    .Title("Choose Order")
                     .PageSize(10)
-                    .MoreChoicesText("move up or down to choose")
+                    .MoreChoicesText("Move Up Or Down to Choose")
                     .AddChoices(Enum.GetValues<Enums.SessionOrder>())
                     );
             return order;
@@ -81,7 +85,7 @@ namespace CodingTracker
         public static CodingGoal PromptNewCodingGoal()
         {
             DateOnly start = DateOnly.FromDateTime(DateTime.Now);
-            TextPrompt<DateOnly> EndPrompt = new("end date(mm/dd/yy)");
+            TextPrompt<DateOnly> EndPrompt = new("Enter End Date Time (mm/dd/yy hh:ii)");
 
             DateOnly end = AnsiConsole.Prompt(EndPrompt.Validate((end) =>
             {
@@ -89,7 +93,7 @@ namespace CodingTracker
             }));
             AnsiConsole.WriteLine(end.ToString());
 
-            int duration = AnsiConsole.Prompt(new TextPrompt<int>("duration in hour? must be round number").Validate(Validation.ValidatePositiveInteger));
+            int duration = AnsiConsole.Prompt(new TextPrompt<int>("Enter Duration in Hour (Must Be a Round Number)").Validate(Validation.ValidatePositiveInteger));
 
             CodingGoal obj = new(start, end, duration);
             return obj;

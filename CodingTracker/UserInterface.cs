@@ -13,9 +13,9 @@ namespace CodingTracker
                 AnsiConsole.Write(title);
                 Enums.MenuOption choice = AnsiConsole.Prompt(
                         new SelectionPrompt<Enums.MenuOption>()
-                        .Title("what do?")
+                        .Title("Choose Menu")
                         .PageSize(10)
-                        .MoreChoicesText("move up or down to choose")
+                        .MoreChoicesText("Move Up Or Down to Choose")
                         .AddChoices(Enum.GetValues<Enums.MenuOption>())
                         );
 
@@ -51,7 +51,7 @@ namespace CodingTracker
                         AnsiConsole.WriteLine("invalid");
                         break;
                 }
-                AnsiConsole.MarkupLine("press any key to continue");
+                AnsiConsole.MarkupLine("Press Any Key to Continue");
                 _ = Console.ReadKey();
             }
         }
