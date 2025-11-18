@@ -10,8 +10,8 @@
             Delete,
             Start,
             Report,
-            SetGoal,
-            ShowGoalStatus,
+            Goal,
+            Exit
         };
 
         public enum SessionFilter

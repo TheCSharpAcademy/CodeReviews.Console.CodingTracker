@@ -124,6 +124,76 @@ namespace CodingTracker
             AnsiConsole.Write(readTable);
         }
 
+        public void Goal()
+        {
+            CodingGoal? activeGoal = database.GetActiveCodingGoal();
+            if (activeGoal is null)
+            {
+                if (!UserInput.Confirm())
+                {
+                    return;
+                }
+
+                CreateGoal();
+            }
+
+            ShowGoalProgress();
+
+            return;
+        }
+
+        private void CreateGoal()
+        {
+            CodingGoal obj = UserInput.PromptNewCodingGoal();
+            database.SaveCodingGoal(obj);
+            return;
+        }
+
+        private void ShowGoalProgress()
+        {
+            CodingGoal? goal = database.GetActiveCodingGoal();
+            if (goal is null)
+            {
+                return;
+            }
+
+            // get all from start till now, see if achieved
+            List<CodingSession> codingSessions = database.GetAllCodingSessionsBetweenDates(goal.Start, goal.End);
+            double totalDuration = 0.0;
+            foreach (CodingSession cs in codingSessions)
+            {
+                totalDuration += cs.Duration;
+            }
+
+            // TODO: goal duration is in hours, maybe to someting to class to compare with session duration
+            double remainingDuration = goal.GetRemainingDuration(totalDuration);
+            if (remainingDuration <= 0)
+            {
+                // update if achieved
+                goal.IsFinished = 1;
+                goal.IsAchieved = 1;
+                database.UpdateCodingGoal(goal);
+                AnsiConsole.WriteLine("congrats, goal achieved");
+                return;
+            }
+
+            if (goal.End < DateTime.Now)
+            {
+                goal.IsFinished = 1;
+                goal.IsAchieved = 0;
+                database.UpdateCodingGoal(goal);
+                AnsiConsole.WriteLine("time out");
+                return;
+            }
+            // TODO: change duration to readable format
+            AnsiConsole.WriteLine($"you did {totalDuration} sec, remaining duration {remainingDuration}");
+            int remainingDays = goal.RemainingDays;
+            double dailyAverageNeeded = goal.GetDailyAverageNeeded(remainingDuration);
+            AnsiConsole.WriteLine($"you need to do {dailyAverageNeeded} for {remainingDays} days to achieve your goal");
+
+            return;
+        }
+
         private static void ShowCodingSessionTable(List<CodingSession> codingSessions)
         {
             Table readTable = new();

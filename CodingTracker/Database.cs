@@ -23,8 +23,19 @@ namespace CodingTracker
 
             _ = tableCmd.ExecuteNonQuery();
 
-            connection.Close();
+            tableCmd.CommandText =
+                @"CREATE TABLE IF NOT EXISTS coding_goals (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        start_time TEXT,
+                        end_time TEXT,
+                        duration INTEGER,
+                        is_finished INTEGER,
+                        is_achieved INTEGER
+                        );";
 
+            _ = tableCmd.ExecuteNonQuery();
+
+            connection.Close();
         }
 
         public void Save(CodingSession session)
@@ -147,6 +158,39 @@ FROM coding_sessions;
             connection.Open();
             Report report = connection.QuerySingle<Report>(query);
             return report;
+        }
+
+        public CodingGoal? GetActiveCodingGoal()
+        {
+            string query = @"select id, start_time as Start, end_time as End, duration as Duration, is_finished as IsFinished from coding_goals where is_finished == 0 limit 1";
+            connection.Open();
+            CodingGoal? codingGoal = connection.QuerySingleOrDefault<CodingGoal>(query);
+            return codingGoal;
+        }
+
+        public void SaveCodingGoal(CodingGoal codingGoal)
+        {
+            connection.Open();
+            string query = "insert into coding_goals (start_time, end_time, duration, is_finished, is_achieved) values(@Start, @End, @Duration, @IsFinished, @IsAchieved)";
+            Console.WriteLine($"{codingGoal.Start} {codingGoal.End} {codingGoal.Duration}");
+
+            _ = connection.Execute(query, codingGoal);
+        }
+
+        public void UpdateCodingGoal(CodingGoal codingGoal)
+        {
+            connection.Open();
+            string query = "update coding_goals set start_time = @Start, end_time = @End, duration = @Duration, is_finished = @IsFinished, is_achieved = @IsAchieved where id = @Id";
+            _ = connection.Execute(query, codingGoal);
+        }
+
+        public List<CodingSession> GetAllCodingSessionsBetweenDates(DateTime start, DateTime end)
+        {
+            string query = "select id, start_time as start, end_time as end, duration from coding_sessions where start_time >= @Start and end_time <= @End";
+            connection.Open();
+            var parameter = new { Start = start, End = end };
+            List<CodingSession> records = [.. connection.Query<CodingSession>(query, parameter)];
+            return records;
         }
 
         public void Dispose()

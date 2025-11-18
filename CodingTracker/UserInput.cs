@@ -77,5 +77,22 @@ namespace CodingTracker
                     );
             return order;
         }
+
+        public static CodingGoal PromptNewCodingGoal()
+        {
+            DateOnly start = DateOnly.FromDateTime(DateTime.Now);
+            TextPrompt<DateOnly> EndPrompt = new("end date(mm/dd/yy)");
+
+            DateOnly end = AnsiConsole.Prompt(EndPrompt.Validate((end) =>
+            {
+                return Validation.ValidateEndDate(end.ToDateTime(TimeOnly.MaxValue), start.ToDateTime(TimeOnly.MinValue));
+            }));
+            AnsiConsole.WriteLine(end.ToString());
+
+            int duration = AnsiConsole.Prompt(new TextPrompt<int>("duration in hour? must be round number").Validate(Validation.ValidatePositiveInteger));
+
+            CodingGoal obj = new(start, end, duration);
+            return obj;
+        }
     }
 }
