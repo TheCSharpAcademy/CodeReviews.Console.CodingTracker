@@ -68,7 +68,7 @@ namespace CodingTracker
             CodingSession updatedSession = UserInput.PromptNewCodingSession(selectedSession);
             selectedSession.Start = updatedSession.Start;
             selectedSession.End = updatedSession.End;
-            selectedSession.UpdateDuration();
+            // selectedSession.UpdateDuration();
 
             database.Update(selectedSession);
         }
@@ -98,7 +98,7 @@ namespace CodingTracker
 
                 DateTime end = DateTime.Now;
                 codingSession = new(start, end);
-                AnsiConsole.WriteLine($"You have coded for {codingSession.DurationToString()}, Confirm to stop");
+                AnsiConsole.WriteLine($"You have coded for {DurationFormatter.DurationToHourString(codingSession.Duration)}, Confirm to stop");
                 confirmation = UserInput.Confirm();
             }
 
@@ -116,10 +116,10 @@ namespace CodingTracker
                 .AddColumn("Total Session")
                 .AddColumn("Total Duration");
 
-            _ = readTable.AddRow(new Text("Today"), new Text(report.CountToday.ToString()), new Text(report.TodayDurationToString()));
-            _ = readTable.AddRow(new Text("This Week"), new Text(report.CountWeek.ToString()), new Text(report.WeekDurationToString()));
-            _ = readTable.AddRow(new Text("This Year"), new Text(report.CountYear.ToString()), new Text(report.YearDurationToString()));
-            _ = readTable.AddRow(new Text("All Time"), new Text(report.Count.ToString()), new Text(report.TotalDurationToString()));
+            _ = readTable.AddRow(new Text("Today"), new Text(report.CountToday.ToString()), new Text(DurationFormatter.DurationToHourString(report.TotalToday)));
+            _ = readTable.AddRow(new Text("This Week"), new Text(report.CountWeek.ToString()), new Text(DurationFormatter.DurationToHourString(report.TotalWeek)));
+            _ = readTable.AddRow(new Text("This Year"), new Text(report.CountYear.ToString()), new Text(DurationFormatter.DurationToHourString(report.TotalYear)));
+            _ = readTable.AddRow(new Text("All Time"), new Text(report.Count.ToString()), new Text(DurationFormatter.DurationToHourString(report.Total)));
 
             AnsiConsole.Write(readTable);
         }
@@ -129,6 +129,7 @@ namespace CodingTracker
             CodingGoal? activeGoal = database.GetActiveCodingGoal();
             if (activeGoal is null)
             {
+                AnsiConsole.WriteLine("No Active Goal. Create New Goal?");
                 if (!UserInput.Confirm())
                 {
                     return;
@@ -185,11 +186,10 @@ namespace CodingTracker
                 AnsiConsole.WriteLine("You Ran Out of Time");
                 return;
             }
-            // TODO: change duration to readable format
-            AnsiConsole.WriteLine($"You coded for {totalDuration} seconds, remaining duration {remainingDuration}");
+            AnsiConsole.WriteLine($"You coded for {DurationFormatter.DurationToHourString(totalDuration)}, remaining duration {DurationFormatter.DurationToHourString(remainingDuration)}");
             int remainingDays = goal.RemainingDays;
             double dailyAverageNeeded = goal.GetDailyAverageNeeded(remainingDuration);
-            AnsiConsole.WriteLine($"You need to do {dailyAverageNeeded} for {remainingDays} days to achieve your goal");
+            AnsiConsole.WriteLine($"You need to do {DurationFormatter.DurationToHourString(dailyAverageNeeded)} daily for {remainingDays} days to achieve your goal");
 
             return;
         }
@@ -204,8 +204,7 @@ namespace CodingTracker
             foreach (CodingSession cs in codingSessions)
             {
                 // TODO: handle locale thing in one place
-                cs.UpdateDuration();
-                _ = readTable.AddRow(new Text(cs.Id.ToString()), new Text(cs.Start.ToString()), new Text(cs.End.ToString()), new Text(cs.DurationToStringComplete()));
+                _ = readTable.AddRow(new Text(cs.Id.ToString()), new Text(cs.Start.ToString(DateFormats.DateStringFormat)), new Text(cs.End.ToString(DateFormats.DateStringFormat)), new Text(DurationFormatter.DurationToHourString(cs.Duration)));
             }
 
             AnsiConsole.Write(readTable);
@@ -219,7 +218,7 @@ namespace CodingTracker
             foreach (FilteredCodingSession fcs in filteredCodingSessions)
             {
                 // TODO: handle locale thing in one place
-                _ = readTable.AddRow(new Text(fcs.FilterId), new Text(fcs.DurationToStringComplete()));
+                _ = readTable.AddRow(new Text(fcs.FilterId), new Text(DurationFormatter.DurationToHourString(fcs.Duration)));
             }
 
             AnsiConsole.Write(readTable);
