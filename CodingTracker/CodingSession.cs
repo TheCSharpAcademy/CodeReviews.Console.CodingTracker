@@ -11,7 +11,7 @@
             set
             {
                 _start = value;
-                UpdateDuration();
+                CalculateDuration();
             }
         }
         public DateTime End
@@ -20,7 +20,7 @@
             set
             {
                 _end = value;
-                UpdateDuration();
+                CalculateDuration();
             }
         }
         public double Duration { get; set; }
@@ -32,7 +32,7 @@
             End = end;
         }
 
-        private void UpdateDuration()
+        private void CalculateDuration()
         {
             Duration = Math.Ceiling((End - Start).TotalSeconds);
         }

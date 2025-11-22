@@ -1,4 +1,5 @@
-﻿using Spectre.Console;
+﻿using System.Globalization;
+using Spectre.Console;
 
 namespace CodingTracker
 {
@@ -6,29 +7,35 @@ namespace CodingTracker
     {
         public static CodingSession PromptNewCodingSession(CodingSession? oldValue = null)
         {
-            TextPrompt<DateTime> startPrompt = new("Enter Start Date Time (mm/dd/yy hh:ii)");
-            TextPrompt<DateTime> endPrompt = new("Enter End Date Time (mm/dd/yy hh:ii)");
+            TextPrompt<string> startPrompt = new($"Enter Start Date Time ({DateFormats.DateDisplayFormat})");
+            TextPrompt<string> endPrompt = new($"Enter End Date Time ({DateFormats.DateDisplayFormat})");
 
             DateOnly today = DateOnly.FromDateTime(DateTime.Today);
-            _ = startPrompt.DefaultValue(today.ToDateTime(TimeOnly.MinValue));
-            _ = endPrompt.DefaultValue(today.ToDateTime(TimeOnly.MaxValue));
+            _ = startPrompt.DefaultValue(today.ToDateTime(TimeOnly.MinValue).ToString(DateFormats.DateStringFormat));
+            _ = endPrompt.DefaultValue(today.ToDateTime(TimeOnly.MaxValue).ToString(DateFormats.DateStringFormat));
 
             if (oldValue != null)
             {
-                _ = startPrompt.DefaultValue(oldValue.Start);
-                _ = endPrompt.DefaultValue(oldValue.End);
+                _ = startPrompt.DefaultValue(oldValue.Start.ToString(DateFormats.DateStringFormat));
+                _ = endPrompt.DefaultValue(oldValue.End.ToString(DateFormats.DateStringFormat));
             }
 
-            DateTime start = AnsiConsole.Prompt(startPrompt);
+            string start = AnsiConsole.Prompt(startPrompt
+                    .Validate(Validation.ValidateDateString));
             AnsiConsole.WriteLine(start.ToString());
 
-            DateTime end = AnsiConsole.Prompt(endPrompt.Validate((end) =>
-            {
-                return Validation.ValidateEndDate(end, start);
-            }));
+            string end = AnsiConsole.Prompt(
+                    endPrompt
+                    .Validate(Validation.ValidateDateString)
+                    .Validate((end) =>
+                    {
+                        return Validation.ValidateEndDate(end, start);
+                    }));
             AnsiConsole.WriteLine(end.ToString());
 
-            CodingSession obj = new(start, end);
+            DateTime startDate = DateTime.ParseExact(start, DateFormats.DateStringFormat, CultureInfo.InvariantCulture);
+            DateTime endDate = DateTime.ParseExact(end, DateFormats.DateStringFormat, CultureInfo.InvariantCulture);
+            CodingSession obj = new(startDate, endDate);
             return obj;
         }
 
@@ -39,7 +46,7 @@ namespace CodingTracker
                     .Title("Select Coding Session")
                     .PageSize(10)
                     .MoreChoicesText("Move Up Or Down to Choose")
-                    .UseConverter(static a => $"{a.Id} {a.Start} {a.Duration}")
+                    .UseConverter(static a => $"{a.Id} {a.Start.ToString(DateFormats.DateStringFormat)}\t| {DurationFormatter.DurationToHourString(a.Duration)}")
                     .AddChoices(selections)
                     );
             return updateId;
@@ -85,17 +92,25 @@ namespace CodingTracker
         public static CodingGoal PromptNewCodingGoal()
         {
             DateOnly start = DateOnly.FromDateTime(DateTime.Now);
-            TextPrompt<DateOnly> EndPrompt = new("Enter End Date Time (mm/dd/yy hh:ii)");
+            TextPrompt<string> EndPrompt = new($"Enter End Date Time ({DateFormats.DateOnlyDisplayFormat})");
 
-            DateOnly end = AnsiConsole.Prompt(EndPrompt.Validate((end) =>
-            {
-                return Validation.ValidateEndDate(end.ToDateTime(TimeOnly.MaxValue), start.ToDateTime(TimeOnly.MinValue));
-            }));
+            string end = AnsiConsole.Prompt(EndPrompt
+                    .Validate((end) =>
+                    {
+                        ValidationResult res = Validation.ValidateDateOnlyString(end);
+                        if (!res.Successful)
+                        {
+                            return res;
+                        }
+                        DateOnly endDate = DateOnly.ParseExact(end, DateFormats.DateOnlyStringFormat, CultureInfo.InvariantCulture);
+                        return Validation.ValidateEndDate(endDate.ToDateTime(TimeOnly.MaxValue), start.ToDateTime(TimeOnly.MinValue));
+                    }));
             AnsiConsole.WriteLine(end.ToString());
 
             int duration = AnsiConsole.Prompt(new TextPrompt<int>("Enter Duration in Hour (Must Be a Round Number)").Validate(Validation.ValidatePositiveInteger));
 
-            CodingGoal obj = new(start, end, duration);
+            DateOnly endDate = DateOnly.ParseExact(end, DateFormats.DateOnlyStringFormat, CultureInfo.InvariantCulture);
+            CodingGoal obj = new(start, endDate, duration);
             return obj;
         }
     }

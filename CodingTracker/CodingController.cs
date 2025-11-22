@@ -68,7 +68,6 @@ namespace CodingTracker
             CodingSession updatedSession = UserInput.PromptNewCodingSession(selectedSession);
             selectedSession.Start = updatedSession.Start;
             selectedSession.End = updatedSession.End;
-            // selectedSession.UpdateDuration();
 
             database.Update(selectedSession);
         }
