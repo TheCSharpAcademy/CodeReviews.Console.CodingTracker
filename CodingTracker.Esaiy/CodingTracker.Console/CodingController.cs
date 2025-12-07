@@ -157,7 +157,6 @@ namespace CodingTracker
                 return;
             }
 
-            // get all from start till now, see if achieved
             List<CodingSession> codingSessions = database.GetAllCodingSessionsBetweenDates(goal.Start, goal.End);
             double totalDuration = 0.0;
             foreach (CodingSession cs in codingSessions)
@@ -165,11 +164,9 @@ namespace CodingTracker
                 totalDuration += cs.Duration;
             }
 
-            // TODO: goal duration is in hours, maybe to someting to class to compare with session duration
             double remainingDuration = goal.GetRemainingDuration(totalDuration);
             if (remainingDuration <= 0)
             {
-                // update if achieved
                 goal.IsFinished = 1;
                 goal.IsAchieved = 1;
                 database.UpdateCodingGoal(goal);
@@ -202,7 +199,6 @@ namespace CodingTracker
             .AddColumn("Duration");
             foreach (CodingSession cs in codingSessions)
             {
-                // TODO: handle locale thing in one place
                 _ = readTable.AddRow(new Text(cs.Id.ToString()), new Text(cs.Start.ToString(DateFormats.DateStringFormat)), new Text(cs.End.ToString(DateFormats.DateStringFormat)), new Text(DurationFormatter.DurationToHourString(cs.Duration)));
             }
 
@@ -216,7 +212,6 @@ namespace CodingTracker
                 .AddColumn("Total Duration");
             foreach (FilteredCodingSession fcs in filteredCodingSessions)
             {
-                // TODO: handle locale thing in one place
                 _ = readTable.AddRow(new Text(fcs.FilterId), new Text(DurationFormatter.DurationToHourString(fcs.Duration)));
             }
 

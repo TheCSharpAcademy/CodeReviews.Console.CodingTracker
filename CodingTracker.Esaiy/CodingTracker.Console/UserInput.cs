@@ -59,7 +59,6 @@ namespace CodingTracker
                     .AddChoice(true)
                     .AddChoice(false)
                     .DefaultValue(true)
-                    // TODO: why static good?
                     .WithConverter(static choice => choice ? "y" : "n")
                     );
             return confirmation;
