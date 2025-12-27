@@ -21,10 +21,20 @@ namespace CodingTracker
             AnsiConsole.Write(new Align(
                               new Markup("Welcome to the Coding Tracker!\n", UserInterface.MenuStyle),
                               HorizontalAlignment.Center));
-
+            var descriptions = new Dictionary<MenuChoice, string>
+            {
+                { MenuChoice.StartTime,"Start Time" },
+                { MenuChoice.InsertTime,"Insert Time" },
+                { MenuChoice.CheckHistory,"Check History" },
+                { MenuChoice.DeleteSession,"Delete Session" },
+                { MenuChoice.DeleteHistory,"Delete History" },
+                { MenuChoice.UpdateSession,"Update Session" },
+                { MenuChoice.Exit,"Exit" }
+            };
             var choice = AnsiConsole.Prompt(
                 new SelectionPrompt<MenuChoice>()
                 .Title("[green bold]What would you like to do?[/]")
+                .UseConverter(s => descriptions[s])
                 .AddChoices(Enum.GetValues<MenuChoice>())
                 );
 
@@ -40,6 +50,10 @@ namespace CodingTracker
 
                 case MenuChoice.CheckHistory:
                     timeController.ViewHistory();
+                    break;
+
+                case MenuChoice.UpdateSession:
+                    timeController.UpdateSession();
                     break;
 
                 case MenuChoice.DeleteSession:

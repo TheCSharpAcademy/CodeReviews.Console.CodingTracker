@@ -9,6 +9,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static CodingTracker.Enums;
 
 namespace CodingTracker
 {
@@ -36,9 +37,20 @@ namespace CodingTracker
 
         internal void ViewHistory()
         {
+            var descriptions = new Dictionary<SessionViewChoice, string>
+        {
+            { SessionViewChoice.Normal,"Normal" },
+            { SessionViewChoice.Chronologically,"Chronologically" },
+            { SessionViewChoice.ReversedChronologically,"Reversed Chronologically" },
+            { SessionViewChoice.SortedByDurationAscending,"Sorted By Duration Ascending" },
+            { SessionViewChoice.SortedByDurationDescending,"Sorted By Duration Descending" },
+            { SessionViewChoice.Custom,"Custom" }
+        };
+
             var choice = AnsiConsole.Prompt(
                 new SelectionPrompt<Enums.SessionViewChoice>()
                 .Title("[bold green]How would you like to see the sessions?[/]")
+                .UseConverter(s => descriptions[s])
                 .AddChoices(Enum.GetValues<Enums.SessionViewChoice>())
                 );
 
@@ -180,13 +192,15 @@ namespace CodingTracker
                 AnsiConsole.Write(new Markup("List is currently empty, returning to Main Menu", UserInterface.MenuStyle));
                 HelperFunctions.ContinueToMainMenu();
             }
-
+            CodingSession Cancel = new();
+            Cancel.Id = -1;
+            SessionList.Add(Cancel);
             var Session = AnsiConsole.Prompt(
                 new SelectionPrompt<CodingSession>()
                 .UseConverter(sessionDisplay=> sessionDisplay.DisplaySession())
                 .AddChoices(SessionList));
             var SessionId = Session.Id;
-
+            if (SessionId == -1) HelperFunctions.ContinueToMainMenu();
             var confirm = AnsiConsole.Prompt(
                 (new TextPrompt<bool>($"[red]Are you sure you want to delete session with ID:[/][green]{SessionId}[/]")
                 .AddChoice(true)
@@ -266,6 +280,61 @@ namespace CodingTracker
                 AnsiConsole.Write(new Markup("Session Cancelled!", UserInterface.MenuStyle));
                 HelperFunctions.ContinueToMainMenu();
             }
+        }
+
+        internal void UpdateSession()
+        {
+            var connection = OpenConnection();
+            var sql = "SELECT * FROM CodingSessions";
+            var SessionList = connection.Query<CodingSession>(sql).ToList();
+
+            if (!SessionList.Any())
+            {
+                AnsiConsole.Write(new Markup("List is currently empty, returning to Main Menu", UserInterface.MenuStyle));
+                HelperFunctions.ContinueToMainMenu();
+            }
+
+            CodingSession Cancel = new();
+            Cancel.Id = -1;
+            SessionList.Add(Cancel);
+
+            var Session = AnsiConsole.Prompt(
+                new SelectionPrompt<CodingSession>()
+                .UseConverter(sessionDisplay => sessionDisplay.DisplaySession())
+                .AddChoices(SessionList));
+            var SessionId = Session.Id;
+            if (SessionId == -1) HelperFunctions.ContinueToMainMenu();
+
+            var start = AnsiConsole.Prompt(
+                new TextPrompt<DateTime>("When did you start the Coding Session? (yyyy-MM-dd HH:mm:ss)"));
+            var end = AnsiConsole.Prompt(
+                new TextPrompt<DateTime>("When did you finish the Coding Session? (yyyy-MM-dd HH:mm:ss)"));
+
+            if (DateTime.Compare(start, end) >= 0)
+            {
+                AnsiConsole.Write(new Markup("[bold red]\nError: Start time can't be equal to or later than end time. Returning to Main Menu.[/]"));
+                Console.ReadKey();
+                Console.Clear();
+                UserInterface.MainMenu();
+            }
+            string startTime = start.ToString("yyyy-MM-dd HH:mm:ss");
+            string endTime = end.ToString("yyyy-MM-dd HH:mm:ss");
+            CodingSession UserInput = new CodingSession(startTime, endTime); //Safer to create the object in order for Duration to update
+
+            var parameters = new
+            {
+                ParametrisedStartTime = UserInput.StartTime,
+                ParametrisedEndTime = UserInput.EndTime,
+                ParametrisedDuration = UserInput.Duration
+            };
+            var UpdateSql = @$"UPDATE CodingSessions  
+                               SET StartTime = @ParametrisedStartTime, EndTime = @ParametrisedEndTime, Duration = @ParametrisedDuration
+                               WHERE Id = '{SessionId}'";
+
+            var UpdateStatus = connection.Execute(UpdateSql, parameters);
+            if (UpdateStatus > 0) AnsiConsole.Write(new Markup("\n Session inserted successfully\n", UserInterface.MenuStyle));
+            connection.Close();
+            HelperFunctions.ContinueToMainMenu();
         }
     }
 }

@@ -26,6 +26,7 @@ namespace CodingTracker
         }
         public string DisplaySession()
         {
+            if(Id == -1) return "Cancel"; // For cancelling delete session
             string text = $"Coding Session #{Id}: Duration:{Duration}, Started: {StartTime} - Ended: {EndTime}\n";
             return text; 
         }
