@@ -27,7 +27,6 @@ internal class UserInput
     public static string GetUserTime()
     {
         var endAsk = false;
-        var time = DateTime.MinValue;
 
         while (!endAsk)
         {
