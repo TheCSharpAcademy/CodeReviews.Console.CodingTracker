@@ -1,0 +1,2 @@
+﻿DatabaseController.StartConnection();
+UserInterface.MainMenu();
