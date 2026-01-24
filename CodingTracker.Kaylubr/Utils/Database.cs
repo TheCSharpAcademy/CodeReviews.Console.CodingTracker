@@ -1,3 +1,4 @@
+using CodingTracker.Models;
 using Dapper;
 using Microsoft.Data.Sqlite;
 
@@ -27,5 +28,12 @@ internal static class Database
         ";
 
         connection.Execute(sql, new { start = st, end = et, duration });
+    }
+
+    internal static List<CodingSession> GetAll()
+    {
+        var sql = "SELECT * FROM coding_session";
+        List<CodingSession> records = connection.Query<CodingSession>(sql).ToList();
+        return records;
     }
 }

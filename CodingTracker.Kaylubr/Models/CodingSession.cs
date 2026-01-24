@@ -2,8 +2,8 @@ namespace CodingTracker.Models;
 
 internal class CodingSession
 {
-    int Id { get; set; }
-    DateTime StartTime { get; set; }
-    DateTime EndTime { get; set; }
-    TimeSpan duration { get; set; }
+    internal int Id { get; set; }
+    internal DateTime StartTime { get; set; }
+    internal DateTime EndTime { get; set; }
+    internal required string Duration { get; set; }
 }
