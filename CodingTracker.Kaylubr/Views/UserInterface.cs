@@ -1,5 +1,7 @@
 using Spectre.Console;
 using CodingTracker.Enums;
+using CodingTracker.Controllers;
+using CodingTracker.Models;
 
 namespace CodingTracker.Views;
 
@@ -14,7 +16,7 @@ internal static class UserInterface
             var choice = AnsiConsole.Prompt(
              new SelectionPrompt<MenuChoices>()
              .Title("[Chartreuse3_1]Pick operation:[/]")
-             .HighlightStyle(new Style(Color.Chartreuse3_1))
+             .HighlightStyle(new Style(Color.Green))
              .AddChoices(Enum.GetValues<MenuChoices>())
            );
 
@@ -23,14 +25,13 @@ internal static class UserInterface
                 case MenuChoices.View:
                     break;
                 case MenuChoices.Insert:
+                    CodingTrackerController.InsertSession();
                     break;
                 case MenuChoices.Update:
                     break;
                 case MenuChoices.Delete:
                     break;
             }
-
-            Console.ReadKey();
         }
     }
 
