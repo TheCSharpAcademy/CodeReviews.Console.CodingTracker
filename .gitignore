@@ -478,3 +478,5 @@ $RECYCLE.BIN/
 *.lnk
 /MathGame2
 /CodingTracker.TomDonegan/TextFile1.txt
+
+*.db
