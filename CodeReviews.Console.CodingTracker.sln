@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodingTracker.Kaylubr", "CodingTracker.Kaylubr\CodingTracker.Kaylubr.csproj", "{6AABB9C0-5449-298C-1EB0-59B25D4A6CAC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6AABB9C0-5449-298C-1EB0-59B25D4A6CAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AABB9C0-5449-298C-1EB0-59B25D4A6CAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AABB9C0-5449-298C-1EB0-59B25D4A6CAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AABB9C0-5449-298C-1EB0-59B25D4A6CAC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {67FA8CC2-65C3-4683-B605-8F131556E3AC}
+	EndGlobalSection
+EndGlobal
