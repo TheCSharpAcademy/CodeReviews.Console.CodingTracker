@@ -1,4 +1,3 @@
-using CodingTracker.Models;
 using CodingTracker.Utils;
 
 namespace CodingTracker.Controllers;
@@ -23,7 +22,7 @@ internal static class CodingTrackerController
     {
         Helper.RenderCodingSessionInTable(Database.GetAll());
 
-        int id = Helper.GetID();
+        int id = Helper.GetID("EDITED");
 
         if (!Database.FindOneSession(id))
         {
@@ -35,6 +34,28 @@ internal static class CodingTrackerController
         string duration = Helper.GetDuration(startTime, endTime);
 
         Database.Update(id, startTime, endTime, duration);
+
+        Helper.Pause("Successful Operation!", success: true);
+    }
+
+    internal static void DeleteRecord()
+    {
+        Helper.RenderCodingSessionInTable(Database.GetAll());
+
+        int id = Helper.GetID("DELETED");
+
+        if (!Helper.Confirmation("Are you sure?"))
+        {
+            return;
+        }
+
+        Database.DeleteOne(id);
+
+        if (!Database.FindOneSession(id))
+        {
+            Helper.Pause("Record not found!", success: false);
+            return;
+        }
 
         Helper.Pause("Successful Operation!", success: true);
     }

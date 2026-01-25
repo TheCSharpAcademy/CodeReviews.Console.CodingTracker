@@ -46,6 +46,12 @@ internal static class Database
         connection.Execute(sql, obj);
     }
 
+    internal static void DeleteOne(int id)
+    {
+        var sql = "DELETE FROM coding_session WHERE id = @id";
+        connection.Execute(sql, new { id });
+    }
+
     internal static bool FindOneSession(int id)
     {
         var sql = "SELECT * FROM coding_session WHERE Id = @id";

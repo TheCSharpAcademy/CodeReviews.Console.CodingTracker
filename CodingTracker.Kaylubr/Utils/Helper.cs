@@ -6,10 +6,10 @@ namespace CodingTracker.Utils;
 
 internal static class Helper
 {
-    internal static int GetID()
+    internal static int GetID(string mode)
     {
         AnsiConsole.WriteLine();
-        return AnsiConsole.Ask<int>($"\nEnter the [green]ID[/] of the row to be edited: ");
+        return AnsiConsole.Ask<int>($"\nEnter the [green]ID[/] of the row to be [bold]{mode}[/]: ");
     }
 
     internal static (string StartTime, string EndTime) GetStartAndEndTime()
@@ -85,14 +85,14 @@ internal static class Helper
         AnsiConsole.Write(table);
     }
 
-    internal static bool Confirmation()
+    internal static bool Confirmation(string message)
     {
         AnsiConsole.WriteLine();
 
         string? choice;
         do
         {
-            choice = AnsiConsole.Ask<string>("Do you want to perform the operation [bold green]Y[/] or [bold red]N[/]:").Trim().ToUpper();
+            choice = AnsiConsole.Ask<string>($"{message} [bold green]Y[/] or [bold red]N[/]:").Trim().ToUpper();
         } while (choice != "Y" && choice != "N");
 
         if (choice == "N")

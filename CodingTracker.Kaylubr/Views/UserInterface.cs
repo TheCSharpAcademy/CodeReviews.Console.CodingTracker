@@ -20,7 +20,7 @@ internal static class UserInterface
              .AddChoices(Enum.GetValues<MenuChoices>())
             );
 
-            if (!Helper.Confirmation())
+            if (!Helper.Confirmation("Do you want to do the operation?"))
             {
                 continue;
             }
@@ -37,6 +37,7 @@ internal static class UserInterface
                     CodingTrackerController.UpdateRecord();
                     break;
                 case MenuChoices.Delete:
+                    CodingTrackerController.DeleteRecord();
                     break;
             }
         }
