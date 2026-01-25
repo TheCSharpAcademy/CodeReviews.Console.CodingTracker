@@ -1,9 +1,9 @@
 namespace CodingTracker.Models;
 
-internal class CodingSession
+public class CodingSession
 {
-    internal int Id { get; set; }
-    internal DateTime StartTime { get; set; }
-    internal DateTime EndTime { get; set; }
-    internal required string Duration { get; set; }
+    public int Id { get; set; }
+    public DateTime StartTime { get; set; }
+    public DateTime EndTime { get; set; }
+    public string Duration { get; set; } = string.Empty;
 }

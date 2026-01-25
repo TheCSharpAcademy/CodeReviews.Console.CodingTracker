@@ -7,28 +7,35 @@ internal static class CodingTrackerController
 {
     internal static void InsertSession()
     {
-        DateTime startTime;
-        DateTime endTime;
-
-        do
-        {
-            startTime = Helper.GetTime("start");
-            endTime = Helper.GetTime("end");
-        } while (!Helper.ValidateTime(startTime, endTime));
-
+        var (startTime, endTime) = Helper.GetStartAndEndTime();
         string duration = Helper.GetDuration(startTime, endTime);
-
-        string startTimeInString = startTime.ToString();
-        string endTimeInString = endTime.ToString();
-
-        Database.Insert(startTimeInString, endTimeInString, duration);
-
-        Helper.PrintSuccessOperation();
+        Database.Insert(startTime, endTime, duration);
+        Helper.Pause("Successful Operation!", success: true);
     }
 
     internal static void LogAllRecords()
     {
-        List<CodingSession> codingSessions = Database.GetAll();
-        Helper.RenderCodingSessionInTable(codingSessions);
+        Helper.RenderCodingSessionInTable(Database.GetAll());
+        Helper.Pause();
+    }
+
+    internal static void UpdateRecord()
+    {
+        Helper.RenderCodingSessionInTable(Database.GetAll());
+
+        int id = Helper.GetID();
+
+        if (!Database.FindOneSession(id))
+        {
+            Helper.Pause("Record not found!", success: false);
+            return;
+        }
+
+        var (startTime, endTime) = Helper.GetStartAndEndTime();
+        string duration = Helper.GetDuration(startTime, endTime);
+
+        Database.Update(id, startTime, endTime, duration);
+
+        Helper.Pause("Successful Operation!", success: true);
     }
 }

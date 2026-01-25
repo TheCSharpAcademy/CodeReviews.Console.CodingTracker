@@ -34,6 +34,7 @@ internal static class UserInterface
                     CodingTrackerController.InsertSession();
                     break;
                 case MenuChoices.Update:
+                    CodingTrackerController.UpdateRecord();
                     break;
                 case MenuChoices.Delete:
                     break;

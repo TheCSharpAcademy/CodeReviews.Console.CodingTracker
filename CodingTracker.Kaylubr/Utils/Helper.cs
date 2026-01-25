@@ -6,7 +6,31 @@ namespace CodingTracker.Utils;
 
 internal static class Helper
 {
-    internal static DateTime GetTime(string message)
+    internal static int GetID()
+    {
+        AnsiConsole.WriteLine();
+        return AnsiConsole.Ask<int>($"\nEnter the [green]ID[/] of the row to be edited: ");
+    }
+
+    internal static (string StartTime, string EndTime) GetStartAndEndTime()
+    {
+        DateTime start;
+        DateTime end;
+
+        do
+        {
+            AnsiConsole.WriteLine();
+            start = GetTime("start");
+            end = GetTime("end");
+        } while (!ValidateTime(start, end));
+
+        string startTime = start.ToString();
+        string endTime = end.ToString();
+
+        return (startTime, endTime);
+    }
+
+    static DateTime GetTime(string message)
     {
         while (true)
         {
@@ -22,12 +46,15 @@ internal static class Helper
 
     }
 
-    internal static string GetDuration(DateTime start, DateTime end)
+    internal static string GetDuration(string start, string end)
     {
-        return (end - start).ToString(@"hh\:mm\:ss");
+        DateTime startTime = DateTime.Parse(start);
+        DateTime endTime = DateTime.Parse(end);
+
+        return (endTime - startTime).ToString(@"hh\:mm\:ss");
     }
 
-    internal static bool ValidateTime(DateTime start, DateTime end)
+    static bool ValidateTime(DateTime start, DateTime end)
     {
         if (start > end)
         {
@@ -40,8 +67,9 @@ internal static class Helper
 
     internal static void RenderCodingSessionInTable(List<CodingSession> codingSessions)
     {
+        AnsiConsole.Clear();
         var table = new Table()
-            .Title("\n[green bold]Session Records[/]")
+            .Title("[green bold]Session Records[/]")
             .Border(TableBorder.Heavy);
 
         table.AddColumn("ID");
@@ -55,31 +83,44 @@ internal static class Helper
         }
 
         AnsiConsole.Write(table);
-
-        AnsiConsole.WriteLine("\nPress any key to exit..");
-        Console.ReadKey();
     }
 
     internal static bool Confirmation()
     {
-        string? choice;
+        AnsiConsole.WriteLine();
 
+        string? choice;
         do
         {
-            choice = AnsiConsole.Ask<string>(@"Do you want to perform the operation [green]y[/] or [red]n[/]:").Trim().ToLower();
-        } while (choice != "y" && choice != "n");
+            choice = AnsiConsole.Ask<string>("Do you want to perform the operation [bold green]Y[/] or [bold red]N[/]:").Trim().ToUpper();
+        } while (choice != "Y" && choice != "N");
 
-        if (choice == "n")
+        if (choice == "N")
             return false;
 
         return true;
     }
 
-    internal static void PrintSuccessOperation()
+    internal static void Pause()
     {
-        AnsiConsole.MarkupLine("\n[green]Successful operation![/]");
-
-        AnsiConsole.WriteLine("\nPress any key to continue..");
+        AnsiConsole.Write("\nPress any key to continue..");
         Console.ReadKey();
+    }
+
+    internal static void Pause(string message, bool success)
+    {
+        if (success)
+        {
+            AnsiConsole.MarkupLine($"\n[green]{message}[/]");
+        }
+        else
+        {
+            AnsiConsole.MarkupLine($"\n[red]{message}[/]");
+        }
+
+        AnsiConsole.Write("\nPress any key to continue..");
+        Console.ReadKey();
+
+        AnsiConsole.Clear();
     }
 }
