@@ -20,43 +20,57 @@ internal static class CodingTrackerController
 
     internal static void UpdateRecord()
     {
-        Helper.RenderCodingSessionInTable(Database.GetAll());
+        bool exists = Helper.RenderCodingSessionInTable(Database.GetAll());
 
-        int id = Helper.GetID("EDITED");
-
-        if (!Database.FindOneSession(id))
+        if (exists)
         {
-            Helper.Pause("Record not found!", success: false);
-            return;
+            int id = Helper.GetID("EDITED");
+
+            if (!Database.FindOneSession(id))
+            {
+                Helper.Pause("Record not found!", success: false);
+                return;
+            }
+
+            var (startTime, endTime) = Helper.GetStartAndEndTime();
+            string duration = Helper.GetDuration(startTime, endTime);
+
+            Database.Update(id, startTime, endTime, duration);
+
+            Helper.Pause("Successful Operation!", success: true);
         }
-
-        var (startTime, endTime) = Helper.GetStartAndEndTime();
-        string duration = Helper.GetDuration(startTime, endTime);
-
-        Database.Update(id, startTime, endTime, duration);
-
-        Helper.Pause("Successful Operation!", success: true);
+        else
+        {
+            Helper.Pause();
+        }
     }
 
     internal static void DeleteRecord()
     {
-        Helper.RenderCodingSessionInTable(Database.GetAll());
+        bool exists = Helper.RenderCodingSessionInTable(Database.GetAll());
 
-        int id = Helper.GetID("DELETED");
-
-        if (!Helper.Confirmation("Are you sure?"))
+        if (exists)
         {
-            return;
+            int id = Helper.GetID("DELETED");
+
+            if (!Helper.Confirmation("Are you sure?"))
+            {
+                return;
+            }
+
+            Database.DeleteOne(id);
+
+            if (!Database.FindOneSession(id))
+            {
+                Helper.Pause("Record not found!", success: false);
+                return;
+            }
+
+            Helper.Pause("Successful Operation!", success: true);
         }
-
-        Database.DeleteOne(id);
-
-        if (!Database.FindOneSession(id))
+        else
         {
-            Helper.Pause("Record not found!", success: false);
-            return;
+            Helper.Pause();
         }
-
-        Helper.Pause("Successful Operation!", success: true);
     }
 }

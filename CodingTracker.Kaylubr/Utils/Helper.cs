@@ -65,24 +65,36 @@ internal static class Helper
         return true;
     }
 
-    internal static void RenderCodingSessionInTable(List<CodingSession> codingSessions)
+    internal static bool RenderCodingSessionInTable(List<CodingSession> codingSessions)
     {
         AnsiConsole.Clear();
-        var table = new Table()
-            .Title("[green bold]Session Records[/]")
-            .Border(TableBorder.Heavy);
 
-        table.AddColumn("ID");
-        table.AddColumn("Starting time");
-        table.AddColumn("End time");
-        table.AddColumn("Duration");
-
-        foreach (var session in codingSessions)
+        if (codingSessions.Count >= 1)
         {
-            table.AddRow(session.Id.ToString(), session.StartTime.ToString(), session.EndTime.ToString(), session.Duration);
+            var table = new Table()
+                .Title("[green bold]Session Records[/]")
+                .Border(TableBorder.Heavy);
+
+            table.AddColumn("ID");
+            table.AddColumn("Starting time");
+            table.AddColumn("End time");
+            table.AddColumn("Duration");
+
+            foreach (var session in codingSessions)
+            {
+                table.AddRow(session.Id.ToString(), session.StartTime.ToString(), session.EndTime.ToString(), session.Duration);
+            }
+
+            AnsiConsole.Write(table);
+
+            return true;
+        }
+        else
+        {
+            AnsiConsole.MarkupLine("[red]No coding sessions to display. Add a session to see it here.[/]");
+            return false;
         }
 
-        AnsiConsole.Write(table);
     }
 
     internal static bool Confirmation(string message)
