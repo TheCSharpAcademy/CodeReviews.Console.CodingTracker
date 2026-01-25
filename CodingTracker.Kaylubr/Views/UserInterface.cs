@@ -25,26 +25,33 @@ internal static class UserInterface
                 case MenuChoices.View:
                     CodingTrackerController.LogAllRecords();
                     break;
+
                 case MenuChoices.Insert:
+
+                    if (!Helper.Confirmation("Proceed with this operation? (No will return to the main menu)"))
+                        continue;
+
                     CodingTrackerController.InsertSession();
-
-                    if (!Helper.Confirmation("Proceed with this operation? (No will return to the main menu)"))
-                        continue;
-
                     break;
+
                 case MenuChoices.Update:
-                    CodingTrackerController.UpdateRecord();
 
                     if (!Helper.Confirmation("Proceed with this operation? (No will return to the main menu)"))
                         continue;
 
+                    CodingTrackerController.UpdateRecord();
                     break;
+
                 case MenuChoices.Delete:
 
                     if (!Helper.Confirmation("Proceed with this operation? (No will return to the main menu)"))
                         continue;
 
                     CodingTrackerController.DeleteRecord();
+                    break;
+                case MenuChoices.Exit:
+                    AnsiConsole.WriteLine("\nExiting..");
+                    Environment.Exit(0);
                     break;
             }
         }
