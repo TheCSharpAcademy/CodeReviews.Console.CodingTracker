@@ -6,8 +6,8 @@ internal static class CodingTrackerController
 {
     internal static void InsertSession()
     {
-        var (startTime, endTime) = Helper.GetStartAndEndTime();
-        string duration = Helper.GetDuration(startTime, endTime);
+        var (startTime, endTime) = UserInput.GetStartAndEndTime();
+        string duration = UserInput.GetDuration(startTime, endTime);
         Database.Insert(startTime, endTime, duration);
         Helper.Pause("Successful Operation!", success: true);
     }
@@ -24,7 +24,7 @@ internal static class CodingTrackerController
 
         if (exists)
         {
-            int id = Helper.GetID("EDITED");
+            int id = UserInput.GetID("EDITED");
 
             if (!Database.FindOneSession(id))
             {
@@ -32,8 +32,8 @@ internal static class CodingTrackerController
                 return;
             }
 
-            var (startTime, endTime) = Helper.GetStartAndEndTime();
-            string duration = Helper.GetDuration(startTime, endTime);
+            var (startTime, endTime) = UserInput.GetStartAndEndTime();
+            string duration = UserInput.GetDuration(startTime, endTime);
 
             Database.Update(id, startTime, endTime, duration);
 
@@ -51,7 +51,13 @@ internal static class CodingTrackerController
 
         if (exists)
         {
-            int id = Helper.GetID("DELETED");
+            int id = UserInput.GetID("DELETED");
+
+            if (!Database.FindOneSession(id))
+            {
+                Helper.Pause("Record not found!", success: false);
+                return;
+            }
 
             if (!Helper.Confirmation("Are you sure?"))
             {
@@ -59,12 +65,6 @@ internal static class CodingTrackerController
             }
 
             Database.DeleteOne(id);
-
-            if (!Database.FindOneSession(id))
-            {
-                Helper.Pause("Record not found!", success: false);
-                return;
-            }
 
             Helper.Pause("Successful Operation!", success: true);
         }
