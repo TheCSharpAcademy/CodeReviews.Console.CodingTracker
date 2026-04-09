@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="../CodingTrackerTests/CodingTrackerTests.csproj" Id="a2b74cee-b6bf-4e21-ad11-1bc78cab7e0d" />
+  <Project Path="CodingTracker.Ledana.csproj" />
+</Solution>
