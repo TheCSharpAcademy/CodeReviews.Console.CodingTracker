@@ -21,7 +21,7 @@ internal class CodingSessionController
         CreateTable();
     }
 
-    public List<CodingSessionModel> GetCodingSessions(FilterChoice filterChoice, int periodNum, OrderChoice orderChoice)
+    public List<CodingSessionModel> GetCodingSessions(FilterChoice filterChoice, DateTime periodDate, OrderChoice orderChoice)
     {
         List<CodingSessionModel> codingSessions = new();
         List<CodingSessionModel> filteredCodingSessions = new List<CodingSessionModel>();
@@ -49,21 +49,21 @@ internal class CodingSessionController
             DBErrorMessage("getting the saved coding sessions", e.Message);
         }
 
-        filteredCodingSessions = FilterCodingSession(filterChoice, periodNum, codingSessions);
+        filteredCodingSessions = FilterCodingSession(filterChoice, periodDate, codingSessions);
 
         return filteredCodingSessions;
     }
 
-    private static List<CodingSessionModel> FilterCodingSession(FilterChoice filterChoice, int periodNum, List<CodingSessionModel> codingSessions)
+    private static List<CodingSessionModel> FilterCodingSession(FilterChoice filterChoice, DateTime periodDate, List<CodingSessionModel> codingSessions)
     {
         switch (filterChoice)
         {
             case FilterChoice.Week:
-                return codingSessions.FindAll(c => ISOWeek.GetWeekOfYear(c.startTime) == periodNum);
+                return codingSessions.FindAll(c => ISOWeek.GetWeekOfYear(c.startTime) == ISOWeek.GetWeekOfYear(periodDate) || ISOWeek.GetWeekOfYear(c.endTime) == ISOWeek.GetWeekOfYear(periodDate));
             case FilterChoice.Day:
-                return codingSessions.FindAll(c => c.startTime.Day == periodNum);
+                return codingSessions.FindAll(c => c.startTime.Date == periodDate || c.endTime.Date == periodDate);
             case FilterChoice.Year:
-                return codingSessions.FindAll(c => c.startTime.Year == periodNum);
+                return codingSessions.FindAll(c => c.startTime.Year == periodDate.Year || c.endTime.Year == periodDate.Year);
             default:
                 return codingSessions;
         }

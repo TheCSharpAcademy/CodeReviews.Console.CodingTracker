@@ -4,6 +4,7 @@ using STUDY.CodingTracker.Controllers;
 using STUDY.CodingTracker.Helper;
 using STUDY.CodingTracker.Models;
 using System.Globalization;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace STUDY.CodingTracker;
 
@@ -33,19 +34,22 @@ internal class UserInterface
             {
                 case MainMenuChoice.ViewCodingSessions:
                     FilterChoice filterChoice = AskFilter();
-                    int periodNum = AskPeriodNum(filterChoice);
-                    OrderChoice orderChoice = AskOrder();
+                    if (filterChoice == FilterChoice.Return) break;
 
-                    DisplayCodingSessionsTable(filterChoice, periodNum, orderChoice);
+                    DateTime periodDate = AskPeriodDate(filterChoice);
+                    if (periodDate == new DateTime(1)) break;
+
+                    OrderChoice orderChoice = AskOrder();
+                    if (orderChoice == OrderChoice.ReturnToMainMenu) break;
+
+                    DisplayCodingSessionsTable(filterChoice, periodDate, orderChoice);
                     DisplayPressKeyToContinue();
                     break;
                 case MainMenuChoice.AddCodingSession:
                     AskUserStopwatchChoice();
-                    DisplayPressKeyToContinue();
                     break;
                 case MainMenuChoice.DeleteCodingSession:
                     DisplayDeleteCodingSessionUI();
-                    DisplayPressKeyToContinue();
                     break;
                 case MainMenuChoice.UpdateCodingSession:
                     DisplayUpdateCodingSessionUI();
@@ -87,13 +91,13 @@ internal class UserInterface
         return filterChoice;
     }
 
-    private int AskPeriodNum(FilterChoice filterChoice)
+    private DateTime AskPeriodDate(FilterChoice filterChoice)
     {
         while (true)
         {
             string userInput = "";
-            int periodNum = 0;
-            (bool correct, int periodNum) validationResult = (false, 0);
+            DateTime periodDate = new DateTime(0);
+            (bool correct, DateTime periodDate) validationResult = (false, new DateTime(0));
 
             if (filterChoice != FilterChoice.None)
             {
@@ -101,29 +105,20 @@ internal class UserInterface
             }
             else
             {
-                return periodNum;
+                return periodDate;
             }
 
-            switch (filterChoice)
-            {
-                case FilterChoice.Week:
-                    validationResult = Verification.VerifyWeek(userInput);
-                    break;
-                case FilterChoice.Day:
-                    validationResult = Verification.VerifyDay(userInput);
-                    break;
-                case FilterChoice.Year:
-                    validationResult = Verification.VerifyYear(userInput);
-                    break;
-            }
+            if (userInput == "-1") return new DateTime(1);
+
+            validationResult = Verification.VerifyPeriodDate(userInput);
 
             if (validationResult.correct)
             {
-                return validationResult.periodNum;
+                return validationResult.periodDate;
             }
             else
             {
-                AnsiConsole.MarkupLine("[red]Please enter a correct number based on the period you've chosen.[/]");
+                AnsiConsole.MarkupLine("[red]Please enter a correct date based on the period you've chosen. (Format : dd/MM/yyyy)[/]");
                 DisplayPressKeyToContinue();
             }
         }
@@ -140,11 +135,11 @@ internal class UserInterface
         return orderChoice;
     }
 
-    private void DisplayCodingSessionsTable(FilterChoice filterChoice, int periodNum, OrderChoice orderChoice)
+    private void DisplayCodingSessionsTable(FilterChoice filterChoice, DateTime periodDate, OrderChoice orderChoice)
     {
         Console.Clear();
 
-        var codingSessions = _codingSessionController.GetCodingSessions(filterChoice, periodNum, orderChoice);
+        var codingSessions = _codingSessionController.GetCodingSessions(filterChoice, periodDate, orderChoice);
 
         var table = new Table().RoundedBorder().BorderColor(Color.Gold1);
 
@@ -176,8 +171,12 @@ internal class UserInterface
 
         if (choice == StopwatchChoice.Yes)
             ManageStopWatch();
-        else
+        else if (choice == StopwatchChoice.No)
             DisplayManualAddingCodingSessionUI();
+        else
+            return;
+
+        DisplayPressKeyToContinue();
     }
 
     private void ManageStopWatch()
@@ -204,6 +203,8 @@ internal class UserInterface
 
         CodingSessionModel newCodingSession = CreateCodingSession();
 
+        if (newCodingSession.startTime == new DateTime(0)) return;
+
         success = _codingSessionController.AddCodingSession(newCodingSession);
 
         DisplaySuccessResultWhenAddingSession(success);
@@ -223,14 +224,21 @@ internal class UserInterface
     private void DisplayDeleteCodingSessionUI()
     {
         FilterChoice filterChoice = AskFilter();
-        int periodNum = AskPeriodNum(filterChoice);
+        if (filterChoice == FilterChoice.Return) return;
+
+        DateTime periodDate = AskPeriodDate(filterChoice);
+        if (periodDate == new DateTime(1)) return;
+
         OrderChoice orderChoice = AskOrder();
+        if (orderChoice == OrderChoice.ReturnToMainMenu) return;
 
         while (true)
         {
-            DisplayCodingSessionsTable(filterChoice, periodNum, orderChoice);
+            DisplayCodingSessionsTable(filterChoice, periodDate, orderChoice);
 
             string idToDelete = UserInput.GetUserIDInput("delete");
+            if (idToDelete == "-1") return;
+
             var verificationResult = Verification.VerifyId(idToDelete);
 
             if (!verificationResult.correct)
@@ -254,14 +262,20 @@ internal class UserInterface
     private void DisplayUpdateCodingSessionUI()
     {
         FilterChoice filterChoice = AskFilter();
-        int periodNum = AskPeriodNum(filterChoice);
+        if (filterChoice == FilterChoice.Return) return;
+
+        DateTime periodDate = AskPeriodDate(filterChoice);
+        if (periodDate == new DateTime(1)) return;
+
         OrderChoice orderChoice = AskOrder();
+        if (orderChoice == OrderChoice.ReturnToMainMenu) return;
 
         while (true)
         {
-            DisplayCodingSessionsTable(filterChoice, periodNum, orderChoice);
+            DisplayCodingSessionsTable(filterChoice, periodDate, orderChoice);
 
             string idToUpdate = UserInput.GetUserIDInput("update");
+            if (idToUpdate == "-1") return;
             var verificationResult = Verification.VerifyId(idToUpdate);
 
             if (!verificationResult.correct)
@@ -271,6 +285,8 @@ internal class UserInterface
             }
 
             CodingSessionModel updatedCodingSession = CreateCodingSession();
+
+            if (updatedCodingSession.startTime == new DateTime(0)) return;
 
             int numberOfRows = _codingSessionController.UpdateCodingSession(verificationResult.id, updatedCodingSession);
 
@@ -295,8 +311,12 @@ internal class UserInterface
         while (true)
         {
             Console.Clear();
+            DateTime dateReturn = new DateTime(0);
+            DateTime.TryParseExact("0/0/0 0:0", "dd/MM/yyyy HH:mm", new CultureInfo("en-US"), DateTimeStyles.None, out dateReturn);
+            CodingSessionModel codingSessionReturn = new CodingSessionModel(dateReturn, dateReturn);
 
             string startTime = UserInput.GetUserDateInput("start");
+            if (startTime == "-1") return codingSessionReturn; 
             var verificationResultStartTime = Verification.VerifyDate(startTime);
 
             if (!verificationResultStartTime.correct)
@@ -306,6 +326,7 @@ internal class UserInterface
             }
 
             string endTime = UserInput.GetUserDateInput("end");
+            if (endTime == "-1") return codingSessionReturn;
             var verificationResultEndTime = Verification.VerifyEndDate(endTime, verificationResultStartTime.date);
 
             if (!verificationResultEndTime.correct)
@@ -314,8 +335,7 @@ internal class UserInterface
                 continue;
             }
 
-            CodingSessionModel newCodingSession = new CodingSessionModel(verificationResultStartTime.date, verificationResultEndTime.date);
-
+            CodingSessionModel newCodingSession = new CodingSessionModel(verificationResultStartTime.date, verificationResultEndTime.date);;
             return newCodingSession;
         }
     }

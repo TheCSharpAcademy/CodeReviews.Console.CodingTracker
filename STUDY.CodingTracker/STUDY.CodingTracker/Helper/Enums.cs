@@ -14,18 +14,21 @@ public enum FilterChoice
     Week,
     Day,
     Year,
-    None
+    None,
+    Return
 }
 
 public enum StopwatchChoice
 {
     Yes,
-    No
+    No,
+    Return
 }
 
 public enum OrderChoice
 {
     Descending,
     Ascending,
-    None
+    None,
+    ReturnToMainMenu
 }

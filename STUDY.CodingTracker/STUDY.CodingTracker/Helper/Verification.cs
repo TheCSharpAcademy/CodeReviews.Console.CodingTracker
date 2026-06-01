@@ -17,6 +17,19 @@ public static class Verification
         return (correct, date);
     }
 
+    public static (bool correct, DateTime dateOnly) VerifyPeriodDate(string periodDate)
+    {
+        bool correct = false;
+        DateTime date = new DateTime();
+
+        if (periodDate != null && DateTime.TryParseExact(periodDate, "dd/MM/yyyy", new CultureInfo("en-US"), DateTimeStyles.None, out date))
+        {
+            correct = true;
+        }
+
+        return (correct, date);
+    }
+
     public static (bool correct, DateTime date) VerifyEndDate(string endDateInput, DateTime startDate)
     {
         bool correct = false;
