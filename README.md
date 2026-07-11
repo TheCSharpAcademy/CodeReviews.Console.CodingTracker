@@ -51,4 +51,3 @@ Spectre.Console treats `[` and `]` as markup tag delimiters. Any interpolated st
 ### 5. Nullable value type gotchas
 Attempted to call `DateTime?.TryParseExact(...)` directly on the nullable type and pass a `DateTime?` as the `out` parameter — neither compiles, since `TryParseExact`'s `out` parameter requires a non-nullable `DateTime`, and static methods can't be invoked through a `Nullable<T>` instance.
 **Fix:** parse into a local non-nullable `DateTime`, then let it implicitly convert to `DateTime?` on return; return `null` explicitly on the failure path.
-S
