@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Spectre.Console;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -15,5 +16,18 @@ internal class CodingSession {
         StartTime = startTime;
         EndTime = endTime;
         Duration = duration;
+    }
+
+    public CodingSession() { }
+
+    public void DisplayDetails() {
+        var panel = new Panel(new Markup($"[bold]Id:[/] [cyan]{Id}[/]" +
+            $"\n[bold]Start Time:[/] [cyan]{StartTime}[/]" +
+            $"\n[bold]End Time:[/] [cyan]{EndTime}[/]" +
+            $"\n[bold]Duration:[/] [cyan]{Duration}[/]")) {
+            Border = BoxBorder.Rounded
+        };
+
+        AnsiConsole.Write(panel);
     }
 }
