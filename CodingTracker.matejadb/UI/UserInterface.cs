@@ -27,6 +27,7 @@ internal class UserInterface {
                     DeleteSession();
                     break;
                 case MenuAction.UpdateSession:
+                    UpdateSession();
                     break;
             }
         }
@@ -42,5 +43,9 @@ internal class UserInterface {
 
     private void DeleteSession() {
         _codingSessionControler.DeleteSession();
+    }
+
+    private void UpdateSession() {
+        _codingSessionControler.UpdateSession();
     }
 }

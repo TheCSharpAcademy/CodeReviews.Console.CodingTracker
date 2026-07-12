@@ -12,4 +12,10 @@ internal class BaseController {
 
         return confirm;
     }
+
+    protected bool ConfirmUpdate(CodingSession session) {
+        var confirm = AnsiConsole.Confirm($"Are you sure you want to update [yellow]{session.Id} {session.StartTime} {session.EndTime} {session.Duration}[/]");
+
+        return confirm;
+    }
 }

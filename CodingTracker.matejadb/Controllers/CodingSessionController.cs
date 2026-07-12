@@ -2,6 +2,7 @@
 using CodingTracker.matejadb.Database;
 using CodingTracker.matejadb.Models;
 using Spectre.Console;
+using CodingTracker.matejadb.Utils;
 
 namespace CodingTracker.matejadb.Controllers; 
 internal class CodingSessionController : BaseController, IBaseController {
@@ -31,10 +32,10 @@ internal class CodingSessionController : BaseController, IBaseController {
     }
 
     public void AddSession() {
-        var startTime = AnsiConsole.Ask<string>($"Enter the [darkorange]Start Time[/] of your session ({AppSettings.DateFormat}):");
-        var endTime = AnsiConsole.Ask<string>($"Enter the [darkorange]End Time[/] of your session ({AppSettings.DateFormat}):");
-        // temporary manual duration input
-        var duration = AnsiConsole.Ask<string>("Enter the [darkorange]Duration[/] of your session:");
+        var startTime = UserInput.GetDateTimeFromUser("Start Time");
+        var endTime = UserInput.GetDateTimeFromUser("End Time");
+
+        var duration = CalculateSessionDuration.SessionDuration(startTime, endTime);
 
         _databaseManager.AddSession(startTime, endTime, duration);
         AnsiConsole.MarkupLine($"[green]Session successfully added![/]");
@@ -67,5 +68,34 @@ internal class CodingSessionController : BaseController, IBaseController {
         Console.ReadKey();
     }
 
-    public void UpdateSession() { }
+    public void UpdateSession() {
+        var sessions = _databaseManager.GetAllSessions();
+
+        if (sessions.Count == 0) {
+            AnsiConsole.MarkupLine("[yellow]No sessions available to update[/]");
+            Console.ReadKey();
+            return;
+        }
+
+        var sessionToUpdate = AnsiConsole.Prompt(
+           new SelectionPrompt<CodingSession>()
+           .Title("Select a [yellow]session[/] to update.")
+           .UseConverter(s => $"{s.Id} {s.StartTime} {s.EndTime} {s.Duration}")
+           .AddChoices(sessions));
+
+        var startTime = UserInput.GetDateTimeFromUser("Start Time");
+        var endTime = UserInput.GetDateTimeFromUser("End Time");
+        var duration = CalculateSessionDuration.SessionDuration(startTime, endTime);
+
+        if(ConfirmUpdate(sessionToUpdate)) {
+            _databaseManager.UpdateSession(sessionToUpdate.Id, startTime, endTime, duration);
+            AnsiConsole.MarkupLine("[yellow]Session updated successfully.[/]");
+        } else {
+            AnsiConsole.MarkupLine("[red]Session update cancelled.[/]");
+        }
+
+        AnsiConsole.MarkupLine("Press any Key to continue.");
+        Console.ReadKey();
+
+    }
 }
