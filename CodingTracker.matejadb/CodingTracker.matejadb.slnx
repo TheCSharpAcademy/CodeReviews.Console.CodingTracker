@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="../CodingTracker.matejadb.UnitTests/CodingTracker.matejadb.UnitTests.csproj" Id="98b24539-4cb8-465b-8197-bab23ed73c7d" />
   <Project Path="CodingTracker.matejadb.csproj" />
 </Solution>
