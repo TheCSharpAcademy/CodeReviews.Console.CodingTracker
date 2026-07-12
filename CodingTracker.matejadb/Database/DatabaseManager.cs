@@ -25,7 +25,7 @@ internal class DatabaseManager {
         connection.Close();
     }
 
-    internal void AddSession(string startTime, string endTime, string duration) {
+    internal void InsertNewSession(string startTime, string endTime, string duration) {
         var sql = @"INSERT INTO coding_tracker(StartTime, EndTime, Duration) VALUES (@startTime, @endTime, @duration)";
         var connection = OpenConnection();
 
@@ -33,7 +33,7 @@ internal class DatabaseManager {
         connection.Close();
     }
 
-    internal void UpdateSession(int id, string startTime, string endTime, string duration) {
+    internal void UpdateExistingSession(int id, string startTime, string endTime, string duration) {
         var sql = @"UPDATE coding_tracker SET StartTime = @startTime, EndTime = @endTime, Duration = @duration WHERE Id = @id";
         var connection = OpenConnection();
 
@@ -41,7 +41,7 @@ internal class DatabaseManager {
         connection.Close();
     }
 
-    internal void DeleteSession(int id) {
+    internal void DeleteExistingSession(int id) {
         var sql = @"DELETE FROM coding_tracker WHERE Id = @id";
         var connection = OpenConnection();
 

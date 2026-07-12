@@ -7,6 +7,9 @@ using System.Text;
 namespace CodingTracker.matejadb.Controllers;
 
 internal class BaseController {
+    protected void DisplayMessage(string message, string color = "darkorange") {
+        AnsiConsole.MarkupLine($"[{color}]{message}[/]");
+    }
     protected bool ConfirmDeletion(CodingSession session) {
         var confirm = AnsiConsole.Confirm($"Are you sure you want to delete [red]{session.Id} {session.StartTime} {session.EndTime} {session.Duration}[/]");
 

@@ -1,10 +1,10 @@
-﻿using CodingTracker.matejadb.Config;
-using CodingTracker.matejadb.Database;
+﻿using CodingTracker.matejadb.Database;
 using CodingTracker.matejadb.Models;
 using Spectre.Console;
 using CodingTracker.matejadb.Utils;
 
-namespace CodingTracker.matejadb.Controllers; 
+namespace CodingTracker.matejadb.Controllers;
+
 internal class CodingSessionController : BaseController, IBaseController {
     DatabaseManager _databaseManager = new();
 
@@ -18,7 +18,7 @@ internal class CodingSessionController : BaseController, IBaseController {
 
         var sessions = _databaseManager.GetAllSessions();
 
-        foreach(var session in sessions) {
+        foreach (var session in sessions) {
             table.AddRow(
                 session.Id.ToString(),
                 session.StartTime,
@@ -27,7 +27,7 @@ internal class CodingSessionController : BaseController, IBaseController {
         }
 
         AnsiConsole.Write(table);
-        AnsiConsole.MarkupLine("Press any Key to continue.");
+        DisplayMessage("Press any Key to continue");
         Console.ReadKey();
     }
 
@@ -37,18 +37,18 @@ internal class CodingSessionController : BaseController, IBaseController {
 
         var duration = CalculateSessionDuration.SessionDuration(startTime, endTime);
 
-        _databaseManager.AddSession(startTime, endTime, duration);
-        AnsiConsole.MarkupLine($"[green]Session successfully added![/]");
+        _databaseManager.InsertNewSession(startTime, endTime, duration);
+        DisplayMessage("Session successfully added.", "green");
 
-        AnsiConsole.MarkupLine("Press any Key to continue.");
+        DisplayMessage("Press any Key to continue");
         Console.ReadKey();
     }
 
     public void DeleteSession() {
         var sessions = _databaseManager.GetAllSessions();
 
-        if(sessions.Count == 0) {
-            AnsiConsole.MarkupLine("[red]No sessions available to delete[/]");
+        if (sessions.Count == 0) {
+            DisplayMessage("No session available to delete.", "red");
             Console.ReadKey();
             return;
         }
@@ -59,12 +59,11 @@ internal class CodingSessionController : BaseController, IBaseController {
             .UseConverter(s => $"{s.Id} {s.StartTime} {s.EndTime} {s.Duration}")
             .AddChoices(sessions));
 
-        if(ConfirmDeletion(sessionToDelete)) {
-            _databaseManager.DeleteSession(sessionToDelete.Id);
-            AnsiConsole.MarkupLine("[red]Book deleted successfully.[/]");
+        if (ConfirmDeletion(sessionToDelete)) {
+            _databaseManager.DeleteExistingSession(sessionToDelete.Id);
+            DisplayMessage("Book deleted successfully.", "red");
         }
-
-        AnsiConsole.MarkupLine("Press any Key to continue.");
+        DisplayMessage("Press any Key to continue");
         Console.ReadKey();
     }
 
@@ -72,7 +71,7 @@ internal class CodingSessionController : BaseController, IBaseController {
         var sessions = _databaseManager.GetAllSessions();
 
         if (sessions.Count == 0) {
-            AnsiConsole.MarkupLine("[yellow]No sessions available to update[/]");
+            DisplayMessage("No sessions available to update.", "yellow");
             Console.ReadKey();
             return;
         }
@@ -87,14 +86,14 @@ internal class CodingSessionController : BaseController, IBaseController {
         var endTime = UserInput.GetDateTimeFromUser("End Time");
         var duration = CalculateSessionDuration.SessionDuration(startTime, endTime);
 
-        if(ConfirmUpdate(sessionToUpdate)) {
-            _databaseManager.UpdateSession(sessionToUpdate.Id, startTime, endTime, duration);
-            AnsiConsole.MarkupLine("[yellow]Session updated successfully.[/]");
+        if (ConfirmUpdate(sessionToUpdate)) {
+            _databaseManager.UpdateExistingSession(sessionToUpdate.Id, startTime, endTime, duration);
+            DisplayMessage("Session updated successfully.", "yellow");
         } else {
-            AnsiConsole.MarkupLine("[red]Session update cancelled.[/]");
+            DisplayMessage("Session update cancelled.", "red");
         }
 
-        AnsiConsole.MarkupLine("Press any Key to continue.");
+        DisplayMessage("Press any Key to continue");
         Console.ReadKey();
 
     }
