@@ -49,7 +49,7 @@ internal class DatabaseManager {
         connection.Close();
     }
 
-    internal List<CodingSession> ViewSessions() {
+    internal List<CodingSession> GetAllSessions() {
         var sql = @"SELECT Id, StartTime, EndTime, Duration FROM coding_tracker";
         var connection = OpenConnection();
 
