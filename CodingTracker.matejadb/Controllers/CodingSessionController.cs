@@ -32,8 +32,20 @@ internal class CodingSessionController : BaseController, IBaseController {
     }
 
     public void AddSession() {
+        var isValidEndTime = false;
+
         var startTime = UserInput.GetDateTimeFromUser("Start Time");
-        var endTime = UserInput.GetDateTimeFromUser("End Time");
+        string endTime;
+        do {
+            endTime = UserInput.GetDateTimeFromUser("End Time");
+
+            isValidEndTime = Validation.ValidateEndDate(startTime, endTime);
+
+            if(!isValidEndTime) {
+                AnsiConsole.MarkupLine("[red]End date can't be in the past.[/]");
+            }
+
+        } while (!isValidEndTime);
 
         var duration = CalculateSessionDuration.SessionDuration(startTime, endTime);
 
