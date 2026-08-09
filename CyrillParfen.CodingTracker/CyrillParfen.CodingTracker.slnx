@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="CyrillParfen.CodingTracker.Tests/CyrillParfen.CodingTracker.Tests.csproj" Id="2ed482a5-b2c3-4995-8be7-1c6e4cc11619" />
+  <Project Path="CyrillParfen.CodingTracker/CyrillParfen.CodingTracker.csproj" />
+</Solution>
