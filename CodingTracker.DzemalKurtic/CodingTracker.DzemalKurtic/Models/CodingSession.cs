@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace CodingTracker.DzemalKurtic.Models;
+﻿namespace CodingTracker.DzemalKurtic.Models;
 
 public class CodingSession
 {

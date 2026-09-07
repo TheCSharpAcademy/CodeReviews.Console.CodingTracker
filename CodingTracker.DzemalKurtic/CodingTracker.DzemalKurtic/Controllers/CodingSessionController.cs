@@ -1,5 +1,4 @@
 ﻿using CodingTracker.DzemalKurtic.Models;
-using CodingTracker.DzemalKurtic.Views;
 using Dapper;
 using Microsoft.Data.Sqlite;
 
@@ -30,7 +29,7 @@ internal class CodingSessionController
         connection.Execute(sql, session);
     }
 
-    public void DeleteItem(int id)
+    public int DeleteItem(int id)
     {
         using var connection = new SqliteConnection(ConnectionString);
         connection.Open();
@@ -41,10 +40,11 @@ internal class CodingSessionController
             WHERE Id = @Id;
             """;
 
-        connection.Execute(sql, new { Id = id });
+        var rowCount = connection.Execute(sql, new { Id = id });
+        return rowCount;
     }
 
-    public void UpdateItem(int id, DateTime start, DateTime end)
+    public int UpdateItem(int id, DateTime start, DateTime end)
     {
         using var connection = new SqliteConnection(ConnectionString);
         connection.Open();
@@ -56,7 +56,8 @@ internal class CodingSessionController
             """;
         var session = new CodingSession { Id = id, StartTime = start, EndTime = end };
 
-        connection.Execute(sql, session);
+        var rowCount = connection.Execute(sql, session);
+        return rowCount;
     }
 
     public List<CodingSession> ViewItems()

@@ -1,8 +1,5 @@
 ﻿using CodingTracker.DzemalKurtic.Controllers;
-using CodingTracker.DzemalKurtic.Models;
-using Microsoft.Data.Sqlite;
 using Spectre.Console;
-using System.Globalization;
 
 namespace CodingTracker.DzemalKurtic.Views;
 
@@ -24,7 +21,7 @@ internal class UserInterface
 
             var choice = AnsiConsole.Prompt(
                 new SelectionPrompt<MenuAction>()
-                .Title("What do you want to do next?")
+                .Title("What do you want to do?")
                 .AddChoices(Enum.GetValues<MenuAction>())
                 .UseConverter(action => action switch
                 {
@@ -57,10 +54,10 @@ internal class UserInterface
         var table = new Table();
         table.Border(TableBorder.Rounded);
 
-        table.AddColumn("[yellow]ID[/]");
-        table.AddColumn("[yellow]Start Time[/]");
-        table.AddColumn("[yellow]End Time[/]");
-        table.AddColumn("[yellow]Duration[/]");
+        table.AddColumn("ID");
+        table.AddColumn("Start Time");
+        table.AddColumn("End Time");
+        table.AddColumn("Duration");
 
         var sessions = _codingSessionController.ViewItems();
 
@@ -70,7 +67,7 @@ internal class UserInterface
                 session.Id.ToString(),
                 $"[cyan]{session.StartTime:dd-MM-yyyy HH:mm}[/]",
                 $"[yellow]{session.EndTime:dd-MM-yyyy HH:mm}[/]",
-                $"[green]{session.Duration.TotalHours:F2} hours[/]"
+                $"[green]{session.Duration.Hours} hours {session.Duration.Minutes} minutes[/]"
                 );
         }
 
@@ -81,40 +78,89 @@ internal class UserInterface
 
     internal void AddItem()
     {
-        var start = AnsiConsole.Ask<string>("Enter the start date of the Coding Session: (Format: dd-mm-yy HH:mm)");
-        var end = AnsiConsole.Ask<string>("Enter the end date of the Coding Session: (format: dd-mm-yy HH:mm");
+        var start = getDate("start");
+        var startDate = Validation.ValidateDate(start, "start");
 
-        var startDate = DateTime.ParseExact(start, "dd-MM-yy HH:mm", CultureInfo.InvariantCulture);
-        var endDate = DateTime.ParseExact(end, "dd-MM-yy HH:mm", CultureInfo.InvariantCulture);
+        var end = getDate("end");
+        var endDate = Validation.ValidateDate(end, "end");
 
-        _codingSessionController.AddItem(startDate, endDate);
-        AnsiConsole.MarkupLine("Press Any Key to Continue.");
-        Console.ReadKey();
+        var isBigger = Validation.ValidateTimespan(startDate, endDate);
+
+        if (!isBigger)
+        {
+            _codingSessionController.AddItem(startDate, endDate);
+            AnsiConsole.MarkupLine("Press Any Key to Continue.");
+            Console.ReadKey();
+        }
+        else
+        {
+            AnsiConsole.MarkupLine("Press Any Key to Continue.");
+            Console.ReadKey();
+            
+            Console.Clear();
+            AddItem();
+        }
+     
     }
 
     internal void UpdateItem()
     {
         ShowItems();
 
-        var itemId = AnsiConsole.Ask<int>("Please typt the Id od the item you want to update");
-        var start = AnsiConsole.Ask<string>("Enter the start date of the Coding Session: (Format: dd-mm-yy HH:mm)");
-        var end = AnsiConsole.Ask<string>("Enter the end date of the Coding Session: (format: dd-mm-yy HH:mm");
+        var itemId = getId("update");
+        var id = Validation.ValidateId(itemId);
 
-        var startDate = DateTime.ParseExact(start, "dd-MM-yy HH:mm", CultureInfo.InvariantCulture);
-        var endDate = DateTime.ParseExact(end, "dd-MM-yy HH:mm", CultureInfo.InvariantCulture);
+        var start = getDate("start");
+        var startDate = Validation.ValidateDate(start, "start");
 
-        _codingSessionController.UpdateItem(itemId, startDate, endDate);
-        AnsiConsole.MarkupLine("Press Any Key to Continue.");
-        Console.ReadKey();
+        var end = getDate("end");
+        var endDate = Validation.ValidateDate(end, "end");
+
+        var rowCount = _codingSessionController.UpdateItem(itemId, startDate, endDate);
+        if (rowCount == 0)
+        {
+            AnsiConsole.MarkupLine($"Session with id {id} doesn't exist.");
+            AnsiConsole.MarkupLine("Press Any Key to Continue.");
+            Console.ReadKey();
+            Console.Clear();
+            MainMenu();
+        }else
+        {
+            AnsiConsole.MarkupLine("Press Any Key to Continue.");
+            Console.ReadKey();
+        }
     }
 
     internal void DeleteItem()
     {
         ShowItems();
 
-        var itemId = AnsiConsole.Ask<int>("Please typt the Id od the item you want to delete");
-        _codingSessionController.DeleteItem(itemId);
-        AnsiConsole.MarkupLine("Press Any Key to Continue.");
-        Console.ReadKey();
+        var itemId = getId("delete");
+        var id = Validation.ValidateId(itemId);
+
+        var rowCount = _codingSessionController.DeleteItem(id);
+        if (rowCount == 0)
+        {
+            AnsiConsole.MarkupLine($"Session with id {id} doesn't exist.\n");
+            AnsiConsole.MarkupLine("Press Any Key to Continue.\n");
+            Console.ReadKey();
+            Console.Clear();
+            DeleteItem();
+        }
+        else
+        {
+            AnsiConsole.MarkupLine("Press Any Key to Continue.");
+            Console.ReadKey();
+        }
+    }
+
+    private string getDate(string time)
+    {
+        return AnsiConsole.Ask<string>($"Enter the {time} time of the Coding Session: (Format: dd-mm-yy HH:mm)");
+    }
+
+    private int getId(string action)
+    {
+        return AnsiConsole.Ask<int>($"Please typt the Id od the item you want to {action}");
     }
 }
