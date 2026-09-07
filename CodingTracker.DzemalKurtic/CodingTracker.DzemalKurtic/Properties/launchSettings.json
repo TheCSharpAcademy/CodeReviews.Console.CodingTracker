@@ -1,8 +1,7 @@
 {
   "profiles": {
     "CodingTracker.DzemalKurtic": {
-      "commandName": "Project",
-      "workingDirectory": "C:\\Users\\User\\Desktop\\CSharpAcademy\\CodeReviews.Console.CodingTracker\\CodingTracker.DzemalKurtic\\CodingTracker.DzemalKurtic\\"
+      "commandName": "Project"
     }
   }
 }
