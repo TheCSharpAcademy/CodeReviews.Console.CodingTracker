@@ -19,6 +19,6 @@ internal static class Database
             );
             """;
 
-        connection.Execute(sql );
+        connection.Execute(sql);
     }
 }
