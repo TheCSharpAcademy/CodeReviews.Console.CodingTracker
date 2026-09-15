@@ -33,5 +33,7 @@ dotnet run
 ## Experience
 
 Definitely learned a lot about how to read the docs for an external library, and how it integrates with the base language in apps.
+
 One of the challenges I faced was how to use Dapper with dates considering how SQLite does not have a DATETIME data type, which makes it always stored as TEXT.
+
 I had to write an extension method of sorts to it, but i still need to revisit that.
