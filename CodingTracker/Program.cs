@@ -2,8 +2,8 @@
 
 static class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
-        Console.WriteLine("Hello, World!");
+        await Controller.Start();
     }
 }
