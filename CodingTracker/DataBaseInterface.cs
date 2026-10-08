@@ -9,8 +9,8 @@ public static class DataBaseInterface
 
     static DataBaseInterface()
     {
-        // TODO: Add string from appsettings.json
-        DbConnection = new SqliteConnection();
+        string dbPath = ReadConfig.Config.DbPath;
+        DbConnection = new SqliteConnection(dbPath);
         DbConnection.Open();
         CreateTable();
     }
