@@ -5,14 +5,12 @@ namespace CodingTracker;
 
 public class CodingSession
 {
-    private int Id { get; set; }
     private DateTime StartTime { get; set; }
     private DateTime EndTime { get; set; }
     private TimeSpan Duration { get; set; }
 
-    public CodingSession(int id, DateTime startTime, DateTime endTime, TimeSpan duration)
+    public CodingSession(DateTime startTime, DateTime endTime, TimeSpan duration)
     {
-        Id = id;
         StartTime = startTime;
         EndTime = endTime;
         Duration = duration;
@@ -20,10 +18,9 @@ public class CodingSession
 
     public void AddRowToTable(Table table)
     {
-        table.AddRow(Id.ToString(),
+        table.AddRow(
             StartTime.ToString(CultureInfo.CurrentCulture),
             EndTime.ToString(CultureInfo.CurrentCulture),
             Duration.ToString());
     }
-    
 }
