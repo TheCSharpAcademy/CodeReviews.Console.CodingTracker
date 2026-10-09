@@ -8,7 +8,7 @@ public class AppSettings
 {
     public string DbPath { get; set; } = string.Empty;
 
-    private static readonly string FilePath = Path.Combine(AppContext.BaseDirectory, "config.json");
+    private static readonly string FilePath = Path.Combine(AppContext.BaseDirectory, "appsettings.json");
     
     public static AppSettings LoadConfig()
     {

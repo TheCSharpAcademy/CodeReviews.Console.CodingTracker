@@ -15,6 +15,6 @@ public class Tests
     public void Test1()
     {
         string expectedDbPath = "CodingTracker.db";
-        Assert.Equals(validAppSettings.DbPath, expectedDbPath);
+        Assert.That(validAppSettings.DbPath, Is.EqualTo(expectedDbPath));
     }
 }
