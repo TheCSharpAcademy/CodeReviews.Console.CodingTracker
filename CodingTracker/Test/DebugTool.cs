@@ -12,7 +12,7 @@ internal class DebugTool
     DateTime startDate = RandomDateTime();
     Random rand = new();
 
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < 30; i++)
     {
       int randDay = rand.Next(0, 4);
       int randMinutes = rand.Next(0, 580);

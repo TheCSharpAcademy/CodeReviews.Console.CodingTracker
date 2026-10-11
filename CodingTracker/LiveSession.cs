@@ -7,8 +7,12 @@ namespace CodingTracker;
 
 internal class LiveSession
 {
+
   internal static void Launch()
   {
+    string action = "Add";
+    string colorHighlight = "green";
+
     DateTime startDate = DateTime.Now;
     Stopwatch stopwatch = Stopwatch.StartNew();
 
@@ -32,18 +36,16 @@ internal class LiveSession
     }
 
     DateTime endDate = DateTime.Now;
-
     SessionOverStatus(startDate, stopwatch);
 
-    string activity = ChoicesPrompt.AskForActivity();
+    string activity = ChoicesPrompt.AskForActivity(action, colorHighlight);
 
     //add autoFill feature, query the DB for Last activity, catch empty DB
 
     Repository.ConvertAndAdd(activity, startDate, endDate, stopwatch.Elapsed);
 
-    AnsiConsole.MarkupLine("[green]The session has been added to the DB[/]");
-    //Add a query that display the last DB entry.
-
+    AnsiConsole.WriteLine();
+    AnsiConsole.MarkupLine($"[{colorHighlight}]The session has been added to the DB.[/]");
     AnsiConsole.WriteLine();
   }
 
@@ -55,7 +57,7 @@ internal class LiveSession
 
     if (stopwatch.IsRunning)
     {
-      colorHighlight = "green";
+      colorHighlight = "orange";
       state = "active";
       action = "pause";
     }
@@ -81,7 +83,7 @@ internal class LiveSession
     Console.Clear();
     Displayer.PrintTitle();
 
-    AnsiConsole.MarkupLine($"Coding session [yellow]done.[/]");
+    AnsiConsole.MarkupLine($"Coding session [green]done.[/]");
     AnsiConsole.WriteLine();
     AnsiConsole.MarkupLine(DisplayDate(date));
     AnsiConsole.MarkupLine(DisplayDuration(stopwatch));

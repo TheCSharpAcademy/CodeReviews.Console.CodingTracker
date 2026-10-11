@@ -44,6 +44,7 @@ class CodingSession
     string endTime = TimeFormatter.ConvertHourOutDb(EndTime);
     string duration = TimeFormatter.IntToHHmm(Duration);
 
-    return activity.PadRight(25, ' ') + startTime.PadRight(20, ' ') + endTime.PadRight(10, ' ') + duration;
+    string result = activity.PadRight(20, ' ') + startTime.PadRight(25, ' ') + endTime.PadRight(10, ' ') + duration;
+    return result;
   }
 }

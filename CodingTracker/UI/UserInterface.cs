@@ -102,10 +102,10 @@ internal class UserInterface
       string[] choices = EnumExtensions.GetEditableColumn().ToArray();
       List<string> toEdit = ChoicesPrompt.SelectMultiString(action, colorHighlight, choices);
 
-      if (toEdit.Contains($"{Column.activity}"))
+      if (toEdit.Contains($"{Column.activity.GetDisplayName()}"))
         selection.EditActivity(ChoicesPrompt.AskForActivity(action, colorHighlight));
 
-      if (toEdit.Contains($"{Column.startTime}") && toEdit.Contains($"{Column.endTime}"))
+      if (toEdit.Contains($"{Column.startTime.GetDisplayName()}") && toEdit.Contains($"{Column.endTime.GetDisplayName()}"))
       {
         string startDate = GetTimeFromUser(DaTeStyleShort, $"[{colorHighlight}]{action}[/] start date").ToString(DaTeStyleShort);
         string startHour = GetTimeFromUser(DateStyleHour, $"[{colorHighlight}]{action}[/] start hour").ToString(DateStyleHour);
@@ -117,7 +117,7 @@ internal class UserInterface
         selection.EditDuration(Convert.ToInt32(timeInfos[2]));
       }
 
-      else if (toEdit.Contains($"{Column.startTime}"))
+      else if (toEdit.Contains($"{Column.startTime.GetDisplayName()}"))
       {
         string startDate = GetTimeFromUser(DaTeStyleShort, $"[{colorHighlight}]{action}[/] start date").ToString(DaTeStyleShort);
         string startHour = GetTimeFromUser(DateStyleHour, $"[{colorHighlight}]{action}[/] start hour").ToString(DateStyleHour);
@@ -128,7 +128,7 @@ internal class UserInterface
         selection.EditDuration(Convert.ToInt32(timeInfos[2]));
       }
 
-      else if (toEdit.Contains($"{Column.endTime}"))
+      else if (toEdit.Contains($"{Column.endTime.GetDisplayName()}"))
       {
         string startDate = TrimHour(selection.StartTime);
         string startHour = TrimDate(selection.StartTime);
@@ -142,8 +142,9 @@ internal class UserInterface
       Repository.UpdateRow(selection);
 
       AnsiConsole.WriteLine();
-      AnsiConsole.MarkupLine("[green]Entry succesfully edited.[/]");
       Displayer.PreviewRow(selection);
+      AnsiConsole.WriteLine();
+      AnsiConsole.MarkupLine($"[green]Entry succesfully [{colorHighlight}]edited.[/][/]");
       AnsiConsole.WriteLine();
     }
   }
@@ -164,6 +165,8 @@ internal class UserInterface
       AnsiConsole.WriteLine();
       List<CodingSession> selection = ChoicesPrompt.SelectMultiSessions(action, colorHighlight, tableData);
 
+      Displayer.PreviewRows(selection);
+
       if (selection.Count == 0)
         AnsiConsole.MarkupLine($"[yellow]No entry has been deleted[/]");
       else
@@ -178,5 +181,6 @@ internal class UserInterface
           AnsiConsole.MarkupLine($"[green]{selection.Count} entries have been [red]deleted[/].[/]");
       }
     }
+    AnsiConsole.WriteLine();
   }
 }

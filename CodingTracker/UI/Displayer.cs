@@ -31,6 +31,7 @@ internal class Displayer
     var table = new Table()
             .RoundedBorder();
 
+
     table.AddColumn(Markup.Escape(Enums.Column.activity.GetDisplayName()));
     table.AddColumn(Markup.Escape(Enums.Column.startTime.GetDisplayName()));
     table.AddColumn(Markup.Escape(Enums.Column.endTime.GetDisplayName()));
@@ -41,6 +42,28 @@ internal class Displayer
       Markup.Escape(ConvertDateOutDb(session.StartTime)),
       Markup.Escape(ConvertHourOutDb(session.EndTime)),
       Markup.Escape(IntToHHmm(session.Duration)));
+
+    AnsiConsole.Write(table);
+  }
+
+  internal static void PreviewRows(List<CodingSession> sessions)
+  {
+    var table = new Table()
+            .RoundedBorder();
+
+    table.AddColumn(Markup.Escape(Enums.Column.activity.GetDisplayName()));
+    table.AddColumn(Markup.Escape(Enums.Column.startTime.GetDisplayName()));
+    table.AddColumn(Markup.Escape(Enums.Column.endTime.GetDisplayName()));
+    table.AddColumn(Markup.Escape(Enums.Column.duration.GetDisplayName()));
+
+    foreach (var session in sessions)
+    {
+      table.AddRow(
+          Markup.Escape(session.Activity),
+          Markup.Escape(ConvertDateOutDb(session.StartTime)),
+          Markup.Escape(ConvertHourOutDb(session.EndTime)),
+          Markup.Escape(IntToHHmm(session.Duration)));
+    }
 
     AnsiConsole.Write(table);
   }

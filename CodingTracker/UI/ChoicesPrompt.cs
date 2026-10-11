@@ -23,7 +23,7 @@ internal class ChoicesPrompt
 
     var selection = AnsiConsole.Prompt(
       new SelectionPrompt<string>()
-      .Title($"What do you want to [BOLD {colorHighlight}]{action}[/]")
+      .Title($"What do you want to [bold {colorHighlight}]{action}[/]:")
       .HighlightStyle(colorHighlight)
       .PageSize(100)
       .Mode(SelectionMode.Leaf)
@@ -35,13 +35,15 @@ internal class ChoicesPrompt
     }
     else if (selection == choices[1])
     {
+      AnsiConsole.MarkupLine($"[{colorHighlight}]{action}[/] - search specific activity");
       string activity = AskForActivity(action, colorHighlight);
       tableData = Query.FilterByActivity(activity);
     }
     else if (selection == choices[2])
     {
-      string startDate = ConvertDateForDb(GetTimeFromUser(DaTeStyleShort, "Search from", "00:00"));
-      string endDate = ConvertDateForDb(GetTimeFromUser(DaTeStyleShort, "Till", "23:59"));
+      AnsiConsole.MarkupLine($"[{colorHighlight}]{action}[/] - search specific date");
+      string startDate = ConvertDateForDb(GetTimeFromUser(DaTeStyleShort, "From", "00:00"));
+      string endDate = ConvertDateForDb(GetTimeFromUser(DaTeStyleShort, "To", "23:59"));
       tableData = Query.FilterByDate(startDate, endDate);
     }
 
