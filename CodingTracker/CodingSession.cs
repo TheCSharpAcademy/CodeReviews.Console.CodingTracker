@@ -1,16 +1,17 @@
-using System.Globalization;
-using Spectre.Console;
-
 namespace CodingTracker;
 
 public class CodingSession
 {
+    public long? Id { get; set; }
     public DateTime StartTime { get; set; }
-    private DateTime? EndTime { get; set; }
+    public DateTime? EndTime { get; set; }
     public TimeSpan Duration { get; set; }
 
-    public CodingSession(DateTime startTime, DateTime? endTime, TimeSpan duration)
+    public CodingSession() { }
+    
+    public CodingSession(DateTime startTime, DateTime? endTime, TimeSpan duration, long? id = null)
     {
+        Id = id;
         StartTime = startTime;
         EndTime = endTime;
         Duration = duration;
