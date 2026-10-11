@@ -45,6 +45,6 @@ class CodingSession
     string duration = TimeFormatter.IntToHHmm(Duration);
 
     string result = activity.PadRight(20, ' ') + startTime.PadRight(25, ' ') + endTime.PadRight(10, ' ') + duration;
-    return result;
+    return Spectre.Console.Markup.Escape(result);
   }
 }

@@ -57,7 +57,7 @@ internal class LiveSession
 
     if (stopwatch.IsRunning)
     {
-      colorHighlight = "orange";
+      colorHighlight = "orange1";
       state = "active";
       action = "pause";
     }
