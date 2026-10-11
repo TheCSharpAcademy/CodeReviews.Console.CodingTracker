@@ -22,12 +22,12 @@ internal class UserInterface
 
       switch (selection)
       {
-        case MenuChoice.addItemStartNow:
-          LiveSession.Launch();
-          break;
-
         case MenuChoice.viewItems:
           ViewAll();
+          break;
+
+        case MenuChoice.addItemStartNow:
+          LiveSession.Launch();
           break;
 
         case MenuChoice.addItem:
@@ -39,7 +39,7 @@ internal class UserInterface
           break;
 
         case MenuChoice.deleteItem:
-          //DeleteItem();
+          DeleteItem();
           break;
 
         case MenuChoice.exit:
@@ -67,7 +67,7 @@ internal class UserInterface
     AnsiConsole.WriteLine();
     Displayer.PreviewRow(activity, timeInfos[0], timeInfos[1], Convert.ToInt32(timeInfos[2]));
     AnsiConsole.WriteLine();
-    AnsiConsole.MarkupLine($"[{colorHighlight}]The new session has been added to the database.[/]");
+    AnsiConsole.MarkupLine($"[{colorHighlight}]The session has been added to the DB.[/]");
     AnsiConsole.WriteLine();
   }
 
@@ -99,8 +99,8 @@ internal class UserInterface
       Displayer.PreviewRow(selection);
       AnsiConsole.WriteLine();
 
-      string[] editingChoices = EnumExtensions.GetEditableColumn().ToArray();
-      List<string> toEdit = ChoicesPrompt.SelectMultiString(action, colorHighlight, editingChoices);
+      string[] choices = EnumExtensions.GetEditableColumn().ToArray();
+      List<string> toEdit = ChoicesPrompt.SelectMultiString(action, colorHighlight, choices);
 
       if (toEdit.Contains($"{Column.activity}"))
         selection.EditActivity(ChoicesPrompt.AskForActivity(action, colorHighlight));
@@ -145,6 +145,38 @@ internal class UserInterface
       AnsiConsole.MarkupLine("[green]Entry succesfully edited.[/]");
       Displayer.PreviewRow(selection);
       AnsiConsole.WriteLine();
+    }
+  }
+
+  internal static void DeleteItem()
+  {
+    Displayer.PrintTitle();
+
+    if (Query.CountRows() == 0)
+      Displayer.NoEntriesFound();
+
+    else
+    {
+      string action = "Delete";
+      string colorHighlight = "Red";
+
+      List<CodingSession> tableData = ChoicesPrompt.AskForFilter(action, colorHighlight);
+      AnsiConsole.WriteLine();
+      List<CodingSession> selection = ChoicesPrompt.SelectMultiSessions(action, colorHighlight, tableData);
+
+      if (selection.Count == 0)
+        AnsiConsole.MarkupLine($"[yellow]No entry has been deleted[/]");
+      else
+      {
+        foreach (var entry in selection)
+          Repository.Delete(entry);
+
+        if (selection.Count == 1)
+          AnsiConsole.MarkupLine($"[green]{selection.Count} entry has been [red]deleted[/].[/]");
+
+        else
+          AnsiConsole.MarkupLine($"[green]{selection.Count} entries have been [red]deleted[/].[/]");
+      }
     }
   }
 }

@@ -41,7 +41,7 @@ internal class ChoicesPrompt
     else if (selection == choices[2])
     {
       string startDate = ConvertDateForDb(GetTimeFromUser(DaTeStyleShort, "Search from", "00:00"));
-      string endDate = ConvertDateForDb(GetTimeFromUser(DaTeStyleShort, "Till :", "23:59"));
+      string endDate = ConvertDateForDb(GetTimeFromUser(DaTeStyleShort, "Till", "23:59"));
       tableData = Query.FilterByDate(startDate, endDate);
     }
 
@@ -69,6 +69,19 @@ internal class ChoicesPrompt
       .HighlightStyle(colorHighlight)
       .InstructionsText($"[grey](Press [{colorHighlight}]<space>[/] to toggle, [green]<enter>[/] to confirm)[/]")
       .AddChoices(choices));
+
+    return selection;
+  }
+
+  public static List<CodingSession> SelectMultiSessions(string action, string colorHighlight, List<CodingSession> tableData)
+  {
+    var selection = AnsiConsole.Prompt(
+    new MultiSelectionPrompt<CodingSession>()
+    .Title($"[BOLD {colorHighlight}]Select[/] the entry you want to [BOLD {colorHighlight}]{action}[/]:")
+    .HighlightStyle(colorHighlight)
+    .InstructionsText($"[grey](Press [{colorHighlight}]<space>[/] to toggle, [green]<enter>[/] to confirm)[/]")
+    .UseConverter(entry => entry.DisplayData())
+    .AddChoices(tableData));
 
     return selection;
   }
