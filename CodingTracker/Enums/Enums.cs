@@ -24,11 +24,11 @@ internal class Enums
 
   internal enum MenuChoice
   {
-    [Display(Name = "[green]Start[/] a session now")]
-    addItemStartNow,
-
     [Display(Name = "View entries")]
     viewItems,
+
+    [Display(Name = "[green]Start[/] a session [green]now[/]")]
+    addItemStartNow,
 
     [Display(Name = "[green]Add[/] a previous session")]
     addItem,
