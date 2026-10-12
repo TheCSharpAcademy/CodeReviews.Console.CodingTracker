@@ -2,7 +2,7 @@ namespace CodingTracker;
 
 public static class Controller
 {
-    public static DateTime MonthToShow = GetFirstDayMonth(DateTime.Now);
+    public static DateTime MonthToShow = Utils.GetFirstDayMonth(DateTime.Now);
     private static UserOption.PromptMenus _promptMenu = UserOption.PromptMenus.Main;
     private static bool _endApp = false;
     
@@ -11,7 +11,7 @@ public static class Controller
         UserInterface.Title();
         do
         {
-            var sessions = await DataBaseInterface.ViewCodingSessions(MonthToShow, NextMonth(MonthToShow));
+            var sessions = await DataBaseInterface.ViewCodingSessions(MonthToShow, Utils.NextMonth(MonthToShow));
             var sessionsPerDay = AmountCodingPerDay(sessions);
             
             TableVisualisationEngine.ShowCalendarWithCaption(sessionsPerDay);
@@ -88,28 +88,11 @@ public static class Controller
 
     private static async Task AddMenu(DateTime start, DateTime end)
     {
-        var duration = Duration(start, end);
+        var duration = Utils.Duration(start, end);
         var codingSession = new CodingSession(start, end, duration);
         bool confirmation = UserInterface.ConfirmationPrompt($"add {codingSession}");
 
         if (confirmation) await DataBaseInterface.AddCodingSession(codingSession);
-    }
-
-    public static TimeSpan Duration(DateTime start, DateTime end)
-    {
-        if (start.CompareTo(end) >= 0) throw new Exception("Start must be earlier than end");
-        
-        return (end - start);
-    }
-
-    public static DateTime GetFirstDayMonth(DateTime time)
-    {
-        return new DateTime(time.Date.Year, time.Date.Month, 1);
-    }
-
-    public static DateTime NextMonth(DateTime time)
-    {
-        return time.AddMonths(1);
     }
     
     /// Aggregates coding sessions by calendar day, returning one session per day with summed durations
