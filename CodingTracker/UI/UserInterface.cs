@@ -81,71 +81,77 @@ internal class UserInterface
     Displayer.PrintTitle();
 
     if (Query.CountRows() == 0)
-      Displayer.NoEntriesFound();
-
-    else
     {
-      string action = "Edit";
-      string colorHighlight = "Blue";
-
-      string[] timeInfos;
-
-      List<CodingSession> tableData = ChoicesPrompt.AskForFilter(action, colorHighlight);
-      AnsiConsole.WriteLine();
-      CodingSession selection = ChoicesPrompt.SelectEntry(tableData, action, colorHighlight);
-
-      AnsiConsole.MarkupLine($"[{colorHighlight}]Selection (id {selection.Id})[/]");
-      Displayer.PreviewRow(selection);
-      AnsiConsole.WriteLine();
-
-      string[] choices = EnumExtensions.GetEditableColumn().ToArray();
-      List<string> toEdit = ChoicesPrompt.SelectMultiString(action, colorHighlight, choices);
-
-      if (toEdit.Contains($"{Column.activity.GetDisplayName()}"))
-        selection.EditActivity(ChoicesPrompt.AskForActivity(action, colorHighlight));
-
-      if (toEdit.Contains($"{Column.startTime.GetDisplayName()}") && toEdit.Contains($"{Column.endTime.GetDisplayName()}"))
-      {
-        string startDate = GetTimeFromUser(DaTeStyleShort, $"[{colorHighlight}]{action}[/] start date").ToString(DaTeStyleShort);
-        string startHour = GetTimeFromUser(DateStyleHour, $"[{colorHighlight}]{action}[/] start hour").ToString(DateStyleHour);
-        string endHour = GetTimeFromUser(DateStyleHour, $"[{colorHighlight}]{action}[/] end hour").ToString(DateStyleHour);
-        timeInfos = FormatTimeInfo(startDate, startHour, endHour);
-
-        selection.EditStartTime(timeInfos[0]);
-        selection.EditEndTime(timeInfos[1]);
-        selection.EditDuration(Convert.ToInt32(timeInfos[2]));
-      }
-
-      else if (toEdit.Contains($"{Column.startTime.GetDisplayName()}"))
-      {
-        string startDate = GetTimeFromUser(DaTeStyleShort, $"[{colorHighlight}]{action}[/] start date").ToString(DaTeStyleShort);
-        string startHour = GetTimeFromUser(DateStyleHour, $"[{colorHighlight}]{action}[/] start hour").ToString(DateStyleHour);
-        string endHour = selection.EndTime;
-        timeInfos = FormatTimeInfo(startDate, startHour, endHour);
-
-        selection.EditStartTime(timeInfos[0]);
-        selection.EditDuration(Convert.ToInt32(timeInfos[2]));
-      }
-
-      else if (toEdit.Contains($"{Column.endTime.GetDisplayName()}"))
-      {
-        string startDate = TrimHour(selection.StartTime);
-        string startHour = TrimDate(selection.StartTime);
-        string endHour = GetTimeFromUser(DateStyleHour, $"[{colorHighlight}]{action}[/] end hour").ToString(DateStyleHour);
-        timeInfos = FormatTimeInfo(startDate, startHour, endHour);
-
-        selection.EditEndTime(timeInfos[1]);
-        selection.EditDuration(Convert.ToInt32(timeInfos[2]));
-      }
-
-      Repository.UpdateRow(selection);
-
-      AnsiConsole.WriteLine();
-      Displayer.PreviewRow(selection);
-      AnsiConsole.WriteLine();
-      AnsiConsole.MarkupLine($"[green]Entry succesfully [{colorHighlight}]edited.[/][/]");
-      AnsiConsole.WriteLine();
+      Displayer.NoEntriesFound();
+      return;
     }
+
+    string action = "Edit";
+    string colorHighlight = "Blue";
+    string[] timeInfos;
+
+    List<CodingSession> tableData = ChoicesPrompt.AskForFilter(action, colorHighlight);
+    AnsiConsole.WriteLine();
+
+    if (tableData.Count == 0)
+    {
+      Displayer.NoEntriesFound();
+      return;
+    }
+
+    CodingSession selection = ChoicesPrompt.SelectEntry(tableData, action, colorHighlight);
+
+    AnsiConsole.MarkupLine($"[{colorHighlight}]Selection (id {selection.Id})[/]");
+    Displayer.PreviewRow(selection);
+    AnsiConsole.WriteLine();
+
+    string[] choices = EnumExtensions.GetEditableColumn().ToArray();
+    List<string> toEdit = ChoicesPrompt.SelectMultiString(action, colorHighlight, choices);
+
+    if (toEdit.Contains($"{Column.activity.GetDisplayName()}"))
+      selection.EditActivity(ChoicesPrompt.AskForActivity(action, colorHighlight));
+
+    if (toEdit.Contains($"{Column.startTime.GetDisplayName()}") && toEdit.Contains($"{Column.endTime.GetDisplayName()}"))
+    {
+      string startDate = GetTimeFromUser(DaTeStyleShort, $"[{colorHighlight}]{action}[/] start date").ToString(DaTeStyleShort);
+      string startHour = GetTimeFromUser(DateStyleHour, $"[{colorHighlight}]{action}[/] start hour").ToString(DateStyleHour);
+      string endHour = GetTimeFromUser(DateStyleHour, $"[{colorHighlight}]{action}[/] end hour").ToString(DateStyleHour);
+      timeInfos = FormatTimeInfo(startDate, startHour, endHour);
+
+      selection.EditStartTime(timeInfos[0]);
+      selection.EditEndTime(timeInfos[1]);
+      selection.EditDuration(Convert.ToInt32(timeInfos[2]));
+    }
+
+    else if (toEdit.Contains($"{Column.startTime.GetDisplayName()}"))
+    {
+      string startDate = GetTimeFromUser(DaTeStyleShort, $"[{colorHighlight}]{action}[/] start date").ToString(DaTeStyleShort);
+      string startHour = GetTimeFromUser(DateStyleHour, $"[{colorHighlight}]{action}[/] start hour").ToString(DateStyleHour);
+      string endHour = selection.EndTime;
+      timeInfos = FormatTimeInfo(startDate, startHour, endHour);
+
+      selection.EditStartTime(timeInfos[0]);
+      selection.EditDuration(Convert.ToInt32(timeInfos[2]));
+    }
+
+    else if (toEdit.Contains($"{Column.endTime.GetDisplayName()}"))
+    {
+      string startDate = TrimHour(selection.StartTime);
+      string startHour = TrimDate(selection.StartTime);
+      string endHour = GetTimeFromUser(DateStyleHour, $"[{colorHighlight}]{action}[/] end hour").ToString(DateStyleHour);
+      timeInfos = FormatTimeInfo(startDate, startHour, endHour);
+
+      selection.EditEndTime(timeInfos[1]);
+      selection.EditDuration(Convert.ToInt32(timeInfos[2]));
+    }
+
+    Repository.UpdateRow(selection);
+
+    AnsiConsole.WriteLine();
+    Displayer.PreviewRow(selection);
+    AnsiConsole.WriteLine();
+    AnsiConsole.MarkupLine($"[green]Entry succesfully [{colorHighlight}]edited.[/][/]");
+    AnsiConsole.WriteLine();
   }
 
   internal static void DeleteItem()
@@ -153,32 +159,38 @@ internal class UserInterface
     Displayer.PrintTitle();
 
     if (Query.CountRows() == 0)
+    {
       Displayer.NoEntriesFound();
+      return;
+    }
 
+    string action = "Delete";
+    string colorHighlight = "Red";
+
+    List<CodingSession> tableData = ChoicesPrompt.AskForFilter(action, colorHighlight);
+    AnsiConsole.WriteLine();
+
+    if (tableData.Count == 0)
+    {
+      Displayer.NoEntriesFound();
+      return;
+    }
+
+    List<CodingSession> selection = ChoicesPrompt.SelectMultiSessions(action, colorHighlight, tableData);
+    Displayer.PreviewRows(selection);
+
+    if (selection.Count == 0)
+      AnsiConsole.MarkupLine($"[yellow]No entry has been deleted[/]");
     else
     {
-      string action = "Delete";
-      string colorHighlight = "Red";
+      foreach (var entry in selection)
+        Repository.Delete(entry);
 
-      List<CodingSession> tableData = ChoicesPrompt.AskForFilter(action, colorHighlight);
-      AnsiConsole.WriteLine();
-      List<CodingSession> selection = ChoicesPrompt.SelectMultiSessions(action, colorHighlight, tableData);
+      if (selection.Count == 1)
+        AnsiConsole.MarkupLine($"[green]{selection.Count} entry has been [red]deleted[/].[/]");
 
-      Displayer.PreviewRows(selection);
-
-      if (selection.Count == 0)
-        AnsiConsole.MarkupLine($"[yellow]No entry has been deleted[/]");
       else
-      {
-        foreach (var entry in selection)
-          Repository.Delete(entry);
-
-        if (selection.Count == 1)
-          AnsiConsole.MarkupLine($"[green]{selection.Count} entry has been [red]deleted[/].[/]");
-
-        else
-          AnsiConsole.MarkupLine($"[green]{selection.Count} entries have been [red]deleted[/].[/]");
-      }
+        AnsiConsole.MarkupLine($"[green]{selection.Count} entries have been [red]deleted[/].[/]");
     }
     AnsiConsole.WriteLine();
   }
