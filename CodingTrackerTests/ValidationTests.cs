@@ -24,4 +24,26 @@ public class ValidationTests
         
         Assert.That(result, Does.Match(@"^\d{4}-\d{2}-\d{2}: \d{2}-\d{2}$"));
     }
+    
+        
+    [TestCase("2026-10-12: 18-30", true)]
+    [TestCase("  2026-10-12: 18-30  ", true)]
+    public void DateTryParser_WithValidInput_ReturnsTrueAndParsedDate(string input, bool expectedResult)
+    {
+        bool success = Validation.DateTryParser(input, out DateTime parsedDate);
+        
+        Assert.That(success, Is.EqualTo(expectedResult));
+        Assert.That(parsedDate, Is.Not.EqualTo(default(DateTime)));
+    }
+    
+    [TestCase("12-10-2026")]
+    [TestCase("not-a-date")]
+    [TestCase("")]
+    public void DateTryParser_WithInvalidInput_ReturnsFalse(string input)
+    {
+        bool success = Validation.DateTryParser(input, out DateTime parsedDate);
+        
+        Assert.That(success, Is.False);
+    }
+    
 }
