@@ -45,6 +45,13 @@ internal class Query
                     WHERE startTime BETWEEN @startDate AND @endDate
                     ORDER BY startTime DESC";
 
-    return connection.Query<CodingSession>(sql, new { startDate = startDate, endDate = endDate }).ToList();
+  internal static string LastActivity()
+  {
+    string sql = @$"SELECT activity FROM coding_tracker 
+                    ORDER BY id DESC
+                    LIMIT 1";
+
+    using var connection = new SqliteConnection(ConnectionString);
+    return Convert.ToString(connection.ExecuteScalar(sql));
   }
 }
