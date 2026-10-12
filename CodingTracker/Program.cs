@@ -1,4 +1,10 @@
-﻿namespace CodingTracker;
+﻿using Spectre.Console;
+
+namespace CodingTracker;
+
+// finish auto autoFill
+// add feedback from previous project
+// write readme
 
 class Program
 {

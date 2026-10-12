@@ -1,4 +1,3 @@
-using CodingSession;
 using Spectre.Console;
 using static CodingTracker.Enums;
 using static CodingTracker.TimeFormatter;

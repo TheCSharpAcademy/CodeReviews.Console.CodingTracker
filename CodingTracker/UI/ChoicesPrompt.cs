@@ -8,9 +8,14 @@ internal class ChoicesPrompt
 {
   internal static string AskForActivity(string action, string colorHighlight)
   {
-    AnsiConsole.MarkupLine("[grey]Press 'Enter' to autofill with the last activity registered.[/]");
+    AnsiConsole.MarkupLine("[grey]Press 'Enter' to autofill with the last activity (highest id registered).[/]");
     var prompt = new TextPrompt<string>($"[{colorHighlight}]{action}[/] activity:").AllowEmpty();
-    return AnsiConsole.Prompt(prompt);
+    string result = AnsiConsole.Prompt(prompt);
+
+    if (result == "")
+      return Query.LastActivity();
+    else
+      return result;
   }
 
   public static List<CodingSession> AskForFilter(string action, string colorHighlight)
@@ -57,7 +62,7 @@ internal class ChoicesPrompt
     .Title($"[BOLD {colorHighlight}]Select[/] the entry you want to [BOLD {colorHighlight}]{action}[/]:")
     .HighlightStyle(colorHighlight)
     .UseConverter(entry => entry.DisplayData())
-    .PageSize(100)
+    //.PageSize(100)
     .AddChoices(tableData));
 
     return selection;
@@ -70,6 +75,7 @@ internal class ChoicesPrompt
       .Title($"What do you want to [BOLD {colorHighlight}]{action}[/]")
       .HighlightStyle(colorHighlight)
       .InstructionsText($"[grey](Press [{colorHighlight}]<space>[/] to toggle, [green]<enter>[/] to confirm)[/]")
+      .PageSize(100)
       .AddChoices(choices));
 
     return selection;
@@ -83,6 +89,7 @@ internal class ChoicesPrompt
     .HighlightStyle(colorHighlight)
     .InstructionsText($"[grey](Press [{colorHighlight}]<space>[/] to toggle, [green]<enter>[/] to confirm)[/]")
     .UseConverter(entry => entry.DisplayData())
+    .PageSize(100)
     .AddChoices(tableData));
 
     return selection;
