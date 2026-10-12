@@ -8,6 +8,19 @@ internal class Repository
 {
   internal static string ConnectionString { get; private set; } = @"Data Source=CodingTracker.db";
 
+  internal static T Execute<T>(Func<SqliteConnection, T> action)
+  {
+    try
+    {
+      using var connection = new SqliteConnection(ConnectionString);
+      return action(connection);
+    }
+    catch (SqliteException ex)
+    {
+      throw new InvalidOperationException("Database access failed.", ex);
+    }
+  }
+
   internal static void CreateDB()
   {
     bool tableExisted;
@@ -43,15 +56,13 @@ internal class Repository
                   (activity, startTime, endTime, duration)
                   VALUES (@activity, @startTime, @endTime, @duration)";
 
-    using var connection = new SqliteConnection(ConnectionString);
-
-    connection.Execute(sql, new
+    Execute(connection => connection.Execute(sql, new
     {
       activity = activity,
       startTime = startTime,
       endTime = endTime,
       duration = duration
-    });
+    }));
   }
 
   internal static void ConvertAndAdd(string activity, DateTime startTime, DateTime endTime, TimeSpan duration)
@@ -66,8 +77,7 @@ internal class Repository
   internal static void Delete(CodingSession entry)
   {
     string sql = @$"DELETE FROM coding_tracker WHERE id = @id";
-    using var connection = new SqliteConnection(ConnectionString);
-    connection.Execute(sql, new { id = entry.Id });
+    Execute(connection => connection.Execute(sql, new { id = entry.Id }));
   }
 
   internal static void UpdateRow(CodingSession entry)
@@ -79,15 +89,13 @@ internal class Repository
                         duration = @duration 
                     WHERE id = @id";
 
-    using var connection = new SqliteConnection(ConnectionString);
-
-    connection.Execute(sql, new
+    Execute(connection => connection.Execute(sql, new
     {
       activity = entry.Activity,
       startTime = entry.StartTime,
       endTime = entry.EndTime,
       duration = entry.Duration,
       id = entry.Id
-    });
+    }));
   }
 }
