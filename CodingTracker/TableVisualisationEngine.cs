@@ -27,7 +27,7 @@ public static class TableVisualisationEngine
 
     private static Calendar GetCalendar(List<CodingSession> sessions)
     {
-        if (sessions.Count == 0) return new Calendar(DateTime.Today.Year, DateTime.Today.Month);
+        if (sessions.Count == 0) return new Calendar(Controller.MonthToShow.Year, Controller.MonthToShow.Month);
 
         int year = sessions[0].StartTime.Year;
         int month = sessions[0].StartTime.Month;

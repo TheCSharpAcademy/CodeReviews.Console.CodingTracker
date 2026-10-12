@@ -2,6 +2,7 @@ namespace CodingTracker;
 
 public static class UserOption
 {
+    // Option for the main menu selection prompt
     public enum MainMenu
     {
         Insert,
@@ -10,11 +11,21 @@ public static class UserOption
         Quit
     }
 
+    // Option for the view menu selection prompt
     public enum ViewMenu
     {
         Previous,
         Next,
         Quit
+    }
+    
+    // Different prompt that can be shown
+    public enum PromptMenus
+    {
+        Main,
+        Add,
+        AddLive,
+        View
     }
 
     public static string MainMenuToString(MainMenu option)

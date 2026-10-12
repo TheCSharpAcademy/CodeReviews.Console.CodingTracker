@@ -26,7 +26,7 @@ public static class DataBaseInterface
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 StartTime TEXT NOT NULL,
                 EndTime TEXT NOT NULL,
-                Duration INT NOT NULL);";
+                DurationTicks INTEGER NOT NULL);";
         
         using var command = new SqliteCommand(createTableQuery, _dbConnection);
         command.ExecuteNonQuery();
@@ -36,8 +36,8 @@ public static class DataBaseInterface
     {
         InitializeDb();
         string addCodingSessionQuery = @"
-            INSERT INTO CodingSessions (StartTime, EndTime, Duration) 
-            VALUES (@StartTime, @EndTime, @Duration);";
+            INSERT INTO CodingSessions (StartTime, EndTime, DurationTicks) 
+            VALUES (@StartTime, @EndTime, @DurationTicks);";
 
         await _dbConnection.ExecuteAsync(addCodingSessionQuery, codingSession);
     }

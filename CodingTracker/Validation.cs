@@ -1,3 +1,6 @@
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+
 namespace CodingTracker;
 
 public static class Validation
@@ -8,6 +11,12 @@ public static class Validation
     public static string DateToString(DateTime time)
     {
         return time.ToString(DateFormat);
+    }
+
+    public static bool DateTryParser(string input, out DateTime parsedDate)
+    {
+        return (DateTime.TryParseExact(input?.Trim(), DateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None,
+            out parsedDate));
     }
     
 }

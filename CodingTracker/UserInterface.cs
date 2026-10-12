@@ -14,6 +14,12 @@ public static class UserInterface
     private static readonly string DatePromptMessage =
         $"Enter the date ({Validation.DateFormat}) of the {{0}}, nothing for right now";
 
+    private static readonly string DatePromptLiveMessage =
+        $"You started the live session at {{0}}, press enter to end the session";
+
+    private static readonly string DatePromptErrorEndBeforeStart =
+        "[red]End date cannot be earlier than start date. Try again.[/]";
+
     public static void Title()
     {
         var title = new Text(TitleString, new Style(foreground: Color.Green1));
@@ -40,17 +46,49 @@ public static class UserInterface
                 .UseConverter(UserOption.ViewMenuToString));
     }
 
+    public static (DateTime, DateTime) AskDateRange()
+    {
+        
+        var startDate = AskDate("start date");
+        var endDate = AskDate("end date");
+
+        while (endDate <= startDate)
+        {
+            AnsiConsole.MarkupLine(DatePromptErrorEndBeforeStart);
+            endDate = AskDate("end date");
+        }
+        
+        return (startDate, endDate);
+    }
+
+    public static (DateTime, DateTime) AskDateRangeLive()
+    {
+        var startDate = DateTime.Now;
+        AnsiConsole.MarkupLine(string.Format(DatePromptLiveMessage, startDate));
+        
+        // Wait user input without showing it in console
+        Console.ReadKey(intercept: true);
+        
+        var endDate = DateTime.Now;
+        return (startDate, endDate);
+    }
+    
     public static bool ConfirmationPrompt(string message)
     {
         return AnsiConsole.Confirm(string.Format(ConfirmationBaseMessage, message));
     }
 
-    public static DateTime AskDate(string message)
+    private static DateTime AskDate(string message)
     {
-        return AnsiConsole.Prompt(
-            new TextPrompt<DateTime>(string.Format(DatePromptMessage, message))
-                .DefaultValue(DateTime.Now)
-                .WithConverter(Validation.DateToString)
+        string formattedMessage = string.Format(DatePromptMessage, message);
+        string defaultValue = Validation.DateToString(DateTime.Now);
+        Validation.DateTryParser(defaultValue, out DateTime parsedDate);
+        
+        AnsiConsole.Prompt(
+            new TextPrompt<string>(formattedMessage)
+                .DefaultValue(defaultValue)
+                .Validate(input => Validation.DateTryParser(input, out parsedDate))
                 .ValidationErrorMessage(Validation.DateErrorMessage));
+        return parsedDate;
     }
 }
