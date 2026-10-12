@@ -49,7 +49,7 @@ public static class Controller
                 _promptMenu = UserOption.PromptMenus.Main;
                 break;
             default:
-                throw new ArgumentOutOfRangeException("Not valid promptMenu");
+                throw new ArgumentOutOfRangeException($"Not valid promptMenu");
         }
     }
 

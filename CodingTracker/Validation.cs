@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 
 namespace CodingTracker;
@@ -18,5 +17,4 @@ public static class Validation
         return (DateTime.TryParseExact(input?.Trim(), DateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None,
             out parsedDate));
     }
-    
 }

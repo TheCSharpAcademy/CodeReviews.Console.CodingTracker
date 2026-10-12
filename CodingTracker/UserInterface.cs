@@ -25,7 +25,7 @@ public static class UserInterface
         var title = new Text(TitleString, new Style(foreground: Color.Green1));
         var alignedTitle = Align.Center(title);
         
-        //AnsiConsole.Clear();
+        AnsiConsole.Clear();
         AnsiConsole.Write(alignedTitle);
     }
     public static UserOption.MainMenu MainMenuPrompt()
@@ -50,7 +50,6 @@ public static class UserInterface
 
     public static (DateTime, DateTime) AskDateRange()
     {
-        
         var startDate = AskDate("start date");
         var endDate = AskDate("end date");
 
