@@ -1,4 +1,6 @@
+using System.Globalization;
 using Spectre.Console;
+using Calendar = Spectre.Console.Calendar;
 
 namespace CodingTracker;
 
@@ -15,14 +17,15 @@ public static class TableVisualisationEngine
         new(double.MaxValue, Color.DarkRed)
     ];
     
-    public static void ShowCalendarWithCaption(List<CodingSession> sessions)
+    public static void ShowCalendarWithCaption(List<CodingSession> sessionsPrevious, List<CodingSession> sessions)
     {
         var caption = GetCaptionForCalendar();
         var alignedCaption = Align.Left(caption, VerticalAlignment.Middle).Height(10);
         
-        var grid = new Grid().AddColumn().AddColumn();
-        grid.AddRow(GetCalendar(sessions), alignedCaption);
-        AnsiConsole.Live(grid).Start(ctx => ctx.Refresh());
+        var grid = new Grid().AddColumn().AddColumn().AddColumn();
+        grid.AddRow(GetCalendar(sessionsPrevious), GetCalendar(sessions), alignedCaption);
+        
+        AnsiConsole.Write(grid);
     }
 
     private static Calendar GetCalendar(List<CodingSession> sessions)
@@ -31,10 +34,15 @@ public static class TableVisualisationEngine
 
         int year = sessions[0].StartTime.Year;
         int month = sessions[0].StartTime.Month;
-        var calendar = new Calendar(year, month);
+        var calendar = new Calendar(year, month)
+            .Border(TableBorder.Rounded) // Gives it a nice, smooth border
+            .HeaderStyle(new Style(foreground: Color.Cyan1, decoration: Decoration.Bold))
+            .HighlightStyle(new Style(foreground: Color.White, background: Color.Blue))
+            .Culture(CultureInfo.CurrentCulture);
 
         foreach (var session in sessions)
         {
+            if (session.Duration.Ticks == 0) break;
             calendar.AddCalendarEvent(year, month, session.StartTime.Day, GetStyle(session.Duration));
         }
         return calendar;
@@ -42,7 +50,8 @@ public static class TableVisualisationEngine
     
     private static Style GetStyle(TimeSpan duration)
     {
-        return new Style(ColorLevels.First(level => duration.TotalHours < level.MaxHours).Color);
+        var color = ColorLevels.First(level => duration.TotalHours < level.MaxHours).Color;
+        return new Style(background: color);
     }
     
     private static Grid GetCaptionForCalendar()

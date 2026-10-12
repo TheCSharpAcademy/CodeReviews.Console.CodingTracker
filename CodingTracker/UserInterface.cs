@@ -20,10 +20,12 @@ public static class UserInterface
     private static readonly string DatePromptErrorEndBeforeStart =
         "[red]End date cannot be earlier than start date. Try again.[/]";
 
-    public static void Title()
+    public static void ClearAndTitle()
     {
         var title = new Text(TitleString, new Style(foreground: Color.Green1));
         var alignedTitle = Align.Center(title);
+        
+        AnsiConsole.Clear();
         AnsiConsole.Write(alignedTitle);
     }
     public static UserOption.MainMenu MainMenuPrompt()
@@ -52,7 +54,7 @@ public static class UserInterface
         var startDate = AskDate("start date");
         var endDate = AskDate("end date");
 
-        while (endDate <= startDate)
+        while (endDate < startDate)
         {
             AnsiConsole.MarkupLine(DatePromptErrorEndBeforeStart);
             endDate = AskDate("end date");

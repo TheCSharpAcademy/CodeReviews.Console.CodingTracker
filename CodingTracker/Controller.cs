@@ -8,13 +8,19 @@ public static class Controller
     
     public static async Task Start()
     {
-        UserInterface.Title();
         do
         {
             var sessions = await DataBaseInterface.ViewCodingSessions(MonthToShow, Utils.NextMonth(MonthToShow));
             var sessionsPerDay = AmountCodingPerDay(sessions);
+            sessionsPerDay = AddEmptyCodingSessionIfEmpty(sessionsPerDay, MonthToShow);
+
+            var previousMonth = Utils.PreviousMonth(MonthToShow);
+            var sessionsPrevious = await DataBaseInterface.ViewCodingSessions(previousMonth, MonthToShow);
+            var sessionsPreviousPerDay = AmountCodingPerDay(sessionsPrevious);
+            sessionsPreviousPerDay = AddEmptyCodingSessionIfEmpty(sessionsPreviousPerDay, previousMonth);
             
-            TableVisualisationEngine.ShowCalendarWithCaption(sessionsPerDay);
+            UserInterface.ClearAndTitle();
+            TableVisualisationEngine.ShowCalendarWithCaption(sessionsPreviousPerDay, sessionsPerDay);
             await Prompt();
 
         } while (!_endApp);
@@ -73,10 +79,10 @@ public static class Controller
         switch (choice)
         {
             case UserOption.ViewMenu.Previous:
-                MonthToShow = MonthToShow.AddMonths(-1);
+                MonthToShow = Utils.PreviousMonth(MonthToShow);
                 break;
             case UserOption.ViewMenu.Next:
-                MonthToShow = MonthToShow.AddMonths(1);
+                MonthToShow = Utils.NextMonth(MonthToShow);
                 break;
             case UserOption.ViewMenu.Quit:
                 _promptMenu = UserOption.PromptMenus.Main;
@@ -107,6 +113,12 @@ public static class Controller
                 codingSession.Key.AddDays(1),
                 TimeSpan.FromTicks(codingSession.Sum(s => s.Duration.Ticks))))
             .ToList();
+    }
+
+    private static List<CodingSession> AddEmptyCodingSessionIfEmpty(List<CodingSession> sessions, DateTime monthToShow)
+    {
+        if (sessions.Count > 0) return sessions;
+        return [new CodingSession(monthToShow, monthToShow, new TimeSpan(0))];
     }
     
 }
