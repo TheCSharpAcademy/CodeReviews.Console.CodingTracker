@@ -62,7 +62,7 @@ internal class ChoicesPrompt
     .Title($"[BOLD {colorHighlight}]Select[/] the entry you want to [BOLD {colorHighlight}]{action}[/]:")
     .HighlightStyle(colorHighlight)
     .UseConverter(entry => entry.DisplayData())
-    //.PageSize(100)
+    .PageSize(100)
     .AddChoices(tableData));
 
     return selection;
