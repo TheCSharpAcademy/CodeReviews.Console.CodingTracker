@@ -35,6 +35,8 @@ public static class DataBaseInterface
     public static async Task AddCodingSession(CodingSession codingSession)
     {
         InitializeDb();
+        if (_dbConnection == null) throw new Exception("Database connection couldn't initialize");
+        
         string addCodingSessionQuery = @"
             INSERT INTO CodingSessions (StartTime, EndTime, DurationTicks) 
             VALUES (@StartTime, @EndTime, @DurationTicks);";
@@ -45,6 +47,8 @@ public static class DataBaseInterface
     public static async Task<List<CodingSession>> ViewCodingSessions(DateTime? minStartDate = null, DateTime? maxStartDate = null)
     {
         InitializeDb();
+        if (_dbConnection == null) throw new Exception("Database connection couldn't initialize");
+        
         var conditions = new List<string>();
         if (minStartDate.HasValue) conditions.Add("StartTime >= @MinDate");
         if (maxStartDate.HasValue) conditions.Add("StartTime <= @MaxDate");

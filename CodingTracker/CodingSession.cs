@@ -8,7 +8,7 @@ public class CodingSession
     public DateTime StartTime { get; set; }
     public DateTime? EndTime { get; set; }
     public long? DurationTicks { get; set; }
-    // We use Duration to treat with TimeSpan in the code even if SQLite doesn't support it
+    // We use Duration to use TimeSpan in the code even if SQLite doesn't support it
     [NotMapped]
     public TimeSpan Duration
     {

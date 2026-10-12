@@ -25,7 +25,7 @@ public static class UserInterface
         var title = new Text(TitleString, new Style(foreground: Color.Green1));
         var alignedTitle = Align.Center(title);
         
-        AnsiConsole.Clear();
+        //AnsiConsole.Clear();
         AnsiConsole.Write(alignedTitle);
     }
     public static UserOption.MainMenu MainMenuPrompt()
