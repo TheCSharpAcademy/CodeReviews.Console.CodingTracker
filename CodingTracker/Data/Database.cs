@@ -4,7 +4,7 @@ using Microsoft.Data.Sqlite;
 
 namespace CodingTracker;
 
-internal class Repository
+internal class Database
 {
   internal static string ConnectionString { get; private set; } = @"Data Source=CodingTracker.db";
 

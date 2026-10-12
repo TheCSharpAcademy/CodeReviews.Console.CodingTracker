@@ -23,7 +23,7 @@ internal class DebugTool
       TimeSpan duration = TimeSpan.FromMinutes(rand.Next(5, 440));
       DateTime endDate = startDate.AddMinutes((int)duration.TotalMinutes);
 
-      Repository.ConvertAndAdd(activity, startDate, endDate, duration);
+      Database.ConvertAndAdd(activity, startDate, endDate, duration);
     }
   }
 

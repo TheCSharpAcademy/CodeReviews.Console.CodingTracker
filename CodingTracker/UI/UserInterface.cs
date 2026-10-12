@@ -61,7 +61,7 @@ internal class UserInterface
 
     string[] timeInfos = FormatTimeInfo(startDate, startHour, endHour);
 
-    Repository.Add(activity, timeInfos[0], timeInfos[1], Convert.ToInt32(timeInfos[2]));
+    Database.Add(activity, timeInfos[0], timeInfos[1], Convert.ToInt32(timeInfos[2]));
 
     AnsiConsole.WriteLine();
     Displayer.PreviewRow(activity, timeInfos[0], timeInfos[1], Convert.ToInt32(timeInfos[2]));
@@ -145,7 +145,7 @@ internal class UserInterface
       selection.EditDuration(Convert.ToInt32(timeInfos[2]));
     }
 
-    Repository.UpdateRow(selection);
+    Database.UpdateRow(selection);
 
     AnsiConsole.WriteLine();
     Displayer.PreviewRow(selection);
@@ -184,7 +184,7 @@ internal class UserInterface
     else
     {
       foreach (var entry in selection)
-        Repository.Delete(entry);
+        Database.Delete(entry);
 
       if (selection.Count == 1)
         AnsiConsole.MarkupLine($"[green]{selection.Count} entry has been [red]deleted[/].[/]");

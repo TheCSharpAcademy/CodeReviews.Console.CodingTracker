@@ -1,6 +1,6 @@
 using Dapper;
 using Microsoft.Data.Sqlite;
-using static CodingTracker.Repository;
+using static CodingTracker.Database;
 
 namespace CodingTracker;
 
