@@ -15,22 +15,16 @@ public static class EnumExtensions
         .GetName()
         ?? value.ToString();
   }
+
+  internal static List<string> GetEditableColumn()
+  {
+    List<string> choices = new();
+
+    foreach (string columnName in Enum.GetNames<Column>())
+    {
+      if (columnName != Column.id.ToString() && columnName != Column.duration.ToString())
+        choices.Add(((Column)Enum.Parse(typeof(Column), columnName)).GetDisplayName());
+    }
+    return choices;
+  }
 }
-
-//   internal static List<string> GetColumnWithoutId()
-//   {
-//     List<string> choices = new();
-
-//     foreach (string columnName in Enum.GetNames<Column>())
-//     {
-//       if (columnName != Column.id.ToString())
-//         choices.Add(columnName);
-//     }
-//     return choices;
-//   }
-
-//   internal static string DisplayCategories()
-//   {
-//     return $"{Column.id}\t\t{Column.category}\t\t\t{Column.date}\t{Column.quantity}";
-//   }
-// }
