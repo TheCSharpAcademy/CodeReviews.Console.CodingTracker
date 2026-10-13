@@ -6,7 +6,12 @@ namespace CodingTracker;
 
 internal class Database
 {
-  internal static string ConnectionString { get; private set; } = @"Data Source=CodingTracker.db";
+  private static string ConnectionString;
+
+  internal static void Configure(string connectionString)
+  {
+    ConnectionString = connectionString;
+  }
 
   internal static T Execute<T>(Func<SqliteConnection, T> action)
   {
