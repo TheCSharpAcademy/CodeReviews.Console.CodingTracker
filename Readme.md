@@ -20,26 +20,25 @@ Console-based CRUD application to track time spent coding. Developed using C#, S
 
 ## Challenges
 I struggled a lot with the Elapsed.Time and DateTime paradigms. As I wanted to let the user input dates in a user-friendly way, I had to do a lot more conversions than I expected.
-As I developed the application, I encountered issues where the information I extracted was in a different format from the one previously built for conversion, and I ended up having a lot of helper methods for specific cases.
-This made naming and code readability challenging.
-
-I find it hard to remember the solutions I used in other projects. When facing the same issues again, I feel like I either reinvent the wheel a second time or check what I did before and get it done.
+As I developed the application, I had to do a lot of helpers conversion methods. Way more that I expected. Sometimes I had the hour without the date, sometime the hour and the date etc. It felt complicated. This made naming and code readability challenging.
+I made early the poor decision of letting the Database class be responsible for adding data in the correct format (Database.ConvertAndAdd()). I'm not redoing that again in the future. 
+Otherwise I found it hard to remember some really specific solution I used in previous projects. When facing the same need again, I tend to directly reread what I did. 
 It's hard to find the balance between learning by heart and being pragmatic and efficient. I don't think it makes a lot of sense to learn every coding scenario or library.
 
 ## Lessons Learned
-- I'm getting more at ease with how DateTime and Elapsed.Time work.
-- I should indeed plan the project beforehand. I started with what was challenging and motivating me and ended up working in a less efficient way. Knowing which features I want and writing user stories will help me stay focused.
-- I tend to add too many features or make design decisions on the go.
-- Having a side project to test features quickly.
+- I think I have a good basic understanding of DateTime and Elapsed.Time now.
+- I should plan the project beforehand. I started with what was challenging (the stopwatch) and ended up working in a chaotic way. Knowing which features I want and writing user stories will help me stay focused.
+- Having a side project to test features quickly would be helpful.
 - Getting used to do micro-commit. Till here I only used Github to send my work once done. Now I am trying to get used a habbit of commiting new progress increment.
 
 ## Areas to improve
-- I really need to learn how delegates and generics work. I always struggle to understand code that uses them, and they seem really practical.
-- Error handling seems to be a vast topic that I will have to dig into.
+- I really need to learn how delegates, generics and lambda work. I always struggle to understand code that uses them, and they seem really practical.
+- the process of making an appsettings.json is still a bit mysterious to me
+- Error handling is a vast topic that I will have to dig into.
 
 ## Resources Used
 - LearnDapper.com
 - My previous habit tracker project
 - Spectre documentation
-- Various Stack Overflow forum posts
-Copilot to get some syntax quickly and explain how it works.
+- Various Stack Overflow and Medium posts
+- Copilot to get some syntax quickly and explain how it works, as well as for review when I know I'm going the wrong way
